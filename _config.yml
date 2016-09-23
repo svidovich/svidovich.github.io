@@ -2,8 +2,8 @@ title: Researcher
 url: "http://svidovich.github.io"
 baseurl: "/researcher"
 
-<<<<<<< HEAD
-=======
+#<<<<<<< HEAD
+#=======
 # Site settings
 title: Your awesome title
 email: your-email@domain.com
@@ -15,7 +15,7 @@ twitter_username: jekyllrb
 github_username:  jekyll
 
 # Build settings
->>>>>>> 0812791473563b26b904739cecfda142b263c2c6
+#>>>>>>> 0812791473563b26b904739cecfda142b263c2c6
 markdown: kramdown
 
 tracking_id: #
