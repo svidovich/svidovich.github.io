@@ -19,3 +19,15 @@ p{
 font-family: "Trebuchet MS", Helvetica, sans-serif;
 color: white;
 }
+a:link{
+color: white;
+text-decoration: none;
+}
+a:visited{
+color: #EEEEEE; 
+text-decoration: none;
+}
+a:hover{
+color: #66CCEE;
+text-decoration: underline;
+}
