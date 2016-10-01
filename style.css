@@ -31,3 +31,9 @@ a:hover{
 color: #66CCEE;
 text-decoration: underline;
 }
+table, tr, th, td{
+border: 1px solid black;
+border-collapse: collapse;
+color: white;
+font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
