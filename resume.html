@@ -6,6 +6,44 @@ Resume | Samuel Vidovich
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="icon" href="media/favicon.png">
 </title>
+<style>
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #34495e;
+}
+
+.collapsible:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+</style>
+
 </head>
 <body>
 <a name="top"></a>
@@ -37,9 +75,12 @@ If you have any questions, please don&#8217;t hesitate to email me.
 Experience
 </h1>
 <hr/>
-<h3>
+<button class="collapsible">
 Work Experience
-</h3>
+</button>
+
+<div class="content">
+
 <table style="border: none;" cellpadding="8">
 <tr style="border: none;">
 <td style="border: none;">
@@ -66,6 +107,9 @@ September 2016 to June 2018: <br/> Mathematics tutor at Kent State University. C
 </td>
 </tr>
 </table>
+
+</div>
+
 <br/>
 <br/>
 
@@ -269,6 +313,25 @@ The chief Community Facing outreach program of St. John's is called <em>Heart Mi
 Back to Top
 </a>
 <hr/>
+
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
+}
+</script>
+
 
 </body>
 </html>
