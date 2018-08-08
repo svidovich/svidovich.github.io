@@ -25,13 +25,13 @@ Resume | Samuel Vidovich
 
 .content {
     padding: 0 18px;
-    display: none;
+    display: block;
     overflow: hidden;
     background-color: #34495e;
 }
 
 .collapsible:after {
-    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    content: '\02796'; /* Unicode character for "plus" sign (+) */
     font-size: 13px;
     color: white;
     float: right;
@@ -39,7 +39,7 @@ Resume | Samuel Vidovich
 }
 
 .active:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
+    content: "\2795"; /* Unicode character for "minus" sign (-) */
 }
 
 </style>
@@ -79,7 +79,7 @@ Experience
 Work Experience
 </button>
 
-<div class="content">
+<div class="content" style="display:block">
 
 <table style="border: none;" cellpadding="8">
 <tr style="border: none;">
@@ -114,8 +114,9 @@ September 2016 to June 2018: <br/> Mathematics tutor at Kent State University. C
 Programming Experience & Personal Projects
 </button>
 
-<div class="content">
+<div class="content" style="display:block">
 <br/>
+<strong>Programming:</strong><br/><br/>
 Python: Psycopg2, Scrapy, Numpy, Matplotlib / Matlab / C++: Eigen / C: ncurses / Mathematica / Docker / KML / Git / PostgreSQL / Shodan API / CLI: Powershell, Bash
 
 <h4>
@@ -167,7 +168,7 @@ Undergraduate Commendations & Activities
 Stark State College
 </button>
 
-<div class="content">
+<div class="content" style="display:block">
 <br/>
 Commendations:
 <ul>
@@ -213,7 +214,7 @@ Foundation of the Mu Alpha Theta mathematical honors society Stark State chapter
 <button class="collapsible">
 Kent State University
 </button>
-<div class="content">
+<div class="content" style="display:block">
 <br/>
 <p align="left">
 Cumulative GPA: 3.53
@@ -273,7 +274,7 @@ Community Involvement
 St. John's United Church of Christ
 </button>
 
-<div class="content">
+<div class="content" style="display:block">
 <br/>
 The Governing board of the church is called the <em>Consistory</em>. Following is my involvement in this board, and an outline of responsibilities.
 <ul>
@@ -336,8 +337,10 @@ for (i = 0; i < coll.length; i++) {
         var content = this.nextElementSibling;
         if (content.style.display === "block") {
             content.style.display = "none";
+            this.classList.toggle("active");
         } else {
             content.style.display = "block";
+            this.classList.toggle("active");
         }
     });
 }
