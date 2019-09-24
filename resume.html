@@ -131,7 +131,7 @@ Programming Experience & Personal Projects
 <br/>
 <strong>Programming:</strong><br/><br/>
 <tt>
-Python: {Psycopg2,Scrapy,Numpy,Matplotlib,Protobuf,Shodan\ API} / Matlab / C++: Eigen / C: ncurses / Mathematica / Docker{-compose} / KML / Git / PostgreSQL / CLI: {Powershell,Bash,AWS} / x86 Assembly / AWS {CloudWatch,Lambda,Glue,Athena} / Linux Systems: {Make,Automake,Shell,GNU\ Parallel,Ansible,SELinux,Cron}
+Apache Spark: {Devops,Testing,PySpark2.{2,4}} / Python: {Psycopg2,Scrapy,Numpy,Matplotlib,Protobuf,Shodan\ API} / Matlab / C++: Eigen / C / Mathematica / Docker{,-compose} / KML / Git / SQL: {PostgreSQL,Presto} / CLI: {Powershell,Bash,AWS} / x86 Assembly / AWS {CloudWatch,Lambda,Glue,Athena,Cloudformation,Serverless} / Linux Systems: {Make,Automake,Shell,GNU\ Parallel,Ansible,SELinux,Cron}
 </tt>
 <h4>
 Linux from Scratch
@@ -143,14 +143,14 @@ to this LFS since constructing it: it is now a 'BLFS' with i3 as a window manage
 
 
 <h4>
-    SRControl
+    SRControl <img src="media/cool2.gif"/> Open Source!
 </h4>
 SRControl is a project that aims to bind Linux CGroups using python. It will allow users to execute specific functions in their own CGroups, as well as create and manage new CGroups generally.
 <br/>
 SRControl is released under GPLv3  and can be found <a href="https://github.com/svidovich/srcontrol/blob/master/LICENSE">here</a>. Feel free to issue pull requests!
 
 <h4>
-    LAD
+    LAD <img src="media/cool.gif"/> Open Source!
 </h4>
 This new project will allow users to enter any Linux Allocated Device major/minor combination and return the device name, and vice-verse ( e.g. /dev/sda2 -> 8:3 ).<br/>
 This project is yet unlicensed. It will likely be BSD, or something. You can contribute <a href="https://github.com/svidovich/lad">here</a>.
@@ -158,18 +158,25 @@ This project is yet unlicensed. It will likely be BSD, or something. You can con
 <h4>
     Homelab
 </h4>
-This is my personal home network. I use PFSense and a managed switch with a wireless access point. The server runs postgres, and the compute nodes collect and deliver network information to the database.
+This is my personal home network. I use PFSense and a managed switch with a wireless access point. The largest server is the ESXi host which currently runs plex in one Ubuntu instance and Apache Spark Master in another. The Spark Master communicates with a baremetal Spark Worker in the same rack.
 Also, it makes LAN parties very smooth.
 <p align="center">
-    <img src="media/nmap.png">
+    <img src="media/HomelabAUG2019.png">
 </p>
 
+
 <h4>
-	NCurses Collection
+    Jefferson-3 <img src="media/cool_globe.gif"> Open Source!
 </h4>
-	This project is written in C. It uses the NCurses library, and has various attachments. Here is a preview of one that tracks mouse clicks and shoots fireworks at the click location:
+A python3 port of the popular jffs2 filesystem unpacker, jefferson, as the original project seems to have been abandoned. It works! You can find it on github <a href="https://github.com/svidovich/jefferson-3">here</a>.
+
+
+<h4>
+	GeoIP Mapper <img src="media/cool.gif"/>
+</h4>
+This project is written in python. It uses the Shodan and MaxMind APIs to cross-reference zip codes, and allows a user to map IP addresses of any city in the United States on Google Earth. Here's a Preview:
 <p align="center">
-<img src="media/fireworks.gif" width="504" height="282"/>
+<img src="media/ipmap.jpg" width="850" height="600" />
 </p>
 
 <h4>
@@ -180,18 +187,7 @@ Also, it makes LAN parties very smooth.
 <img src="media/soundboard.png" width="270" heigh="480"/>
 </p>
 
-<h4>
-	GeoIP Mapper
-</h4>
-This project is written in python. It uses the Shodan and MaxMind APIs to cross-reference zip codes, and allows a user to map IP addresses of any city in the United States on Google Earth. Here's a Preview:
-<p align="center">
-<img src="media/ipmap.jpg" width="850" height="600" />
-</p>
 
-<h4>
-	Virtual Honeypots (In progress)
-</h4>
-This project is written with bash scripts, following the curriculum of a book called <em>Virtual Honeypots</em>. This project allows a user to set up deceptive, emulated, high-interaction, scalable honeypots for network protection and investegation of an adversary's techniques.
 <h4>
 	Grand Exchange Analysis
 </h4>
