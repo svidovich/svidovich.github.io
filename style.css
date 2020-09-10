@@ -21,7 +21,7 @@ color: white;
 }
 a:link{
 color: white;
-text-decoration: none;
+text-decoration: underline;
 }
 a:visited{
 color: #EEEEEE;
@@ -75,6 +75,11 @@ font-family: "Trebuchet MS", Helvetica, sans-serif;
     text-align: left;
     outline: none;
     font-size: 15px;
+    border-radius: 3px;
+}
+
+.containers {
+    display: flex
 }
 
 .active, .collapsible:hover {

@@ -1,0 +1,58 @@
+.hoverable-image {
+    transition: all .2s ease-in-out;
+}
+
+.hoverable-image:hover {
+    transform: scale(1.1)
+}
+
+.headers {
+    font-family: 'Arvo', sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration: underline;
+}
+
+.containers {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* .lists {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: stretch;
+} */
+
+.grid-container {
+    box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  box-sizing: border-box;
+}
+
+.descriptions {
+    border-radius: 5px;
+    font-family: 'Arvo', sans-serif;
+}
+
+a:hover {
+    color: #43b3ae;
+}
+
