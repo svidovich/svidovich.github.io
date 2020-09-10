@@ -1,108 +1,74 @@
-body {
-background-color: #666666;
-font-family: "Trebuchet MS", Helvetica, sans-serif;
-color: white;
-}
-h1{
-font-family: "Trebuchet MS", Helvetica, sans-serif;
-color: white;
-}
-h2{
-font-family: "Trebuchet MS", Helvetica, sans-serif;
-color: white;
-}
-h3{
-font-family: "Trebuchet MS", Helvetica, sans-serif;
-color: white;
-}
-p{
-font-family: "Trebuchet MS", Helvetica, sans-serif;
-color: white;
-}
-a:link{
-color: white;
-text-decoration: underline;
-}
-a:visited{
-color: #EEEEEE;
-text-decoration: none;
-}
-a:hover{
-color: #66CCEE;
-text-decoration: underline;
-}
-table, tr, th, td{
-border: 1px solid white;
-border-collapse: collapse;
-color: white;
-font-family: "Trebuchet MS", Helvetica, sans-serif;
+.hoverable-image {
+    transition: all .2s ease-in-out;
 }
 
-.zoom {
-    transition: transform .2s; /* Animation */
-    width: 200px;
-    height: 365px;
-    margin: 0 auto;
-	border-radius: 15px;
+.hoverable-image:hover {
+    transform: scale(1.1)
 }
 
-.zoomlite:hover {
-    transform: scale(1.075);
-    /* (Note: if the zoom is too large, it will go outside of the viewport) */
+.headers {
+    font-family: 'Arvo', sans-serif;
 }
 
-
-.zoomlite {
-    transition: transform .2s; /* Animation */
-    width: 200px;
-    height: 100px;
-    margin: 0 auto;
-	border-radius: 15px;
-}
-
-.zoom:hover {
-    transform: scale(1.075);
-    /* (Note: if the zoom is too large, it will go outside of the viewport) */
-}
-
-.collapsible {
-    background-color: #777;
-    color: white;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    border-radius: 3px;
+a {
+    color: black;
+    text-decoration: underline;
 }
 
 .containers {
-    display: flex
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
-.active, .collapsible:hover {
-    background-color: #555;
+/* .lists {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: stretch;
+} */
+
+.grid-container {
+    box-sizing: border-box;
 }
 
-.content {
-    padding: 0 18px;
-    display: block;
-    overflow: hidden;
-    background-color: #34495e;
+
+.descriptions {
+    border-radius: 5px;
+    font-family: 'Arvo', sans-serif;
 }
 
-.collapsible:after {
-    content: '\02796';
-    /* Unicode character for "plus" sign (+) */
-    font-size: 13px;
-    color: white;
-    float: right;
-    margin-left: 5px;
+a:hover {
+    color: #43b3ae;
 }
 
-.active:after {
-    content: "\2795";
-    /* Unicode character for "minus" sign (-) */
+* {
+    box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 0 4px;
+}
+
+.column div {
+  margin-top: 8px;
+  vertical-align: middle;
+  background-color: #43b3ad8f;
+}
+
+.row * {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.gridcontent {
+    box-shadow: 3px 3px #43b3ae;
 }

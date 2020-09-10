@@ -1,0 +1,391 @@
+<html>
+
+<head>
+    <title>
+        Resume | Samuel Vidovich
+    </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" href="media/favicon.png">
+    </title>
+
+
+</head>
+
+<body>
+    <a name="top"></a>
+    <h1 align="center">
+        Samuel L Vidovich
+    </h1>
+
+    <h3 align="center">
+        <a href="https://github.com/svidovich">
+            github
+        </a>
+    </h3>
+
+    <h3 align="center">
+        <a href="mailto:samuel.vidovich@gmail.com">
+            samuel.vidovich@gmail.com
+        </a>
+    </h3>
+    <h3 align="center">
+        August 2020
+    </h3>
+
+    <p align="center">
+        Hello! My name is Samuel Vidovich. I am a software engineer living in Columbus, Ohio with interests in
+        software
+        development, data science, operating systems and cybersecurity.
+        <br />This page serves as a resume for just about everything I've done so far.
+        If you have any questions, please don&#8217;t hesitate to email me. Also I apparently use a cookie from
+        cloudflare. I'm sorry.
+    </p>
+    <br />
+
+
+    <h2 align="left">
+        Experience
+    </h2>
+
+    <hr />
+    <div id="work-div" class="containers">
+        <div>
+            <button id='work-button' class="collapsible">
+                Work Experience
+            </button>
+        </div>
+
+        <div id='work-content' class="content" style="display:block">
+
+            <table style="border: none;" cellpadding="8">
+
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <img src="media/finitestate.png" width="85" height="97" />
+                    </td>
+                    <td style="border: none;">
+                        October 2018 to Present: <br />Software Engineer / Researcher for <a
+                            href="https://www.finitestate.io" target="_blank">Finite State</a>, a company building
+                        the next
+                        generation in network security for the Internet of Things.<br/>
+                        In the news: <a href="https://finitestate.io/finite-state-supply-chain-assessment/">Huawei Supply Chain Assessment</a>
+
+                    </td>
+                </tr>
+
+
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <img src="media/finitestate.png" width="85" height="97" />
+                    </td>
+                    <td style="border: none;">
+                        June to October 2018: <br />Intern for <a href="https://www.finitestate.io" target="_blank">Finite
+                            State</a>, a company building the next generation in network security for the Internet
+                        of
+                        Things.
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <img src="media/kent.png" width="85" height="65" />
+                    </td>
+                    <td style="border: none;">
+                        January to June 2017: <br />Undergraduate Research Assistant at Kent State University. Built
+                        a
+                        variational integrator for flight control in C++ using Eigen.
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="border: none;">
+                        <img src="media/kent.png" width="85" height="65" />
+                    </td>
+                    <td style="border: none;">
+                        September 2016 to June 2018: <br /> Mathematics tutor at Kent State University. Calculus,
+                        Linear
+                        Algebra, and more.
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    </div>
+    <!-- Dare you press the programming button?? -->
+    <div>
+        <button id="programming-button" class="collapsible">
+            Programming Experience & Personal Projects
+        </button>
+    </div>
+
+    <div id="programming-content" class="content" style="display:block">
+        <br />
+        <strong>Programming:</strong><br /><br />
+        <tt>
+        the_keywords:
+        </tt>
+        <br/>
+        <tt>
+            Apache Spark: {Devops,Testing,PySpark{3.0,2.{2,4}}} /
+            Python: {psycopg2,scrapy,numpy,matplotlib,protobuf,Shodan\ API,boto3,django} /
+            Matlab /
+            C++: Eigen /
+            C /
+            Mathematica /
+            Docker{,-compose} /
+            Git /
+            SQL: {PostgreSQL,Presto} /
+            CLI: {Powershell,Bash,AWS,GRUB} /
+            x86 Assembly /
+            AWS {CloudWatch,Lambda,Glue,Athena,Cloudformation,ECS,SQS,...} /
+            Linux: {Make,Automake,Shell,GNU\ Parallel,Ansible,SELinux,Cron,Linux\ From\ Scratch} /
+            JavaScript: Electron
+        </tt>
+        <h4>
+            Linux from Scratch
+        </h4>
+
+        Linux from scratch is project where you take all of the packages which make up a linux distribution, and
+        then
+        build it from the ground up. It took a month and a half working each night to construct my Linux
+        distribution,
+        called <em>Archaea</em>, which runs on the metal of my Thinkpad T420.<br />
+        <em>Archaea</em> is LFS version 8.3, and is a minimal installation. You can find it in the <em><a
+                href="http://www.linuxfromscratch.org/cgi-bin/lfscounter.php" target="blank">Get
+                Counted</a></em>
+        section of the LFS website under ID 27437, and you can find my compiled notes on Github. I have added
+        to this LFS since constructing it: it is now a 'BLFS' with i3 as a window manager, wireless management,
+        a modern
+        web browser, a file browser and more.
+
+
+        <h4>
+            Media Converter <img src="media/cool2.gif" /> Open Source!
+        </h4>
+        Media Converter converts your media! Have a bunch of WMA files from 2006 that should really be FLAC? Have a bunch of FLAC
+        files taking up too much space? Media converter is right for you! Written in electron, wrapper for ffmpeg.
+        <br />
+        SRControl is released under GPLv3 and can be found <a
+            href="https://github.com/svidovich/mediaconverter.git">here</a>. Feel free to issue pull requests!
+
+        <h4>
+            LAD <img src="media/cool.gif" /> Open Source!
+        </h4>
+        This new project will allow users to enter any Linux Allocated Device major/minor combination and return
+        the
+        device name, and vice-verse ( e.g. /dev/sda2 -> 8:3 ).<br />
+        This project is yet unlicensed. It will likely be BSD, or something. You can contribute <a
+            href="https://github.com/svidovich/lad">here</a>.
+
+        <h4>
+            Homelab
+        </h4>
+        This is my personal home network. I use PFSense and a managed switch with a wireless access point. The
+        largest server is the ESXi host which currently runs several fun home entertainment instances -- tmux'd minecraft,
+        a plex server, and kafka, which I guess isn't really home entertainment. For most people.
+        Also, it makes LAN parties very smooth.
+
+
+        <h4>
+            Jefferson-3 <img src="media/cool_globe.gif"> Open Source!
+        </h4>
+        A python3 port of the popular jffs2 filesystem unpacker, jefferson, as the original project seems to
+        have been
+        abandoned. It works! You can find it on github <a href="https://github.com/svidovich/jefferson-3">here</a>.
+
+
+        <h4>
+            GeoIP Mapper <img src="media/cool.gif" />
+        </h4>
+        This project is written in python. It uses the Shodan and MaxMind APIs to cross-reference zip codes, and
+        allows
+        a user to map IP addresses of any city in the United States on Google Earth. Here's a Preview:
+        <p align="center">
+            <img src="media/ipmap.jpg" width="500" height="350" />
+        </p>
+
+
+    </div>
+
+    <h2 align="left">
+        Undergraduate Commendations & Activities
+    </h2>
+
+    <hr />
+
+    <div id="education-div-starkstate">
+        <button id="education-button-starkstate" class="collapsible">
+            Stark State College
+        </button>
+
+        <div id="education-div-starkstate-content" class="content" style="display:block">
+            <br />
+            Commendations:
+            <ul>
+                <li>
+                    Math Student of the Year, 2015-2016
+                </li>
+                <li>
+                    Founding Member, Mu Alpha Theta mathematical honors society for two year colleges, Stark chapter
+                </li>
+            </ul>
+            Activities:
+            <ul>
+                <li>
+                    Stark State College Math Club, President, under the instruction of Professor Florian Haiduc
+                </li>
+                <ul>
+                    <li>
+                        AMATYC National Mathematics competition - planning &amp; participation
+                    </li>
+                    <li>
+                        Rocket City Math League mathematics competition - planning &amp; participation
+                    </li>
+                    <li>
+                        Second Annual Stark State Mathematics Competition for High School Students - Planning
+                    </li>
+                    <li>
+                        Third Annual Stark State Mathematics Competition for High School Students - Volunteer
+                    </li>
+                    <li>
+                        Fourth Annual Stark State Mathematics Competition for High School Students - Volunteer
+                    </li>
+                </ul>
+            </ul>
+            <ul>
+                <li>
+                    Foundation of the Mu Alpha Theta mathematical honors society Stark State chapter under the
+                    instruction
+                    of Professors Florian Haiduc and Enyinda Onunwor
+                </li>
+            </ul>
+            </p>
+        </div>
+    </div>
+
+    <div id="education-div-kent">
+        <button id="education-button-kentstate" class="collapsible">
+            Kent State University
+        </button>
+        <div id="education-div-kent-content" class="content" style="display:block">
+            <br />
+            <p align="left">
+                Cumulative GPA: 3.53
+            </p>
+            Commendations:
+            <ul>
+                <li>
+                    AS Mathematics, August 2017
+                </li>
+                <li>
+                    BS Applied Mathematics, <em>Cum Laude</em>, May 2018
+                </li>
+                <li>
+                    Dean's List, Fall 2016
+                </li>
+                <li>
+                    Dean's List, Spring 2017
+                </li>
+                <li>
+                    Dean's List, Fall 2017
+                </li>
+                <li>
+                    Dean's List, Spring 2018
+                </li>
+            </ul>
+
+            Activities:
+            <ul>
+                <li>
+                    Computer Club (President), under the instruction of Dr. Angela Guercio
+                </li>
+                <li>
+                    Math Club (President), under the instruction of Dr. Relja Vulanovic
+                </li>
+                <li>
+                    Research of variational integrators as applied to flight control under the instruction of Dr.
+                    Rob Kipka.
+                </li>
+                <ul>
+                    <li>
+                        <a href="http://bit.ly/2v9riIp">Program</a>
+                    </li>
+                    <li>
+                        <a href="https://drive.google.com/open?id=0BxaNZ7Cq_J0OTkpYUDllMm1jT1E">Slide Show</a>
+                    </li>
+                </ul>
+            </ul>
+            <br />
+        </div>
+    </div>
+
+
+    <h2 align="left">
+        Community Involvement
+    </h2>
+    <hr />
+
+    <button id='stjohns-button' class="collapsible">
+        St. John's United Church of Christ
+    </button>
+
+    <div id='stjohns-content' class="content" style="display:block">
+        <br />
+        The Governing board of the church is called the <em>Consistory</em>. Following is my involvement in this
+        board,
+        and an outline of responsibilities.
+        <ul>
+            <li>
+                Consistory President, 2018
+            </li>
+            <ul>
+                <li>
+                    Running meetings of the Consistory, dissemination of valuable information to the
+                    congregation,
+                    intermediary between congregation and pastor, and general oversight of church activities.
+                </li>
+            </ul>
+            <li>
+                Consistory Vice President, 2017
+            </li>
+            <ul>
+                <li>
+                    Assistant to the President of Consistory. Responsible for any tasks the president is unable
+                    to
+                    complete, including running of meetings and calling of quorums for votes.
+                </li>
+            </ul>
+            <li>
+                Head of Worship Team, 2016
+            </li>
+            <ul>
+                <li>
+                    Required collaboration with Worship team members, including the Pastor and Choir Director,
+                    to plan
+                    each week's worship service. Personally provided a slide presentation each week.
+                </li>
+            </ul>
+        </ul>
+        Other Church Involvement:
+        <ul>
+            <li>
+                Heart Ministry
+            </li>
+            <ul>
+                <li>
+                    The chief Community Facing outreach program of St. John's is called <em>Heart Ministry</em>.
+                    This
+                    program provides non-taxable goods, a food bank, and a community meal to those who could
+                    otherwise
+                    not afford them on a monthly basis, meeting the third Tuesday of each month.
+                </li>
+            </ul>
+        </ul>
+        <br />
+    </div>
+
+    <br />
+</body>
+<script src='index.js'>
+</script>
+
+</html>
