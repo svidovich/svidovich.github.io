@@ -24,7 +24,7 @@ color: white;
 text-decoration: none;
 }
 a:visited{
-color: #EEEEEE; 
+color: #EEEEEE;
 text-decoration: none;
 }
 a:hover{
@@ -47,7 +47,7 @@ font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 .zoomlite:hover {
-    transform: scale(1.075); 
+    transform: scale(1.075);
     /* (Note: if the zoom is too large, it will go outside of the viewport) */
 }
 
@@ -61,6 +61,43 @@ font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 .zoom:hover {
-    transform: scale(1.075); 
+    transform: scale(1.075);
     /* (Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 0 18px;
+    display: block;
+    overflow: hidden;
+    background-color: #34495e;
+}
+
+.collapsible:after {
+    content: '\02796';
+    /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2795";
+    /* Unicode character for "minus" sign (-) */
 }
