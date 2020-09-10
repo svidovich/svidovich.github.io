@@ -23,30 +23,16 @@ In the news
 <div align="center">
 Works
 </div>
-<div class="grid-container">
-    <div class="row">
-        <div class="column" style="background-color:#43b3ae;">
-            <p>Constructed unprecedented statistical analysis pipeline for firmware vulnerability research</p>
-        </div>
-        <div class="column" style="background-color:#3ba7a1;">
-            <p>Utilized Ghidra&apos;s scripting capabilities for automated binary analysis</p>
-        </div>
+<div class="row">
+    <div class="column">
+    <div class="gridcontent"><strong>Big Data</strong><br/>Constructed unprecedented statistical analysis pipeline for firmware vulnerability research</div>
+    <div class="gridcontent"><strong>Reverse Engineering</strong><br/>Utilized Ghidra&apos;s scripting capabilities for automated binary analysis of arbitrary binaries</div>
+    <div class="gridcontent"><strong>Test-Driven Development</strong><br/>Saved development endpoint cost by developing a custom Spark unit testing framework</div>
     </div>
-    <div class="row">
-        <div class="column" style="background-color:#43b3ae;">
-            <p>Saved development endpoint cost by developing a custom Spark unit testing framework</p>
-        </div>
-        <div class="column" style="background-color:#3ba7a1;">
-            <p>Performed and automated vulnerability assessment for linux based firmwares</p>
-        </div>
-    </div>
-    <div class="row>
-        <div class="column" style="background-color:#43b3ae;">
-            <p>Involved with research behind 2019 Philips IntelliVue WLAN vulnerability (ICSMA-19-255-01)</p>
-        </div>
-        <div class="column" style="background-color:#3ba7a1;">
-            <p>Emulated several IoT devices from firmware for use in dynamic vulnerability research</p>
-        </div>
+    <div class="column">
+    <div class="gridcontent"><strong>Vulnerability Research</strong><br/>Performed and automated vulnerability assessment for linux based firmwares</div>
+    <div class="gridcontent"><strong>Vulnerability Disclosures</strong><br/>Involved with research behind 2019 Philips IntelliVue WLAN vulnerability (ICSMA-19-255-01)</div>
+    <div class="gridcontent"><strong>Dynamic Analysis</strong><br/>Emulated several IoT devices from firmware for use in dynamic vulnerability research</div>
     </div>
 </div>
 `;
