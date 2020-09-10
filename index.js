@@ -87,6 +87,9 @@ Amazon Web Services: Works
         <div class="gridcontent">
             <strong>Cloudformation</strong><br/>Dynamic generation of staging environments for integration testing.
         </div>
+        <div class="gridcontent">
+            <strong>Dynamo</strong><br/>Mass accumulation of real-time data for aggregation in Spark and later analysis.
+        </div>
     </div>
 </div>
 `};
