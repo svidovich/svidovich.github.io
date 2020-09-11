@@ -8,7 +8,7 @@ let programmingExperienceDescriptionDiv = document.getElementById('programming-e
 
 // A little bait-and-switch action. Set state based on the description ID, so I can switch back and
 // forth between multiple clickables on the page easily.
-let SetDescription = function (descriptionElement, stateString, Description) {
+let SetDescription = (descriptionElement, stateString, Description) => {
     if (localStorage.getItem(stateString) === "empty" || localStorage.getItem(stateString) !== Description.id) {
         console.log(Description.id)
         localStorage.setItem(stateString, Description.id);
