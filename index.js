@@ -62,11 +62,20 @@ underConstructionDescription = new Object();
 underConstructionDescription.id = 'under-construction';
 GetHTMLFromURI('./assets/elements/under_construction.html').then(data => { underConstructionDescription.data = data });
 
+pgDescription = new Object();
+pgDescription.id = 'pg-description';
+GetHTMLFromURI('./assets/elements/postgres_description.html').then(data => {pgDescription.data = data});
 let pgHoverable = document.getElementById('pg-hoverable');
-pgHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', underConstructionDescription));
+pgHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', pgDescription));
 
+dockerDescription = new Object();
+dockerDescription.id = 'docker-description'
+GetHTMLFromURI('./assets/elements/docker_description.html').then(data => {dockerDescription.data = data});
 let dockerHoverable = document.getElementById('docker-hoverable');
-dockerHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', underConstructionDescription));
+dockerHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', dockerDescription));
 
+linuxDescription = new Object();
+linuxDescription.id = 'linux-description'
+GetHTMLFromURI('./assets/elements/linux_description.html').then(data => {linuxDescription.data = data});
 let linuxHoverable = document.getElementById('linux-hoverable');
-linuxHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', underConstructionDescription));
+linuxHoverable.addEventListener('click', SetDescription.bind(this, programmingExperienceDescriptionDiv, 'programmingExperienceDescriptionState', linuxDescription));
