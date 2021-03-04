@@ -19,14 +19,8 @@ a {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    text-align: center;
 }
-
-/* .lists {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    align-items: stretch;
-} */
 
 .grid-container {
     box-sizing: border-box;
