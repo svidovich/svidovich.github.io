@@ -134,8 +134,8 @@ class Character {
   }
 
   moveBy(dx, dy) {
-    this.x = this.x + dx;
-    this.y = this.y + dy;
+    this.x += dx;
+    this.y += dy;
   }
 }
 
@@ -153,18 +153,39 @@ class Enemy extends Character {
   }
   setInMotion() {
     let slope = randomInt(-10, 10);
-    setInterval(this.moveBy.bind(slope, 1), 120);
+    let ySign = 1;
+    // For whatever reason, when I try to use setInterval with this.moveBy,
+    // 'this' winds up being null in the caller, which I don't really understand
+    setInterval(() => {
+      if (this.x >= canvasWidth || this.x <= 0) {
+        slope = -slope;
+      }
+      if (this.y >= canvasHeight || this.y <= 0) {
+        ySign = -ySign;
+      }
+      this.x += slope;
+      this.y += 1 * ySign;
+    }, 50);
   }
 }
 
 myCircle = new Character(100, 100, 20, 3);
 
-let enemySpawnX = randomInt(0, canvasWidth);
-let enemySpawnY = randomInt(0, canvasHeight);
-let enemySize = randomInt(15, 60);
-let enemySpeed = randomInt(1, 6);
+const randomEnemyFactory = () => {
+  let enemySpawnX = randomInt(0, canvasWidth);
+  let enemySpawnY = randomInt(0, canvasHeight);
+  let enemySize = randomInt(15, 60);
+  let enemySpeed = randomInt(1, 6);
+  return new Enemy(enemySpawnX, enemySpawnY, enemySize, enemySpeed);
+};
 
-// anotherCircle = new Enemy(enemySpawnX, enemySpawnY, enemySize, enemySpeed);
+let enemyCollection = new Array();
+let enemyCount = 12;
+for (let i = 0; i < enemyCount; i++) {
+  enemyCollection.push(randomEnemyFactory());
+}
+
+// anotherCircle = randomEnemyFactory();
 
 const updateCharacterFromInput = (inputObject, characterObject) => {
   // Can this get more DRY?
@@ -202,7 +223,9 @@ const update = () => {
   // the circle state based on the input.
   updateCharacterFromInput(playerInput, myCircle);
   drawCircle(canvasContext, myCircle);
-  // drawCircle(canvasContext, anotherCircle);
+  enemyCollection.forEach((enemy) => {
+    drawCircle(canvasContext, enemy);
+  });
 };
 
 // main is an immediately invoked function expression! google it lol
