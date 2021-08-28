@@ -134,8 +134,16 @@ class Character {
   }
 
   moveBy(dx, dy) {
-    this.x += dx;
-    this.y += dy;
+    // Don't let the player leave the boundaries using simple checks.
+    // Just checking for this.x < canvasWidth won't let us move if we
+    // hit the boundary. We need to check to see if where we're _going_
+    // is inside the boundary or not.
+    if (this.x + dx <= canvasWidth && this.x + dx >= 0) {
+      this.x += dx;
+    }
+    if (this.y + dy <= canvasHeight && this.y + dy >= 0) {
+      this.y += dy;
+    }
   }
 }
 
@@ -156,15 +164,26 @@ class Enemy extends Character {
     let ySign = 1;
     // For whatever reason, when I try to use setInterval with this.moveBy,
     // 'this' winds up being null in the caller, which I don't really understand
+    // Anyway, this is how we update random movement for the enemies. They just
+    // float around.
     setInterval(() => {
+      // If we've hit the right or left side, we should reverse our slope. This will
+      // cause us to 'bounce off' the side, and start moving in a different direction.
       if (this.x >= canvasWidth || this.x <= 0) {
         slope = -slope;
       }
+      // If we've hit the top or bottom, we should reverse the sign of our y value. This
+      // will cause us to start moving in the opposite direction with respect to the y
+      // axis, which is just a bounce off the top or bottom.
       if (this.y >= canvasHeight || this.y <= 0) {
         ySign = -ySign;
       }
+      // Finally, given our computed slope and y sign, whatever they are, update our
+      // location.
       this.x += slope;
       this.y += 1 * ySign;
+      // I've set the interval here to be rather swift so that we pre-empt the browser
+      // framerate. It's very smooth this way.
     }, 50);
   }
 }
