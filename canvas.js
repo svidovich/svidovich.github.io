@@ -20,17 +20,22 @@ const InputKeys = {
   X: 88, // shrink!
 };
 
-let input = {
-  right: false,
-  up: false,
-  left: false,
-  down: false,
-  quit: false,
-  grow: false,
-  shrink: false,
-  speedUp: false, // TODO ;)
-  speedDown: false, // TODO ;)
-};
+class Input {
+  // TODO: I should be able to bind specific keys to each of
+  // these different actions, so that when I instantiate a new
+  // input class, I can set up controls.
+  constructor(keycodes) {
+    this.right = false;
+    this.up = false;
+    this.left = false;
+    this.down = false;
+    this.quit = false;
+    this.grow = false;
+    this.shrink = false;
+    this.speedUp = false;
+    this.speedDown = false;
+  }
+}
 
 // Helps me stay DRY
 const changeInputByEventType = (eventType) => {
@@ -42,7 +47,7 @@ const changeInputByEventType = (eventType) => {
 };
 
 // a function for telling which key we pressed
-const keySwitch = (keyPressEvent) => {
+const keySwitch = (keyPressEvent, inputObject) => {
   // We've been handed an event containing a keypress.
   // What key is it that was pressed?
   const keyCode = keyPressEvent.keyCode;
@@ -50,32 +55,36 @@ const keySwitch = (keyPressEvent) => {
   switch (keyCode) {
     // Change our input struct depending on the keycode
     case InputKeys.W:
-      input.up = changeInputByEventType(eventType);
+      inputObject.up = changeInputByEventType(eventType);
       break;
     case InputKeys.A:
-      input.left = changeInputByEventType(eventType);
+      inputObject.left = changeInputByEventType(eventType);
       break;
     case InputKeys.S:
-      input.down = changeInputByEventType(eventType);
+      inputObject.down = changeInputByEventType(eventType);
       break;
     case InputKeys.D:
-      input.right = changeInputByEventType(eventType);
+      inputObject.right = changeInputByEventType(eventType);
       break;
     case InputKeys.Z:
-      input.grow = changeInputByEventType(eventType);
+      inputObject.grow = changeInputByEventType(eventType);
       break;
     case InputKeys.X:
-      input.shrink = changeInputByEventType(eventType);
+      inputObject.shrink = changeInputByEventType(eventType);
       break;
     case InputKeys.Q:
-      input.quit = true;
+      inputObject.quit = true;
       break;
   }
 };
 
+playerInput = new Input();
+
 // Add the listeners for keyboard usage.
-window.addEventListener("keydown", keySwitch);
-window.addEventListener("keyup", keySwitch);
+// Binding allows us to pass arbitrary input objects into the event listener
+// callback.
+window.addEventListener("keydown", keySwitch.bind(playerInput));
+window.addEventListener("keyup", keySwitch.bind(playerInput));
 
 // Draws a border around the canvas!
 const drawCanvasFrame = (canvasContext) => {
@@ -88,47 +97,70 @@ const drawCanvasFrame = (canvasContext) => {
   canvasContext.stroke();
 };
 
-const drawCircle = (canvasContext, x, y, r) => {
+const drawCircle = (canvasContext, circleData) => {
   // We must beginPath, otherwise we'll sweep between updates instead
   // of drawing a new circle each time.
   canvasContext.beginPath();
   // void ctx.arc(x, y, radius, startAngle, endAngle [, counterclockwise]);
-  canvasContext.arc(x, y, r, 0, 2 * Math.PI);
+  canvasContext.arc(circleData.x, circleData.y, circleData.r, 0, 2 * Math.PI);
   canvasContext.stroke();
 };
 
-// I don't think this is how you do this, but it's late.
-// Let's research a better way tomorrow.
-let myCircleData = {
-  x: 100,
-  y: 100,
-  r: 20,
-  speed: 3,
-};
+// A more general representation of a character in space
+class Character {
+  constructor(x, y, r, speed) {
+    this.x = x;
+    this.y = y;
+    this.r = r; // temporary
+    this.speed = speed;
+  }
 
-// A function to update my circle's data based on input.
-const updateCircleFromInput = (inputObject) => {
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  set setSpeed(s) {
+    this.speed = s;
+  }
+
+  set setSize(r) {
+    this.r = r;
+  }
+
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+}
+
+myCircle = new Character(100, 100, 20, 3);
+anotherCircle = new Character(200, 200, 20, 1);
+
+const updateCharacterFromInput = (inputObject, characterObject) => {
   // Can this get more DRY?
   if (inputObject.up === true) {
     // because (0,0) is in the top right with
     // y growing as we go down
-    myCircleData.y -= myCircleData.speed;
+    characterObject.y -= characterObject.speed;
   }
   if (inputObject.down === true) {
-    myCircleData.y += myCircleData.speed;
+    characterObject.y += characterObject.speed;
   }
   if (inputObject.right === true) {
-    myCircleData.x += myCircleData.speed;
+    characterObject.x += characterObject.speed;
   }
   if (inputObject.left === true) {
-    myCircleData.x -= myCircleData.speed;
+    characterObject.x -= characterObject.speed;
   }
   if (inputObject.grow === true) {
-    myCircleData.r += myCircleData.speed / 2;
+    characterObject.r += characterObject.speed / 2;
   }
   if (inputObject.shrink === true) {
-    if (myCircleData.r > 1) {
-      myCircleData.r -= myCircleData.speed / 2;
+    if (characterObject.r > 1) {
+      characterObject.r -= characterObject.speed / 2;
     }
   }
 };
@@ -141,8 +173,8 @@ const update = () => {
   drawCanvasFrame(canvasContext);
   // Read the input object to see what's up. Modify
   // the circle state based on the input.
-  updateCircleFromInput(input);
-  drawCircle(canvasContext, myCircleData.x, myCircleData.y, myCircleData.r);
+  updateCharacterFromInput(input, myCircle);
+  drawCircle(canvasContext, myCircle);
 };
 
 // main is an immediately invoked function expression! google it lol
