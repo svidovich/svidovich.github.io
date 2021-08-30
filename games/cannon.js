@@ -1,9 +1,19 @@
-import { drawCanvasFrame } from "./common.js";
+import { drawRectangle, drawCanvasFrame } from "./common.js";
 
 let canvas = document.getElementById("mainCanvas");
 let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
+
+// General Constants for Gameplay
+const cursorSize = 15;
+// Keep this even because I don't feel like programming around
+// floors and other dumb numeric problems, OK? I'm hateful, and _will_
+// enforce this
+const cannonSideLength = 32;
+if (cannonSideLength % 2 !== 0) {
+  throw new Error("Cannon side length should be even in parity!");
+}
 
 class MouseFollowingInput {
   constructor() {
@@ -43,13 +53,29 @@ class MouseFollowingInput {
   }
 }
 
+class CannonData {
+  // The cannon winds up being _centered_ on (x,y)
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.angle = 0;
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+}
+
 let playerInput = new MouseFollowingInput();
-// setInterval(() => {
-//   console.log(playerInput.coordinates);
-// }, 1000);
+
+// Add a cannon right in the middle of the canvas
+let cannon1 = new CannonData(canvasWidth / 2, canvasHeight / 2);
+
 // We can divine where the circle belongs based on
 // the current location of the player's cursor
-const cursorSize = 15;
 const drawCursor = (canvasContext, input) => {
   let x = input.coordinates.x;
   let y = input.coordinates.y;
@@ -59,6 +85,23 @@ const drawCursor = (canvasContext, input) => {
   canvasContext.stroke();
 };
 
+const drawCannon = (canvasContext, cannonData) => {
+  // We're centering the cannon's base around the (x,y)
+  // coordinate pair given. To do so, calculate the top left
+  // and bottom right corners of the square of side length
+  // cannonSideLength centered at the (x,y) coordinate pair in
+  // cannonData.
+  let cannonBaseStart = {
+    x: cannonData.coordinates.x - cannonSideLength / 2,
+    y: cannonData.coordinates.y + cannonSideLength / 2,
+  };
+  let cannonBaseFinish = {
+    x: cannonData.coordinates.x + cannonSideLength / 2,
+    y: cannonData.coordinates.y - cannonSideLength / 2,
+  };
+  drawRectangle(canvasContext, cannonBaseStart, cannonBaseFinish);
+};
+
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -66,6 +109,7 @@ const update = () => {
   drawCanvasFrame(canvasContext);
   // draw the player's cursor
   drawCursor(canvasContext, playerInput);
+  drawCannon(canvasContext, cannon1);
 };
 
 (() => {
