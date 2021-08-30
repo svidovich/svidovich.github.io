@@ -58,7 +58,15 @@ class CannonData {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.angle = 0;
+    this.angle = 90;
+  }
+
+  get getBarrelAngle() {
+    return this.angle;
+  }
+
+  set setBarrelAngle(a) {
+    this.angle = a;
   }
 
   get coordinates() {
@@ -66,6 +74,11 @@ class CannonData {
       x: this.x,
       y: this.y,
     };
+  }
+
+  set coordinates(coordinates) {
+    this.x = coordinates.x;
+    this.y = coordinates.y;
   }
 }
 
@@ -86,20 +99,58 @@ const drawCursor = (canvasContext, input) => {
 };
 
 const drawCannon = (canvasContext, cannonData) => {
+  let cannonBaseX = cannonData.coordinates.x;
+  let cannonBaseY = cannonData.coordinates.y;
   // We're centering the cannon's base around the (x,y)
   // coordinate pair given. To do so, calculate the top left
   // and bottom right corners of the square of side length
   // cannonSideLength centered at the (x,y) coordinate pair in
   // cannonData.
   let cannonBaseStart = {
-    x: cannonData.coordinates.x - cannonSideLength / 2,
-    y: cannonData.coordinates.y + cannonSideLength / 2,
+    x: cannonBaseX - cannonSideLength / 2,
+    y: cannonBaseY + cannonSideLength / 2,
   };
   let cannonBaseFinish = {
-    x: cannonData.coordinates.x + cannonSideLength / 2,
-    y: cannonData.coordinates.y - cannonSideLength / 2,
+    x: cannonBaseX + cannonSideLength / 2,
+    y: cannonBaseY - cannonSideLength / 2,
   };
   drawRectangle(canvasContext, cannonBaseStart, cannonBaseFinish);
+
+  // Rotating a rectangle that acts as the cannon's barrel.
+  canvasContext.save();
+
+  // Draw a rectangle to start with
+  // canvasContext.fillStyle = "blue";
+  // canvasContext.fillRect(cannonBaseX, cannonBaseY, cannonSideLength, Math.floor(cannonSideLength / 8));
+  // Move the transformation matrix? to the center of the cannon
+  canvasContext.translate(cannonBaseX, cannonBaseY);
+  // Rotation by the current angle of the cannon barrel according to the cannon data.
+
+  // Since we have translated over to the base of the cannon, the angle we need to pass
+  // in needs to be calculated based on a translated reference frame. That's fine, we
+  // simply subtract the location of the cannon's base from the player input location.
+
+  let referenceFrameTransformedX = playerInput.coordinates.x - cannonBaseX;
+  let referenceFrameTransformedY = playerInput.coordinates.y - cannonBaseY;
+
+  // Computing the angle that the cannon should have based on the
+  // current input value. Uses arctangent calculation using opposite
+  // & adjacent to save calculating a hypotenuse. Output is apparently
+  // already in radians, so no need to convert when using rotate().
+  // We can just pass in to atan2 since we have already accounted for the difference in
+  // the reference frame. This is the arctangent of the triangle with opp-hyp intersection
+  // located at (referenceFrameTransformedX, referenceFrameTransformedY)
+  let cannonRadians = Math.atan2(referenceFrameTransformedY, referenceFrameTransformedX);
+
+  canvasContext.rotate(cannonRadians);
+  // Draw the rectangle!
+  canvasContext.fillStyle = "purple";
+  // The rectangle is at (0, 0) because the current reference frame is at the location
+  // where we put the cannon.
+  canvasContext.fillRect(0, 0, cannonSideLength, Math.floor(cannonSideLength / 8));
+  // Move the transformation matrix? Back exactly to where it came from
+
+  canvasContext.restore();
 };
 
 const update = () => {
