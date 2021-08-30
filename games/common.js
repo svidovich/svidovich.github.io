@@ -1,5 +1,12 @@
 export const name = "common";
 
+export const drawCircle = (canvasContext, x, y, r) => {
+  canvasContext.beginPath();
+  // void ctx.arc(x, y, radius, startAngle, endAngle [, counterclockwise]);
+  canvasContext.arc(x, y, r, 0, 2 * Math.PI);
+  canvasContext.stroke();
+};
+
 // start and finish are both objects of the form
 // {x: int, y: int}
 // that describe the coordinate of the top left corner and the
