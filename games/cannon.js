@@ -5,6 +5,20 @@ let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
 
+// The score.
+let scoreCard = document.getElementById("scoreCard");
+let gameScore = 0;
+// The encouragement.
+let encouragement = document.getElementById("encouragement");
+setInterval(() => {
+  let belt = int2KarateBelt(gameScore);
+  if (belt !== "black") {
+    encouragement.innerText = `Point-and-Click. You can do it, ${belt} belt!`;
+  } else {
+    encouragement.innerText = `Well done, ${belt} belt! You've done it!`;
+  }
+}, 2000);
+
 // Some settings around projectiles
 const projectileSpeed = 50;
 const projectileSize = 5;
@@ -199,6 +213,22 @@ const drawCursor = (canvasContext, input) => {
   drawCircle(canvasContext, x, y, cursorSize);
 };
 
+const int2KarateBelt = (integer) => {
+  if (integer > 700) {
+    return "black";
+  } else if (integer > 450) {
+    return "sienna";
+  } else if (integer > 250) {
+    return "green";
+  } else if (integer > 100) {
+    return "blue";
+  } else if (integer > 50) {
+    return "orange";
+  } else {
+    return "yellow";
+  }
+};
+
 const drawCannon = (canvasContext, cannonData) => {
   let cannonBaseX = cannonData.coordinates.x;
   let cannonBaseY = cannonData.coordinates.y;
@@ -250,7 +280,7 @@ const drawCannon = (canvasContext, cannonData) => {
 
   canvasContext.rotate(cannonRadians);
   // Draw the rectangle!
-  canvasContext.fillStyle = "purple";
+  canvasContext.fillStyle = int2KarateBelt(gameScore);
   // The rectangle is at (0, -1) because the current reference frame is at the location
   // where we put the cannon, and because the rectangle looks a little better if we
   // translate it upward by 1.
@@ -284,7 +314,7 @@ let onScreenBubbles = new Array();
 const bubbleGenerator = () => {
   let enemySpawnX = randomInt(0, canvasWidth);
   let enemySpawnY = randomInt(0, canvasHeight);
-  let enemySize = randomInt(15, 60);
+  let enemySize = randomInt(30, 75);
   let enemySpeed = randomInt(1, 6);
   return new RandomPathBubble(enemySpawnX, enemySpawnY, enemySize, enemySpeed);
 };
@@ -309,6 +339,7 @@ const computeCollisions = (projectiles, bubbles) => {
       if (D(projectile, bubble) <= bubble.r) {
         projectile.queueDeletion = true;
         bubble.queueDeletion = true;
+        gameScore += 1;
       }
     });
   });
@@ -327,13 +358,14 @@ const update = () => {
   onScreenProjectiles.forEach((element) => {
     drawCircle(canvasContext, element.x, element.y, projectileSize);
   });
-  randomlyGenerateBubbles(1);
+  randomlyGenerateBubbles(5);
   onScreenBubbles.forEach((bubble) => {
     drawCircle(canvasContext, bubble.x, bubble.y, bubble.r);
   });
   computeCollisions(onScreenProjectiles, onScreenBubbles);
   garbageCollectObjects(onScreenProjectiles);
   garbageCollectObjects(onScreenBubbles);
+  scoreCard.innerText = `${gameScore}`;
 };
 
 (() => {
