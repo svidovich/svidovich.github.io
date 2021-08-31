@@ -1,9 +1,13 @@
-import { drawCircle, drawRectangle, drawCanvasFrame } from "./common.js";
+import { drawCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
 
 let canvas = document.getElementById("mainCanvas");
 let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
+
+// Some settings around projectiles
+const projectileSpeed = 50;
+const projectileSize = 5;
 // Will projectiles bounce?
 const projectilesWillBounce = false;
 // General Constants for Gameplay
@@ -18,8 +22,6 @@ if (cannonSideLength % 2 !== 0) {
 
 class MouseFollowingInput {
   constructor() {
-    // this.x = x;
-    // this.y = y;
     this.x;
     this.y;
     this.register();
@@ -143,6 +145,47 @@ class Projectile {
   }
 }
 
+class RandomPathBubble {
+  // Lifted from Character and Enemy in bubbles.js
+  constructor(x, y, r, speed) {
+    this.x = x;
+    this.y = y;
+    this.r = r; // temporary
+    this.speed = speed;
+    this.queueDeletion = false;
+
+    this.setInMotion();
+  }
+
+  setInMotion() {
+    let slope = randomInt(-10, 10);
+    let ySign = 1;
+    // For whatever reason, when I try to use setInterval with this.moveBy,
+    // 'this' winds up being null in the caller, which I don't really understand
+    // Anyway, this is how we update random movement for the enemies. They just
+    // float around.
+    setInterval(() => {
+      // If we've hit the right or left side, we should reverse our slope. This will
+      // cause us to 'bounce off' the side, and start moving in a different direction.
+      if (this.x >= canvasWidth || this.x <= 0) {
+        slope = -slope;
+      }
+      // If we've hit the top or bottom, we should reverse the sign of our y value. This
+      // will cause us to start moving in the opposite direction with respect to the y
+      // axis, which is just a bounce off the top or bottom.
+      if (this.y >= canvasHeight || this.y <= 0) {
+        ySign = -ySign;
+      }
+      // Finally, given our computed slope and y sign, whatever they are, update our
+      // location.
+      this.x += slope;
+      this.y += 1 * ySign;
+      // I've set the interval here to be rather swift so that we pre-empt the browser
+      // framerate. It's very smooth this way.
+    }, 50);
+  }
+}
+
 let playerInput = new MouseFollowingInput();
 
 // Add a cannon right in the middle of the canvas
@@ -217,8 +260,6 @@ const drawCannon = (canvasContext, cannonData) => {
   canvasContext.restore();
 };
 
-const projectileSpeed = 50;
-const projectileSize = 5;
 const onScreenProjectiles = new Array();
 const fireCannon = (cannonData, mouseClickEvent) => {
   const x = cannonData.coordinates.x;
@@ -228,12 +269,48 @@ const fireCannon = (cannonData, mouseClickEvent) => {
   onScreenProjectiles.push(firedProjectile);
 };
 
-const garbageCollectProjectiles = (projectilesArray) => {
-  projectilesArray.forEach((projectile) => {
-    if (projectile.queueDeletion === true) {
-      const projectileIndex = projectilesArray.indexOf(projectile);
-      projectilesArray.splice(projectileIndex, 1);
+// The objects in the array need to have a 'queueDeletion' property
+const garbageCollectObjects = (arrayOfObjects) => {
+  arrayOfObjects.forEach((deletableObject) => {
+    if (deletableObject.queueDeletion === true) {
+      const deletableObjectIndex = arrayOfObjects.indexOf(deletableObject);
+      arrayOfObjects.splice(deletableObjectIndex, 1);
     }
+  });
+};
+
+let maxOnScreenBubbles = 15;
+let onScreenBubbles = new Array();
+const bubbleGenerator = () => {
+  let enemySpawnX = randomInt(0, canvasWidth);
+  let enemySpawnY = randomInt(0, canvasHeight);
+  let enemySize = randomInt(15, 60);
+  let enemySpeed = randomInt(1, 6);
+  return new RandomPathBubble(enemySpawnX, enemySpawnY, enemySize, enemySpeed);
+};
+
+const randomlyGenerateBubbles = (chance) => {
+  // Chance: an integer in [1, 100]. Specifying 10 means there's
+  // a 10% chance to spawn a bubble.
+  if (randomInt(1, 100) > 100 - chance && onScreenBubbles.length < maxOnScreenBubbles) {
+    onScreenBubbles.push(bubbleGenerator());
+  }
+};
+
+// For computing the distance between two points
+// A and B, each with a component x and a component y
+const D = (A, B) => {
+  return Math.sqrt(Math.pow(B.y - A.y, 2) + Math.pow(B.x - A.x, 2));
+};
+
+const computeCollisions = (projectiles, bubbles) => {
+  projectiles.forEach((projectile) => {
+    bubbles.forEach((bubble) => {
+      if (D(projectile, bubble) <= bubble.r) {
+        projectile.queueDeletion = true;
+        bubble.queueDeletion = true;
+      }
+    });
   });
 };
 
@@ -250,7 +327,13 @@ const update = () => {
   onScreenProjectiles.forEach((element) => {
     drawCircle(canvasContext, element.x, element.y, projectileSize);
   });
-  garbageCollectProjectiles(onScreenProjectiles);
+  randomlyGenerateBubbles(1);
+  onScreenBubbles.forEach((bubble) => {
+    drawCircle(canvasContext, bubble.x, bubble.y, bubble.r);
+  });
+  computeCollisions(onScreenProjectiles, onScreenBubbles);
+  garbageCollectObjects(onScreenProjectiles);
+  garbageCollectObjects(onScreenBubbles);
 };
 
 (() => {
