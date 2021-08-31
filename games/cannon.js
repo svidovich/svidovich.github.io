@@ -1,4 +1,4 @@
-import { drawCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
+import { drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
 
 let canvas = document.getElementById("mainCanvas");
 let canvasHeight = canvas.height;
@@ -360,7 +360,7 @@ const update = () => {
   });
   randomlyGenerateBubbles(5);
   onScreenBubbles.forEach((bubble) => {
-    drawCircle(canvasContext, bubble.x, bubble.y, bubble.r);
+    drawRandomColoredCircle(canvasContext, bubble.x, bubble.y, bubble.r);
   });
   computeCollisions(onScreenProjectiles, onScreenBubbles);
   garbageCollectObjects(onScreenProjectiles);
