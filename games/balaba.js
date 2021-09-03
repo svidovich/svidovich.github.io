@@ -1,4 +1,4 @@
-import { drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
+import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
 
 let canvas = document.getElementById("mainCanvas");
 let canvasHeight = canvas.height;
@@ -73,12 +73,14 @@ class Input {
 }
 
 class Character {
-  constructor(x, y, size, color) {
+  constructor(x, y, size, color, orientation) {
     this.speed = 5;
     this.size = size || 2;
     this.color = color || "rgb(67, 179, 174)";
     this.x = x;
     this.y = y || canvasHeight - 20;
+    this.queueDeletion = false;
+    this.orientation = orientation || "down";
   }
 
   set characterSpeed(newSpeed) {
@@ -89,6 +91,14 @@ class Character {
     return {
       x: this.x,
       y: this.y,
+    };
+  }
+
+  get hitBoxDetails() {
+    return {
+      x: this.x + 5 * this.size,
+      y: this.orientation === "down" ? this.y + 4 * this.size : this.y - 4 * this.size,
+      size: 5 * this.size,
     };
   }
 
@@ -154,7 +164,7 @@ const playerShoot = (characterObject) => {
   }
   if (readyToFire === true) {
     let midpointdx = 5 * characterObject.size;
-    let tipY = 10 * characterObject.size;
+    let tipY = 9 * characterObject.size;
     const x = characterObject.coordinates.x + midpointdx;
     const y = characterObject.coordinates.y - tipY;
     let firedProjectile = new Projectile(x, y, projectileSpeed, "up");
@@ -199,7 +209,7 @@ const drawArrow = (canvasContext, x, y, facing, size, rgbString) => {
     tipY = y + 10 * scale;
     elbowY = y + 3 * scale;
   } else if (facing === "up") {
-    tipY = y - 10 * scale;
+    tipY = y - 9 * scale;
     elbowY = y - 3 * scale;
   } else {
     throw new Error(`${facing} is not a valid facing.`);
@@ -220,21 +230,54 @@ const drawArrow = (canvasContext, x, y, facing, size, rgbString) => {
   canvasContext.lineWidth = oldWidth;
 };
 
+const computeCollisions = (projectiles, entities) => {
+  entities.forEach((entity) => {
+    projectiles.forEach((projectile) => {
+      if (distance(projectile, entity.hitBoxDetails) <= entity.hitBoxDetails.size) {
+        projectile.queueDeletion = true;
+        entity.queueDeletion = true;
+        // gameScore += 1;
+      }
+    });
+  });
+};
+
 const playerInput = new Input();
-let playerShip = new Character(canvasWidth / 2);
+let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
+
+let enemyShip = new Character(canvasWidth / 2, 100, 3, "red");
+let enemyShip0 = new Character(canvasWidth / 2, 200, 4, "blue", "down");
+let enemyShip1 = new Character(canvasWidth / 2, 300, 5, "green", "down");
+let enemyShip2 = new Character(canvasWidth / 2, 500, 6, "purple", "down");
+
+let onScreenEnemies = new Array();
+onScreenEnemies.push(enemyShip);
+onScreenEnemies.push(enemyShip0);
+onScreenEnemies.push(enemyShip1);
+onScreenEnemies.push(enemyShip2);
 
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
   // Get the player's current location
   updateCharacterFromInput(playerInput, playerShip);
-  // Draw the player
+
+  drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
+
+  onScreenEnemies.forEach((enemy) => {
+    drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+    drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
+  });
+  // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
   drawArrow(canvasContext, playerShip.coordinates.x, playerShip.coordinates.y, "up", playerShip.size, playerShip.color);
   fireLaz0rFromInput(playerInput, playerShip);
   onScreenProjectiles.forEach((element) => {
     drawCircle(canvasContext, element.x, element.y, projectileSize);
   });
+
+  computeCollisions(onScreenProjectiles, onScreenEnemies);
   garbageCollectObjects(onScreenProjectiles);
+  garbageCollectObjects(onScreenEnemies);
 };
 
 (() => {

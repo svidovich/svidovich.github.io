@@ -1,5 +1,11 @@
 export const name = "common";
 
+// For computing the distance between two points
+// A and B, each with a component x and a component y
+export const distance = (A, B) => {
+  return Math.sqrt(Math.pow(B.y - A.y, 2) + Math.pow(B.x - A.x, 2));
+};
+
 export const drawCircle = (canvasContext, x, y, r) => {
   canvasContext.beginPath();
   // void ctx.arc(x, y, radius, startAngle, endAngle [, counterclockwise]);
