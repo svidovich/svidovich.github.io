@@ -119,9 +119,13 @@ class Enemy extends Character {
     super(x, y, size, color, "down");
     this.target = target || null;
     this.speed = speed || 1;
-    setInterval(() => {
+    this.hunting = setInterval(() => {
       this.hunt();
     }, 60);
+
+    this.shooting = setInterval(() => {
+      characterShoot(this, onScreenEnemyProjectiles);
+    }, 1000);
   }
 
   moveBy(dx, dy) {
@@ -174,11 +178,12 @@ class Enemy extends Character {
 }
 
 class Projectile {
-  constructor(x, y, speed, direction) {
+  constructor(x, y, speed, direction, power) {
     this.x = x;
     this.y = y;
     this.direction = direction;
     this.speed = speed;
+    this.power = power || 1;
     this.createdTime = Date.now();
     this.queueDeletion = false;
 
@@ -205,10 +210,13 @@ class Projectile {
   }
 }
 
+// Handle these separately because ???
 const onScreenProjectiles = new Array();
-const playerShoot = (characterObject) => {
+const onScreenEnemyProjectiles = new Array();
+
+const characterShoot = (characterObject, projectilesArray) => {
   let readyToFire = true; // boolean
-  let currentProjectileCount = onScreenProjectiles.length;
+  let currentProjectileCount = projectilesArray.length;
   // Quick rev limiter for firing. We have a 'created at' timestamp on each of the
   // projectiles on-screen. Since each time we create a new projectile we 'push' to
   // the back of the array, the last element of the array will be the last projectile.
@@ -216,7 +224,7 @@ const playerShoot = (characterObject) => {
   // causes downstream to not make a new projectile.
   // This can only ever happen if there's a projectile on screen already!
   if (currentProjectileCount > 0) {
-    let lastProjectileTime = onScreenProjectiles[currentProjectileCount - 1].createdTime;
+    let lastProjectileTime = projectilesArray[currentProjectileCount - 1].createdTime;
     if (Date.now() - lastProjectileTime < minTimeBetweenPlayerProjectilesMS) {
       readyToFire = false;
     }
@@ -225,9 +233,12 @@ const playerShoot = (characterObject) => {
     let midpointdx = 5 * characterObject.size;
     let tipY = 9 * characterObject.size;
     const x = characterObject.coordinates.x + midpointdx;
-    const y = characterObject.coordinates.y - tipY;
-    let firedProjectile = new Projectile(x, y, projectileSpeed, "up");
-    onScreenProjectiles.push(firedProjectile);
+    const y =
+      characterObject.orientation === "up"
+        ? characterObject.coordinates.y - tipY
+        : characterObject.coordinates.y + tipY;
+    let firedProjectile = new Projectile(x, y, projectileSpeed, characterObject.orientation);
+    projectilesArray.push(firedProjectile);
   }
 };
 
@@ -253,7 +264,7 @@ const updateCharacterFromInput = (inputObject, characterObject) => {
 
 const fireLaz0rFromInput = (inputObject, characterObject) => {
   if (inputObject.shooting === true) {
-    playerShoot(characterObject);
+    characterShoot(characterObject, onScreenProjectiles);
   }
 };
 
@@ -301,6 +312,30 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
+const handleEnemyDeaths = (projectiles, enemies) => {
+  computeCollisions(projectiles, enemies);
+  enemies.forEach((enemy) => {
+    if (enemy.queueDeletion === true) {
+      clearInterval(enemy.hunting);
+      clearInterval(enemy.shooting);
+    }
+  });
+};
+
+const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
+  enemyProjectiles.forEach((projectile) => {
+    if (distance(projectile, playerCharacter.hitBoxDetails) <= playerCharacter.hitBoxDetails.size) {
+      projectile.queueDeletion;
+      garbageCollectObjects(enemyProjectiles);
+      playerHealth -= projectile.power;
+      console.log(`I'm hit! ${playerHealth} HP left.`);
+    }
+    if (playerHealth <= 0) {
+      console.log("Oh dear, you are dead!");
+    }
+  });
+};
+
 const playerInput = new Input();
 let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
 
@@ -334,7 +369,12 @@ const update = () => {
     drawCircle(canvasContext, element.x, element.y, projectileSize);
   });
 
-  computeCollisions(onScreenProjectiles, onScreenEnemies);
+  onScreenEnemyProjectiles.forEach((element) => {
+    drawCircle(canvasContext, element.x, element.y, projectileSize);
+  });
+
+  handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
+  handlePlayerHits(onScreenEnemyProjectiles, playerShip);
   garbageCollectObjects(onScreenProjectiles);
   garbageCollectObjects(onScreenEnemies);
 };
