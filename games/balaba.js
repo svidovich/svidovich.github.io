@@ -7,6 +7,8 @@ let canvasContext = canvas.getContext("2d");
 
 let playerHealth = 3;
 
+// Maybe this can get influenced by powerups?
+let minTimeBetweenPlayerProjectilesMS = 175;
 const projectileSpeed = 30;
 const projectileSize = 2;
 
@@ -71,10 +73,10 @@ class Input {
 }
 
 class Character {
-  constructor(x, y) {
+  constructor(x, y, size, color) {
     this.speed = 5;
-    this.size = 2;
-    this.color = "rgb(67, 179, 174)";
+    this.size = size || 2;
+    this.color = color || "rgb(67, 179, 174)";
     this.x = x;
     this.y = y || canvasHeight - 20;
   }
@@ -108,6 +110,7 @@ class Projectile {
     this.y = y;
     this.direction = direction;
     this.speed = speed;
+    this.createdTime = Date.now();
     this.queueDeletion = false;
 
     this.setInMotion();
@@ -135,13 +138,28 @@ class Projectile {
 
 const onScreenProjectiles = new Array();
 const playerShoot = (characterObject) => {
-  // This will need fixed lol.
-  let midpointdx = 5 * characterObject.size;
-  let tipY = 10 * characterObject.size;
-  const x = characterObject.coordinates.x + midpointdx;
-  const y = characterObject.coordinates.y - tipY;
-  let firedProjectile = new Projectile(x, y, projectileSpeed, "up");
-  onScreenProjectiles.push(firedProjectile);
+  let readyToFire = true; // boolean
+  let currentProjectileCount = onScreenProjectiles.length;
+  // Quick rev limiter for firing. We have a 'created at' timestamp on each of the
+  // projectiles on-screen. Since each time we create a new projectile we 'push' to
+  // the back of the array, the last element of the array will be the last projectile.
+  // If we've made a new projectile too recently, we set 'readyToFire' to false, which
+  // causes downstream to not make a new projectile.
+  // This can only ever happen if there's a projectile on screen already!
+  if (currentProjectileCount > 0) {
+    let lastProjectileTime = onScreenProjectiles[currentProjectileCount - 1].createdTime;
+    if (Date.now() - lastProjectileTime < minTimeBetweenPlayerProjectilesMS) {
+      readyToFire = false;
+    }
+  }
+  if (readyToFire === true) {
+    let midpointdx = 5 * characterObject.size;
+    let tipY = 10 * characterObject.size;
+    const x = characterObject.coordinates.x + midpointdx;
+    const y = characterObject.coordinates.y - tipY;
+    let firedProjectile = new Projectile(x, y, projectileSpeed, "up");
+    onScreenProjectiles.push(firedProjectile);
+  }
 };
 
 // The objects in the array need to have a 'queueDeletion' property
