@@ -114,6 +114,65 @@ class Character {
   }
 }
 
+class Enemy extends Character {
+  constructor(x, y, size, color, speed, target) {
+    super(x, y, size, color, "down");
+    this.target = target || null;
+    this.speed = speed || 1;
+    setInterval(() => {
+      this.hunt();
+    }, 60);
+  }
+
+  moveBy(dx, dy) {
+    let rightBoundary = 10 * this.size;
+    if (this.x + rightBoundary + dx <= canvasWidth && this.x + dx >= 0) {
+      this.x += dx;
+    }
+    this.y += dy;
+  }
+
+  hunt() {
+    if (this.target !== null) {
+      let targetHitBoxDetails = this.target.hitBoxDetails;
+      let selfHitBoxDetails = this.hitBoxDetails;
+      let targetX = targetHitBoxDetails.x;
+
+      // The target y value depends on the target's orientation
+      // -- we want to get as close as we can to the tip of the
+      // target's ship.
+      let targetY =
+        this.target.orientation === "up"
+          ? targetHitBoxDetails.y - targetHitBoxDetails.size
+          : targetHitBoxDetails.y + targetHitBoxDetails.size;
+
+      // Which way we're going depends on the our ship's orientation
+      // -- if we're facing up, then we need a different sign than
+      // if we were facing down.
+      let dySign = this.orientation === "up" ? -1 : 1;
+      let dx, dy;
+
+      // If we're close enough to see the whites of their eyes,
+      // we probably don't need to get any closer, ya?
+      if (Math.abs(selfHitBoxDetails.y - targetY) < 40) {
+        dy = 0;
+      } else {
+        dy = this.speed * dySign;
+      }
+      // Strafe until we're lined up with the target, then don't
+      // bother strafing anymore.
+      if (selfHitBoxDetails.x - targetX > 0) {
+        dx = -this.speed;
+      } else if (selfHitBoxDetails.x - targetX < 0) {
+        dx = this.speed;
+      } else if (selfHitBoxDetails.x - targetX === 0) {
+        dx = 0;
+      }
+      this.moveBy(dx, dy);
+    }
+  }
+}
+
 class Projectile {
   constructor(x, y, speed, direction) {
     this.x = x;
@@ -245,16 +304,16 @@ const computeCollisions = (projectiles, entities) => {
 const playerInput = new Input();
 let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
 
-let enemyShip = new Character(canvasWidth / 2, 100, 3, "red");
-let enemyShip0 = new Character(canvasWidth / 2, 200, 4, "blue", "down");
-let enemyShip1 = new Character(canvasWidth / 2, 300, 5, "green", "down");
-let enemyShip2 = new Character(canvasWidth / 2, 500, 6, "purple", "down");
+let enemyShip = new Enemy(canvasWidth / 2, 100, 3, "red", 2, playerShip);
+// let enemyShip0 = new Enemy(canvasWidth / 2, 200, 4, "blue");
+// let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
+// let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
 let onScreenEnemies = new Array();
 onScreenEnemies.push(enemyShip);
-onScreenEnemies.push(enemyShip0);
-onScreenEnemies.push(enemyShip1);
-onScreenEnemies.push(enemyShip2);
+// onScreenEnemies.push(enemyShip0);
+// onScreenEnemies.push(enemyShip1);
+// onScreenEnemies.push(enemyShip2);
 
 const update = () => {
   // clear the canvas
