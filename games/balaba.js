@@ -5,6 +5,8 @@ let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
 
+const SHOW_HITBOXES = false;
+const MAXIMUM_HEALTH = 100;
 let playerHealth = 100;
 
 // Maybe this can get influenced by powerups?
@@ -81,6 +83,7 @@ class Character {
     this.y = y || canvasHeight - 20;
     this.queueDeletion = false;
     this.orientation = orientation || "down";
+    this.health = 100;
   }
 
   set characterSpeed(newSpeed) {
@@ -229,7 +232,7 @@ class Projectile {
   setInMotion() {
     // I'm lifting some of this logic from what I've learned in the
     // bubbles game I made.
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       // If we've hit the top, we need to destroy ourselves.
 
       if (this.y >= canvasHeight || this.y <= 0) {
@@ -246,9 +249,99 @@ class Projectile {
   }
 }
 
+const PowerUpTypes = Object.freeze({
+  health: "health",
+  shield: "shield",
+  weapon: "weapon",
+});
+
+class PowerUp {
+  constructor(x, y, target) {
+    this.x = x;
+    this.y = y;
+    // Color and letter are how we decorate the powerup
+    // Have a default in case programmer forgets to add
+    // these to the inheriting classes ;)
+    this.color = "black";
+    this.letter = "P";
+    this.styleCenteringAdjustments = {
+      x: 0,
+      y: 7,
+    };
+    // Target is who we're applying our powerup to.
+    this.target = target;
+    this.queueDeletion = false;
+  }
+
+  // Powerups just slowly move down the screen. We _do not_
+  // call the set in motion in the constructor of PowerUp;
+  // that's the responsibility of a class that extends this
+  // one. This is effectively an abstract base class, which
+  // I _think_ are called mixins here, but we don't need to
+  // go that far, I don't think.
+  setInMotion() {
+    this.intervalId = setInterval(() => {
+      if (this.y >= canvasHeight) {
+        this.queueDeletion = true;
+      }
+      this.y += 2;
+    }, 40);
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+}
+
+class HeatlhPowerUp extends PowerUp {
+  constructor(x, y, target, strength) {
+    super(x, y, target);
+    this.strength = strength;
+    this.color = "red";
+    this.letter = "H";
+    this.styleCenteringAdjustments = {
+      x: -7,
+      y: 7,
+    };
+    this.setInMotion();
+  }
+
+  apply() {
+    if (this.target.health !== MAXIMUM_HEALTH) {
+      if (this.target.health + this.strength > MAXIMUM_HEALTH) {
+        this.target.health = MAXIMUM_HEALTH;
+      } else {
+        this.target.health += this.strength;
+      }
+    }
+  }
+}
+
+class WeaponPowerUp extends PowerUp {
+  constructor(x, y, target, strength) {
+    super(x, y, target);
+    this.strength = strength;
+    this.color = "green";
+    this.letter = "W";
+    this.styleCenteringAdjustments = {
+      x: -9,
+      y: 7,
+    };
+    this.setInMotion();
+  }
+
+  apply() {
+    console.log("???");
+  }
+}
+
 // Handle these separately because ???
 const onScreenProjectiles = new Array();
 const onScreenEnemyProjectiles = new Array();
+const onScreenPowerUps = new Array();
 
 const characterShoot = (characterObject, projectilesArray) => {
   let readyToFire = true; // boolean
@@ -336,6 +429,39 @@ const drawArrow = (canvasContext, x, y, facing, size, rgbString) => {
   canvasContext.lineWidth = oldWidth;
 };
 
+const drawPowerup = (canvasContext, powerUp) => {
+  // A powerup is essentially an NxN box around the coordinates of the
+  // powerup. The coordinates of the powerup are the centerpoint of that
+  // box. We need to do some extraction and calculation.
+  let startX = powerUp.coordinates.x;
+  let startY = powerUp.coordinates.y;
+
+  // Keep track of the old styles so we can restore them once we're done
+  // drawing the powerup itself
+  const oldStrokeStyle = canvasContext.strokeStyle;
+  const newStrokeStyle = powerUp.color;
+
+  canvasContext.strokeStyle = newStrokeStyle;
+  canvasContext.strokeRect(startX - 10, startY - 10, 20, 20);
+  canvasContext.strokeStyle = oldStrokeStyle;
+
+  const oldFont = canvasContext.font;
+  const newFont = "20px Arial";
+  const oldFillStyle = canvasContext.fillStyle;
+  const newFillStyle = powerUp.color;
+
+  canvasContext.font = newFont;
+  canvasContext.fillStyle = newFillStyle;
+  let powerUpCenteringAdjustments = powerUp.styleCenteringAdjustments;
+  canvasContext.fillText(
+    powerUp.letter,
+    startX + powerUpCenteringAdjustments.x,
+    startY + powerUpCenteringAdjustments.y
+  );
+  canvasContext.font = oldFont;
+  canvasContext.fillStyle = oldFillStyle;
+};
+
 const computeCollisions = (projectiles, entities) => {
   entities.forEach((entity) => {
     projectiles.forEach((projectile) => {
@@ -362,12 +488,24 @@ const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
     if (distance(projectile, playerCharacter.hitBoxDetails) <= playerCharacter.hitBoxDetails.size) {
       projectile.queueDeletion;
       garbageCollectObjects(enemyProjectiles);
-      playerHealth -= projectile.power;
-      console.log(`I'm hit! ${playerHealth} HP left.`);
+      playerCharacter.health -= projectile.power;
+      console.log(`I'm hit! ${playerCharacter.health} HP left.`);
     }
     if (playerHealth <= 0) {
       console.log("Oh dear, you are dead!");
     }
+  });
+};
+
+const handlePowerUps = (projectiles, powerUps) => {
+  powerUps.forEach((powerUp) => {
+    projectiles.forEach((projectile) => {
+      if (distance(projectile, powerUp) < 20) {
+        powerUp.queueDeletion = true;
+        projectile.queueDeletion = true;
+        powerUp.apply();
+      }
+    });
   });
 };
 
@@ -381,6 +519,10 @@ let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
 // let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
+let fancyHealthPowerup = new HeatlhPowerUp(100, 30, playerShip, 50);
+let fancyWeaponPowerup = new WeaponPowerUp(400, 50, playerShip, 10);
+onScreenPowerUps.push(fancyHealthPowerup);
+onScreenPowerUps.push(fancyWeaponPowerup);
 let onScreenEnemies = new Array();
 onScreenEnemies.push(enemyShip);
 onScreenEnemies.push(enemySupport);
@@ -393,11 +535,14 @@ const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
   // Get the player's current location
   updateCharacterFromInput(playerInput, playerShip);
-
-  drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
+  if (SHOW_HITBOXES === true) {
+    drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
+  }
 
   onScreenEnemies.forEach((enemy) => {
-    drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+    if (SHOW_HITBOXES === true) {
+      drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+    }
     drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
   });
   // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
@@ -411,10 +556,16 @@ const update = () => {
     drawCircle(canvasContext, element.x, element.y, projectileSize);
   });
 
+  onScreenPowerUps.forEach((powerUp) => {
+    drawPowerup(canvasContext, powerUp);
+  });
+
   handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
   handlePlayerHits(onScreenEnemyProjectiles, playerShip);
-  garbageCollectObjects(onScreenProjectiles);
-  garbageCollectObjects(onScreenEnemies);
+  handlePowerUps(onScreenProjectiles, onScreenPowerUps);
+  [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
+    garbageCollectObjects(garbageCollectibleArray);
+  });
 };
 
 (() => {

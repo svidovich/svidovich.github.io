@@ -28,6 +28,7 @@ export const drawRandomColoredCircle = (canvasContext, x, y, r) => {
 // that describe the coordinate of the top left corner and the
 // bottom right corners of the rectange respectively
 export const drawRectangle = (canvasContext, start, finish) => {
+  // Note that it's not start -> destination, it's start and size
   canvasContext.strokeRect(start.x, start.y, finish.x - start.x, finish.y - start.y);
 };
 
