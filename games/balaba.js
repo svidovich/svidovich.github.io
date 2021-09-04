@@ -13,6 +13,7 @@ let playerHealth = 100;
 let minTimeBetweenPlayerProjectilesMS = 175;
 const projectileSpeed = 30;
 const projectileSize = 2;
+let score = 0;
 
 const InputKeys = {
   A: 65, // left!
@@ -118,9 +119,10 @@ class Character {
 }
 
 class Enemy extends Character {
-  constructor(x, y, size, color, speed) {
+  constructor(x, y, size, color, speed, points) {
     super(x, y, size, color, "down");
     this.speed = speed || 1;
+    this.points = points || 10;
   }
 
   moveBy(dx, dy) {
@@ -135,7 +137,7 @@ class Enemy extends Character {
 // The type of enemy that'll follow you into the grave.
 class Hunter extends Enemy {
   constructor(x, y, size, color, target) {
-    super(x, y, size, color);
+    super(x, y, size, color, 1, 100);
 
     this.target = target || null;
 
@@ -192,7 +194,7 @@ class Hunter extends Enemy {
 // bullets out there is important.
 class Support extends Enemy {
   constructor(x, y, size, color, speed) {
-    super(x, y, size, color);
+    super(x, y, size, color, 1, 50);
 
     this.speed = speed || 1;
     this.strafeSign = 1;
@@ -248,12 +250,6 @@ class Projectile {
     }, 50);
   }
 }
-
-const PowerUpTypes = Object.freeze({
-  health: "health",
-  shield: "shield",
-  weapon: "weapon",
-});
 
 class PowerUp {
   constructor(x, y, target) {
@@ -484,6 +480,7 @@ const handleEnemyDeaths = (projectiles, enemies) => {
     if (enemy.queueDeletion === true) {
       clearInterval(enemy.hunting);
       clearInterval(enemy.shooting);
+      score += enemy.points;
     }
   });
 };
@@ -514,6 +511,12 @@ const handlePowerUps = (projectiles, powerUps) => {
   });
 };
 
+const drawStatusBar = (canvasContext, playerCharacter) => {
+  canvasContext.strokeRect(0, 0, canvasWidth, 50);
+  canvasContext.fillText(`Score: ${score}`, 20, 25);
+  canvasContext.fillText(`Health: ${playerCharacter.health}`, 20, 35);
+};
+
 const playerInput = new Input();
 let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
 
@@ -538,6 +541,8 @@ onScreenEnemies.push(enemySupport);
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  // Draw the status bar ( amazing, I know )
+  drawStatusBar(canvasContext, playerShip);
   // Get the player's current location
   updateCharacterFromInput(playerInput, playerShip);
   if (SHOW_HITBOXES === true) {
