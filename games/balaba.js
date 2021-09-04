@@ -514,7 +514,32 @@ const handlePowerUps = (projectiles, powerUps) => {
 const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.strokeRect(0, 0, canvasWidth, 50);
   canvasContext.fillText(`Score: ${score}`, 20, 25);
-  canvasContext.fillText(`Health: ${playerCharacter.health}`, 20, 35);
+
+  const oldFillStyle = canvasContext.fillStyle;
+  let healthBarXLocation = 20;
+  let healthBarYLocation = 35;
+  let healthBarHeight = 10;
+  // Lots of handling for negatives here. In short, we don't really want to have a health bar
+  // that stretches backward or does dumb stuff if the player's health goes below zero. Now,
+  // because future me is an OK programmer, player's health _shouldn't_ go below zero, but...
+  // no less, let's uh. Make sure. Just to be sure.
+  canvasContext.fillStyle = "green";
+  canvasContext.fillRect(
+    healthBarXLocation,
+    healthBarYLocation,
+    playerCharacter.health >= 0 ? playerCharacter.health : 0,
+    healthBarHeight
+  );
+  canvasContext.fillStyle = "red";
+  // The red part of the health bar should signify remaining health. Thus, place it right at the end of
+  // the green part, and give it a length equal to MAXIMUM_HEALTH - currentHealth
+  const redBarXLocation =
+    playerCharacter.health >= 0
+      ? healthBarXLocation + MAXIMUM_HEALTH - (MAXIMUM_HEALTH - playerCharacter.health)
+      : healthBarXLocation;
+  const redBarWidth = playerCharacter.health >= 0 ? MAXIMUM_HEALTH - playerCharacter.health : MAXIMUM_HEALTH;
+  canvasContext.fillRect(redBarXLocation, healthBarYLocation, redBarWidth, healthBarHeight);
+  canvasContext.fillStyle = oldFillStyle;
 };
 
 const playerInput = new Input();
