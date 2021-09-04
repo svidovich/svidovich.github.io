@@ -5,7 +5,7 @@ let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
 
-let playerHealth = 3;
+let playerHealth = 100;
 
 // Maybe this can get influenced by powerups?
 let minTimeBetweenPlayerProjectilesMS = 175;
@@ -115,17 +115,9 @@ class Character {
 }
 
 class Enemy extends Character {
-  constructor(x, y, size, color, speed, target) {
+  constructor(x, y, size, color, speed) {
     super(x, y, size, color, "down");
-    this.target = target || null;
     this.speed = speed || 1;
-    this.hunting = setInterval(() => {
-      this.hunt();
-    }, 60);
-
-    this.shooting = setInterval(() => {
-      characterShoot(this, onScreenEnemyProjectiles);
-    }, 1000);
   }
 
   moveBy(dx, dy) {
@@ -135,7 +127,23 @@ class Enemy extends Character {
     }
     this.y += dy;
   }
+}
 
+// The type of enemy that'll follow you into the grave.
+class Hunter extends Enemy {
+  constructor(x, y, size, color, target) {
+    super(x, y, size, color);
+
+    this.target = target || null;
+
+    this.hunting = setInterval(() => {
+      this.hunt();
+    }, 60);
+
+    this.shooting = setInterval(() => {
+      characterShoot(this, onScreenEnemyProjectiles);
+    }, 1000);
+  }
   hunt() {
     if (this.target !== null) {
       let targetHitBoxDetails = this.target.hitBoxDetails;
@@ -174,6 +182,34 @@ class Enemy extends Character {
       }
       this.moveBy(dx, dy);
     }
+  }
+}
+
+// The type of enemy that knows that sometimes getting
+// bullets out there is important.
+class Support extends Enemy {
+  constructor(x, y, size, color, speed) {
+    super(x, y, size, color);
+
+    this.speed = speed || 1;
+    this.strafeSign = 1;
+    this.strafing = setInterval(() => {
+      this.strafe();
+    }, 40);
+
+    this.shooting = setInterval(() => {
+      characterShoot(this, onScreenEnemyProjectiles);
+    }, 3000);
+  }
+  strafe() {
+    let centerLineX = this.hitBoxDetails.x;
+    if (canvasWidth - centerLineX < 75) {
+      this.strafeSign = -1;
+    }
+    if (centerLineX < 75) {
+      this.strafeSign = 1;
+    }
+    this.moveBy(this.speed * this.strafeSign, 0);
   }
 }
 
@@ -306,7 +342,6 @@ const computeCollisions = (projectiles, entities) => {
       if (distance(projectile, entity.hitBoxDetails) <= entity.hitBoxDetails.size) {
         projectile.queueDeletion = true;
         entity.queueDeletion = true;
-        // gameScore += 1;
       }
     });
   });
@@ -339,13 +374,16 @@ const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
 const playerInput = new Input();
 let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
 
-let enemyShip = new Enemy(canvasWidth / 2, 100, 3, "red", 2, playerShip);
+let enemyShip = new Hunter(canvasWidth / 2, 100, 3, "red", playerShip);
+// constructor(x, y, size, color, speed
+let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
 // let enemyShip0 = new Enemy(canvasWidth / 2, 200, 4, "blue");
 // let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
 let onScreenEnemies = new Array();
 onScreenEnemies.push(enemyShip);
+onScreenEnemies.push(enemySupport);
 // onScreenEnemies.push(enemyShip0);
 // onScreenEnemies.push(enemyShip1);
 // onScreenEnemies.push(enemyShip2);
