@@ -321,9 +321,11 @@ class HeatlhPowerUp extends PowerUp {
 }
 
 class WeaponPowerUp extends PowerUp {
-  constructor(x, y, target, strength) {
+  constructor(x, y, target, strength, duration) {
     super(x, y, target);
     this.strength = strength;
+    // ! Must be in MS !
+    this.duration = duration;
     this.color = "green";
     this.letter = "W";
     this.styleCenteringAdjustments = {
@@ -334,7 +336,10 @@ class WeaponPowerUp extends PowerUp {
   }
 
   apply() {
-    console.log("???");
+    minTimeBetweenPlayerProjectilesMS -= this.strength;
+    setTimeout(() => {
+      minTimeBetweenPlayerProjectilesMS += this.strength;
+    }, this.duration);
   }
 }
 
@@ -520,7 +525,7 @@ let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
 let fancyHealthPowerup = new HeatlhPowerUp(100, 30, playerShip, 50);
-let fancyWeaponPowerup = new WeaponPowerUp(400, 50, playerShip, 10);
+let fancyWeaponPowerup = new WeaponPowerUp(400, 50, playerShip, 50, 10000);
 onScreenPowerUps.push(fancyHealthPowerup);
 onScreenPowerUps.push(fancyWeaponPowerup);
 let onScreenEnemies = new Array();
