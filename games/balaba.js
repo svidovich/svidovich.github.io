@@ -11,6 +11,7 @@ let canvasContext = canvas.getContext("2d");
 
 // Maybe this can get influenced by powerups?
 let minTimeBetweenPlayerProjectilesMS = 175;
+let weaponPowerUpIsActive = false;
 const projectileSpeed = 30;
 const projectileSize = 2;
 let score = 0;
@@ -364,11 +365,19 @@ class WeaponPowerUp extends PowerUp {
 
   apply() {
     minTimeBetweenPlayerProjectilesMS -= this.strength;
+    weaponPowerUpIsActive = true;
     setTimeout(() => {
       minTimeBetweenPlayerProjectilesMS += this.strength;
+      weaponPowerUpIsActive = false;
     }, this.duration);
   }
 }
+
+const PowerUpTypes = Object.freeze({
+  health: "health",
+  shield: "shield",
+  weapon: "weapon",
+});
 
 // Handle these separately because ???
 const onScreenProjectiles = new Array();
@@ -577,6 +586,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.fillText(`Score: ${score}`, 20, 30);
 
   const oldFillStyle = canvasContext.fillStyle;
+  const oldStrokeStyle = canvasContext.strokeStyle;
   let healthBarYLocation = 20;
   let healthBarHeight = 10;
 
@@ -590,6 +600,13 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   let shieldBarYLocation = healthBarYLocation + 15;
   let shieldBarTextLocationX = shieldBarXLocation - 90;
   let shieldBarTextLocationY = shieldBarYLocation + 8;
+
+  if (weaponPowerUpIsActive === true) {
+    canvasContext.strokeStyle = "green";
+    canvasContext.fillStyle = "green";
+    canvasContext.strokeRect(canvasWidth - 50, 20, 20, 20);
+    canvasContext.fillText("W", canvasWidth - 45, 35);
+  }
 
   canvasContext.fillText(
     `Health: ${playerCharacter.health} / ${MAXIMUM_HEALTH}`,
