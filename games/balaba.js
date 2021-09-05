@@ -1,13 +1,13 @@
 import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
 
+const SHOW_HITBOXES = false;
+const MAXIMUM_HEALTH = 100;
+const MAXIMUM_SHIELD = 50;
+
 let canvas = document.getElementById("mainCanvas");
 let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
-
-const SHOW_HITBOXES = false;
-const MAXIMUM_HEALTH = 100;
-let playerHealth = 100;
 
 // Maybe this can get influenced by powerups?
 let minTimeBetweenPlayerProjectilesMS = 175;
@@ -84,7 +84,6 @@ class Character {
     this.y = y || canvasHeight - 20;
     this.queueDeletion = false;
     this.orientation = orientation || "down";
-    this.health = 100;
   }
 
   set characterSpeed(newSpeed) {
@@ -131,6 +130,14 @@ class Enemy extends Character {
       this.x += dx;
     }
     this.y += dy;
+  }
+}
+
+class Player extends Character {
+  constructor(x, y, size, color, orientation) {
+    super(x, y, size, color, orientation);
+    this.health = 100;
+    this.shield = 0;
   }
 }
 
@@ -316,6 +323,30 @@ class HeatlhPowerUp extends PowerUp {
   }
 }
 
+class ShieldPowerUp extends PowerUp {
+  constructor(x, y, target, strength) {
+    super(x, y, target);
+    this.strength = strength;
+    this.color = "blue";
+    this.letter = "S";
+    this.styleCenteringAdjustments = {
+      x: -7,
+      y: 7,
+    };
+    this.setInMotion();
+  }
+
+  apply() {
+    if (this.target.shield !== MAXIMUM_SHIELD) {
+      if (this.target.shield + this.strength > MAXIMUM_SHIELD) {
+        this.target.shield = MAXIMUM_SHIELD;
+      } else {
+        this.target.shield += this.strength;
+      }
+    }
+  }
+}
+
 class WeaponPowerUp extends PowerUp {
   constructor(x, y, target, strength, duration) {
     super(x, y, target);
@@ -490,14 +521,40 @@ const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
     if (distance(projectile, playerCharacter.hitBoxDetails) <= playerCharacter.hitBoxDetails.size) {
       projectile.queueDeletion;
       garbageCollectObjects(enemyProjectiles);
-      if (playerCharacter.health - projectile.power < 0) {
+      let availableDamage = projectile.power;
+      let leftOverdamage;
+      // If we have some shield left,
+      if (playerCharacter.shield > 0) {
+        // Check to see if we would over-kill the shield.
+        if (playerCharacter.shield - availableDamage < 0) {
+          // If so, we should get the remainder of over-killing the shield,
+          leftOverdamage = Math.abs(playerCharacter.shield - availableDamage);
+          // Then compute the damage to the shield as that damage which would
+          // reduce the shield to exactly zero.
+          let shieldDamage = availableDamage - leftOverdamage;
+          // Damage the shield,
+          playerCharacter.shield -= shieldDamage;
+          // then re-set availableDamage.
+          availableDamage = leftOverdamage;
+        } else {
+          // If not, just deal damage to the shield.
+          playerCharacter.shield -= availableDamage;
+          availableDamage = 0;
+        }
+      }
+      // By this time, availableDamage is either just projectile.power,
+      // or it's some reduced amount because our shield has been over-
+      // kiled. Either way, we should check if this projectile will over-
+      // kill us.
+      if (playerCharacter.health - availableDamage < 0) {
+        // If so, just kill us.
         playerCharacter.health = 0;
       } else {
-        playerCharacter.health -= projectile.power;
+        // otherwise, damage us normally.
+        playerCharacter.health -= availableDamage;
       }
-      console.log(`I'm hit! ${playerCharacter.health} HP left.`);
     }
-    if (playerHealth <= 0) {
+    if (playerCharacter.health <= 0) {
       console.log("Oh dear, you are dead!");
     }
   });
@@ -517,12 +574,33 @@ const handlePowerUps = (projectiles, powerUps) => {
 
 const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.strokeRect(0, 0, canvasWidth, 50);
-  canvasContext.fillText(`Score: ${score}`, 20, 25);
+  canvasContext.fillText(`Score: ${score}`, 20, 30);
 
   const oldFillStyle = canvasContext.fillStyle;
-  let healthBarXLocation = 20;
-  let healthBarYLocation = 35;
+  let healthBarYLocation = 20;
   let healthBarHeight = 10;
+
+  let healthBarXLocation = canvasWidth - 200;
+  let healthBarTextLocationX = healthBarXLocation - 90;
+  let healthBarTextLocationY = healthBarYLocation + 8;
+
+  // Deciding to tie the shield bar and the health bar together. Good idea?
+  // Who knows. Remains to be seen.
+  let shieldBarXLocation = healthBarXLocation;
+  let shieldBarYLocation = healthBarYLocation + 15;
+  let shieldBarTextLocationX = shieldBarXLocation - 90;
+  let shieldBarTextLocationY = shieldBarYLocation + 8;
+
+  canvasContext.fillText(
+    `Health: ${playerCharacter.health} / ${MAXIMUM_HEALTH}`,
+    healthBarTextLocationX,
+    healthBarTextLocationY
+  );
+  canvasContext.fillText(
+    `Health: ${playerCharacter.shield} / ${MAXIMUM_SHIELD}`,
+    shieldBarTextLocationX,
+    shieldBarTextLocationY
+  );
   // Lots of handling for negatives here. In short, we don't really want to have a health bar
   // that stretches backward or does dumb stuff if the player's health goes below zero. Now,
   // because future me is an OK programmer, player's health _shouldn't_ go below zero, but...
@@ -543,11 +621,15 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
       : healthBarXLocation;
   const redBarWidth = playerCharacter.health >= 0 ? MAXIMUM_HEALTH - playerCharacter.health : MAXIMUM_HEALTH;
   canvasContext.fillRect(redBarXLocation, healthBarYLocation, redBarWidth, healthBarHeight);
+
+  canvasContext.fillStyle = "blue";
+  // Note: anti-patternly setting the height of the shield bar to be the size of the health bar
+  canvasContext.fillRect(shieldBarXLocation, shieldBarYLocation, playerCharacter.shield, healthBarHeight);
   canvasContext.fillStyle = oldFillStyle;
 };
 
 const playerInput = new Input();
-let playerShip = new Character(canvasWidth / 2, undefined, 3, undefined, "up");
+let playerShip = new Player(canvasWidth / 2, undefined, 3, undefined, "up");
 
 let enemyShip = new Hunter(canvasWidth / 2, 100, 3, "red", playerShip);
 // constructor(x, y, size, color, speed
@@ -556,10 +638,12 @@ let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
 // let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
-let fancyHealthPowerup = new HeatlhPowerUp(100, 30, playerShip, 50);
-let fancyWeaponPowerup = new WeaponPowerUp(400, 50, playerShip, 50, 10000);
+let fancyHealthPowerup = new HeatlhPowerUp(100, 70, playerShip, 50);
+let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
+let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
 onScreenPowerUps.push(fancyHealthPowerup);
 onScreenPowerUps.push(fancyWeaponPowerup);
+onScreenPowerUps.push(fancyShieldPowerup);
 let onScreenEnemies = new Array();
 onScreenEnemies.push(enemyShip);
 onScreenEnemies.push(enemySupport);
