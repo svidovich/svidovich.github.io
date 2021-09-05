@@ -490,7 +490,11 @@ const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
     if (distance(projectile, playerCharacter.hitBoxDetails) <= playerCharacter.hitBoxDetails.size) {
       projectile.queueDeletion;
       garbageCollectObjects(enemyProjectiles);
-      playerCharacter.health -= projectile.power;
+      if (playerCharacter.health - projectile.power < 0) {
+        playerCharacter.health = 0;
+      } else {
+        playerCharacter.health -= projectile.power;
+      }
       console.log(`I'm hit! ${playerCharacter.health} HP left.`);
     }
     if (playerHealth <= 0) {
