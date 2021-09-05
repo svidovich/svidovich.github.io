@@ -1,20 +1,26 @@
-import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "./common.js";
+import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "../common.js";
 
 const SHOW_HITBOXES = false;
 const MAXIMUM_HEALTH = 100;
 const MAXIMUM_SHIELD = 50;
 
 let canvas = document.getElementById("mainCanvas");
-let canvasHeight = canvas.height;
-let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
+// Define these globally so I can access them
+// between modules & business logic
+const canvasHeight = canvas.height;
+const canvasWidth = canvas.width;
 
 const initialPlayerProjectileInterval = 175;
 let minTimeBetweenPlayerProjectilesMS = 175;
 let weaponPowerUpIsActive = false;
-const projectileSpeed = 30;
-const projectileSize = 2;
+let projectileSpeed = 30;
+let projectileSize = 2;
 let score = 0;
+
+let onScreenProjectiles = new Array();
+let onScreenEnemyProjectiles = new Array();
+let onScreenPowerUps = new Array();
 
 const InputKeys = {
   A: 65, // left!
@@ -82,7 +88,7 @@ class Character {
     this.size = size || 2;
     this.color = color || "rgb(67, 179, 174)";
     this.x = x;
-    this.y = y || canvasHeight - 20;
+    this.y = y;
     this.queueDeletion = false;
     this.orientation = orientation || "down";
   }
@@ -210,9 +216,9 @@ class Support extends Enemy {
       this.strafe();
     }, 40);
 
-    this.shooting = setInterval(() => {
+    this.shooting = window.requestAnimationFrame(() => {
       characterShoot(this, onScreenEnemyProjectiles);
-    }, 3000);
+    });
   }
   strafe() {
     let centerLineX = this.hitBoxDetails.x;
@@ -226,39 +232,7 @@ class Support extends Enemy {
   }
 }
 
-class Projectile {
-  constructor(x, y, speed, direction, power) {
-    this.x = x;
-    this.y = y;
-    this.direction = direction;
-    this.speed = speed;
-    this.power = power || 1;
-    this.createdTime = Date.now();
-    this.queueDeletion = false;
-
-    this.setInMotion();
-  }
-
-  setInMotion() {
-    // I'm lifting some of this logic from what I've learned in the
-    // bubbles game I made.
-    this.intervalId = setInterval(() => {
-      // If we've hit the top, we need to destroy ourselves.
-
-      if (this.y >= canvasHeight || this.y <= 0) {
-        this.queueDeletion = true;
-      }
-      if (this.direction === "up") {
-        this.y -= this.speed;
-      } else if (this.direction === "down") {
-        this.y += this.speed;
-      } else {
-        throw new Error(`${this.direction} is not a valid direction.`);
-      }
-    }, 50);
-  }
-}
-
+// Base class for powerups
 class PowerUp {
   constructor(x, y, target) {
     this.x = x;
@@ -300,7 +274,40 @@ class PowerUp {
   }
 }
 
-class HeatlhPowerUp extends PowerUp {
+class Projectile {
+  constructor(x, y, speed, direction, power) {
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
+    this.speed = speed;
+    this.power = power || 1;
+    this.createdTime = Date.now();
+    this.queueDeletion = false;
+
+    this.setInMotion();
+  }
+
+  setInMotion() {
+    // I'm lifting some of this logic from what I've learned in the
+    // bubbles game I made.
+    this.intervalId = setInterval(() => {
+      // If we've hit the top, we need to destroy ourselves.
+
+      if (this.y >= canvasHeight || this.y <= 0) {
+        this.queueDeletion = true;
+      }
+      if (this.direction === "up") {
+        this.y -= this.speed;
+      } else if (this.direction === "down") {
+        this.y += this.speed;
+      } else {
+        throw new Error(`${this.direction} is not a valid direction.`);
+      }
+    }, 50);
+  }
+}
+
+class HealthPowerUp extends PowerUp {
   constructor(x, y, target, strength) {
     super(x, y, target);
     this.strength = strength;
@@ -379,10 +386,14 @@ const PowerUpTypes = Object.freeze({
   weapon: "weapon",
 });
 
-// Handle these separately because ???
-const onScreenProjectiles = new Array();
-const onScreenEnemyProjectiles = new Array();
-const onScreenPowerUps = new Array();
+///////////////////////////////////////////
+//
+/// Global Player Ship Definition
+//
+//////////
+
+const playerInput = new Input();
+let playerShip = new Player(canvasWidth / 2, canvasHeight - 20, 3, undefined, "up");
 
 const characterShoot = (characterObject, projectilesArray) => {
   let readyToFire = true; // boolean
@@ -514,14 +525,14 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
-// let fancyHealthPowerup = new HeatlhPowerUp(100, 70, playerShip, 50);
+// let fancyHealthPowerup = new HealthPowerUp(100, 70, playerShip, 50);
 // let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
 // let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
 
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
   if (100 - RNG > 90) {
-    return new HeatlhPowerUp(x, y, target, strength);
+    return new HealthPowerUp(x, y, target, strength);
   } else if (100 - RNG > 85) {
     return new ShieldPowerUp(x, y, target, strength);
   } else if (100 - RNG > 80) {
@@ -668,8 +679,94 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.fillStyle = oldFillStyle;
 };
 
-const playerInput = new Input();
-let playerShip = new Player(canvasWidth / 2, undefined, 3, undefined, "up");
+////////////////////////////////////////////
+// Staging Stuff
+////////////////////////////////////\\\/////
+const generateEnemy = (enemyDetails) => {
+  let enemyX = enemyDetails.x ? enemyDetails.x : canvasWidth / 2;
+  let enemyY = enemyDetails.y ? enemyDetails.y : 100;
+
+  if (enemyDetails.enemyType === "hunter") {
+    return new Hunter(enemyX, enemyY, 3, "red", playerShip);
+  } else if (enemyDetails.enemyType == "support") {
+    return new Support(enemyX, enemyY, 3, "red", 3);
+  }
+};
+
+const generateStage = (id) => {
+  return {
+    id: id,
+    substages: [],
+  };
+};
+
+const generateIncompleteSubStage = () => {
+  return {
+    enemies: [],
+  };
+};
+
+const serializeEnemyDetails = (enemyType, enemyX, enemyY) => {
+  return {
+    enemyType: enemyType,
+    x: enemyX,
+    y: enemyY,
+  };
+};
+
+const addSubStageToStage = (stage, incompleteSubStage) => {
+  const subStageID = stage.substages.length + 1;
+  stage.substages.push({
+    id: subStageID,
+    ...incompleteSubStage,
+  });
+};
+
+const addEnemyToSubStageFromArray = (arrayOfSimpleEnemyDetails, subStage) => {
+  arrayOfSimpleEnemyDetails.forEach((simpleEnemyDetails) => {
+    subStage.enemies.push(generateEnemy(serializeEnemyDetails(...simpleEnemyDetails)));
+  });
+};
+
+let stages = new Array();
+
+// let stage1 = generateStage();
+// let subStage1_1 = generateIncompleteSubStage();
+// addEnemyToSubStageFromArray(
+//   [
+//     ["hunter", 100, 200],
+//     ["support", 200, 300],
+//   ],
+//   subStage1_1
+// );
+
+// let subStage1_2 = generateIncompleteSubStage();
+// addEnemyToSubStageFromArray(
+//   [
+//     ["hunter", 100, 200],
+//     ["hunter", 300, 200],
+//   ],
+//   subStage1_2
+// );
+
+// let subStage1_3 = generateIncompleteSubStage();
+// addEnemyToSubStageFromArray(
+//   [
+//     ["hunter", 100, 200],
+//     ["hunter", 300, 200],
+//     ["support", 100, 150],
+//     ["support", 125, 175],
+//     ["support", 150, 200],
+//     ["support", 175, 225],
+//   ],
+//   subStage1_3
+// );
+
+// [subStage1_1, subStage1_2, subStage1_3].forEach((subStage) => {
+//   addSubStageToStage(stage1, subStage);
+// });
+
+// stages.push(stage1);
 
 let enemyShip = new Hunter(canvasWidth / 2, 100, 3, "red", playerShip);
 // constructor(x, y, size, color, speed
@@ -682,7 +779,7 @@ let enemySupport2 = new Support(canvasWidth / 2, 150, 3, "red", 3);
 // let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
 
-let fancyHealthPowerup = new HeatlhPowerUp(100, 70, playerShip, 50);
+let fancyHealthPowerup = new HealthPowerUp(100, 70, playerShip, 50);
 let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
 let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
 onScreenPowerUps.push(fancyHealthPowerup);
