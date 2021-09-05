@@ -9,7 +9,7 @@ let canvasHeight = canvas.height;
 let canvasWidth = canvas.width;
 let canvasContext = canvas.getContext("2d");
 
-// Maybe this can get influenced by powerups?
+const initialPlayerProjectileInterval = 175;
 let minTimeBetweenPlayerProjectilesMS = 175;
 let weaponPowerUpIsActive = false;
 const projectileSpeed = 30;
@@ -514,12 +514,33 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
+// let fancyHealthPowerup = new HeatlhPowerUp(100, 70, playerShip, 50);
+// let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
+// let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
+
+const rngPowerUpGenerator = (x, y, target, strength) => {
+  const RNG = randomInt(1, 100);
+  if (100 - RNG > 90) {
+    return new HeatlhPowerUp(x, y, target, strength);
+  } else if (100 - RNG > 85) {
+    return new ShieldPowerUp(x, y, target, strength);
+  } else if (100 - RNG > 80) {
+    return new WeaponPowerUp(x, y, target, 50, 100000);
+  } else {
+    return null;
+  }
+};
+
 const handleEnemyDeaths = (projectiles, enemies) => {
   computeCollisions(projectiles, enemies);
   enemies.forEach((enemy) => {
     if (enemy.queueDeletion === true) {
       clearInterval(enemy.hunting);
       clearInterval(enemy.shooting);
+      const enemyDeathPowerUpReward = rngPowerUpGenerator(enemy.x, enemy.y, playerShip, randomInt(10, 25));
+      if (enemyDeathPowerUpReward !== null) {
+        onScreenPowerUps.push(enemyDeathPowerUpReward);
+      }
       score += enemy.points;
     }
   });
@@ -606,6 +627,8 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     canvasContext.fillStyle = "green";
     canvasContext.strokeRect(canvasWidth - 50, 20, 20, 20);
     canvasContext.fillText("W", canvasWidth - 45, 35);
+    canvasContext.strokeStyle = oldStrokeStyle;
+    canvasContext.fillStyle = oldFillStyle;
   }
 
   canvasContext.fillText(
@@ -651,6 +674,10 @@ let playerShip = new Player(canvasWidth / 2, undefined, 3, undefined, "up");
 let enemyShip = new Hunter(canvasWidth / 2, 100, 3, "red", playerShip);
 // constructor(x, y, size, color, speed
 let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
+let enemySupport0 = new Support(canvasWidth / 2 + 50, 100, 3, "red", 3);
+let enemySupport1 = new Support(canvasWidth / 2 - 50, 125, 3, "red", 3);
+let enemySupport2 = new Support(canvasWidth / 2, 150, 3, "red", 3);
+
 // let enemyShip0 = new Enemy(canvasWidth / 2, 200, 4, "blue");
 // let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
 // let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
@@ -664,6 +691,9 @@ onScreenPowerUps.push(fancyShieldPowerup);
 let onScreenEnemies = new Array();
 onScreenEnemies.push(enemyShip);
 onScreenEnemies.push(enemySupport);
+onScreenEnemies.push(enemySupport0);
+onScreenEnemies.push(enemySupport1);
+onScreenEnemies.push(enemySupport2);
 // onScreenEnemies.push(enemyShip0);
 // onScreenEnemies.push(enemyShip1);
 // onScreenEnemies.push(enemyShip2);
@@ -706,6 +736,10 @@ const update = () => {
   [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
     garbageCollectObjects(garbageCollectibleArray);
   });
+  // In case we hit some goofy race condition, let's always try to reset the weapons.
+  if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
+    minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+  }
 };
 
 (() => {
