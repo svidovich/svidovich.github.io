@@ -18,6 +18,7 @@ let projectileSpeed = 30;
 let projectileSize = 2;
 let score = 0;
 
+let deathCondition = false;
 let victoryCondition = false;
 
 let onScreenEnemies = new Array();
@@ -166,7 +167,7 @@ class Hunter extends Enemy {
 
     this.shooting = setInterval(() => {
       characterShoot(this, onScreenEnemyProjectiles);
-    }, 1000);
+    }, 250);
   }
   hunt() {
     if (this.target !== null) {
@@ -223,7 +224,7 @@ class Support extends Enemy {
 
     this.shooting = setInterval(() => {
       characterShoot(this, onScreenEnemyProjectiles);
-    }, 3000);
+    }, 1000);
   }
   strafe() {
     let centerLineX = this.hitBoxDetails.x;
@@ -597,7 +598,7 @@ const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
       }
     }
     if (playerCharacter.health <= 0) {
-      console.log("Oh dear, you are dead!");
+      deathCondition = true;
     }
   });
 };
@@ -614,15 +615,22 @@ const handlePowerUps = (projectiles, powerUps) => {
   });
 };
 
-const drawVictoryBanner = (canvasContext) => {
+const drawFinalBanner = (canvasContext, message) => {
   let oldFillStyle = canvasContext.fillStyle;
   let oldFont = canvasContext.font;
   canvasContext.font = "50px Courier";
   canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
-  let message = "YOU WIN!";
   canvasContext.fillText(message, canvasWidth / 2 - 100, canvasHeight / 2);
   canvasContext.fillStyle = oldFillStyle;
   canvasContext.font = oldFont;
+};
+
+const drawVictoryBanner = (canvasContext) => {
+  drawFinalBanner(canvasContext, "YOU WIN!");
+};
+
+const drawDeathBanner = (canvasContext) => {
+  drawFinalBanner(canvasContext, "YOU DIED!");
 };
 
 ////////////////////////////////////////////
@@ -791,7 +799,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  if (victoryCondition === false) {
+  if (victoryCondition === false && deathCondition === false) {
     let stageKeys = Object.keys(gamePlayStages);
     handleStage(currentStage);
 
@@ -842,7 +850,12 @@ const update = () => {
       minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
     }
   } else {
-    drawVictoryBanner(canvasContext);
+    if (victoryCondition === true) {
+      drawVictoryBanner(canvasContext);
+    }
+    if (deathCondition === true) {
+      drawDeathBanner(canvasContext);
+    }
   }
 };
 
