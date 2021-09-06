@@ -111,6 +111,8 @@ class Character {
   get hitBoxDetails() {
     return {
       x: this.x + 5 * this.size,
+      // The hitbox for a character is a circle. To make it work right, we need to
+      // handle both possible orientations of a character.
       y: this.orientation === "down" ? this.y + 4 * this.size : this.y - 4 * this.size,
       size: 5 * this.size,
     };
@@ -236,48 +238,6 @@ class Support extends Enemy {
   }
 }
 
-// Base class for powerups
-class PowerUp {
-  constructor(x, y, target) {
-    this.x = x;
-    this.y = y;
-    // Color and letter are how we decorate the powerup
-    // Have a default in case programmer forgets to add
-    // these to the inheriting classes ;)
-    this.color = "black";
-    this.letter = "P";
-    this.styleCenteringAdjustments = {
-      x: 0,
-      y: 7,
-    };
-    // Target is who we're applying our powerup to.
-    this.target = target;
-    this.queueDeletion = false;
-  }
-
-  // Powerups just slowly move down the screen. We _do not_
-  // call the set in motion in the constructor of PowerUp;
-  // that's the responsibility of a class that extends this
-  // one. This is effectively an abstract base class, which
-  // I _think_ are called mixins here, but we don't need to
-  // go that far, I don't think.
-  setInMotion() {
-    this.intervalId = setInterval(() => {
-      if (this.y >= canvasHeight) {
-        this.queueDeletion = true;
-      }
-      this.y += 2;
-    }, 40);
-  }
-
-  get coordinates() {
-    return {
-      x: this.x,
-      y: this.y,
-    };
-  }
-}
-
 class Projectile {
   constructor(x, y, speed, direction, power) {
     this.x = x;
@@ -311,6 +271,49 @@ class Projectile {
   }
 }
 
+// Base class for powerups
+class PowerUp {
+  constructor(x, y, target) {
+    this.x = x;
+    this.y = y;
+    // Color and letter are how we decorate the powerup
+    // Have a default in case programmer forgets to add
+    // these to the inheriting classes ;)
+    this.color = "black";
+    this.letter = "P";
+    this.styleCenteringAdjustments = {
+      x: 0,
+      y: 7,
+    };
+    // Target is who we're applying our powerup to.
+    this.target = target;
+    this.queueDeletion = false;
+    this.points = 15;
+  }
+
+  // Powerups just slowly move down the screen. We _do not_
+  // call the set in motion in the constructor of PowerUp;
+  // that's the responsibility of a class that extends this
+  // one. This is effectively an abstract base class, which
+  // I _think_ are called mixins here, but we don't need to
+  // go that far, I don't think.
+  setInMotion() {
+    this.intervalId = setInterval(() => {
+      if (this.y >= canvasHeight) {
+        this.queueDeletion = true;
+      }
+      this.y += 2;
+    }, 40);
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+}
+
 class HealthPowerUp extends PowerUp {
   constructor(x, y, target, strength) {
     super(x, y, target);
@@ -325,6 +328,8 @@ class HealthPowerUp extends PowerUp {
   }
 
   apply() {
+    // We don't want to exceed maximum health. If we're about to,
+    // give us max health. Otherwise, fork over the goods.
     if (this.target.health !== MAXIMUM_HEALTH) {
       if (this.target.health + this.strength > MAXIMUM_HEALTH) {
         this.target.health = MAXIMUM_HEALTH;
@@ -332,6 +337,7 @@ class HealthPowerUp extends PowerUp {
         this.target.health += this.strength;
       }
     }
+    score += this.points;
   }
 }
 
@@ -356,6 +362,7 @@ class ShieldPowerUp extends PowerUp {
         this.target.shield += this.strength;
       }
     }
+    score += this.points;
   }
 }
 
@@ -367,6 +374,7 @@ class WeaponPowerUp extends PowerUp {
     this.duration = duration;
     this.color = "green";
     this.letter = "W";
+    // Still looks a little hokey. Will take advice ;)
     this.styleCenteringAdjustments = {
       x: -9,
       y: 7,
@@ -377,10 +385,13 @@ class WeaponPowerUp extends PowerUp {
   apply() {
     minTimeBetweenPlayerProjectilesMS -= this.strength;
     weaponPowerUpIsActive = true;
+    // We should turn the weapon powerup off after a given
+    // amount of time so that the powerup isn't permanent.
     setTimeout(() => {
       minTimeBetweenPlayerProjectilesMS += this.strength;
       weaponPowerUpIsActive = false;
     }, this.duration);
+    score += this.points;
   }
 }
 
@@ -399,6 +410,11 @@ const PowerUpTypes = Object.freeze({
 const playerInput = new Input();
 let playerShip = new Player(canvasWidth / 2, canvasHeight - 20, 3, undefined, "up");
 
+// We define the way NPCs shoot differently from players, because all of the on-screen
+// NPCs share the same array for their projectiles. Because of the way the player shooting
+// is implemented, this would make it so that only one NPC would ever be able to shoot
+// because of the time limit on firing. Here, we just don't keep track; enemy shooting is
+// set on an interval anyway.
 const NPCShoot = (characterObject, projectilesArray) => {
   let midpointdx = 5 * characterObject.size;
   let tipY = 9 * characterObject.size;
@@ -470,6 +486,8 @@ const drawArrow = (canvasContext, x, y, facing, size, rgbString) => {
   let tipY;
   let elbowY;
   let scale = size || 1;
+  // Carefully chosen magic values make the arrow look pretty.
+  // Trust the styles.
   if (facing === "down") {
     tipY = y + 10 * scale;
     elbowY = y + 3 * scale;
@@ -508,16 +526,20 @@ const drawPowerup = (canvasContext, powerUp) => {
   const newStrokeStyle = powerUp.color;
 
   canvasContext.strokeStyle = newStrokeStyle;
+  // Powerups are 20x20. Start and finish appropriately.
   canvasContext.strokeRect(startX - 10, startY - 10, 20, 20);
   canvasContext.strokeStyle = oldStrokeStyle;
 
   const oldFont = canvasContext.font;
+  // Good fotn :^)
   const newFont = "20px Arial";
   const oldFillStyle = canvasContext.fillStyle;
   const newFillStyle = powerUp.color;
 
   canvasContext.font = newFont;
   canvasContext.fillStyle = newFillStyle;
+  // We may have adjustments from the powerUp. If so, apply them to the
+  // fill text.
   let powerUpCenteringAdjustments = powerUp.styleCenteringAdjustments;
   canvasContext.fillText(
     powerUp.letter,
@@ -539,6 +561,8 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
+// This is the RNG for whether or not killing an enemy nets you a powerup.
+// Make adjustments here, if you dare.
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
   if (100 - RNG > 99) {
@@ -641,9 +665,11 @@ const drawDeathBanner = (canvasContext) => {
   drawFinalBanner(canvasContext, "YOU DIED!");
 };
 
-////////////////////////////////////////////
-// Staging Stuff
-////////////////////////////////////\\\/////
+//\//////////\\\////////////////////////////////\\\\\\\///////
+// Staging Stuff: This sucks, really bad lol.
+//\//////////\\\////////////////////////\\\/////\\\\\\\///////
+
+// Given enemy details, get a new enemy out.
 const generateEnemy = (enemyDetails) => {
   let enemyX = enemyDetails.x ? enemyDetails.x : canvasWidth / 2;
   let enemyY = enemyDetails.y ? enemyDetails.y : 100;
@@ -654,6 +680,8 @@ const generateEnemy = (enemyDetails) => {
   } else if (enemyDetails.enemyType == "support") {
     // x: any, y: any, size: any, color: any, speed: any
     return new Support(enemyX, enemyY, 3, "red", randomInt(2, 5));
+  } else {
+    throw new Error(`${enemyDetails.enemyType} is not a valid enemy type.`);
   }
 };
 
@@ -684,6 +712,7 @@ Object.keys(gamePlayStages).forEach((stageID) => {
   });
 });
 
+// Very serious business
 const StageStatesEnum = Object.freeze({
   none: "none",
   started: "started",
@@ -723,10 +752,10 @@ const finishSubStage = (stageID, subStageID) => {
   }
 };
 
+// This is like... some kind of messed up state machine. It works OK.
 let currentStage = 1;
 let currentSubStage = 1;
 const handleStage = (id) => {
-  let subStagesInThisStage = Object.keys(gamePlayStages[id]);
   if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.started) {
     if (onScreenEnemies.length === 0) {
       finishSubStage(id, currentSubStage);
@@ -756,6 +785,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   let shieldBarTextLocationX = shieldBarXLocation - 90;
   let shieldBarTextLocationY = shieldBarYLocation + 8;
 
+  // Display a cute lil W in a box if we have the weapon powerup!
   if (weaponPowerUpIsActive === true) {
     canvasContext.strokeStyle = "green";
     canvasContext.fillStyle = "green";
@@ -825,7 +855,7 @@ const update = () => {
       }
       drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
     });
-    // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
+    // Draw the player
     drawArrow(
       canvasContext,
       playerShip.coordinates.x,
@@ -847,6 +877,7 @@ const update = () => {
       drawPowerup(canvasContext, powerUp);
     });
 
+    // Get latest deaths, powerups, hits, etc. _before_ garbage collecting.
     handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
     handlePlayerHits(onScreenEnemyProjectiles, playerShip);
     handlePowerUps(onScreenProjectiles, onScreenPowerUps);
