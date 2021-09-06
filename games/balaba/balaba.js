@@ -546,7 +546,7 @@ const rngPowerUpGenerator = (x, y, target, strength) => {
   } else if (100 - RNG > 98) {
     return new ShieldPowerUp(x, y, target, strength);
   } else if (100 - RNG > 95) {
-    return new WeaponPowerUp(x, y, target, 50, 100000);
+    return new WeaponPowerUp(x, y, target, 50, randomInt(3000, 6000));
   } else {
     return null;
   }
