@@ -156,7 +156,6 @@ class Player extends Character {
 class Hunter extends Enemy {
   constructor(x, y, size, color, target) {
     super(x, y, size, color, 1, 100);
-
     this.target = target || null;
 
     this.hunting = setInterval(() => {
@@ -166,7 +165,7 @@ class Hunter extends Enemy {
     this.speed = randomInt(2, 6);
 
     this.shooting = setInterval(() => {
-      characterShoot(this, onScreenEnemyProjectiles);
+      NPCShoot(this, onScreenEnemyProjectiles);
     }, 250);
   }
   hunt() {
@@ -215,7 +214,6 @@ class Hunter extends Enemy {
 class Support extends Enemy {
   constructor(x, y, size, color, speed) {
     super(x, y, size, color, 1, 50);
-
     this.speed = speed || randomInt(2, 4);
     this.strafeSign = 1;
     this.strafing = setInterval(() => {
@@ -223,8 +221,8 @@ class Support extends Enemy {
     }, 40);
 
     this.shooting = setInterval(() => {
-      characterShoot(this, onScreenEnemyProjectiles);
-    }, 1000);
+      NPCShoot(this, onScreenEnemyProjectiles);
+    }, 500);
   }
   strafe() {
     let centerLineX = this.hitBoxDetails.x;
@@ -400,6 +398,16 @@ const PowerUpTypes = Object.freeze({
 
 const playerInput = new Input();
 let playerShip = new Player(canvasWidth / 2, canvasHeight - 20, 3, undefined, "up");
+
+const NPCShoot = (characterObject, projectilesArray) => {
+  let midpointdx = 5 * characterObject.size;
+  let tipY = 9 * characterObject.size;
+  const x = characterObject.coordinates.x + midpointdx;
+  const y =
+    characterObject.orientation === "up" ? characterObject.coordinates.y - tipY : characterObject.coordinates.y + tipY;
+  let firedProjectile = new Projectile(x, y, projectileSpeed, characterObject.orientation);
+  projectilesArray.push(firedProjectile);
+};
 
 const characterShoot = (characterObject, projectilesArray) => {
   let readyToFire = true; // boolean
