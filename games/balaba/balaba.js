@@ -541,11 +541,11 @@ const computeCollisions = (projectiles, entities) => {
 
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
-  if (100 - RNG > 90) {
+  if (100 - RNG > 99) {
     return new HealthPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 85) {
+  } else if (100 - RNG > 98) {
     return new ShieldPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 80) {
+  } else if (100 - RNG > 95) {
     return new WeaponPowerUp(x, y, target, 50, 100000);
   } else {
     return null;
