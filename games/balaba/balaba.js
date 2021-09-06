@@ -1,5 +1,5 @@
 import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "../common.js";
-
+import { gamePlayStages } from "./stages.js";
 const SHOW_HITBOXES = false;
 const MAXIMUM_HEALTH = 100;
 const MAXIMUM_SHIELD = 50;
@@ -18,9 +18,12 @@ let projectileSpeed = 30;
 let projectileSize = 2;
 let score = 0;
 
-let onScreenProjectiles = new Array();
+let victoryCondition = false;
+
+let onScreenEnemies = new Array();
 let onScreenEnemyProjectiles = new Array();
 let onScreenPowerUps = new Array();
+let onScreenProjectiles = new Array();
 
 const InputKeys = {
   A: 65, // left!
@@ -159,6 +162,8 @@ class Hunter extends Enemy {
       this.hunt();
     }, 60);
 
+    this.speed = randomInt(2, 6);
+
     this.shooting = setInterval(() => {
       characterShoot(this, onScreenEnemyProjectiles);
     }, 1000);
@@ -210,15 +215,15 @@ class Support extends Enemy {
   constructor(x, y, size, color, speed) {
     super(x, y, size, color, 1, 50);
 
-    this.speed = speed || 1;
+    this.speed = speed || randomInt(2, 4);
     this.strafeSign = 1;
     this.strafing = setInterval(() => {
       this.strafe();
     }, 40);
 
-    this.shooting = window.requestAnimationFrame(() => {
+    this.shooting = setInterval(() => {
       characterShoot(this, onScreenEnemyProjectiles);
-    });
+    }, 3000);
   }
   strafe() {
     let centerLineX = this.hitBoxDetails.x;
@@ -525,10 +530,6 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
-// let fancyHealthPowerup = new HealthPowerUp(100, 70, playerShip, 50);
-// let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
-// let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
-
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
   if (100 - RNG > 90) {
@@ -613,6 +614,112 @@ const handlePowerUps = (projectiles, powerUps) => {
   });
 };
 
+const drawVictoryBanner = (canvasContext) => {
+  let oldFillStyle = canvasContext.fillStyle;
+  let oldFont = canvasContext.font;
+  canvasContext.font = "50px Courier";
+  canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
+  let message = "YOU WIN!";
+  canvasContext.fillText(message, canvasWidth / 2 - 100, canvasHeight / 2);
+  canvasContext.fillStyle = oldFillStyle;
+  canvasContext.font = oldFont;
+};
+
+////////////////////////////////////////////
+// Staging Stuff
+////////////////////////////////////\\\/////
+const generateEnemy = (enemyDetails) => {
+  let enemyX = enemyDetails.x ? enemyDetails.x : canvasWidth / 2;
+  let enemyY = enemyDetails.y ? enemyDetails.y : 100;
+
+  if (enemyDetails.enemyType === "hunter") {
+    // x: any, y: any, size: any, color: any, target: any
+    return new Hunter(enemyX, enemyY, 3, "red", playerShip);
+  } else if (enemyDetails.enemyType == "support") {
+    // x: any, y: any, size: any, color: any, speed: any
+    return new Support(enemyX, enemyY, 3, "red", randomInt(2, 5));
+  }
+};
+
+const serializeEnemyDetails = (enemyType, enemyX, enemyY) => {
+  return {
+    enemyType: enemyType,
+    x: enemyX,
+    y: enemyY,
+  };
+};
+
+// This method has a side effect: when it's run, an enemy will appear on-screen
+// Don't use it until you're ready
+const addEnemyToSubStageFromArray = (arrayOfSimpleEnemyDetails, enemiesArray) => {
+  let enemy = generateEnemy(serializeEnemyDetails(...arrayOfSimpleEnemyDetails));
+  onScreenEnemies.push(enemy);
+};
+
+// Build the game state to mirror the stage template in stages.js
+let stageState = new Object();
+Object.keys(gamePlayStages).forEach((stageID) => {
+  stageState[stageID] = new Object();
+  Object.keys(gamePlayStages[stageID]).forEach((subStageID) => {
+    stageState[stageID][subStageID] = {
+      subStageStatus: "none",
+      enemies: [],
+    };
+  });
+});
+
+const StageStatesEnum = Object.freeze({
+  none: "none",
+  started: "started",
+  finished: "finished",
+});
+
+const startSubStage = (stageID, subStageID) => {
+  let subStageEnemiesArray = new Array();
+  gamePlayStages[stageID][subStageID].forEach((simpleEnemyDetailsArray) => {
+    addEnemyToSubStageFromArray(simpleEnemyDetailsArray, stageState[stageID][subStageID]["enemies"]);
+  });
+  stageState[stageID][subStageID]["subStageStatus"] = StageStatesEnum.started;
+};
+
+const finishSubStage = (stageID, subStageID) => {
+  stageState[stageID][subStageID]["subStageStatus"] = StageStatesEnum.finished;
+  let stageCount = Object.keys(stageState).length;
+  let subStageCountForStage = Object.keys(stageState[stageID]).length;
+  // Here, we've reached the end of the stage, and run out of substages. To continue,
+  // we need to go to the next stage.
+  if (currentSubStage === subStageCountForStage) {
+    // Here, we're at the last stage, and there's nothing left to do
+    // we should revert the stage vars and throw up the victory flag
+    if (currentStage + 1 > stageCount) {
+      currentStage = currentStage;
+      currentSubStage = currentSubStage;
+      victoryCondition = true;
+      return;
+      // Or, it's time to advance to the next stage.
+    } else {
+      currentStage += 1;
+      currentSubStage = 1;
+    }
+    // Or ( ! ) it's time to advance to the next substage.
+  } else {
+    currentSubStage += 1;
+  }
+};
+
+let currentStage = 1;
+let currentSubStage = 1;
+const handleStage = (id) => {
+  let subStagesInThisStage = Object.keys(gamePlayStages[id]);
+  if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.started) {
+    if (onScreenEnemies.length === 0) {
+      finishSubStage(id, currentSubStage);
+    }
+  } else if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.none) {
+    startSubStage(id, currentSubStage);
+  }
+};
+
 const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.strokeRect(0, 0, canvasWidth, 50);
   canvasContext.fillText(`Score: ${score}`, 20, 30);
@@ -641,6 +748,8 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     canvasContext.strokeStyle = oldStrokeStyle;
     canvasContext.fillStyle = oldFillStyle;
   }
+
+  canvasContext.fillText(`Level ${currentStage}, wave ${currentSubStage}`, 220, 30);
 
   canvasContext.fillText(
     `Health: ${playerCharacter.health} / ${MAXIMUM_HEALTH}`,
@@ -679,163 +788,61 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   canvasContext.fillStyle = oldFillStyle;
 };
 
-////////////////////////////////////////////
-// Staging Stuff
-////////////////////////////////////\\\/////
-const generateEnemy = (enemyDetails) => {
-  let enemyX = enemyDetails.x ? enemyDetails.x : canvasWidth / 2;
-  let enemyY = enemyDetails.y ? enemyDetails.y : 100;
-
-  if (enemyDetails.enemyType === "hunter") {
-    return new Hunter(enemyX, enemyY, 3, "red", playerShip);
-  } else if (enemyDetails.enemyType == "support") {
-    return new Support(enemyX, enemyY, 3, "red", 3);
-  }
-};
-
-const generateStage = (id) => {
-  return {
-    id: id,
-    substages: [],
-  };
-};
-
-const generateIncompleteSubStage = () => {
-  return {
-    enemies: [],
-  };
-};
-
-const serializeEnemyDetails = (enemyType, enemyX, enemyY) => {
-  return {
-    enemyType: enemyType,
-    x: enemyX,
-    y: enemyY,
-  };
-};
-
-const addSubStageToStage = (stage, incompleteSubStage) => {
-  const subStageID = stage.substages.length + 1;
-  stage.substages.push({
-    id: subStageID,
-    ...incompleteSubStage,
-  });
-};
-
-const addEnemyToSubStageFromArray = (arrayOfSimpleEnemyDetails, subStage) => {
-  arrayOfSimpleEnemyDetails.forEach((simpleEnemyDetails) => {
-    subStage.enemies.push(generateEnemy(serializeEnemyDetails(...simpleEnemyDetails)));
-  });
-};
-
-let stages = new Array();
-
-// let stage1 = generateStage();
-// let subStage1_1 = generateIncompleteSubStage();
-// addEnemyToSubStageFromArray(
-//   [
-//     ["hunter", 100, 200],
-//     ["support", 200, 300],
-//   ],
-//   subStage1_1
-// );
-
-// let subStage1_2 = generateIncompleteSubStage();
-// addEnemyToSubStageFromArray(
-//   [
-//     ["hunter", 100, 200],
-//     ["hunter", 300, 200],
-//   ],
-//   subStage1_2
-// );
-
-// let subStage1_3 = generateIncompleteSubStage();
-// addEnemyToSubStageFromArray(
-//   [
-//     ["hunter", 100, 200],
-//     ["hunter", 300, 200],
-//     ["support", 100, 150],
-//     ["support", 125, 175],
-//     ["support", 150, 200],
-//     ["support", 175, 225],
-//   ],
-//   subStage1_3
-// );
-
-// [subStage1_1, subStage1_2, subStage1_3].forEach((subStage) => {
-//   addSubStageToStage(stage1, subStage);
-// });
-
-// stages.push(stage1);
-
-let enemyShip = new Hunter(canvasWidth / 2, 100, 3, "red", playerShip);
-// constructor(x, y, size, color, speed
-let enemySupport = new Support(canvasWidth / 2, 100, 3, "red", 3);
-let enemySupport0 = new Support(canvasWidth / 2 + 50, 100, 3, "red", 3);
-let enemySupport1 = new Support(canvasWidth / 2 - 50, 125, 3, "red", 3);
-let enemySupport2 = new Support(canvasWidth / 2, 150, 3, "red", 3);
-
-// let enemyShip0 = new Enemy(canvasWidth / 2, 200, 4, "blue");
-// let enemyShip1 = new Enemy(canvasWidth / 2, 300, 5, "green");
-// let enemyShip2 = new Enemy(canvasWidth / 2, 500, 6, "purple");
-
-let fancyHealthPowerup = new HealthPowerUp(100, 70, playerShip, 50);
-let fancyShieldPowerup = new ShieldPowerUp(200, 70, playerShip, 15);
-let fancyWeaponPowerup = new WeaponPowerUp(400, 70, playerShip, 50, 10000);
-onScreenPowerUps.push(fancyHealthPowerup);
-onScreenPowerUps.push(fancyWeaponPowerup);
-onScreenPowerUps.push(fancyShieldPowerup);
-let onScreenEnemies = new Array();
-onScreenEnemies.push(enemyShip);
-onScreenEnemies.push(enemySupport);
-onScreenEnemies.push(enemySupport0);
-onScreenEnemies.push(enemySupport1);
-onScreenEnemies.push(enemySupport2);
-// onScreenEnemies.push(enemyShip0);
-// onScreenEnemies.push(enemyShip1);
-// onScreenEnemies.push(enemyShip2);
-
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  // Draw the status bar ( amazing, I know )
-  drawStatusBar(canvasContext, playerShip);
-  // Get the player's current location
-  updateCharacterFromInput(playerInput, playerShip);
-  if (SHOW_HITBOXES === true) {
-    drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
-  }
+  if (victoryCondition === false) {
+    let stageKeys = Object.keys(gamePlayStages);
+    handleStage(currentStage);
 
-  onScreenEnemies.forEach((enemy) => {
+    // Draw the status bar ( amazing, I know )
+    drawStatusBar(canvasContext, playerShip);
+    // Get the player's current location
+    updateCharacterFromInput(playerInput, playerShip);
     if (SHOW_HITBOXES === true) {
-      drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+      drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
     }
-    drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
-  });
-  // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
-  drawArrow(canvasContext, playerShip.coordinates.x, playerShip.coordinates.y, "up", playerShip.size, playerShip.color);
-  fireLaz0rFromInput(playerInput, playerShip);
-  onScreenProjectiles.forEach((element) => {
-    drawCircle(canvasContext, element.x, element.y, projectileSize);
-  });
 
-  onScreenEnemyProjectiles.forEach((element) => {
-    drawCircle(canvasContext, element.x, element.y, projectileSize);
-  });
+    onScreenEnemies.forEach((enemy) => {
+      if (SHOW_HITBOXES === true) {
+        drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+      }
+      drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
+    });
+    // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
+    drawArrow(
+      canvasContext,
+      playerShip.coordinates.x,
+      playerShip.coordinates.y,
+      "up",
+      playerShip.size,
+      playerShip.color
+    );
+    fireLaz0rFromInput(playerInput, playerShip);
+    onScreenProjectiles.forEach((element) => {
+      drawCircle(canvasContext, element.x, element.y, projectileSize);
+    });
 
-  onScreenPowerUps.forEach((powerUp) => {
-    drawPowerup(canvasContext, powerUp);
-  });
+    onScreenEnemyProjectiles.forEach((element) => {
+      drawCircle(canvasContext, element.x, element.y, projectileSize);
+    });
 
-  handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
-  handlePlayerHits(onScreenEnemyProjectiles, playerShip);
-  handlePowerUps(onScreenProjectiles, onScreenPowerUps);
-  [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
-    garbageCollectObjects(garbageCollectibleArray);
-  });
-  // In case we hit some goofy race condition, let's always try to reset the weapons.
-  if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
-    minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+    onScreenPowerUps.forEach((powerUp) => {
+      drawPowerup(canvasContext, powerUp);
+    });
+
+    handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
+    handlePlayerHits(onScreenEnemyProjectiles, playerShip);
+    handlePowerUps(onScreenProjectiles, onScreenPowerUps);
+    [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
+      garbageCollectObjects(garbageCollectibleArray);
+    });
+    // In case we hit some goofy race condition, let's always try to reset the weapons.
+    if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
+      minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+    }
+  } else {
+    drawVictoryBanner(canvasContext);
   }
 };
 
