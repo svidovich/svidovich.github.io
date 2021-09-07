@@ -32,6 +32,9 @@ const InputKeys = {
   L: 37, // also left!
   R: 39, // also right!
   space: 32, // shoot!
+  up: 38,
+  down: 40,
+  enter: 13,
 };
 
 class Input {
@@ -39,6 +42,11 @@ class Input {
     this.right = false;
     this.left = false;
     this.shooting = false;
+
+    // These are just for the menu.
+    this.up = false;
+    this.down = false;
+    this.enter = false;
 
     this.register();
   }
@@ -52,8 +60,6 @@ class Input {
   };
   register() {
     // Add the listeners for keyboard usage.
-    // Binding allows us to pass arbitrary input objects into the event listener
-    // callback.
     window.addEventListener("keydown", this.keySwitch);
     window.addEventListener("keyup", this.keySwitch);
   }
@@ -81,6 +87,15 @@ class Input {
         break;
       case InputKeys.space:
         this.shooting = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.up:
+        this.up = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.down:
+        this.down = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.enter:
+        this.enter = this.changeInputByEventType(eventType);
         break;
     }
   };
@@ -647,22 +662,91 @@ const handlePowerUps = (projectiles, powerUps) => {
   });
 };
 
-const drawFinalBanner = (canvasContext, message) => {
+const drawLargeBanner = (canvasContext, message, adjX, adjY) => {
   let oldFillStyle = canvasContext.fillStyle;
   let oldFont = canvasContext.font;
+  let xAdjustment = adjX || 0;
+  let yAdjustment = adjY || 0;
+  let bannerLocationX = canvasWidth / 2 - 100 + xAdjustment;
+  let bannerLocationY = canvasHeight / 2 + yAdjustment;
   canvasContext.font = "50px Courier";
   canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
-  canvasContext.fillText(message, canvasWidth / 2 - 100, canvasHeight / 2);
+  canvasContext.fillText(message, bannerLocationX, bannerLocationY);
   canvasContext.fillStyle = oldFillStyle;
   canvasContext.font = oldFont;
+  return {
+    x: bannerLocationX,
+    y: bannerLocationY,
+  };
 };
 
 const drawVictoryBanner = (canvasContext) => {
-  drawFinalBanner(canvasContext, "YOU WIN!");
+  drawLargeBanner(canvasContext, "YOU WIN!");
 };
 
 const drawDeathBanner = (canvasContext) => {
-  drawFinalBanner(canvasContext, "YOU DIED!");
+  drawLargeBanner(canvasContext, "YOU DIED!", -25);
+};
+
+const menuOptions = ["Mission", "Survival"];
+let selectedGameMode = null;
+
+let optionLocations = new Object();
+const drawMenu = (canvasContext) => {
+  let titleLocation = drawLargeBanner(canvasContext, "🅱️ALA🅱️A");
+  for (let i = 0; i < menuOptions.length; i++) {
+    let oldFont = canvasContext.font;
+    let oldFillStyle = canvasContext.fillStyle;
+    canvasContext.font = "25px Courier";
+    canvasContext.fillStyle = "grey";
+    let menuOptionLocationX = titleLocation.x + 25;
+    let menuOptionLocationY = titleLocation.y + (i + 1) * 30;
+    let menuOptionText = menuOptions[i];
+    // Most of the time we'll skip this check. The first time, we'll
+    // add to the object. I didn't want to generate a new object every
+    // time I draw the menu.
+    if (!Object.keys(optionLocations).includes(menuOptionText)) {
+      optionLocations[menuOptionText] = {
+        x: menuOptionLocationX,
+        y: menuOptionLocationY,
+      };
+    }
+    canvasContext.fillText(menuOptionText, menuOptionLocationX, menuOptionLocationY);
+    canvasContext.font = oldFont;
+    canvasContext.fillStyle = oldFillStyle;
+  }
+};
+
+// This function is proof that I've never done this before in my life
+let hoveredGameModeIdx = 0;
+let lastHoveredGameModeFromInput = 0;
+const updateHoveredGameModeFromInput = (canvasContext, inputObject) => {
+  // This bit debounces the menu options so we don't hyper speed
+  // them when we press a button 8D
+  if (Date.now() - lastHoveredGameModeFromInput > 200) {
+    if (inputObject.down === true) {
+      // I _think_ this means that we're uh, on the last option
+      if (hoveredGameModeIdx + 1 === menuOptions.length) {
+        hoveredGameModeIdx = 0;
+      } else {
+        hoveredGameModeIdx += 1;
+      }
+      lastHoveredGameModeFromInput = Date.now();
+    } else if (inputObject.up === true) {
+      if (hoveredGameModeIdx - 1 < 0) {
+        hoveredGameModeIdx = menuOptions.length - 1;
+      } else {
+        hoveredGameModeIdx -= 1;
+      }
+      lastHoveredGameModeFromInput = Date.now();
+    } else if (inputObject.enter === true) {
+      selectedGameMode = menuOptions[hoveredGameModeIdx];
+    }
+  }
+  let hoveredGameMode = menuOptions[hoveredGameModeIdx];
+  const selectorX = optionLocations[hoveredGameMode].x - 10;
+  const selectorY = optionLocations[hoveredGameMode].y - 5;
+  drawCircle(canvasContext, selectorX, selectorY, 5);
 };
 
 //\//////////\\\////////////////////////////////\\\\\\\///////
@@ -837,64 +921,78 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  if (victoryCondition === false && deathCondition === false) {
-    let stageKeys = Object.keys(gamePlayStages);
-    handleStage(currentStage);
-
-    // Draw the status bar ( amazing, I know )
-    drawStatusBar(canvasContext, playerShip);
-    // Get the player's current location
-    updateCharacterFromInput(playerInput, playerShip);
-    if (SHOW_HITBOXES === true) {
-      drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
-    }
-
-    onScreenEnemies.forEach((enemy) => {
-      if (SHOW_HITBOXES === true) {
-        drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+  if (selectedGameMode !== null) {
+    if (victoryCondition === false && deathCondition === false) {
+      if (selectedGameMode === "Mission") {
+        handleStage(currentStage);
+      } else if (selectedGameMode === "Survival") {
+        console.log("MEWOTH");
+        return;
       }
-      drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
-    });
-    // Draw the player
-    drawArrow(
-      canvasContext,
-      playerShip.coordinates.x,
-      playerShip.coordinates.y,
-      "up",
-      playerShip.size,
-      playerShip.color
-    );
-    fireLaz0rFromInput(playerInput, playerShip);
-    onScreenProjectiles.forEach((element) => {
-      drawCircle(canvasContext, element.x, element.y, projectileSize);
-    });
 
-    onScreenEnemyProjectiles.forEach((element) => {
-      drawCircle(canvasContext, element.x, element.y, projectileSize);
-    });
+      // Draw the status bar ( amazing, I know )
+      drawStatusBar(canvasContext, playerShip);
+      // Get the player's current location
+      updateCharacterFromInput(playerInput, playerShip);
+      if (SHOW_HITBOXES === true) {
+        drawCircle(
+          canvasContext,
+          playerShip.hitBoxDetails.x,
+          playerShip.hitBoxDetails.y,
+          playerShip.hitBoxDetails.size
+        );
+      }
 
-    onScreenPowerUps.forEach((powerUp) => {
-      drawPowerup(canvasContext, powerUp);
-    });
+      onScreenEnemies.forEach((enemy) => {
+        if (SHOW_HITBOXES === true) {
+          drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+        }
+        drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
+      });
+      // Draw the player
+      drawArrow(
+        canvasContext,
+        playerShip.coordinates.x,
+        playerShip.coordinates.y,
+        "up",
+        playerShip.size,
+        playerShip.color
+      );
+      fireLaz0rFromInput(playerInput, playerShip);
+      onScreenProjectiles.forEach((element) => {
+        drawCircle(canvasContext, element.x, element.y, projectileSize);
+      });
 
-    // Get latest deaths, powerups, hits, etc. _before_ garbage collecting.
-    handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
-    handlePlayerHits(onScreenEnemyProjectiles, playerShip);
-    handlePowerUps(onScreenProjectiles, onScreenPowerUps);
-    [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
-      garbageCollectObjects(garbageCollectibleArray);
-    });
-    // In case we hit some goofy race condition, let's always try to reset the weapons.
-    if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
-      minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+      onScreenEnemyProjectiles.forEach((element) => {
+        drawCircle(canvasContext, element.x, element.y, projectileSize);
+      });
+
+      onScreenPowerUps.forEach((powerUp) => {
+        drawPowerup(canvasContext, powerUp);
+      });
+
+      // Get latest deaths, powerups, hits, etc. _before_ garbage collecting.
+      handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
+      handlePlayerHits(onScreenEnemyProjectiles, playerShip);
+      handlePowerUps(onScreenProjectiles, onScreenPowerUps);
+      [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
+        garbageCollectObjects(garbageCollectibleArray);
+      });
+      // In case we hit some goofy race condition, let's always try to reset the weapons.
+      if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
+        minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+      }
+    } else {
+      if (victoryCondition === true) {
+        drawVictoryBanner(canvasContext);
+      }
+      if (deathCondition === true) {
+        drawDeathBanner(canvasContext);
+      }
     }
   } else {
-    if (victoryCondition === true) {
-      drawVictoryBanner(canvasContext);
-    }
-    if (deathCondition === true) {
-      drawDeathBanner(canvasContext);
-    }
+    drawMenu(canvasContext);
+    updateHoveredGameModeFromInput(canvasContext, playerInput);
   }
 };
 
