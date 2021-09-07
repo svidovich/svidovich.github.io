@@ -18,6 +18,10 @@ let projectileSpeed = 30;
 let projectileSize = 2;
 let score = 0;
 
+let currentStage = 1;
+let currentSubStage = 1;
+let currentWave = 0;
+
 let deathCondition = false;
 let victoryCondition = false;
 
@@ -25,6 +29,18 @@ let onScreenEnemies = new Array();
 let onScreenEnemyProjectiles = new Array();
 let onScreenPowerUps = new Array();
 let onScreenProjectiles = new Array();
+
+let survivalModeTimer = 0;
+let survivalModeTimerIntervalID = null;
+const startSurvivalModeTimer = () => {
+  return setInterval(() => {
+    survivalModeTimer += 1;
+  }, 1000);
+};
+
+const stopSurvivalModeTimer = (intervalID) => {
+  window.clearInterval(intervalID);
+};
 
 const InputKeys = {
   A: 65, // left!
@@ -580,11 +596,11 @@ const computeCollisions = (projectiles, entities) => {
 // Make adjustments here, if you dare.
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
-  if (100 - RNG > 99) {
+  if (100 - RNG > 95) {
     return new HealthPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 98) {
+  } else if (100 - RNG > 93) {
     return new ShieldPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 95) {
+  } else if (100 - RNG > 91) {
     return new WeaponPowerUp(x, y, target, 50, randomInt(3000, 6000));
   } else {
     return null;
@@ -686,6 +702,26 @@ const drawVictoryBanner = (canvasContext) => {
 
 const drawDeathBanner = (canvasContext) => {
   drawLargeBanner(canvasContext, "YOU DIED!", -25);
+  if (selectedGameMode === "Survival") {
+    let oldFont = canvasContext.font;
+    canvasContext.font = "16px Courier";
+    canvasContext.fillText(`You lived for ${survivalModeTimer} seconds`, canvasWidth / 2 - 100, canvasHeight / 2 + 100);
+    canvasContext.fillText(`and made it to wave ${currentWave}`, canvasWidth / 2 - 90, canvasHeight / 2 + 125);
+    canvasContext.fillText(`with a score of ${score}`, canvasWidth / 2 - 75, canvasHeight / 2 + 150);
+    let encouragingMessage;
+    if (currentWave < 10) {
+      encouragingMessage = "Keep trying!";
+    } else if (currentWave < 20) {
+      encouragingMessage = "Looking good!";
+    } else {
+      encouragingMessage = "Wow, nice work!";
+    }
+    let oldFillStyle = canvasContext.fillStyle;
+    canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
+    canvasContext.fillText(encouragingMessage, canvasWidth / 2 - 50, canvasHeight / 2 + 175);
+    canvasContext.fillStyle = oldFillStyle;
+    canvasContext.font = oldFont;
+  }
 };
 
 const menuOptions = ["Mission", "Survival"];
@@ -837,8 +873,6 @@ const finishSubStage = (stageID, subStageID) => {
 };
 
 // This is like... some kind of messed up state machine. It works OK.
-let currentStage = 1;
-let currentSubStage = 1;
 const handleStage = (id) => {
   if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.started) {
     if (onScreenEnemies.length === 0) {
@@ -846,6 +880,42 @@ const handleStage = (id) => {
     }
   } else if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.none) {
     startSubStage(id, currentSubStage);
+  }
+};
+
+const generateSomewhatRandomWave = () => {
+  if (onScreenEnemies.length === 0) {
+    // Fizz buzz helps us decide how big our wave is going to be
+    // this is amazing lol. "What's the application of fizz buzz?"
+    // "It's a meaningless exercise." WELL HERE YOU GO. THIS IS IT.
+    // THE APPLICATION OF FIZZBUZZ.
+    currentWave += 1;
+    let waveSize = 8;
+    if (currentWave % 3 === 0 && currentWave % 5 === 0) {
+      waveSize = 16;
+    } else if (currentWave % 3 === 0) {
+      waveSize = 12;
+    } else if (currentWave % 5 === 0) {
+      waveSize = 6;
+    }
+    for (let i = 0; i < waveSize; i++) {
+      let enemyChance = randomInt(1, 100);
+      let enemy, enemyX, enemyY;
+      // Get some RNG involved in the enemy generation, rite?
+      if (enemyChance > 50) {
+        enemyX = randomInt(Math.floor(canvasWidth / 4), Math.floor((3 * canvasWidth) / 4));
+        enemyY = randomInt(300, 500);
+        // x: any, y: any, size: any, color: any, target: any
+        enemy = new Hunter(enemyX, enemyY, 3, "red", playerShip);
+        onScreenEnemies.push(enemy);
+      } else {
+        enemyX = randomInt(Math.floor(canvasWidth / 4), Math.floor((3 * canvasWidth) / 4));
+        enemyY = randomInt(200, 400);
+        // x: any, y: any, size: any, color: any, speed: any
+        enemy = new Support(enemyX, enemyY, 3, "red", randomInt(2, 6));
+        onScreenEnemies.push(enemy);
+      }
+    }
   }
 };
 
@@ -878,8 +948,12 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     canvasContext.strokeStyle = oldStrokeStyle;
     canvasContext.fillStyle = oldFillStyle;
   }
-
-  canvasContext.fillText(`Level ${currentStage}, wave ${currentSubStage}`, 220, 30);
+  if (selectedGameMode === "Mission") {
+    canvasContext.fillText(`Level ${currentStage}, wave ${currentSubStage}`, 220, 30);
+  }
+  if (selectedGameMode === "Survival") {
+    canvasContext.fillText(`Wave ${currentWave}`, 220, 30);
+  }
 
   canvasContext.fillText(
     `Health: ${playerCharacter.health} / ${MAXIMUM_HEALTH}`,
@@ -926,8 +1000,10 @@ const update = () => {
       if (selectedGameMode === "Mission") {
         handleStage(currentStage);
       } else if (selectedGameMode === "Survival") {
-        console.log("MEWOTH");
-        return;
+        if (survivalModeTimerIntervalID === null) {
+          survivalModeTimerIntervalID = startSurvivalModeTimer();
+        }
+        generateSomewhatRandomWave();
       }
 
       // Draw the status bar ( amazing, I know )
@@ -987,6 +1063,9 @@ const update = () => {
         drawVictoryBanner(canvasContext);
       }
       if (deathCondition === true) {
+        if (selectedGameMode === "Survival") {
+          stopSurvivalModeTimer(survivalModeTimerIntervalID);
+        }
         drawDeathBanner(canvasContext);
       }
     }
