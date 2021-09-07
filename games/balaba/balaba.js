@@ -961,7 +961,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     healthBarTextLocationY
   );
   canvasContext.fillText(
-    `Health: ${playerCharacter.shield} / ${MAXIMUM_SHIELD}`,
+    `Shield: ${playerCharacter.shield} / ${MAXIMUM_SHIELD}`,
     shieldBarTextLocationX,
     shieldBarTextLocationY
   );
