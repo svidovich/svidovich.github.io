@@ -1,6 +1,6 @@
 import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "../common.js";
 import { gamePlayStages } from "./stages.js";
-const SHOW_HITBOXES = false;
+const SHOW_HITBOXES = true;
 const MAXIMUM_HEALTH = 100;
 const MAXIMUM_SHIELD = 50;
 
@@ -11,10 +11,10 @@ let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 
-const initialPlayerProjectileInterval = 175;
-let minTimeBetweenPlayerProjectilesMS = 175;
+const initialPlayerProjectileInterval = 150;
+let minTimeBetweenPlayerProjectilesMS = 150;
 let weaponPowerUpIsActive = false;
-let projectileSpeed = 30;
+let projectileSpeed = 35;
 let projectileSize = 2;
 let score = 0;
 
@@ -261,9 +261,15 @@ class Support extends Enemy {
     let centerLineX = this.hitBoxDetails.x;
     if (canvasWidth - centerLineX < 75) {
       this.strafeSign = -1;
+      if (canvasHeight - this.y > 200) {
+        this.moveBy(0, randomInt(1, 5));
+      }
     }
     if (centerLineX < 75) {
       this.strafeSign = 1;
+      if (canvasHeight - this.y > 200) {
+        this.moveBy(0, randomInt(1, 5));
+      }
     }
     this.moveBy(this.speed * this.strafeSign, 0);
   }
@@ -298,7 +304,7 @@ class Projectile {
       } else {
         throw new Error(`${this.direction} is not a valid direction.`);
       }
-    }, 50);
+    }, 60);
   }
 }
 
@@ -583,6 +589,10 @@ const drawPowerup = (canvasContext, powerUp) => {
 
 const computeCollisions = (projectiles, entities) => {
   entities.forEach((entity) => {
+    // There's a problem here -- we don't account for the size of the projectiles.
+    // The problem essentially becomes "Is this circle contained in this other one?"
+    // And can be solved, but it's 1:30 AM, so I'm not doing that rn. Other measures
+    // have been taken to mask this issue until I fix it.
     projectiles.forEach((projectile) => {
       if (distance(projectile, entity.hitBoxDetails) <= entity.hitBoxDetails.size) {
         projectile.queueDeletion = true;
@@ -912,7 +922,7 @@ const generateSomewhatRandomWave = () => {
         enemyX = randomInt(Math.floor(canvasWidth / 4), Math.floor((3 * canvasWidth) / 4));
         enemyY = randomInt(200, 400);
         // x: any, y: any, size: any, color: any, speed: any
-        enemy = new Support(enemyX, enemyY, 3, "red", randomInt(2, 6));
+        enemy = new Support(enemyX, enemyY, 3, "red", randomInt(5, 9));
         onScreenEnemies.push(enemy);
       }
     }
@@ -995,6 +1005,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
   if (selectedGameMode !== null) {
     if (victoryCondition === false && deathCondition === false) {
       if (selectedGameMode === "Mission") {
@@ -1005,6 +1016,11 @@ const update = () => {
         }
         generateSomewhatRandomWave();
       }
+
+      garbageCollectObjects(onScreenProjectiles);
+      garbageCollectObjects(onScreenEnemyProjectiles);
+      garbageCollectObjects(onScreenEnemies);
+      garbageCollectObjects(onScreenPowerUps);
 
       // Draw the status bar ( amazing, I know )
       drawStatusBar(canvasContext, playerShip);
@@ -1047,13 +1063,15 @@ const update = () => {
         drawPowerup(canvasContext, powerUp);
       });
 
-      // Get latest deaths, powerups, hits, etc. _before_ garbage collecting.
       handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
       handlePlayerHits(onScreenEnemyProjectiles, playerShip);
       handlePowerUps(onScreenProjectiles, onScreenPowerUps);
-      [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
-        garbageCollectObjects(garbageCollectibleArray);
-      });
+
+      garbageCollectObjects(onScreenProjectiles);
+      garbageCollectObjects(onScreenEnemyProjectiles);
+      garbageCollectObjects(onScreenEnemies);
+      garbageCollectObjects(onScreenPowerUps);
+
       // In case we hit some goofy race condition, let's always try to reset the weapons.
       if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
         minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
