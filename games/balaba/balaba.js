@@ -1,6 +1,6 @@
 import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "../common.js";
 import { gamePlayStages } from "./stages.js";
-const SHOW_HITBOXES = true;
+const SHOW_HITBOXES = false;
 const MAXIMUM_HEALTH = 100;
 const MAXIMUM_SHIELD = 50;
 
