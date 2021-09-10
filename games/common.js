@@ -13,6 +13,13 @@ export const drawCircle = (canvasContext, x, y, r) => {
   canvasContext.stroke();
 };
 
+export const drawDisc = (canvasContext, x, y, r) => {
+  canvasContext.beginPath();
+  // void ctx.arc(x, y, radius, startAngle, endAngle [, counterclockwise]);
+  canvasContext.arc(x, y, r, 0, 2 * Math.PI);
+  canvasContext.fill();
+};
+
 export const drawRandomColoredCircle = (canvasContext, x, y, r) => {
   canvasContext.beginPath();
   // void ctx.arc(x, y, radius, startAngle, endAngle [, counterclockwise]);
