@@ -1,0 +1,21 @@
+.game-icon {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.game-icon:hover {
+  transform: scale(1.1);
+}
+
+.game-box {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  text-align: center;
+  padding: 5px;
+}
+
+.individual-game {
+  margin: 5px;
+}

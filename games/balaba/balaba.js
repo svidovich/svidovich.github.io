@@ -11,12 +11,16 @@ let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 
-const initialPlayerProjectileInterval = 175;
-let minTimeBetweenPlayerProjectilesMS = 175;
+const initialPlayerProjectileInterval = 150;
+let minTimeBetweenPlayerProjectilesMS = 150;
 let weaponPowerUpIsActive = false;
-let projectileSpeed = 30;
+let projectileSpeed = 35;
 let projectileSize = 2;
 let score = 0;
+
+let currentStage = 1;
+let currentSubStage = 1;
+let currentWave = 0;
 
 let deathCondition = false;
 let victoryCondition = false;
@@ -26,12 +30,27 @@ let onScreenEnemyProjectiles = new Array();
 let onScreenPowerUps = new Array();
 let onScreenProjectiles = new Array();
 
+let survivalModeTimer = 0;
+let survivalModeTimerIntervalID = null;
+const startSurvivalModeTimer = () => {
+  return setInterval(() => {
+    survivalModeTimer += 1;
+  }, 1000);
+};
+
+const stopSurvivalModeTimer = (intervalID) => {
+  window.clearInterval(intervalID);
+};
+
 const InputKeys = {
   A: 65, // left!
   D: 68, // right!
   L: 37, // also left!
   R: 39, // also right!
   space: 32, // shoot!
+  up: 38,
+  down: 40,
+  enter: 13,
 };
 
 class Input {
@@ -39,6 +58,11 @@ class Input {
     this.right = false;
     this.left = false;
     this.shooting = false;
+
+    // These are just for the menu.
+    this.up = false;
+    this.down = false;
+    this.enter = false;
 
     this.register();
   }
@@ -52,8 +76,6 @@ class Input {
   };
   register() {
     // Add the listeners for keyboard usage.
-    // Binding allows us to pass arbitrary input objects into the event listener
-    // callback.
     window.addEventListener("keydown", this.keySwitch);
     window.addEventListener("keyup", this.keySwitch);
   }
@@ -81,6 +103,15 @@ class Input {
         break;
       case InputKeys.space:
         this.shooting = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.up:
+        this.up = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.down:
+        this.down = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.enter:
+        this.enter = this.changeInputByEventType(eventType);
         break;
     }
   };
@@ -111,6 +142,8 @@ class Character {
   get hitBoxDetails() {
     return {
       x: this.x + 5 * this.size,
+      // The hitbox for a character is a circle. To make it work right, we need to
+      // handle both possible orientations of a character.
       y: this.orientation === "down" ? this.y + 4 * this.size : this.y - 4 * this.size,
       size: 5 * this.size,
     };
@@ -228,53 +261,17 @@ class Support extends Enemy {
     let centerLineX = this.hitBoxDetails.x;
     if (canvasWidth - centerLineX < 75) {
       this.strafeSign = -1;
+      if (canvasHeight - this.y > 200) {
+        this.moveBy(0, randomInt(1, 5));
+      }
     }
     if (centerLineX < 75) {
       this.strafeSign = 1;
+      if (canvasHeight - this.y > 200) {
+        this.moveBy(0, randomInt(1, 5));
+      }
     }
     this.moveBy(this.speed * this.strafeSign, 0);
-  }
-}
-
-// Base class for powerups
-class PowerUp {
-  constructor(x, y, target) {
-    this.x = x;
-    this.y = y;
-    // Color and letter are how we decorate the powerup
-    // Have a default in case programmer forgets to add
-    // these to the inheriting classes ;)
-    this.color = "black";
-    this.letter = "P";
-    this.styleCenteringAdjustments = {
-      x: 0,
-      y: 7,
-    };
-    // Target is who we're applying our powerup to.
-    this.target = target;
-    this.queueDeletion = false;
-  }
-
-  // Powerups just slowly move down the screen. We _do not_
-  // call the set in motion in the constructor of PowerUp;
-  // that's the responsibility of a class that extends this
-  // one. This is effectively an abstract base class, which
-  // I _think_ are called mixins here, but we don't need to
-  // go that far, I don't think.
-  setInMotion() {
-    this.intervalId = setInterval(() => {
-      if (this.y >= canvasHeight) {
-        this.queueDeletion = true;
-      }
-      this.y += 2;
-    }, 40);
-  }
-
-  get coordinates() {
-    return {
-      x: this.x,
-      y: this.y,
-    };
   }
 }
 
@@ -307,7 +304,50 @@ class Projectile {
       } else {
         throw new Error(`${this.direction} is not a valid direction.`);
       }
-    }, 50);
+    }, 60);
+  }
+}
+
+// Base class for powerups
+class PowerUp {
+  constructor(x, y, target) {
+    this.x = x;
+    this.y = y;
+    // Color and letter are how we decorate the powerup
+    // Have a default in case programmer forgets to add
+    // these to the inheriting classes ;)
+    this.color = "black";
+    this.letter = "P";
+    this.styleCenteringAdjustments = {
+      x: 0,
+      y: 7,
+    };
+    // Target is who we're applying our powerup to.
+    this.target = target;
+    this.queueDeletion = false;
+    this.points = 15;
+  }
+
+  // Powerups just slowly move down the screen. We _do not_
+  // call the set in motion in the constructor of PowerUp;
+  // that's the responsibility of a class that extends this
+  // one. This is effectively an abstract base class, which
+  // I _think_ are called mixins here, but we don't need to
+  // go that far, I don't think.
+  setInMotion() {
+    this.intervalId = setInterval(() => {
+      if (this.y >= canvasHeight) {
+        this.queueDeletion = true;
+      }
+      this.y += 2;
+    }, 40);
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
   }
 }
 
@@ -325,6 +365,8 @@ class HealthPowerUp extends PowerUp {
   }
 
   apply() {
+    // We don't want to exceed maximum health. If we're about to,
+    // give us max health. Otherwise, fork over the goods.
     if (this.target.health !== MAXIMUM_HEALTH) {
       if (this.target.health + this.strength > MAXIMUM_HEALTH) {
         this.target.health = MAXIMUM_HEALTH;
@@ -332,6 +374,7 @@ class HealthPowerUp extends PowerUp {
         this.target.health += this.strength;
       }
     }
+    score += this.points;
   }
 }
 
@@ -356,6 +399,7 @@ class ShieldPowerUp extends PowerUp {
         this.target.shield += this.strength;
       }
     }
+    score += this.points;
   }
 }
 
@@ -367,6 +411,7 @@ class WeaponPowerUp extends PowerUp {
     this.duration = duration;
     this.color = "green";
     this.letter = "W";
+    // Still looks a little hokey. Will take advice ;)
     this.styleCenteringAdjustments = {
       x: -9,
       y: 7,
@@ -377,10 +422,13 @@ class WeaponPowerUp extends PowerUp {
   apply() {
     minTimeBetweenPlayerProjectilesMS -= this.strength;
     weaponPowerUpIsActive = true;
+    // We should turn the weapon powerup off after a given
+    // amount of time so that the powerup isn't permanent.
     setTimeout(() => {
       minTimeBetweenPlayerProjectilesMS += this.strength;
       weaponPowerUpIsActive = false;
     }, this.duration);
+    score += this.points;
   }
 }
 
@@ -399,6 +447,11 @@ const PowerUpTypes = Object.freeze({
 const playerInput = new Input();
 let playerShip = new Player(canvasWidth / 2, canvasHeight - 20, 3, undefined, "up");
 
+// We define the way NPCs shoot differently from players, because all of the on-screen
+// NPCs share the same array for their projectiles. Because of the way the player shooting
+// is implemented, this would make it so that only one NPC would ever be able to shoot
+// because of the time limit on firing. Here, we just don't keep track; enemy shooting is
+// set on an interval anyway.
 const NPCShoot = (characterObject, projectilesArray) => {
   let midpointdx = 5 * characterObject.size;
   let tipY = 9 * characterObject.size;
@@ -470,6 +523,8 @@ const drawArrow = (canvasContext, x, y, facing, size, rgbString) => {
   let tipY;
   let elbowY;
   let scale = size || 1;
+  // Carefully chosen magic values make the arrow look pretty.
+  // Trust the styles.
   if (facing === "down") {
     tipY = y + 10 * scale;
     elbowY = y + 3 * scale;
@@ -508,16 +563,20 @@ const drawPowerup = (canvasContext, powerUp) => {
   const newStrokeStyle = powerUp.color;
 
   canvasContext.strokeStyle = newStrokeStyle;
+  // Powerups are 20x20. Start and finish appropriately.
   canvasContext.strokeRect(startX - 10, startY - 10, 20, 20);
   canvasContext.strokeStyle = oldStrokeStyle;
 
   const oldFont = canvasContext.font;
+  // Good fotn :^)
   const newFont = "20px Arial";
   const oldFillStyle = canvasContext.fillStyle;
   const newFillStyle = powerUp.color;
 
   canvasContext.font = newFont;
   canvasContext.fillStyle = newFillStyle;
+  // We may have adjustments from the powerUp. If so, apply them to the
+  // fill text.
   let powerUpCenteringAdjustments = powerUp.styleCenteringAdjustments;
   canvasContext.fillText(
     powerUp.letter,
@@ -530,6 +589,10 @@ const drawPowerup = (canvasContext, powerUp) => {
 
 const computeCollisions = (projectiles, entities) => {
   entities.forEach((entity) => {
+    // There's a problem here -- we don't account for the size of the projectiles.
+    // The problem essentially becomes "Is this circle contained in this other one?"
+    // And can be solved, but it's 1:30 AM, so I'm not doing that rn. Other measures
+    // have been taken to mask this issue until I fix it.
     projectiles.forEach((projectile) => {
       if (distance(projectile, entity.hitBoxDetails) <= entity.hitBoxDetails.size) {
         projectile.queueDeletion = true;
@@ -539,13 +602,15 @@ const computeCollisions = (projectiles, entities) => {
   });
 };
 
+// This is the RNG for whether or not killing an enemy nets you a powerup.
+// Make adjustments here, if you dare.
 const rngPowerUpGenerator = (x, y, target, strength) => {
   const RNG = randomInt(1, 100);
-  if (100 - RNG > 99) {
+  if (100 - RNG > 95) {
     return new HealthPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 98) {
+  } else if (100 - RNG > 93) {
     return new ShieldPowerUp(x, y, target, strength);
-  } else if (100 - RNG > 95) {
+  } else if (100 - RNG > 91) {
     return new WeaponPowerUp(x, y, target, 50, randomInt(3000, 6000));
   } else {
     return null;
@@ -623,27 +688,118 @@ const handlePowerUps = (projectiles, powerUps) => {
   });
 };
 
-const drawFinalBanner = (canvasContext, message) => {
+const drawLargeBanner = (canvasContext, message, adjX, adjY) => {
   let oldFillStyle = canvasContext.fillStyle;
   let oldFont = canvasContext.font;
+  let xAdjustment = adjX || 0;
+  let yAdjustment = adjY || 0;
+  let bannerLocationX = canvasWidth / 2 - 100 + xAdjustment;
+  let bannerLocationY = canvasHeight / 2 + yAdjustment;
   canvasContext.font = "50px Courier";
   canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
-  canvasContext.fillText(message, canvasWidth / 2 - 100, canvasHeight / 2);
+  canvasContext.fillText(message, bannerLocationX, bannerLocationY);
   canvasContext.fillStyle = oldFillStyle;
   canvasContext.font = oldFont;
+  return {
+    x: bannerLocationX,
+    y: bannerLocationY,
+  };
 };
 
 const drawVictoryBanner = (canvasContext) => {
-  drawFinalBanner(canvasContext, "YOU WIN!");
+  drawLargeBanner(canvasContext, "YOU WIN!");
 };
 
 const drawDeathBanner = (canvasContext) => {
-  drawFinalBanner(canvasContext, "YOU DIED!");
+  drawLargeBanner(canvasContext, "YOU DIED!", -25);
+  if (selectedGameMode === "Survival") {
+    let oldFont = canvasContext.font;
+    canvasContext.font = "16px Courier";
+    canvasContext.fillText(`You lived for ${survivalModeTimer} seconds`, canvasWidth / 2 - 100, canvasHeight / 2 + 100);
+    canvasContext.fillText(`and made it to wave ${currentWave}`, canvasWidth / 2 - 90, canvasHeight / 2 + 125);
+    canvasContext.fillText(`with a score of ${score}`, canvasWidth / 2 - 75, canvasHeight / 2 + 150);
+    let encouragingMessage;
+    if (currentWave < 10) {
+      encouragingMessage = "Keep trying!";
+    } else if (currentWave < 20) {
+      encouragingMessage = "Looking good!";
+    } else {
+      encouragingMessage = "Wow, nice work!";
+    }
+    let oldFillStyle = canvasContext.fillStyle;
+    canvasContext.fillStyle = `rgb(${randomInt(100, 200)}, ${randomInt(100, 200)}, ${randomInt(100, 200)})`;
+    canvasContext.fillText(encouragingMessage, canvasWidth / 2 - 50, canvasHeight / 2 + 175);
+    canvasContext.fillStyle = oldFillStyle;
+    canvasContext.font = oldFont;
+  }
 };
 
-////////////////////////////////////////////
-// Staging Stuff
-////////////////////////////////////\\\/////
+const menuOptions = ["Mission", "Survival"];
+let selectedGameMode = null;
+
+let optionLocations = new Object();
+const drawMenu = (canvasContext) => {
+  let titleLocation = drawLargeBanner(canvasContext, "🅱️ALA🅱️A");
+  for (let i = 0; i < menuOptions.length; i++) {
+    let oldFont = canvasContext.font;
+    let oldFillStyle = canvasContext.fillStyle;
+    canvasContext.font = "25px Courier";
+    canvasContext.fillStyle = "grey";
+    let menuOptionLocationX = titleLocation.x + 25;
+    let menuOptionLocationY = titleLocation.y + (i + 1) * 30;
+    let menuOptionText = menuOptions[i];
+    // Most of the time we'll skip this check. The first time, we'll
+    // add to the object. I didn't want to generate a new object every
+    // time I draw the menu.
+    if (!Object.keys(optionLocations).includes(menuOptionText)) {
+      optionLocations[menuOptionText] = {
+        x: menuOptionLocationX,
+        y: menuOptionLocationY,
+      };
+    }
+    canvasContext.fillText(menuOptionText, menuOptionLocationX, menuOptionLocationY);
+    canvasContext.font = oldFont;
+    canvasContext.fillStyle = oldFillStyle;
+  }
+};
+
+// This function is proof that I've never done this before in my life
+let hoveredGameModeIdx = 0;
+let lastHoveredGameModeFromInput = 0;
+const updateHoveredGameModeFromInput = (canvasContext, inputObject) => {
+  // This bit debounces the menu options so we don't hyper speed
+  // them when we press a button 8D
+  if (Date.now() - lastHoveredGameModeFromInput > 200) {
+    if (inputObject.down === true) {
+      // I _think_ this means that we're uh, on the last option
+      if (hoveredGameModeIdx + 1 === menuOptions.length) {
+        hoveredGameModeIdx = 0;
+      } else {
+        hoveredGameModeIdx += 1;
+      }
+      lastHoveredGameModeFromInput = Date.now();
+    } else if (inputObject.up === true) {
+      if (hoveredGameModeIdx - 1 < 0) {
+        hoveredGameModeIdx = menuOptions.length - 1;
+      } else {
+        hoveredGameModeIdx -= 1;
+      }
+      lastHoveredGameModeFromInput = Date.now();
+    } else if (inputObject.enter === true) {
+      selectedGameMode = menuOptions[hoveredGameModeIdx];
+    }
+  }
+  let hoveredGameMode = menuOptions[hoveredGameModeIdx];
+  const selectorX = optionLocations[hoveredGameMode].x - 10;
+  const selectorY = optionLocations[hoveredGameMode].y - 5;
+  drawCircle(canvasContext, selectorX, selectorY, 5);
+};
+
+//\//////////\\\////////////////////////////////\\\\\\\///////
+// Staging Stuff: This sucks, really bad lol.
+//\//////////\\\////////////////////////\\\/////\\\\\\\///////
+
+// Given enemy details, get a new enemy out.
 const generateEnemy = (enemyDetails) => {
   let enemyX = enemyDetails.x ? enemyDetails.x : canvasWidth / 2;
   let enemyY = enemyDetails.y ? enemyDetails.y : 100;
@@ -654,6 +810,8 @@ const generateEnemy = (enemyDetails) => {
   } else if (enemyDetails.enemyType == "support") {
     // x: any, y: any, size: any, color: any, speed: any
     return new Support(enemyX, enemyY, 3, "red", randomInt(2, 5));
+  } else {
+    throw new Error(`${enemyDetails.enemyType} is not a valid enemy type.`);
   }
 };
 
@@ -684,6 +842,7 @@ Object.keys(gamePlayStages).forEach((stageID) => {
   });
 });
 
+// Very serious business
 const StageStatesEnum = Object.freeze({
   none: "none",
   started: "started",
@@ -723,16 +882,50 @@ const finishSubStage = (stageID, subStageID) => {
   }
 };
 
-let currentStage = 1;
-let currentSubStage = 1;
+// This is like... some kind of messed up state machine. It works OK.
 const handleStage = (id) => {
-  let subStagesInThisStage = Object.keys(gamePlayStages[id]);
   if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.started) {
     if (onScreenEnemies.length === 0) {
       finishSubStage(id, currentSubStage);
     }
   } else if (stageState[id][currentSubStage]["subStageStatus"] === StageStatesEnum.none) {
     startSubStage(id, currentSubStage);
+  }
+};
+
+const generateSomewhatRandomWave = () => {
+  if (onScreenEnemies.length === 0) {
+    // Fizz buzz helps us decide how big our wave is going to be
+    // this is amazing lol. "What's the application of fizz buzz?"
+    // "It's a meaningless exercise." WELL HERE YOU GO. THIS IS IT.
+    // THE APPLICATION OF FIZZBUZZ.
+    currentWave += 1;
+    let waveSize = 8;
+    if (currentWave % 3 === 0 && currentWave % 5 === 0) {
+      waveSize = 16;
+    } else if (currentWave % 3 === 0) {
+      waveSize = 12;
+    } else if (currentWave % 5 === 0) {
+      waveSize = 6;
+    }
+    for (let i = 0; i < waveSize; i++) {
+      let enemyChance = randomInt(1, 100);
+      let enemy, enemyX, enemyY;
+      // Get some RNG involved in the enemy generation, rite?
+      if (enemyChance > 50) {
+        enemyX = randomInt(Math.floor(canvasWidth / 4), Math.floor((3 * canvasWidth) / 4));
+        enemyY = randomInt(300, 500);
+        // x: any, y: any, size: any, color: any, target: any
+        enemy = new Hunter(enemyX, enemyY, 3, "red", playerShip);
+        onScreenEnemies.push(enemy);
+      } else {
+        enemyX = randomInt(Math.floor(canvasWidth / 4), Math.floor((3 * canvasWidth) / 4));
+        enemyY = randomInt(200, 400);
+        // x: any, y: any, size: any, color: any, speed: any
+        enemy = new Support(enemyX, enemyY, 3, "red", randomInt(5, 9));
+        onScreenEnemies.push(enemy);
+      }
+    }
   }
 };
 
@@ -756,6 +949,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
   let shieldBarTextLocationX = shieldBarXLocation - 90;
   let shieldBarTextLocationY = shieldBarYLocation + 8;
 
+  // Display a cute lil W in a box if we have the weapon powerup!
   if (weaponPowerUpIsActive === true) {
     canvasContext.strokeStyle = "green";
     canvasContext.fillStyle = "green";
@@ -764,8 +958,12 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     canvasContext.strokeStyle = oldStrokeStyle;
     canvasContext.fillStyle = oldFillStyle;
   }
-
-  canvasContext.fillText(`Level ${currentStage}, wave ${currentSubStage}`, 220, 30);
+  if (selectedGameMode === "Mission") {
+    canvasContext.fillText(`Level ${currentStage}, wave ${currentSubStage}`, 220, 30);
+  }
+  if (selectedGameMode === "Survival") {
+    canvasContext.fillText(`Wave ${currentWave}`, 220, 30);
+  }
 
   canvasContext.fillText(
     `Health: ${playerCharacter.health} / ${MAXIMUM_HEALTH}`,
@@ -773,7 +971,7 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
     healthBarTextLocationY
   );
   canvasContext.fillText(
-    `Health: ${playerCharacter.shield} / ${MAXIMUM_SHIELD}`,
+    `Shield: ${playerCharacter.shield} / ${MAXIMUM_SHIELD}`,
     shieldBarTextLocationX,
     shieldBarTextLocationY
   );
@@ -807,63 +1005,91 @@ const drawStatusBar = (canvasContext, playerCharacter) => {
 const update = () => {
   // clear the canvas
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  if (victoryCondition === false && deathCondition === false) {
-    let stageKeys = Object.keys(gamePlayStages);
-    handleStage(currentStage);
 
-    // Draw the status bar ( amazing, I know )
-    drawStatusBar(canvasContext, playerShip);
-    // Get the player's current location
-    updateCharacterFromInput(playerInput, playerShip);
-    if (SHOW_HITBOXES === true) {
-      drawCircle(canvasContext, playerShip.hitBoxDetails.x, playerShip.hitBoxDetails.y, playerShip.hitBoxDetails.size);
-    }
-
-    onScreenEnemies.forEach((enemy) => {
-      if (SHOW_HITBOXES === true) {
-        drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+  if (selectedGameMode !== null) {
+    if (victoryCondition === false && deathCondition === false) {
+      if (selectedGameMode === "Mission") {
+        handleStage(currentStage);
+      } else if (selectedGameMode === "Survival") {
+        if (survivalModeTimerIntervalID === null) {
+          survivalModeTimerIntervalID = startSurvivalModeTimer();
+        }
+        generateSomewhatRandomWave();
       }
-      drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
-    });
-    // Draw the playerplayerShip.x + 5 * playerShip.size, playerShip.y - 5 * playerShip.size, 5 * playerShip.size;
-    drawArrow(
-      canvasContext,
-      playerShip.coordinates.x,
-      playerShip.coordinates.y,
-      "up",
-      playerShip.size,
-      playerShip.color
-    );
-    fireLaz0rFromInput(playerInput, playerShip);
-    onScreenProjectiles.forEach((element) => {
-      drawCircle(canvasContext, element.x, element.y, projectileSize);
-    });
 
-    onScreenEnemyProjectiles.forEach((element) => {
-      drawCircle(canvasContext, element.x, element.y, projectileSize);
-    });
+      garbageCollectObjects(onScreenProjectiles);
+      garbageCollectObjects(onScreenEnemyProjectiles);
+      garbageCollectObjects(onScreenEnemies);
+      garbageCollectObjects(onScreenPowerUps);
 
-    onScreenPowerUps.forEach((powerUp) => {
-      drawPowerup(canvasContext, powerUp);
-    });
+      // Draw the status bar ( amazing, I know )
+      drawStatusBar(canvasContext, playerShip);
+      // Get the player's current location
+      updateCharacterFromInput(playerInput, playerShip);
+      if (SHOW_HITBOXES === true) {
+        drawCircle(
+          canvasContext,
+          playerShip.hitBoxDetails.x,
+          playerShip.hitBoxDetails.y,
+          playerShip.hitBoxDetails.size
+        );
+      }
 
-    handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
-    handlePlayerHits(onScreenEnemyProjectiles, playerShip);
-    handlePowerUps(onScreenProjectiles, onScreenPowerUps);
-    [onScreenEnemyProjectiles, onScreenEnemies, onScreenPowerUps].forEach((garbageCollectibleArray) => {
-      garbageCollectObjects(garbageCollectibleArray);
-    });
-    // In case we hit some goofy race condition, let's always try to reset the weapons.
-    if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
-      minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+      onScreenEnemies.forEach((enemy) => {
+        if (SHOW_HITBOXES === true) {
+          drawCircle(canvasContext, enemy.hitBoxDetails.x, enemy.hitBoxDetails.y, enemy.hitBoxDetails.size);
+        }
+        drawArrow(canvasContext, enemy.coordinates.x, enemy.coordinates.y, "down", enemy.size, enemy.color);
+      });
+      // Draw the player
+      drawArrow(
+        canvasContext,
+        playerShip.coordinates.x,
+        playerShip.coordinates.y,
+        "up",
+        playerShip.size,
+        playerShip.color
+      );
+      fireLaz0rFromInput(playerInput, playerShip);
+      onScreenProjectiles.forEach((element) => {
+        drawCircle(canvasContext, element.x, element.y, projectileSize);
+      });
+
+      onScreenEnemyProjectiles.forEach((element) => {
+        drawCircle(canvasContext, element.x, element.y, projectileSize);
+      });
+
+      onScreenPowerUps.forEach((powerUp) => {
+        drawPowerup(canvasContext, powerUp);
+      });
+
+      handleEnemyDeaths(onScreenProjectiles, onScreenEnemies);
+      handlePlayerHits(onScreenEnemyProjectiles, playerShip);
+      handlePowerUps(onScreenProjectiles, onScreenPowerUps);
+
+      garbageCollectObjects(onScreenProjectiles);
+      garbageCollectObjects(onScreenEnemyProjectiles);
+      garbageCollectObjects(onScreenEnemies);
+      garbageCollectObjects(onScreenPowerUps);
+
+      // In case we hit some goofy race condition, let's always try to reset the weapons.
+      if (!weaponPowerUpIsActive && initialPlayerProjectileInterval !== minTimeBetweenPlayerProjectilesMS) {
+        minTimeBetweenPlayerProjectilesMS = initialPlayerProjectileInterval;
+      }
+    } else {
+      if (victoryCondition === true) {
+        drawVictoryBanner(canvasContext);
+      }
+      if (deathCondition === true) {
+        if (selectedGameMode === "Survival") {
+          stopSurvivalModeTimer(survivalModeTimerIntervalID);
+        }
+        drawDeathBanner(canvasContext);
+      }
     }
   } else {
-    if (victoryCondition === true) {
-      drawVictoryBanner(canvasContext);
-    }
-    if (deathCondition === true) {
-      drawDeathBanner(canvasContext);
-    }
+    drawMenu(canvasContext);
+    updateHoveredGameModeFromInput(canvasContext, playerInput);
   }
 };
 
