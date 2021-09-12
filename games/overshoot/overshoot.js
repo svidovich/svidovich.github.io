@@ -91,6 +91,30 @@ const drawCatapultFrame = (canvasContext, catapult) => {
   drawCircle(canvasContext, catapultX + 11 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
 };
 
+const drawCatapultAimingLine = (canvasContext, catapult) => {
+  const { x: catapultX, y: catapultY } = catapult.coordinates;
+  const catapultSize = catapult.size;
+  const angle = catapult.angle;
+  const oldStrokeStyle = canvasContext.strokeStyle;
+  const oldLineWidth = canvasContext.lineWidth;
+
+  canvasContext.strokeStyle = "red";
+  canvasContext.lineWidth = 3;
+  canvasContext.beginPath();
+  //   canvasContext.moveTo(catapultX, catapultY);
+  canvasContext.moveTo(
+    catapultX + catapultSize * 14 * Math.cos(angle),
+    catapultY + catapultSize * 14 * Math.sin(angle)
+  );
+  canvasContext.lineTo(
+    catapultX + catapultSize * 22 * Math.cos(angle),
+    catapultY + catapultSize * 22 * Math.sin(angle)
+  );
+  canvasContext.stroke();
+  canvasContext.strokeStyle = oldStrokeStyle;
+  canvasContext.lineWidth = oldLineWidth;
+};
+
 const getRandomTargetLocation = () => {
   // Stick to QI?
   return {
@@ -106,8 +130,12 @@ let myRandomTarget = new Target(randomX, randomY);
 let myCatapult = new Catapult(100, 500, 0, 4);
 
 const update = () => {
+  canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, myCatapult);
+  drawCatapultAimingLine(canvasContext, myCatapult);
+  myCatapult.angle += 0.1;
 };
 
 (() => {
