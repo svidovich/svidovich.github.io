@@ -29,6 +29,7 @@ class Input {
       return false;
     }
   };
+
   register() {
     window.addEventListener("keydown", this.keySwitch);
     window.addEventListener("keyup", this.keySwitch);
@@ -90,10 +91,32 @@ class Catapult {
     this.y = y;
     this.angle = angle || 0;
     this.size = size || 1;
+    this.launchingPower = 0;
+    this.lastPowerChange = 0; // Becomes date time
+    this.powerChangeDebounceTime = 0.1; // ms
+    this.maxPower = 100;
   }
 
   aimAdjust(da) {
     this.angle += da;
+  }
+
+  powerAdjust(dP, reset) {
+    if (Date.now() - this.lastPowerChange > this.powerChangeDebounceTime) {
+      if (reset !== true) {
+        // Don't let use exceed max power. Just set to max instead.
+        if (this.launchingPower + dP > this.maxPower) {
+          this.launchingPower = this.maxPower;
+        } else {
+          this.launchingPower += dP;
+        }
+        // Reset flag allows us to just update power to 0.
+      } else {
+        this.launchingPower = 0;
+      }
+      // Set this so that we can debounce.
+      this.lastPowerChange = Date.now();
+    }
   }
 
   get coordinates() {
@@ -102,9 +125,17 @@ class Catapult {
       y: this.y,
     };
   }
+
+  get catapultState() {
+    return {
+      x: this.x,
+      y: this.y,
+      angle: this.angle,
+    };
+  }
 }
 
-const updateCatapultFromInut = (inputObject, catapult) => {
+const updateCatapultFromInput = (inputObject, catapult) => {
   if (inputObject.up === true) {
     if (catapult.angle - 0.03 < -Math.PI / 2) {
       catapult.angle = -Math.PI / 2;
@@ -117,6 +148,19 @@ const updateCatapultFromInut = (inputObject, catapult) => {
       catapult.angle = 0;
     } else {
       catapult.aimAdjust(0.03);
+    }
+  }
+  // If we're holding the space key, let's try to adjust the
+  // catapult's launching power.
+  if (inputObject.space === true) {
+    catapult.powerAdjust(1);
+    // Otherwise, we aren't holding the space key.
+  } else {
+    // Don't poweradjust to 0 unless we have to. There's
+    // more compute involved there. We would rather do a simple
+    // check here to see if we're already at 0.
+    if (catapult.launchingPower !== 0) {
+      catapult.powerAdjust(0, true);
     }
   }
 };
@@ -203,10 +247,10 @@ let playerInput = new Input();
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
+  updateCatapultFromInput(playerInput, playerCatapult);
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
-  updateCatapultFromInut(playerInput, playerCatapult);
 };
 
 (() => {
