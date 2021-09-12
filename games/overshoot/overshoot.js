@@ -5,6 +5,59 @@ let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 
+const InputKeys = {
+  space: 32,
+  up: 38,
+  down: 40,
+  enter: 13,
+};
+
+class Input {
+  constructor() {
+    this.space = false;
+    this.up = false;
+    this.down = false;
+    this.enter = false;
+
+    this.register();
+  }
+
+  changeInputByEventType = (eventType) => {
+    if (eventType === "keydown") {
+      return true;
+    } else if (eventType === "keyup") {
+      return false;
+    }
+  };
+  register() {
+    window.addEventListener("keydown", this.keySwitch);
+    window.addEventListener("keyup", this.keySwitch);
+  }
+
+  // a function for telling which key we pressed
+  keySwitch = (keyPressEvent) => {
+    // We've been handed an event containing a keypress.
+    // What key is it that was pressed?
+    const keyCode = keyPressEvent.keyCode;
+    const eventType = keyPressEvent.type;
+
+    switch (keyCode) {
+      case InputKeys.space:
+        this.space = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.up:
+        this.up = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.down:
+        this.down = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.enter:
+        this.enter = this.changeInputByEventType(eventType);
+        break;
+    }
+  };
+}
+
 class Target {
   constructor(x, y) {
     this.x = x;
@@ -40,7 +93,7 @@ class Catapult {
   }
 
   aimAdjust(da) {
-    angle += da;
+    this.angle += da;
   }
 
   get coordinates() {
@@ -50,6 +103,23 @@ class Catapult {
     };
   }
 }
+
+const updateCatapultFromInut = (inputObject, catapult) => {
+  if (inputObject.up === true) {
+    if (catapult.angle - 0.03 < -Math.PI / 2) {
+      catapult.angle = -Math.PI / 2;
+    } else {
+      catapult.aimAdjust(-0.03);
+    }
+  }
+  if (inputObject.down === true) {
+    if (catapult.angle + 0.03 > 0) {
+      catapult.angle = 0;
+    } else {
+      catapult.aimAdjust(0.03);
+    }
+  }
+};
 
 const drawCatapultFrame = (canvasContext, catapult) => {
   let { x: catapultX, y: catapultY } = catapult.coordinates;
@@ -127,15 +197,16 @@ const getRandomTargetLocation = () => {
 let { x: randomX, y: randomY } = getRandomTargetLocation();
 let myRandomTarget = new Target(randomX, randomY);
 
-let myCatapult = new Catapult(100, 500, 0, 4);
+let playerCatapult = new Catapult(100, 500, 0, 4);
+let playerInput = new Input();
 
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
-  drawCatapultFrame(canvasContext, myCatapult);
-  drawCatapultAimingLine(canvasContext, myCatapult);
-  myCatapult.angle += 0.1;
+  drawCatapultFrame(canvasContext, playerCatapult);
+  drawCatapultAimingLine(canvasContext, playerCatapult);
+  updateCatapultFromInut(playerInput, playerCatapult);
 };
 
 (() => {
