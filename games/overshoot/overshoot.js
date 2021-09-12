@@ -7,6 +7,13 @@ const canvasWidth = canvas.width;
 
 // Magic numbers
 const statusBarHeight = 50;
+const gravity = -9.8;
+const roughFrameRate = 1 / 60;
+
+// Status stuff
+let controlsPaused = false;
+
+let onScreenProjectiles = new Array();
 
 const InputKeys = {
   space: 32,
@@ -142,6 +149,33 @@ class Catapult {
       y: this.y,
       angle: this.angle,
     };
+  }
+}
+
+class Projectile {
+  constructor(x, y, size, v0, a0) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.v0 = v0; // Initial velocity
+    this.a0 = a0; // Initial Angle
+    this.t = 0;
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  adjustPosition() {
+    this.t += roughFrameRate;
+    this.x += this.v0 * Math.cos(this.a0) * this.t;
+    // The sign for the addition on the y term is positive here because of our reference
+    // frame. The origin is in the _top_ left, not the bottom left, so the math is
+    // slightly goofy. The x term is the same, because x is still increasing left-to-right.
+    this.y += this.t * this.v0 * Math.sin(this.a0) - 0.5 * gravity * Math.pow(this.t, 2);
   }
 }
 
@@ -291,6 +325,9 @@ let myRandomTarget = new Target(randomX, randomY);
 let playerCatapult = new Catapult(100, 500, 0, 4);
 let playerInput = new Input();
 
+let randomProjectile = new Projectile(playerCatapult.x, playerCatapult.y, 4, 10, -(45 * Math.PI) / 180);
+onScreenProjectiles.push(randomProjectile);
+
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -299,6 +336,10 @@ const update = () => {
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
+  randomProjectile.adjustPosition();
+  onScreenProjectiles.map((projectile) => {
+    drawCircle(canvasContext, projectile.x, projectile.y, projectile.size);
+  });
 };
 
 (() => {
