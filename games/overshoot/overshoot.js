@@ -5,6 +5,7 @@ let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 
+// Magic numbers
 const statusBarHeight = 50;
 
 const InputKeys = {
@@ -14,6 +15,10 @@ const InputKeys = {
   enter: 13,
 };
 
+// Some day, especially if I try to make a multiplayer game,
+// this class will probably be a subclass to whatever the player
+// characters are. For now, I guess it's not the worst thing ever
+// that it's out here.
 class Input {
   constructor() {
     this.space = false;
@@ -258,7 +263,7 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   const convertedAngle = -parseFloat(`${(playerCatapult.angle * 180) / Math.PI}`).toFixed(2);
   canvasContext.fillText(`Angle: ${convertedAngle}°`, angleMeterLocationX, midBarText);
 
-  const powerMeterLocationX = 200;
+  const powerMeterLocationX = 400;
   const powerMeterLocationY = statusBarHeight / 2 - 4;
   canvasContext.fillText("Power:", powerMeterLocationX - 50, midBarText);
   const powerBarGradient = canvasContext.createLinearGradient(powerMeterLocationX, 0, powerMeterLocationX + 100, 0);
@@ -269,6 +274,12 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.fillStyle = powerBarGradient;
   canvasContext.fillRect(powerMeterLocationX, powerMeterLocationY, playerCatapult.launchingPower, 10);
   canvasContext.fillStyle = oldFillStyle;
+
+  const ammoMeterLocationX = 160;
+  canvasContext.fillText("Ammo:", ammoMeterLocationX, midBarText);
+  for (let i = 1; i <= playerCatapult.ammoCount; i++) {
+    drawCircle(canvasContext, ammoMeterLocationX + 35 + 10 * i, midBarText - 3, 3);
+  }
 
   canvas.fillStyle = canvasContext.font = oldFont;
 };
