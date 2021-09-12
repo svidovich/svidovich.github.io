@@ -5,6 +5,8 @@ let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 
+const statusBarHeight = 50;
+
 const InputKeys = {
   space: 32,
   up: 38,
@@ -86,11 +88,14 @@ const drawTarget = (canvasContext, x, y) => {
 };
 
 class Catapult {
-  constructor(x, y, angle, size) {
+  constructor(x, y, angle, size, ammoCount) {
     this.x = x;
     this.y = y;
     this.angle = angle || 0;
     this.size = size || 1;
+
+    this.ammoCount = ammoCount || 3;
+
     this.launchingPower = 0;
     this.lastPowerChange = 0; // Becomes date time
     this.powerChangeDebounceTime = 0.1; // ms
@@ -233,8 +238,39 @@ const getRandomTargetLocation = () => {
   // Stick to QI?
   return {
     x: randomInt(canvasWidth / 2, canvasWidth),
-    y: randomInt(0, canvasHeight / 2),
+    y: randomInt(statusBarHeight, canvasHeight / 2),
   };
+};
+
+const statusItemsFont = "12px courier";
+const drawStatusBar = (canvasContext, playerCatapult) => {
+  const oldFillStyle = canvasContext.fillStyle;
+  const oldStrokeStyle = canvasContext.strokeStyle;
+  const oldFont = canvasContext.font;
+  canvasContext.font = statusItemsFont;
+
+  canvasContext.strokeRect(0, 0, canvasWidth, statusBarHeight);
+
+  const midBarText = statusBarHeight / 2 + 4;
+
+  const angleMeterLocationX = 50;
+
+  const convertedAngle = -parseFloat(`${(playerCatapult.angle * 180) / Math.PI}`).toFixed(2);
+  canvasContext.fillText(`Angle: ${convertedAngle}°`, angleMeterLocationX, midBarText);
+
+  const powerMeterLocationX = 200;
+  const powerMeterLocationY = statusBarHeight / 2 - 4;
+  canvasContext.fillText("Power:", powerMeterLocationX - 50, midBarText);
+  const powerBarGradient = canvasContext.createLinearGradient(powerMeterLocationX, 0, powerMeterLocationX + 100, 0);
+  powerBarGradient.addColorStop(0.0, "green");
+  powerBarGradient.addColorStop(0.333, "yellow");
+  powerBarGradient.addColorStop(0.666, "orange");
+  powerBarGradient.addColorStop(1.0, "red");
+  canvasContext.fillStyle = powerBarGradient;
+  canvasContext.fillRect(powerMeterLocationX, powerMeterLocationY, playerCatapult.launchingPower, 10);
+  canvasContext.fillStyle = oldFillStyle;
+
+  canvas.fillStyle = canvasContext.font = oldFont;
 };
 
 // Destruct & rename
@@ -248,6 +284,7 @@ const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
   updateCatapultFromInput(playerInput, playerCatapult);
+  drawStatusBar(canvasContext, playerCatapult);
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
