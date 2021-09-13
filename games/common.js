@@ -57,3 +57,13 @@ export const randomInt = (min, max) => {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+
+// The objects in the array need to have a 'queueDeletion' property
+export const garbageCollectObjects = (arrayOfObjects) => {
+  arrayOfObjects.forEach((deletableObject) => {
+    if (deletableObject.queueDeletion === true) {
+      const deletableObjectIndex = arrayOfObjects.indexOf(deletableObject);
+      arrayOfObjects.splice(deletableObjectIndex, 1);
+    }
+  });
+};
