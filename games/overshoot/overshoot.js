@@ -420,14 +420,11 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.font = oldFont;
 };
 
-// Destruct & rename
-let { x: randomX, y: randomY } = getRandomTargetLocation();
-let myRandomTarget = new Target(randomX, randomY, 20);
-let { x: randomX0, y: randomY0 } = getRandomTargetLocation();
-let myRandomTarget0 = new Target(randomX0, randomY0, 16);
-
-onScreenTargets.push(myRandomTarget);
-onScreenTargets.push(myRandomTarget0);
+for (let i = 1; i <= 4; i++) {
+  // Destruct & rename
+  let { x: randomX, y: randomY } = getRandomTargetLocation();
+  onScreenTargets.push(new Target(randomX, randomY, 20));
+}
 
 let playerCatapult = new Catapult(75, 600, 0, 4, 6);
 let playerInput = new Input();
