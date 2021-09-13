@@ -1,4 +1,4 @@
-import { drawCircle, drawDisc, randomInt, drawRectangle } from "../common.js";
+import { distance, drawCircle, drawDisc, garbageCollectObjects, randomInt, drawRectangle } from "../common.js";
 
 let canvas = document.getElementById("mainCanvas");
 let canvasContext = canvas.getContext("2d");
@@ -9,11 +9,14 @@ const canvasWidth = canvas.width;
 const statusBarHeight = 50;
 const gravity = -9.8;
 const roughFrameRate = 1 / 60;
+const aimAdjustInterval = 0.03;
+let launchPowerDivisor = 0.2;
 
 // Status stuff
 let controlsPaused = false;
 
 let onScreenProjectiles = new Array();
+let onScreenTargets = new Array();
 
 const InputKeys = {
   space: 32,
@@ -29,6 +32,7 @@ const InputKeys = {
 class Input {
   constructor() {
     this.space = false;
+    this.firedFlag = false;
     this.up = false;
     this.down = false;
     this.enter = false;
@@ -59,6 +63,12 @@ class Input {
     switch (keyCode) {
       case InputKeys.space:
         this.space = this.changeInputByEventType(eventType);
+        // When we release the space bar, we should set a flag that we can
+        // retrieve later when we're firing -- that means we're done charging
+        // up, and it's time to release our projectile.
+        if (eventType === "keyup") {
+          this.firedFlag = true;
+        }
         break;
       case InputKeys.up:
         this.up = this.changeInputByEventType(eventType);
@@ -74,9 +84,10 @@ class Input {
 }
 
 class Target {
-  constructor(x, y) {
+  constructor(x, y, r) {
     this.x = x;
     this.y = y;
+    this.r = r;
   }
 
   get coordinates() {
@@ -87,14 +98,14 @@ class Target {
   }
 }
 
-const drawTarget = (canvasContext, x, y) => {
+const drawTarget = (canvasContext, x, y, r) => {
   const oldFillStyle = canvasContext.fillStyle;
   // We want to alternate colours between white and red,
   // starting with red. We can do so with a quick parity
   // check based on the ring count.
   for (let i = 1; i <= 4; i++) {
     canvasContext.fillStyle = i % 2 === 0 ? "white" : "red";
-    drawDisc(canvasContext, x, y, 20 - 4 * i);
+    drawDisc(canvasContext, x, y, r - 4 * i);
     canvasContext.fillStyle = oldFillStyle;
   }
 };
@@ -112,6 +123,7 @@ class Catapult {
     this.lastPowerChange = 0; // Becomes date time
     this.powerChangeDebounceTime = 0.1; // ms
     this.maxPower = 100;
+    this.fired = false;
   }
 
   aimAdjust(da) {
@@ -157,9 +169,12 @@ class Projectile {
     this.x = x;
     this.y = y;
     this.size = size;
+    this.r = this.size;
     this.v0 = v0; // Initial velocity
     this.a0 = a0; // Initial Angle
     this.t = 0;
+
+    this.queueDeletion = false;
   }
 
   get coordinates() {
@@ -176,35 +191,69 @@ class Projectile {
     // frame. The origin is in the _top_ left, not the bottom left, so the math is
     // slightly goofy. The x term is the same, because x is still increasing left-to-right.
     this.y += this.t * this.v0 * Math.sin(this.a0) - 0.5 * gravity * Math.pow(this.t, 2);
+    // If we're off screen to the right or the bottom, we should get garbage collected
+    if (this.x > canvasWidth || this.y > canvasHeight) {
+      this.queueDeletion = true;
+    }
   }
 }
 
+const fireCatapult = (catapult) => {
+  // If we're not already in the middle of firing,
+  if (controlsPaused !== true) {
+    onScreenProjectiles.push(
+      new Projectile(
+        catapult.x,
+        // This should prolly be constantized, but meh. It's the location of
+        // the top bolt.
+        catapult.y - 10 * playerCatapult.size + 2,
+        catapult.size,
+        // If we don't reduce this a touch, it's too fast, lol.
+        catapult.launchingPower * launchPowerDivisor,
+        catapult.angle
+      )
+    );
+    controlsPaused = true;
+  }
+};
+
 const updateCatapultFromInput = (inputObject, catapult) => {
-  if (inputObject.up === true) {
-    if (catapult.angle - 0.03 < -Math.PI / 2) {
-      catapult.angle = -Math.PI / 2;
-    } else {
-      catapult.aimAdjust(-0.03);
-    }
+  if (onScreenProjectiles.length === 0) {
+    controlsPaused = false;
   }
-  if (inputObject.down === true) {
-    if (catapult.angle + 0.03 > 0) {
-      catapult.angle = 0;
-    } else {
-      catapult.aimAdjust(0.03);
+  if (controlsPaused !== true) {
+    if (inputObject.up === true) {
+      // Make sure we don't go too far overhead
+      if (catapult.angle - aimAdjustInterval < -Math.PI / 2) {
+        catapult.angle = -Math.PI / 2;
+      } else {
+        catapult.aimAdjust(-aimAdjustInterval);
+      }
     }
-  }
-  // If we're holding the space key, let's try to adjust the
-  // catapult's launching power.
-  if (inputObject.space === true) {
-    catapult.powerAdjust(1);
-    // Otherwise, we aren't holding the space key.
-  } else {
-    // Don't poweradjust to 0 unless we have to. There's
-    // more compute involved there. We would rather do a simple
-    // check here to see if we're already at 0.
-    if (catapult.launchingPower !== 0) {
-      catapult.powerAdjust(0, true);
+    if (inputObject.down === true) {
+      // Make sure we don't go too far out front
+      if (catapult.angle + aimAdjustInterval > 0) {
+        catapult.angle = 0;
+      } else {
+        catapult.aimAdjust(aimAdjustInterval);
+      }
+    }
+    // If we're holding the space key, let's try to adjust the
+    // catapult's launching power.
+    if (inputObject.space === true) {
+      catapult.powerAdjust(1);
+      // Otherwise, we aren't holding the space key.
+    } else {
+      if (inputObject.firedFlag === true) {
+        fireCatapult(catapult);
+        inputObject.firedFlag = false;
+      }
+      // Don't poweradjust to 0 unless we have to. There's
+      // more compute involved there. We would rather do a simple
+      // check here to see if we're already at 0.
+      if (catapult.launchingPower !== 0) {
+        catapult.powerAdjust(0, true);
+      }
     }
   }
 };
@@ -262,7 +311,8 @@ const drawCatapultArmAndBucket = (canvasContext, catapult) => {
   canvasContext.lineTo(hingeX - 10 * catapultSize, hingeY - 10 * catapultSize);
   canvasContext.lineTo(hingeX - 12 * catapultSize, hingeY - 7 * catapultSize);
   canvasContext.lineTo(hingeX - 9 * catapultSize, hingeY - 5 * catapultSize);
-  canvasContext.lineTo(hingeX - 7 * catapultSize, hingeY - 8 * catapultSize);
+  canvasContext.lineTo(hingeX - 7 * catapultSize, hingeY - 6 * catapultSize);
+  canvasContext.lineTo(hingeX, hingeY);
 
   canvasContext.stroke();
 };
@@ -279,7 +329,6 @@ const drawCatapultAimingLine = (canvasContext, catapult) => {
   canvasContext.strokeStyle = "red";
   canvasContext.lineWidth = 3;
   canvasContext.beginPath();
-  //   canvasContext.moveTo(catapultX, catapultY);
   canvasContext.moveTo(
     catapultX + catapultSize * 14 * Math.cos(angle),
     yAimPoint + catapultSize * 14 * Math.sin(angle)
@@ -301,7 +350,33 @@ const getRandomTargetLocation = () => {
   };
 };
 
+// An updated version which accounts for the size of both the
+// projectile and the entity. This is for projectiles and entities
+// that are either circular or that have circular hitboxes, and that
+// have a component 'r' representing their radii.
+// In addition, it's only going to run through all of the entities
+// and projectiles if there's some of each to run through.
+const computeCollisions = (projectiles, entities) => {
+  if (entities.length > 0 && projectiles.length > 0) {
+    entities.forEach((entity) => {
+      projectiles.forEach((projectile) => {
+        if (distance(projectile, entity) - projectile.r - entity.r <= 0) {
+          projectile.queueDeletion = true;
+          entity.queueDeletion = true;
+        }
+      });
+    });
+  }
+};
+
+// It's definitely not ideal to re-instantiate these variables
+// every time the screen is updated!
 const statusItemsFont = "12px courier";
+const midBarText = statusBarHeight / 2 + 4;
+const angleMeterLocationX = 50;
+const powerMeterLocationX = 400;
+const powerMeterLocationY = statusBarHeight / 2 - 4;
+const ammoMeterLocationX = 160;
 const drawStatusBar = (canvasContext, playerCatapult) => {
   const oldFillStyle = canvasContext.fillStyle;
   const oldStrokeStyle = canvasContext.strokeStyle;
@@ -310,15 +385,9 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
 
   canvasContext.strokeRect(0, 0, canvasWidth, statusBarHeight);
 
-  const midBarText = statusBarHeight / 2 + 4;
-
-  const angleMeterLocationX = 50;
-
   const convertedAngle = -parseFloat(`${(playerCatapult.angle * 180) / Math.PI}`).toFixed(2);
   canvasContext.fillText(`Angle: ${convertedAngle}°`, angleMeterLocationX, midBarText);
 
-  const powerMeterLocationX = 400;
-  const powerMeterLocationY = statusBarHeight / 2 - 4;
   canvasContext.fillText("Power:", powerMeterLocationX - 50, midBarText);
   const powerBarGradient = canvasContext.createLinearGradient(powerMeterLocationX, 0, powerMeterLocationX + 100, 0);
   powerBarGradient.addColorStop(0.0, "green");
@@ -329,18 +398,21 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.fillRect(powerMeterLocationX, powerMeterLocationY, playerCatapult.launchingPower, 10);
   canvasContext.fillStyle = oldFillStyle;
 
-  const ammoMeterLocationX = 160;
   canvasContext.fillText("Ammo:", ammoMeterLocationX, midBarText);
   for (let i = 1; i <= playerCatapult.ammoCount; i++) {
     drawCircle(canvasContext, ammoMeterLocationX + 35 + 10 * i, midBarText - 3, 3);
   }
-
-  canvas.fillStyle = canvasContext.font = oldFont;
+  canvasContext.font = oldFont;
 };
 
 // Destruct & rename
 let { x: randomX, y: randomY } = getRandomTargetLocation();
-let myRandomTarget = new Target(randomX, randomY);
+let myRandomTarget = new Target(randomX, randomY, 20);
+let { x: randomX0, y: randomY0 } = getRandomTargetLocation();
+let myRandomTarget0 = new Target(randomX0, randomY0, 16);
+
+onScreenTargets.push(myRandomTarget);
+onScreenTargets.push(myRandomTarget0);
 
 let playerCatapult = new Catapult(100, 500, 0, 4);
 let playerInput = new Input();
@@ -352,21 +424,27 @@ let randomProjectile = new Projectile(
   10,
   -(45 * Math.PI) / 180
 );
-onScreenProjectiles.push(randomProjectile);
 
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
   updateCatapultFromInput(playerInput, playerCatapult);
   drawStatusBar(canvasContext, playerCatapult);
-  drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultArmAndBucket(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
-  randomProjectile.adjustPosition();
+
+  onScreenTargets.map((target) => {
+    drawTarget(canvasContext, target.x, target.y, target.r);
+  });
+
   onScreenProjectiles.map((projectile) => {
+    projectile.adjustPosition();
     drawCircle(canvasContext, projectile.x, projectile.y, projectile.size);
   });
+  computeCollisions(onScreenProjectiles, onScreenTargets);
+  garbageCollectObjects(onScreenProjectiles);
+  garbageCollectObjects(onScreenTargets);
 };
 
 (() => {
