@@ -249,8 +249,28 @@ const drawCatapultFrame = (canvasContext, catapult) => {
   drawCircle(canvasContext, catapultX + 11 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
 };
 
+const drawCatapultArmAndBucket = (canvasContext, catapult) => {
+  const { x: catapultX, y: catapultY } = catapult.coordinates;
+  const catapultSize = catapult.size;
+  const hingeX = catapultX + 2 * catapultSize + 2;
+  const hingeY = catapultY - 2 * catapultSize + 2;
+
+  canvasContext.beginPath();
+
+  canvasContext.moveTo(hingeX, hingeY);
+  canvasContext.lineTo(hingeX, hingeY - 2 * catapultSize);
+  canvasContext.lineTo(hingeX - 10 * catapultSize, hingeY - 10 * catapultSize);
+  canvasContext.lineTo(hingeX - 12 * catapultSize, hingeY - 7 * catapultSize);
+  canvasContext.lineTo(hingeX - 9 * catapultSize, hingeY - 5 * catapultSize);
+  canvasContext.lineTo(hingeX - 7 * catapultSize, hingeY - 8 * catapultSize);
+
+  canvasContext.stroke();
+};
+
 const drawCatapultAimingLine = (canvasContext, catapult) => {
   const { x: catapultX, y: catapultY } = catapult.coordinates;
+  const yAimPoint = catapultY - 10 * catapult.size + 2;
+
   const catapultSize = catapult.size;
   const angle = catapult.angle;
   const oldStrokeStyle = canvasContext.strokeStyle;
@@ -262,11 +282,11 @@ const drawCatapultAimingLine = (canvasContext, catapult) => {
   //   canvasContext.moveTo(catapultX, catapultY);
   canvasContext.moveTo(
     catapultX + catapultSize * 14 * Math.cos(angle),
-    catapultY + catapultSize * 14 * Math.sin(angle)
+    yAimPoint + catapultSize * 14 * Math.sin(angle)
   );
   canvasContext.lineTo(
-    catapultX + catapultSize * 22 * Math.cos(angle),
-    catapultY + catapultSize * 22 * Math.sin(angle)
+    catapultX + catapultSize * 24 * Math.cos(angle),
+    yAimPoint + catapultSize * 24 * Math.sin(angle)
   );
   canvasContext.stroke();
   canvasContext.strokeStyle = oldStrokeStyle;
@@ -325,7 +345,13 @@ let myRandomTarget = new Target(randomX, randomY);
 let playerCatapult = new Catapult(100, 500, 0, 4);
 let playerInput = new Input();
 
-let randomProjectile = new Projectile(playerCatapult.x, playerCatapult.y, 4, 10, -(45 * Math.PI) / 180);
+let randomProjectile = new Projectile(
+  playerCatapult.x,
+  playerCatapult.y - 10 * playerCatapult.size + 2,
+  4,
+  10,
+  -(45 * Math.PI) / 180
+);
 onScreenProjectiles.push(randomProjectile);
 
 const update = () => {
@@ -335,6 +361,7 @@ const update = () => {
   drawStatusBar(canvasContext, playerCatapult);
   drawTarget(canvasContext, myRandomTarget.x, myRandomTarget.y);
   drawCatapultFrame(canvasContext, playerCatapult);
+  drawCatapultArmAndBucket(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
   randomProjectile.adjustPosition();
   onScreenProjectiles.map((projectile) => {
