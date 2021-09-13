@@ -205,7 +205,7 @@ class Projectile {
 
 const fireCatapult = (catapult) => {
   // If we're not already in the middle of firing,
-  if (controlsPaused !== true) {
+  if (controlsPaused !== true && catapult.ammoCount > 0) {
     onScreenProjectiles.push(
       new Projectile(
         catapult.x,
@@ -218,6 +218,7 @@ const fireCatapult = (catapult) => {
         catapult.angle
       )
     );
+    catapult.ammoCount -= 1;
     controlsPaused = true;
   }
 };
@@ -428,16 +429,8 @@ let myRandomTarget0 = new Target(randomX0, randomY0, 16);
 onScreenTargets.push(myRandomTarget);
 onScreenTargets.push(myRandomTarget0);
 
-let playerCatapult = new Catapult(75, 600, 0, 4);
+let playerCatapult = new Catapult(75, 600, 0, 4, 6);
 let playerInput = new Input();
-
-let randomProjectile = new Projectile(
-  playerCatapult.x,
-  playerCatapult.y - 10 * playerCatapult.size + 2,
-  4,
-  10,
-  -(45 * Math.PI) / 180
-);
 
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
