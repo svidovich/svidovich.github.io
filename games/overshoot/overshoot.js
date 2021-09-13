@@ -9,7 +9,7 @@ const canvasWidth = canvas.width;
 const statusBarHeight = 50;
 const gravity = -9.8;
 const roughFrameRate = 1 / 60;
-const aimAdjustInterval = 0.03;
+let aimAdjustInterval = 0.03;
 let launchPowerDivisor = 0.2;
 
 // Status stuff
@@ -20,6 +20,7 @@ let onScreenTargets = new Array();
 
 const InputKeys = {
   space: 32,
+  lshift: 16,
   up: 38,
   down: 40,
   enter: 13,
@@ -36,6 +37,7 @@ class Input {
     this.up = false;
     this.down = false;
     this.enter = false;
+    this.lshift = false;
 
     this.register();
   }
@@ -78,6 +80,9 @@ class Input {
         break;
       case InputKeys.enter:
         this.enter = this.changeInputByEventType(eventType);
+        break;
+      case InputKeys.lshift:
+        this.shift = this.changeInputByEventType(eventType);
         break;
     }
   };
@@ -258,6 +263,15 @@ const updateCatapultFromInput = (inputObject, catapult) => {
   }
 };
 
+const updateGlobalEnvironmentFromInput = (inputObject) => {
+  // Enable precision aiming
+  if (inputObject.shift === true) {
+    aimAdjustInterval = 0.003;
+  } else {
+    aimAdjustInterval = 0.03;
+  }
+};
+
 const drawCatapultFrame = (canvasContext, catapult) => {
   let { x: catapultX, y: catapultY } = catapult.coordinates;
   let catapultSize = catapult.size;
@@ -428,6 +442,7 @@ let randomProjectile = new Projectile(
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
+  updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
   drawStatusBar(canvasContext, playerCatapult);
   drawCatapultFrame(canvasContext, playerCatapult);
