@@ -348,8 +348,8 @@ const drawCatapultAimingLine = (canvasContext, catapult) => {
     yAimPoint + catapultSize * 14 * Math.sin(angle)
   );
   canvasContext.lineTo(
-    catapultX + catapultSize * 24 * Math.cos(angle),
-    yAimPoint + catapultSize * 24 * Math.sin(angle)
+    catapultX + catapultSize * 28 * Math.cos(angle),
+    yAimPoint + catapultSize * 28 * Math.sin(angle)
   );
   canvasContext.stroke();
   canvasContext.strokeStyle = oldStrokeStyle;
@@ -428,7 +428,7 @@ let myRandomTarget0 = new Target(randomX0, randomY0, 16);
 onScreenTargets.push(myRandomTarget);
 onScreenTargets.push(myRandomTarget0);
 
-let playerCatapult = new Catapult(100, 500, 0, 4);
+let playerCatapult = new Catapult(75, 600, 0, 4);
 let playerInput = new Input();
 
 let randomProjectile = new Projectile(
