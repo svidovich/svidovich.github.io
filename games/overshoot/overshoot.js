@@ -4,13 +4,13 @@ import { distance, drawCircle, drawDisc, garbageCollectObjects, randomInt, drawR
 const cookieBanner = document.getElementById("cookie-banner");
 const cookieCloseButton = document.getElementById("close");
 const cookieBailButton = document.getElementById("noway");
-if (localStorage.getItem("cookieSeen") === "shown") {
+if (localStorage.getItem("cookieSeenOvershoot") === "shown") {
   cookieBanner.style.display = "none";
 }
 
 cookieCloseButton.onclick = () => {
   cookieBanner.style.display = "none";
-  localStorage.setItem("cookieSeen", "shown");
+  localStorage.setItem("cookieSeenOvershoot", "shown");
 };
 
 cookieBailButton.onclick = () => {
@@ -29,6 +29,26 @@ const roughFrameRate = 1 / 60;
 let aimAdjustInterval = 0.03;
 let launchPowerDivisor = 0.2;
 
+// User data!
+const setUpGameData = () => {
+  let data = {
+    numbers: ["ammunitionDeltaOS", "powerDeltaOS", "lootOS"],
+    upgrades: ["moreProjectilesOS", "biggerAmmoOS"],
+  };
+  data.numbers.forEach((numericValue) => {
+    if (localStorage.getItem(numericValue) === null) {
+      localStorage.setItem(numericValue, 0);
+    }
+  });
+  data.upgrades.forEach((upgrade) => {
+    if (localStorage.getItem(upgrade) === null) {
+      localStorage.setItem(upgrade, false);
+    }
+  });
+};
+
+setUpGameData();
+
 // Status stuff
 let controlsPaused = false;
 
@@ -38,7 +58,28 @@ const GameInterfaces = Object.freeze({
   shop: "shop",
   battlefield: "battlefield",
 });
-let currentInterface = null;
+
+let currentInterface = GameInterfaces.battlefield;
+
+const mainMenuLocationX = 100;
+const mainMenuLocationY = 75;
+const mainMenuSizeX = 100;
+const mainMenuSizeY = 100;
+const drawMainMenu = (canvasContext) => {
+  canvasContext.strokeRect(mainMenuLocationX, mainMenuLocationY, mainMenuSizeX, mainMenuSizeY);
+  drawTarget(
+    canvasContext,
+    mainMenuSizeX / 2 + mainMenuLocationX,
+    mainMenuSizeY / 2 + mainMenuLocationY,
+    (mainMenuSizeX + mainMenuSizeY) / 4
+  );
+  canvasContext.fillText("Target ", mainMenuSizeX / 2 + mainMenuLocationX - 15, mainMenuSizeY / 2 + mainMenuLocationY);
+  canvasContext.fillText(
+    "Practice!",
+    mainMenuSizeX / 2 + mainMenuLocationX - 20,
+    mainMenuSizeY / 2 + mainMenuLocationY + 10
+  );
+};
 
 let onScreenProjectiles = new Array();
 let onScreenTargets = new Array();
@@ -478,7 +519,14 @@ const drawBattleField = () => {
 
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  drawBattleField();
+  if (currentInterface === null) {
+    currentInterface = GameInterfaces.mainMenu;
+  }
+  if (currentInterface === GameInterfaces.mainMenu) {
+    drawMainMenu(canvasContext);
+  } else if (currentInterface === GameInterfaces.battlefield) {
+    drawBattleField();
+  }
 };
 
 (() => {
