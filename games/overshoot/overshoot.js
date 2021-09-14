@@ -1,5 +1,22 @@
 import { distance, drawCircle, drawDisc, garbageCollectObjects, randomInt, drawRectangle } from "../common.js";
 
+// We need to chill with the DOM to warn our user about cookies.
+const cookieBanner = document.getElementById("cookie-banner");
+const cookieCloseButton = document.getElementById("close");
+const cookieBailButton = document.getElementById("noway");
+if (localStorage.getItem("cookieSeen") === "shown") {
+  cookieBanner.style.display = "none";
+}
+
+cookieCloseButton.onclick = () => {
+  cookieBanner.style.display = "none";
+  localStorage.setItem("cookieSeen", "shown");
+};
+
+cookieBailButton.onclick = () => {
+  location.href = "index.html";
+};
+
 let canvas = document.getElementById("mainCanvas");
 let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
@@ -14,6 +31,14 @@ let launchPowerDivisor = 0.2;
 
 // Status stuff
 let controlsPaused = false;
+
+const GameInterfaces = Object.freeze({
+  mainMenu: "mainMenu",
+  levelSelect: "levelSelect",
+  shop: "shop",
+  battlefield: "battlefield",
+});
+let currentInterface = null;
 
 let onScreenProjectiles = new Array();
 let onScreenTargets = new Array();
@@ -429,11 +454,10 @@ for (let i = 1; i <= 4; i++) {
 let playerCatapult = new Catapult(75, 600, 0, 4, 6);
 let playerInput = new Input();
 
-const update = () => {
-  canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
+const drawBattleField = () => {
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
+
   drawStatusBar(canvasContext, playerCatapult);
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultArmAndBucket(canvasContext, playerCatapult);
@@ -450,6 +474,11 @@ const update = () => {
   computeCollisions(onScreenProjectiles, onScreenTargets);
   garbageCollectObjects(onScreenProjectiles);
   garbageCollectObjects(onScreenTargets);
+};
+
+const update = () => {
+  canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  drawBattleField();
 };
 
 (() => {
