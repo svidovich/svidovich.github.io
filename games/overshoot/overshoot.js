@@ -17,10 +17,14 @@ cookieBailButton.onclick = () => {
   location.href = "index.html";
 };
 
+// Things we want to be global
+
 let canvas = document.getElementById("mainCanvas");
 let canvasContext = canvas.getContext("2d");
 const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
+
+let { left: canvasLeftEdgeX, top: canvasTopEdgeY } = canvas.getBoundingClientRect();
 
 // Magic numbers
 const statusBarHeight = 50;
@@ -59,27 +63,85 @@ const GameInterfaces = Object.freeze({
   battlefield: "battlefield",
 });
 
-let currentInterface = GameInterfaces.battlefield;
+let currentInterface = GameInterfaces.mainMenu;
 
-const mainMenuLocationX = 100;
-const mainMenuLocationY = 75;
-const mainMenuSizeX = 100;
-const mainMenuSizeY = 100;
+// This kind of thing really sucks and needs refactored. I think there should probably be
+// a menu icon class that gets drawn, one size fits all, yada yada, and has definite bounds,
+// and a function? that draws something inside it
+const mainMenuTargetPracticeLocationX = 100;
+const mainMenuTargetPracticeLocationY = 75;
+const mainMenuTargetPracticeSizeX = 100;
+const mainMenuTargetPracticeSizeY = 100;
 const drawMainMenu = (canvasContext) => {
-  canvasContext.strokeRect(mainMenuLocationX, mainMenuLocationY, mainMenuSizeX, mainMenuSizeY);
+  // Drawing the target practice button
+  canvasContext.strokeRect(
+    mainMenuTargetPracticeLocationX,
+    mainMenuTargetPracticeLocationY,
+    mainMenuTargetPracticeSizeX,
+    mainMenuTargetPracticeSizeY
+  );
   drawTarget(
     canvasContext,
-    mainMenuSizeX / 2 + mainMenuLocationX,
-    mainMenuSizeY / 2 + mainMenuLocationY,
-    (mainMenuSizeX + mainMenuSizeY) / 4
+    mainMenuTargetPracticeSizeX / 2 + mainMenuTargetPracticeLocationX,
+    mainMenuTargetPracticeSizeY / 2 + mainMenuTargetPracticeLocationY,
+    (mainMenuTargetPracticeSizeX + mainMenuTargetPracticeSizeY) / 4
   );
-  canvasContext.fillText("Target ", mainMenuSizeX / 2 + mainMenuLocationX - 15, mainMenuSizeY / 2 + mainMenuLocationY);
+  canvasContext.fillText(
+    "Target ",
+    mainMenuTargetPracticeSizeX / 2 + mainMenuTargetPracticeLocationX - 15,
+    mainMenuTargetPracticeSizeY / 2 + mainMenuTargetPracticeLocationY
+  );
   canvasContext.fillText(
     "Practice!",
-    mainMenuSizeX / 2 + mainMenuLocationX - 20,
-    mainMenuSizeY / 2 + mainMenuLocationY + 10
+    mainMenuTargetPracticeSizeX / 2 + mainMenuTargetPracticeLocationX - 20,
+    mainMenuTargetPracticeSizeY / 2 + mainMenuTargetPracticeLocationY + 10
   );
 };
+
+const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
+  const { x, y } = clickCoordinates;
+  // Yeah this really sucks lol. The menu icon could have a member function that does this
+  // so I never have to write this code.
+  if (
+    x >= mainMenuTargetPracticeLocationX &&
+    x <= mainMenuTargetPracticeLocationX + mainMenuTargetPracticeSizeX &&
+    y >= mainMenuTargetPracticeLocationY &&
+    y <= mainMenuTargetPracticeLocationY + mainMenuTargetPracticeSizeY
+  ) {
+    currentInterface = GameInterfaces.battlefield;
+  }
+};
+
+const levelSelectClickHandler = (canvasContext) => {};
+
+const shopClickHandler = (canvasContext) => {};
+
+const battlefieldClickHandler = () => {
+  return;
+};
+
+const interfaceClickHandler = (canvasContext, clickEvent) => {
+  let clickCoordinates = {
+    x: clickEvent.clientX - canvasLeftEdgeX,
+    y: clickEvent.clientY - canvasTopEdgeY,
+  };
+  switch (currentInterface) {
+    case GameInterfaces.mainMenu:
+      mainMenuClickHandler(canvasContext, clickCoordinates);
+      break;
+    case GameInterfaces.levelSelect:
+      levelSelectClickHandler(canvasContext);
+      break;
+    case GameInterfaces.shop:
+      shopClickHandler(canvasContext);
+      break;
+    case GameInterfaces.battlefield:
+      battlefieldClickHandler();
+      break;
+  }
+};
+
+canvas.addEventListener("click", interfaceClickHandler.bind(null, canvasContext));
 
 let onScreenProjectiles = new Array();
 let onScreenTargets = new Array();
