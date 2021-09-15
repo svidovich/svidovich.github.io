@@ -80,7 +80,7 @@ class MenuItem {
     return { x: this.x, y: this.y };
   }
 
-  draw() {
+  draw(canvasContext) {
     throw new Error("Method 'draw()' must be implemented.");
   }
 
@@ -133,6 +133,29 @@ class MainMenuShopLink extends MenuItem {
   }
 }
 
+// To be used Anywhere! Designed to be a rectangle.
+class MainMenuLink extends MenuItem {
+  constructor(x, y) {
+    const w = 100;
+    const h = 25;
+    super(x, y, w, h);
+    this.w = w;
+    this.h = h;
+  }
+
+  draw(canvasContext) {
+    canvasContext.strokeRect(this.x, this.y, this.w, this.h);
+    const oldFont = canvasContext.font;
+    canvasContext.font = `bold ${this.h / 2}px courier`;
+    canvasContext.fillText("Main Menu", this.x + this.w / 6, this.y + this.h / 1.5);
+    canvasContext.font = oldFont;
+  }
+
+  clickAction() {
+    currentInterface = GameInterfaces.mainMenu;
+  }
+}
+
 let mainMenuItems = new Array();
 mainMenuItems.push(new MainMenuTargetPractice(100, 100, 100, 100));
 mainMenuItems.push(new MainMenuShopLink(250, 100, 100, 100));
@@ -151,16 +174,29 @@ const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
   });
 };
 
+let shopItems = new Array();
+shopItems.push(new MainMenuLink(25, 25));
+
+// Starting to feel moist
 const drawShop = (canvasContext) => {
   let oldFont = canvasContext.font;
   canvasContext.font = "bold 50px Courer";
   canvasContext.fillText("Coming soon ;)", canvasWidth / 4, canvasHeight / 2);
   canvasContext.font = oldFont;
+
+  shopItems.forEach((item) => {
+    item.draw(canvasContext);
+  });
+};
+
+// Definitely moist. Needs to be... DRY
+const shopClickHandler = (canvasContext, clickCoordinates) => {
+  shopItems.forEach((item) => {
+    return item.isClicked(clickCoordinates);
+  });
 };
 
 const levelSelectClickHandler = (canvasContext) => {};
-
-const shopClickHandler = (canvasContext) => {};
 
 const battlefieldClickHandler = () => {
   return;
@@ -179,7 +215,7 @@ const interfaceClickHandler = (canvasContext, clickEvent) => {
       levelSelectClickHandler(canvasContext);
       break;
     case GameInterfaces.shop:
-      shopClickHandler(canvasContext);
+      shopClickHandler(canvasContext, clickCoordinates);
       break;
     case GameInterfaces.battlefield:
       battlefieldClickHandler();
