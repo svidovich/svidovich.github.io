@@ -114,9 +114,28 @@ class MainMenuTargetPractice extends MenuItem {
   }
 }
 
+class MainMenuShopLink extends MenuItem {
+  constructor(x, y, w, h) {
+    super(x, y, w, h);
+  }
+
+  draw(canvasContext) {
+    canvasContext.strokeRect(this.x, this.y, this.w, this.h);
+    const oldFont = canvasContext.font;
+    canvasContext.font = `bold ${this.w}px courier`;
+    canvasContext.fillText("$", this.x, this.y + this.h - this.h / 3);
+    canvasContext.font = `bold ${this.w / 4}px courier`;
+    canvasContext.fillText("Shop", this.x + this.w / 3, this.y + this.h - this.w / 12);
+    canvasContext.font = oldFont;
+  }
+  clickAction() {
+    currentInterface = GameInterfaces.shop;
+  }
+}
+
 let mainMenuItems = new Array();
 mainMenuItems.push(new MainMenuTargetPractice(100, 100, 100, 100));
-
+mainMenuItems.push(new MainMenuShopLink(250, 100, 100, 100));
 const drawMainMenu = (canvasContext) => {
   mainMenuItems.forEach((item) => {
     item.draw(canvasContext);
@@ -130,6 +149,13 @@ const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
   mainMenuItems.forEach((item) => {
     return item.isClicked(clickCoordinates);
   });
+};
+
+const drawShop = (canvasContext) => {
+  let oldFont = canvasContext.font;
+  canvasContext.font = "bold 50px Courer";
+  canvasContext.fillText("Coming soon ;)", canvasWidth / 4, canvasHeight / 2);
+  canvasContext.font = oldFont;
 };
 
 const levelSelectClickHandler = (canvasContext) => {};
@@ -608,6 +634,8 @@ const update = () => {
     drawMainMenu(canvasContext);
   } else if (currentInterface === GameInterfaces.battlefield) {
     drawBattleField();
+  } else if (currentInterface === GameInterfaces.shop) {
+    drawShop(canvasContext);
   }
 };
 
