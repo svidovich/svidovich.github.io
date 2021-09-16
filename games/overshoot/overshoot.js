@@ -32,6 +32,7 @@ const gravity = -9.8;
 const roughFrameRate = 1 / 60;
 let aimAdjustInterval = 0.03;
 let launchPowerDivisor = 0.2;
+let ammoSize = 6;
 
 // User data!
 const setUpGameData = () => {
@@ -46,7 +47,7 @@ const setUpGameData = () => {
   });
   data.upgrades.forEach((upgrade) => {
     if (localStorage.getItem(upgrade) === null) {
-      localStorage.setItem(upgrade, false);
+      localStorage.setItem(upgrade, { applied: false, active: false });
     }
   });
 };
@@ -55,6 +56,8 @@ setUpGameData();
 
 // Status stuff
 let controlsPaused = false;
+
+let needToCheckUpgrades = false;
 
 const GameInterfaces = Object.freeze({
   mainMenu: "mainMenu",
@@ -174,16 +177,50 @@ const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
   });
 };
 
+class ShopItem extends MenuItem {
+  constructor(x, y, cost, description, storageKey, purchaseAction) {
+    let w = 100;
+    let h = 100;
+    super(x, y, w, h);
+    this.cost = cost;
+    this.description = description;
+    this.storageKey = storageKey;
+    this.purchaseAction = purchaseAction;
+  }
+
+  clickAction() {
+    if (localStorage.getItem("lootOS") < this.cost) {
+      console.log("Not enough cash");
+    } else {
+      if (this.purchaseAction.type === "switch") {
+        localStorage.setItem(this.storageKey, true);
+      } else if (this.purchaseAction.type === "numeric") {
+        localStorage.setItem(this.storageKey, this.purchaseAction.upgradeDelta);
+      } else {
+        throw new Error("Bad purchase action.");
+      }
+    }
+  }
+
+  draw(canvasContext) {
+    canvasContext.strokeRect(this.x, this.y, this.w, this.h);
+    // this.drawIcon();
+    const oldFont = canvasContext.font;
+    canvasContext.font = `14px bold courier`;
+    canvasContext.fillText(this.description, this.x, this.y + this.h / 2);
+    canvasContext.fillText(`$${this.cost}`, this.x + this.w / 3, this.y + this.h / 2 + 14);
+    canvasContext.font = oldFont;
+  }
+}
+
 let shopItems = new Array();
+const biggerAmmoPurchaseAction = { type: "switch" };
+let biggerAmmo = new ShopItem(100, 125, 250, "Bigger Ammo", "biggerAmmoOS", biggerAmmoPurchaseAction);
 shopItems.push(new MainMenuLink(25, 25));
+shopItems.push(biggerAmmo);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
-  let oldFont = canvasContext.font;
-  canvasContext.font = "bold 50px Courer";
-  canvasContext.fillText("Coming soon ;)", canvasWidth / 4, canvasHeight / 2);
-  canvasContext.font = oldFont;
-
   shopItems.forEach((item) => {
     item.draw(canvasContext);
   });
@@ -422,7 +459,7 @@ const fireCatapult = (catapult) => {
         // This should prolly be constantized, but meh. It's the location of
         // the top bolt.
         catapult.y - 10 * playerCatapult.size + 2,
-        catapult.size,
+        ammoSize,
         // If we don't reduce this a touch, it's too fast, lol.
         catapult.launchingPower * launchPowerDivisor,
         catapult.angle
@@ -654,7 +691,7 @@ const drawBattleField = (canvasContext) => {
 
   onScreenProjectiles.map((projectile) => {
     projectile.adjustPosition();
-    drawCircle(canvasContext, projectile.x, projectile.y, projectile.size);
+    drawCircle(canvasContext, projectile.x, projectile.y, projectile.r);
   });
   computeCollisions(onScreenProjectiles, onScreenTargets);
   garbageCollectObjects(onScreenProjectiles);
