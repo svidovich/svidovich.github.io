@@ -639,7 +639,7 @@ for (let i = 1; i <= 4; i++) {
 let playerCatapult = new Catapult(75, 600, 0, 4, 6);
 let playerInput = new Input();
 
-const drawBattleField = () => {
+const drawBattleField = (canvasContext) => {
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
 
@@ -669,7 +669,7 @@ const update = () => {
   if (currentInterface === GameInterfaces.mainMenu) {
     drawMainMenu(canvasContext);
   } else if (currentInterface === GameInterfaces.battlefield) {
-    drawBattleField();
+    drawBattleField(canvasContext);
   } else if (currentInterface === GameInterfaces.shop) {
     drawShop(canvasContext);
   }
