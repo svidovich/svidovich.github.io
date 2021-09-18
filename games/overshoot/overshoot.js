@@ -178,7 +178,7 @@ const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
 };
 
 class ShopItem extends MenuItem {
-  constructor(x, y, cost, description, storageKey, purchaseAction) {
+  constructor(x, y, cost, description, storageKey, purchaseAction, imagePath) {
     let w = 100;
     let h = 100;
     super(x, y, w, h);
@@ -186,6 +186,18 @@ class ShopItem extends MenuItem {
     this.description = description;
     this.storageKey = storageKey;
     this.purchaseAction = purchaseAction;
+    this.imagePath = imagePath;
+
+    this.loadImage();
+  }
+
+  loadImage() {
+    if (this.imagePath !== undefined) {
+      this.image = new Image();
+      this.image.src = this.imagePath;
+    } else {
+      this.image = null;
+    }
   }
 
   clickAction() {
@@ -207,15 +219,26 @@ class ShopItem extends MenuItem {
     // this.drawIcon();
     const oldFont = canvasContext.font;
     canvasContext.font = `14px bold courier`;
-    canvasContext.fillText(this.description, this.x, this.y + this.h / 2);
-    canvasContext.fillText(`$${this.cost}`, this.x + this.w / 3, this.y + this.h / 2 + 14);
+    canvasContext.fillText(this.description, this.x + this.w / 10, this.y + this.h + 14);
+    canvasContext.fillText(`$${this.cost}`, this.x + this.w / 3, this.y + this.h + 28);
+    if (this.image !== null) {
+      canvasContext.drawImage(this.image, this.x, this.y, this.w, this.h);
+    }
     canvasContext.font = oldFont;
   }
 }
 
 let shopItems = new Array();
 const biggerAmmoPurchaseAction = { type: "switch" };
-let biggerAmmo = new ShopItem(100, 125, 250, "Bigger Ammo", "biggerAmmoOS", biggerAmmoPurchaseAction);
+let biggerAmmo = new ShopItem(
+  100,
+  125,
+  250,
+  "Bigger Ammo",
+  "biggerAmmoOS",
+  biggerAmmoPurchaseAction,
+  "./overshoot/media/biggerAmmo.png"
+);
 shopItems.push(new MainMenuLink(25, 25));
 shopItems.push(biggerAmmo);
 
