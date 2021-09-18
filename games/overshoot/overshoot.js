@@ -239,8 +239,20 @@ let biggerAmmo = new ShopItem(
   biggerAmmoPurchaseAction,
   "./overshoot/media/biggerAmmo.png"
 );
+
+let moreAmmo = new ShopItem(
+  250,
+  125,
+  500,
+  "More Ammo",
+  "biggerAmmoOS",
+  biggerAmmoPurchaseAction,
+  "./overshoot/media/moreAmmo.png"
+);
+
 shopItems.push(new MainMenuLink(25, 25));
 shopItems.push(biggerAmmo);
+shopItems.push(moreAmmo);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
