@@ -61,7 +61,8 @@ let crashThroughActive = false;
 let drawAimLineActive = false;
 
 // This is a mapping of upgrade names to callables that make
-// their effects happen in-game.
+// their effects happen in-game. The callables should be
+// somewhat close to idempotent.
 const upgradeStruct = {
   moreAmmoOs: () => {
     playerAmmoCount = 6;
@@ -96,12 +97,28 @@ const setUpGameData = () => {
   });
   data.upgrades.forEach((upgrade) => {
     if (localStorage.getItem(upgrade) === null) {
-      localStorage.setItem(upgrade, { applied: false, active: false });
+      localStorage.setItem(upgrade, { purchased: false, active: false });
+    }
+  });
+};
+
+const updateUpgrades = () => {
+  Object.entries(upgradeStruct).forEach((entry) => {
+    // Destruct entries into key / value.
+    const [key, value] = entry;
+    // We may have purchased something, but it may not be active.
+    // For example, if we have purchased both ammo quanitity
+    // upgrades, only one should be active at a time.
+    const { purchased, active } = localStorage.getItem(key);
+    if (purchased && active) {
+      // This is a callable, so let's call it.
+      value.call();
     }
   });
 };
 
 setUpGameData();
+updateUpgrades();
 
 // Status stuff
 let controlsPaused = false;
