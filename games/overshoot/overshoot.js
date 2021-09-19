@@ -27,18 +27,67 @@ const canvasWidth = canvas.width;
 let { left: canvasLeftEdgeX, top: canvasTopEdgeY } = canvas.getBoundingClientRect();
 
 // Magic numbers
+// How big should the status bar be? This big:
 const statusBarHeight = 50;
+// Used in the projectile calculations. Yes, earth gravity. It would be
+// kind of neat / cute if we were to have our catapult destroy targets
+// on different planets, with accurate gravity constants ;D
 const gravity = -9.8;
+// The internet tells me that rAF tends to hit about 60 times per second.
+// So be it, our frame rate is 60fps, like it or lump it.
 const roughFrameRate = 1 / 60;
+// In radians, this is how much we update when we receive an event to change
+// where the catapult aims. It's set very low because I wanted a limiter for
+// how fast the user's aim changed ( to avoid ragequitting because of aim
+// that is too sensitive ) but I didn't want to explicitly time debounce.
 let aimAdjustInterval = 0.03;
+// A sort of percentage -- we use this in a product. At its base, this means
+// that we're reducing to 20% of some whole number. Thus, the higher this is,
+// the more power with which we launch projectiles.
 let launchPowerDivisor = 0.2;
+// The actual radius of projectiles. We're kind of assuming that bigger projectiles
+// means an easier game, since it *should* make targets easier to hit.
 let ammoSize = 6;
+// The player starts out with 4 projectiles. Perhaps, through upgrades, they
+// can get some more. If they're lucky and I'm gracious.
+let playerAmmoCount = 4;
+// If this is set to true, then a projectile can hit a target and not be destroyed
+// until it either leaves the screen or hits one more target. In essence, this gives
+// projectiles a little bit of 'health'.
+let crashThroughActive = false;
+// If this is set to true, as a player moves the aiming reticle for the catapult,
+// the parabolic line matching the angle and a reasonable initial velocity will be
+// drawn, to help the player aim at targets. This is going to be SO COOL
+let drawAimLineActive = false;
+
+// This is a mapping of upgrade names to callables that make
+// their effects happen in-game.
+const upgradeStruct = {
+  moreAmmoOs: () => {
+    playerAmmoCount = 6;
+  },
+  mostAmmoOS: () => {
+    playerAmmoCount = 10;
+  },
+  biggerAmmoOS: () => {
+    ammoSize = 12;
+  },
+  hiPowerOS: () => {
+    launchPowerDivisor = 0.4;
+  },
+  crashThroughOS: () => {
+    crashThroughActive = true;
+  },
+  drawAimLineOS: () => {
+    drawAimLineActive = true;
+  },
+};
 
 // User data!
 const setUpGameData = () => {
   let data = {
     numbers: ["lootOS"],
-    upgrades: ["moreAmmoOs", "biggerAmmoOS", "hiPowerOS", "mostAmmoOS", "crashThroughOS"],
+    upgrades: Object.keys(upgradeStruct),
   };
   data.numbers.forEach((numericValue) => {
     if (localStorage.getItem(numericValue) === null) {
@@ -719,7 +768,7 @@ for (let i = 1; i <= 4; i++) {
   onScreenTargets.push(new Target(randomX, randomY, 20));
 }
 
-let playerCatapult = new Catapult(75, 600, 0, 4, 6);
+let playerCatapult = new Catapult(75, 600, 0, 4, playerAmmoCount);
 let playerInput = new Input();
 
 const drawBattleField = (canvasContext) => {
