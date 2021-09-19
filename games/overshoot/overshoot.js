@@ -37,8 +37,8 @@ let ammoSize = 6;
 // User data!
 const setUpGameData = () => {
   let data = {
-    numbers: ["ammunitionDeltaOS", "powerDeltaOS", "lootOS"],
-    upgrades: ["moreProjectilesOS", "biggerAmmoOS"],
+    numbers: ["lootOS"],
+    upgrades: ["moreAmmoOs", "biggerAmmoOS", "hiPowerOS", "mostAmmoOS", "crashThroughOS"],
   };
   data.numbers.forEach((numericValue) => {
     if (localStorage.getItem(numericValue) === null) {
@@ -250,9 +250,20 @@ let moreAmmo = new ShopItem(
   "./overshoot/media/moreAmmo.png"
 );
 
+let crashThrough = new ShopItem(
+  400,
+  125,
+  750,
+  "Two-Hit Ammo",
+  "biggerAmmoOS",
+  biggerAmmoPurchaseAction,
+  "./overshoot/media/crashThrough.png"
+);
+
 shopItems.push(new MainMenuLink(25, 25));
 shopItems.push(biggerAmmo);
 shopItems.push(moreAmmo);
+shopItems.push(crashThrough);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
