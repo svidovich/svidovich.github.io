@@ -97,7 +97,7 @@ const setUpGameData = () => {
   });
   data.upgrades.forEach((upgrade) => {
     if (localStorage.getItem(upgrade) === null) {
-      localStorage.setItem(upgrade, { purchased: false, active: false });
+      localStorage.setItem(upgrade, { purchased: false, active: false, applied: false });
     }
   });
 };
@@ -109,10 +109,25 @@ const updateUpgrades = () => {
     // We may have purchased something, but it may not be active.
     // For example, if we have purchased both ammo quanitity
     // upgrades, only one should be active at a time.
-    const { purchased, active } = localStorage.getItem(key);
-    if (purchased && active) {
-      // This is a callable, so let's call it.
-      value.call();
+    let { purchased, active, applied } = localStorage.getItem(key);
+    // NOTE
+    // Honestly I'm not sure about this block of code. I don't
+    // really know what's going to happen when I have two upgrades
+    // that have an effect on the same... stuff. Stuff? Stuff. If
+    // anything goofy happens between upgrades, it's probably this.
+    // I can't think the six steps ahead right this second, I will
+    // like to see it in action to debug.
+    if (!applied) {
+      if (purchased && active) {
+        // This is a callable, so let's call it.
+        value.call();
+        applied = true;
+      }
+      localStorage.setItem(key, {
+        purchased: purchased,
+        active: active,
+        applied: applied,
+      });
     }
   });
 };
