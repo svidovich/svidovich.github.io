@@ -60,6 +60,21 @@ let crashThroughActive = false;
 // drawn, to help the player aim at targets. This is going to be SO COOL
 let drawAimLineActive = false;
 
+// Status stuff
+let controlsPaused = false;
+
+let needToCheckUpgrades = false;
+
+const GameInterfaces = Object.freeze({
+  mainMenu: "mainMenu",
+  levelSelect: "levelSelect",
+  shop: "shop",
+  targetPractice: "targetPractice",
+  battlefield: "battlefield",
+});
+
+let currentInterface = GameInterfaces.mainMenu;
+
 // This is a mapping of upgrade names to callables that make
 // their effects happen in-game. The callables should be
 // somewhat close to idempotent.
@@ -130,24 +145,13 @@ const updateUpgrades = () => {
       });
     }
   });
+  // At the end, we should always put the 'check upgrades' flag
+  // back to being false.
+  needToCheckUpgrades = false;
 };
 
 setUpGameData();
 updateUpgrades();
-
-// Status stuff
-let controlsPaused = false;
-
-let needToCheckUpgrades = false;
-
-const GameInterfaces = Object.freeze({
-  mainMenu: "mainMenu",
-  levelSelect: "levelSelect",
-  shop: "shop",
-  battlefield: "battlefield",
-});
-
-let currentInterface = GameInterfaces.mainMenu;
 
 class MenuItem {
   constructor(x, y, w, h) {
@@ -194,7 +198,7 @@ class MainMenuTargetPractice extends MenuItem {
   }
 
   clickAction() {
-    currentInterface = GameInterfaces.battlefield;
+    currentInterface = GameInterfaces.targetPractice;
   }
 }
 
@@ -285,13 +289,9 @@ class ShopItem extends MenuItem {
     if (localStorage.getItem("lootOS") < this.cost) {
       console.log("Not enough cash");
     } else {
-      if (this.purchaseAction.type === "switch") {
-        localStorage.setItem(this.storageKey, true);
-      } else if (this.purchaseAction.type === "numeric") {
-        localStorage.setItem(this.storageKey, this.purchaseAction.upgradeDelta);
-      } else {
-        throw new Error("Bad purchase action.");
-      }
+      localStorage.setItem(this.storageKey, { purchased: true, active: true, applied: true });
+      // Set a flag that we should check upgrades.
+      needToCheckUpgrades = true;
     }
   }
 
@@ -361,33 +361,6 @@ const shopClickHandler = (canvasContext, clickCoordinates) => {
 };
 
 const levelSelectClickHandler = (canvasContext) => {};
-
-const battlefieldClickHandler = () => {
-  return;
-};
-
-const interfaceClickHandler = (canvasContext, clickEvent) => {
-  let clickCoordinates = {
-    x: clickEvent.clientX - canvasLeftEdgeX,
-    y: clickEvent.clientY - canvasTopEdgeY,
-  };
-  switch (currentInterface) {
-    case GameInterfaces.mainMenu:
-      mainMenuClickHandler(canvasContext, clickCoordinates);
-      break;
-    case GameInterfaces.levelSelect:
-      levelSelectClickHandler(canvasContext);
-      break;
-    case GameInterfaces.shop:
-      shopClickHandler(canvasContext, clickCoordinates);
-      break;
-    case GameInterfaces.battlefield:
-      battlefieldClickHandler();
-      break;
-  }
-};
-
-canvas.addEventListener("click", interfaceClickHandler.bind(null, canvasContext));
 
 let onScreenProjectiles = new Array();
 let onScreenTargets = new Array();
@@ -467,6 +440,7 @@ class Target {
     this.x = x;
     this.y = y;
     this.r = r;
+    this.value = 0;
   }
 
   get coordinates() {
@@ -752,6 +726,12 @@ const computeCollisions = (projectiles, entities) => {
         if (distance(projectile, entity) - projectile.r - entity.r <= 0) {
           projectile.queueDeletion = true;
           entity.queueDeletion = true;
+
+          // Let's earn some cash
+          if (typeof entity.value === "number") {
+            let currentLoot = parseInt(localStorage.getItem("lootOS"));
+            localStorage.setItem("lootOS", currentLoot + entity.value);
+          }
         }
       });
     });
@@ -791,18 +771,29 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   for (let i = 1; i <= playerCatapult.ammoCount; i++) {
     drawCircle(canvasContext, ammoMeterLocationX + 35 + 10 * i, midBarText - 3, 3);
   }
+
+  canvasContext.fillText(`Cash: ${localStorage.getItem("lootOS")}`, canvasWidth - 150, midBarText);
+
   canvasContext.font = oldFont;
 };
-
-for (let i = 1; i <= 4; i++) {
-  // Destruct & rename
-  let { x: randomX, y: randomY } = getRandomTargetLocation();
-  onScreenTargets.push(new Target(randomX, randomY, 20));
-}
 
 let playerCatapult = new Catapult(75, 600, 0, 4, playerAmmoCount);
 let playerInput = new Input();
 
+let targetPracticePrepared = false;
+const prepareTargetPractice = () => {
+  for (let i = 1; i <= 4; i++) {
+    // Destruct & rename
+    let { x: randomX, y: randomY } = getRandomTargetLocation();
+    let nextTarget = new Target(randomX, randomY, 20);
+    nextTarget.value = 3;
+    onScreenTargets.push(nextTarget);
+  }
+  targetPracticePrepared = true;
+};
+
+let battleFieldItems = new Array();
+battleFieldItems.push(new MainMenuLink(canvasWidth - 110, canvasHeight - 30));
 const drawBattleField = (canvasContext) => {
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
@@ -823,16 +814,63 @@ const drawBattleField = (canvasContext) => {
   computeCollisions(onScreenProjectiles, onScreenTargets);
   garbageCollectObjects(onScreenProjectiles);
   garbageCollectObjects(onScreenTargets);
+  battleFieldItems.forEach((item) => {
+    item.draw(canvasContext);
+  });
 };
+
+const battlefieldClickHandler = (canvasContext, clickCoordinates) => {
+  // Here I am again, rewriting this stupid code. I even had to rearrange the
+  // whole document to write this code. This is dumb, again.
+  battleFieldItems.forEach((item) => {
+    return item.isClicked(clickCoordinates);
+  });
+};
+
+const targetPracticeClickHandler = (canvasContext, clickCoordinates) => {
+  battlefieldClickHandler(canvasContext, clickCoordinates);
+};
+
+const interfaceClickHandler = (canvasContext, clickEvent) => {
+  let clickCoordinates = {
+    x: clickEvent.clientX - canvasLeftEdgeX,
+    y: clickEvent.clientY - canvasTopEdgeY,
+  };
+  switch (currentInterface) {
+    case GameInterfaces.mainMenu:
+      mainMenuClickHandler(canvasContext, clickCoordinates);
+      break;
+    case GameInterfaces.levelSelect:
+      levelSelectClickHandler(canvasContext);
+      break;
+    case GameInterfaces.shop:
+      shopClickHandler(canvasContext, clickCoordinates);
+      break;
+    case GameInterfaces.battlefield:
+      battlefieldClickHandler(canvasContext, clickCoordinates);
+      break;
+    case GameInterfaces.targetPractice:
+      targetPracticeClickHandler(canvasContext, clickCoordinates);
+      break;
+  }
+};
+
+canvas.addEventListener("click", interfaceClickHandler.bind(null, canvasContext));
 
 const update = () => {
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  if (needToCheckUpgrades === true) {
+    updateUpgrades();
+  }
   if (currentInterface === null) {
     currentInterface = GameInterfaces.mainMenu;
   }
   if (currentInterface === GameInterfaces.mainMenu) {
     drawMainMenu(canvasContext);
-  } else if (currentInterface === GameInterfaces.battlefield) {
+  } else if (currentInterface === GameInterfaces.targetPractice) {
+    if (targetPracticePrepared === false) {
+      prepareTargetPractice();
+    }
     drawBattleField(canvasContext);
   } else if (currentInterface === GameInterfaces.shop) {
     drawShop(canvasContext);
