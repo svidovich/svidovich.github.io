@@ -239,8 +239,17 @@ class MainMenuLink extends MenuItem {
     canvasContext.font = oldFont;
   }
 
-  clickAction() {
+  guaranteedClickActions() {
     currentInterface = GameInterfaces.mainMenu;
+  }
+
+  extraClickActions() {
+    return;
+  }
+
+  clickAction() {
+    this.guaranteedClickActions();
+    this.extraClickActions();
   }
 }
 
@@ -782,6 +791,8 @@ let playerInput = new Input();
 
 let targetPracticePrepared = false;
 const prepareTargetPractice = () => {
+  // Reset the current count of on screen targets.
+  onScreenTargets.length = 0;
   for (let i = 1; i <= 4; i++) {
     // Destruct & rename
     let { x: randomX, y: randomY } = getRandomTargetLocation();
@@ -793,7 +804,15 @@ const prepareTargetPractice = () => {
 };
 
 let battleFieldItems = new Array();
-battleFieldItems.push(new MainMenuLink(canvasWidth - 110, canvasHeight - 30));
+let targetPracticeMenuButton = new MainMenuLink(canvasWidth - 110, canvasHeight - 30);
+targetPracticeMenuButton.extraClickActions = () => {
+  targetPracticePrepared = false;
+  // NOTE
+  // Is this an OK practice for state management? If this gets ugly, we'll
+  // rip it out in favor of some kind of meta state manager, I suppose.
+  playerCatapult.ammoCount = playerAmmoCount;
+};
+battleFieldItems.push(targetPracticeMenuButton);
 const drawBattleField = (canvasContext) => {
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
