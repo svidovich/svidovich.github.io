@@ -357,6 +357,10 @@ shopItems.push(crashThrough);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
+  let oldFont = canvasContext.font;
+  canvasContext.font = "bold 16px courier";
+  canvasContext.fillText(`Cash: ${localStorage.getItem("lootOS")}`, 150, 45);
+  canvasContext.font = oldFont;
   shopItems.forEach((item) => {
     item.draw(canvasContext);
   });
