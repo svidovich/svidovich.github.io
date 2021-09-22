@@ -298,7 +298,6 @@ class ShopItem extends MenuItem {
     this.description = description;
     this.storageKey = storageKey;
     this.imagePath = imagePath;
-
     this.loadImage();
   }
 
@@ -313,11 +312,14 @@ class ShopItem extends MenuItem {
 
   clickAction() {
     let currentCash = localStorage.getItem("lootOS");
+    let currentItemStatus = getObjectFromLocalStorage(this.storageKey);
     if (currentCash < this.cost) {
       console.log("Not enough cash");
     } else {
-      putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
-      localStorage.setItem("lootOS", currentCash - this.cost);
+      if (currentItemStatus.purchased !== true) {
+        putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
+        localStorage.setItem("lootOS", currentCash - this.cost);
+      }
       // Set a flag that we should check upgrades.
       needToCheckUpgrades = true;
     }
@@ -332,6 +334,19 @@ class ShopItem extends MenuItem {
     canvasContext.fillText(`$${this.cost}`, this.x + this.w / 3, this.y + this.h + 28);
     if (this.image !== null) {
       canvasContext.drawImage(this.image, this.x, this.y, this.w, this.h);
+    }
+    let currentItemStatus = getObjectFromLocalStorage(this.storageKey);
+    if (currentItemStatus.purchased === true) {
+      let oldStrokeStyle = canvasContext.strokeStyle;
+      let oldLineWidth = canvasContext.lineWidth;
+      canvasContext.lineWidth = 10;
+      canvasContext.strokeStyle = "green";
+      canvasContext.beginPath();
+      canvasContext.moveTo(this.x, this.y + this.h);
+      canvasContext.lineTo(this.x + this.w, this.y);
+      canvasContext.stroke();
+      canvasContext.strokeStyle = oldStrokeStyle;
+      canvasContext.lineWidth = oldLineWidth;
     }
     canvasContext.font = oldFont;
   }
