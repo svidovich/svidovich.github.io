@@ -17,6 +17,16 @@ cookieBailButton.onclick = () => {
   location.href = "index.html";
 };
 
+const getObjectFromLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key));
+};
+
+const putObjectToLocalStorage = (key, object) => {
+  console.log("putting to local storage:");
+  console.log(object);
+  localStorage.setItem(key, JSON.stringify(object));
+};
+
 // Things we want to be global
 
 let canvas = document.getElementById("mainCanvas");
@@ -112,7 +122,7 @@ const setUpGameData = () => {
   });
   data.upgrades.forEach((upgrade) => {
     if (localStorage.getItem(upgrade) === null) {
-      localStorage.setItem(upgrade, { purchased: false, active: false, applied: false });
+      putObjectToLocalStorage(upgrade, { purchased: false, active: false, applied: false });
     }
   });
 };
@@ -124,7 +134,7 @@ const updateUpgrades = () => {
     // We may have purchased something, but it may not be active.
     // For example, if we have purchased both ammo quanitity
     // upgrades, only one should be active at a time.
-    let { purchased, active, applied } = localStorage.getItem(key);
+    let { purchased, active, applied } = getObjectFromLocalStorage(key);
     // NOTE
     // Honestly I'm not sure about this block of code. I don't
     // really know what's going to happen when I have two upgrades
@@ -138,7 +148,7 @@ const updateUpgrades = () => {
         value.call();
         applied = true;
       }
-      localStorage.setItem(key, {
+      putObjectToLocalStorage(key, {
         purchased: purchased,
         active: active,
         applied: applied,
@@ -151,7 +161,6 @@ const updateUpgrades = () => {
 };
 
 setUpGameData();
-updateUpgrades();
 
 class MenuItem {
   constructor(x, y, w, h) {
@@ -272,14 +281,13 @@ const mainMenuClickHandler = (canvasContext, clickCoordinates) => {
 };
 
 class ShopItem extends MenuItem {
-  constructor(x, y, cost, description, storageKey, purchaseAction, imagePath) {
+  constructor(x, y, cost, description, storageKey, imagePath) {
     let w = 100;
     let h = 100;
     super(x, y, w, h);
     this.cost = cost;
     this.description = description;
     this.storageKey = storageKey;
-    this.purchaseAction = purchaseAction;
     this.imagePath = imagePath;
 
     this.loadImage();
@@ -295,10 +303,12 @@ class ShopItem extends MenuItem {
   }
 
   clickAction() {
-    if (localStorage.getItem("lootOS") < this.cost) {
+    let currentCash = localStorage.getItem("lootOS");
+    if (currentCash < this.cost) {
       console.log("Not enough cash");
     } else {
-      localStorage.setItem(this.storageKey, { purchased: true, active: true, applied: true });
+      putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: true });
+      localStorage.setItem("lootOS", currentCash - this.cost);
       // Set a flag that we should check upgrades.
       needToCheckUpgrades = true;
     }
@@ -319,41 +329,19 @@ class ShopItem extends MenuItem {
 }
 
 let shopItems = new Array();
-const biggerAmmoPurchaseAction = { type: "switch" };
-let biggerAmmo = new ShopItem(
-  100,
-  125,
-  250,
-  "Bigger Ammo",
-  "biggerAmmoOS",
-  biggerAmmoPurchaseAction,
-  "./overshoot/media/biggerAmmo.png"
-);
+// moreAmmoOs mostAmmoOS biggerAmmoOS hiPowerOS crashThroughOS drawAimLineOS
 
-let moreAmmo = new ShopItem(
-  250,
-  125,
-  500,
-  "More Ammo",
-  "biggerAmmoOS",
-  biggerAmmoPurchaseAction,
-  "./overshoot/media/moreAmmo.png"
-);
-
-let crashThrough = new ShopItem(
-  400,
-  125,
-  750,
-  "Two-Hit Ammo",
-  "biggerAmmoOS",
-  biggerAmmoPurchaseAction,
-  "./overshoot/media/crashThrough.png"
-);
+let biggerAmmo = new ShopItem(100, 125, 250, "Bigger Ammo", "biggerAmmoOS", "./overshoot/media/biggerAmmo.png");
+let moreAmmo = new ShopItem(250, 125, 500, "More Ammo", "moreAmmoOS", "./overshoot/media/moreAmmo.png");
+let crashThrough = new ShopItem(400, 125, 750, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
+let hiPower = new ShopItem(550, 125, 500, "High Power!", "hiPowerOS", "./overshoot/media/hiPower.png");
+// let drawAimLine = new ShopItem(700, 125, 1500, "Aim Line", "aimLineOs", "./overshoot/media/drawAimLine.png")
 
 shopItems.push(new MainMenuLink(25, 25));
 shopItems.push(biggerAmmo);
 shopItems.push(moreAmmo);
 shopItems.push(crashThrough);
+shopItems.push(hiPower);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
