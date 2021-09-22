@@ -56,6 +56,8 @@ const upgradableValues = Object.freeze({
   // The actual radius of projectiles. We're kind of assuming that bigger projectiles
   // means an easier game, since it *should* make targets easier to hit.
   ammoSize: 6,
+  // How many targets should a projectile hit before it disappears?
+  ammoHealthOS: 1,
   // The player starts out with 4 projectiles. Perhaps, through upgrades, they
   // can get some more. If they're lucky and I'm gracious.
   playerAmmoCount: 4,
@@ -106,6 +108,7 @@ const upgradeStruct = {
   },
   crashThroughOS: () => {
     localStorage.setItem("crashThroughActive", true);
+    localStorage.setItem("ammoHealthOS", 2);
   },
   drawAimLineOS: () => {
     localStorage.setItem("drawAimLineActive", true);
@@ -552,6 +555,7 @@ class Projectile {
     this.a0 = a0; // Initial Angle
     this.t = 0;
 
+    this.health = parseInt(localStorage.getItem("ammoHealthOS"));
     this.queueDeletion = false;
   }
 
@@ -749,7 +753,10 @@ const computeCollisions = (projectiles, entities) => {
     entities.forEach((entity) => {
       projectiles.forEach((projectile) => {
         if (distance(projectile, entity) - projectile.r - entity.r <= 0) {
-          projectile.queueDeletion = true;
+          projectile.health -= 1;
+          if (projectile.health === 0) {
+            projectile.queueDeletion = true;
+          }
           entity.queueDeletion = true;
 
           // Let's earn some cash
