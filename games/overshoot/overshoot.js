@@ -22,8 +22,6 @@ const getObjectFromLocalStorage = (key) => {
 };
 
 const putObjectToLocalStorage = (key, object) => {
-  console.log("putting to local storage:");
-  console.log(object);
   localStorage.setItem(key, JSON.stringify(object));
 };
 
