@@ -51,24 +51,29 @@ const roughFrameRate = 1 / 60;
 // how fast the user's aim changed ( to avoid ragequitting because of aim
 // that is too sensitive ) but I didn't want to explicitly time debounce.
 let aimAdjustInterval = 0.03;
-// A sort of percentage -- we use this in a product. At its base, this means
-// that we're reducing to 20% of some whole number. Thus, the higher this is,
-// the more power with which we launch projectiles.
-let launchPowerDivisor = 0.2;
-// The actual radius of projectiles. We're kind of assuming that bigger projectiles
-// means an easier game, since it *should* make targets easier to hit.
-let ammoSize = 6;
-// The player starts out with 4 projectiles. Perhaps, through upgrades, they
-// can get some more. If they're lucky and I'm gracious.
-let playerAmmoCount = 4;
-// If this is set to true, then a projectile can hit a target and not be destroyed
-// until it either leaves the screen or hits one more target. In essence, this gives
-// projectiles a little bit of 'health'.
-let crashThroughActive = false;
-// If this is set to true, as a player moves the aiming reticle for the catapult,
-// the parabolic line matching the angle and a reasonable initial velocity will be
-// drawn, to help the player aim at targets. This is going to be SO COOL
-let drawAimLineActive = false;
+
+// We need a way to persist upgrades through refreshes. We can initialize to these
+// values in localStorage, and retrieve them when they need to be used.
+const upgradableValues = Object.freeze({
+  // The actual radius of projectiles. We're kind of assuming that bigger projectiles
+  // means an easier game, since it *should* make targets easier to hit.
+  ammoSize: 6,
+  // The player starts out with 4 projectiles. Perhaps, through upgrades, they
+  // can get some more. If they're lucky and I'm gracious.
+  playerAmmoCount: 4,
+  // If this is set to true, then a projectile can hit a target and not be destroyed
+  // until it either leaves the screen or hits one more target. In essence, this gives
+  // projectiles a little bit of 'health'.
+  crashThroughActive: false,
+  // If this is set to true, as a player moves the aiming reticle for the catapult,
+  // the parabolic line matching the angle and a reasonable initial velocity will be
+  // drawn, to help the player aim at targets. This is going to be SO COOL
+  drawAimLineActive: false,
+  // A sort of percentage -- we use this in a product. At its base, this means
+  // that we're reducing to 20% of some whole number. Thus, the higher this is,
+  // the more power with which we launch projectiles.
+  launchPowerDivisor: 0.2,
+});
 
 // Status stuff
 let controlsPaused = false;
@@ -89,23 +94,23 @@ let currentInterface = GameInterfaces.mainMenu;
 // their effects happen in-game. The callables should be
 // somewhat close to idempotent.
 const upgradeStruct = {
-  moreAmmoOs: () => {
-    playerAmmoCount = 6;
+  moreAmmoOS: () => {
+    localStorage.setItem("playerAmmoCount", 6);
   },
   mostAmmoOS: () => {
-    playerAmmoCount = 10;
+    localStorage.setItem("playerAmmoCount", 10);
   },
   biggerAmmoOS: () => {
-    ammoSize = 12;
+    localStorage.setItem("ammoSize", 16);
   },
   hiPowerOS: () => {
-    launchPowerDivisor = 0.4;
+    localStorage.setItem("launchPowerDivisor", 0.4);
   },
   crashThroughOS: () => {
-    crashThroughActive = true;
+    localStorage.setItem("crashThroughActive", true);
   },
   drawAimLineOS: () => {
-    drawAimLineActive = true;
+    localStorage.setItem("drawAimLineActive", true);
   },
 };
 
@@ -125,9 +130,16 @@ const setUpGameData = () => {
       putObjectToLocalStorage(upgrade, { purchased: false, active: false, applied: false });
     }
   });
+  Object.entries(upgradableValues).forEach((entry) => {
+    const [key, value] = entry;
+    if (localStorage.getItem(key) === null) {
+      localStorage.setItem(key, value);
+    }
+  });
 };
 
 const updateUpgrades = () => {
+  console.log("TIME TO UGRADE!");
   Object.entries(upgradeStruct).forEach((entry) => {
     // Destruct entries into key / value.
     const [key, value] = entry;
@@ -307,7 +319,7 @@ class ShopItem extends MenuItem {
     if (currentCash < this.cost) {
       console.log("Not enough cash");
     } else {
-      putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: true });
+      putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
       localStorage.setItem("lootOS", currentCash - this.cost);
       // Set a flag that we should check upgrades.
       needToCheckUpgrades = true;
@@ -561,9 +573,9 @@ const fireCatapult = (catapult) => {
         // This should prolly be constantized, but meh. It's the location of
         // the top bolt.
         catapult.y - 10 * playerCatapult.size + 2,
-        ammoSize,
+        parseInt(localStorage.getItem("ammoSize")),
         // If we don't reduce this a touch, it's too fast, lol.
-        catapult.launchingPower * launchPowerDivisor,
+        catapult.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
         catapult.angle
       )
     );
@@ -778,7 +790,7 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.font = oldFont;
 };
 
-let playerCatapult = new Catapult(75, 600, 0, 4, playerAmmoCount);
+let playerCatapult = new Catapult(75, 600, 0, 4, parseInt(localStorage.getItem("playerAmmoCount")));
 let playerInput = new Input();
 
 let targetPracticePrepared = false;
@@ -802,7 +814,7 @@ targetPracticeMenuButton.extraClickActions = () => {
   // NOTE
   // Is this an OK practice for state management? If this gets ugly, we'll
   // rip it out in favor of some kind of meta state manager, I suppose.
-  playerCatapult.ammoCount = playerAmmoCount;
+  playerCatapult.ammoCount = parseInt(localStorage.getItem("playerAmmoCount"));
 };
 battleFieldItems.push(targetPracticeMenuButton);
 const drawBattleField = (canvasContext) => {
