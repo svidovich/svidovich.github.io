@@ -137,7 +137,6 @@ const setUpGameData = () => {
 };
 
 const updateUpgrades = () => {
-  console.log("TIME TO UGRADE!");
   Object.entries(upgradeStruct).forEach((entry) => {
     // Destruct entries into key / value.
     const [key, value] = entry;
