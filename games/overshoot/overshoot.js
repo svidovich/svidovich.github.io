@@ -469,6 +469,8 @@ class Target {
     this.y = y;
     this.r = r;
     this.value = 0;
+    this.health = 1;
+    this.damage = 1;
   }
 
   get coordinates() {
@@ -489,6 +491,33 @@ const drawTarget = (canvasContext, x, y, r) => {
     drawDisc(canvasContext, x, y, r - 4 * i);
     canvasContext.fillStyle = oldFillStyle;
   }
+};
+
+class Brick {
+  constructor(x, y, s) {
+    this.x = x;
+    this.y = y;
+    if (s % 2 !== 0) {
+      throw new Error("Bricks must have even side lengths.");
+    }
+    this.s = s;
+    this.r = r;
+
+    this.value = 0;
+    this.health = 12;
+    this.damage = 12;
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+}
+
+const drawBrick = (canvasContext, x, y, s) => {
+  return;
 };
 
 class Catapult {
@@ -556,6 +585,7 @@ class Projectile {
     this.t = 0;
 
     this.health = parseInt(localStorage.getItem("ammoHealthOS"));
+    this.damage = Math.floor(this.size / 2);
     this.queueDeletion = false;
   }
 
@@ -753,11 +783,14 @@ const computeCollisions = (projectiles, entities) => {
     entities.forEach((entity) => {
       projectiles.forEach((projectile) => {
         if (distance(projectile, entity) - projectile.r - entity.r <= 0) {
-          projectile.health -= 1;
-          if (projectile.health === 0) {
+          projectile.health -= entity.damage;
+          if (projectile.health <= 0) {
             projectile.queueDeletion = true;
           }
-          entity.queueDeletion = true;
+          entity.health -= projectile.damage;
+          if (entity.health <= 0) {
+            entity.queueDeletion = true;
+          }
 
           // Let's earn some cash
           if (typeof entity.value === "number") {
