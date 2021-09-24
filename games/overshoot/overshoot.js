@@ -213,7 +213,13 @@ class MainMenuTargetPractice extends MenuItem {
   draw(canvasContext) {
     // Drawing the target practice button
     canvasContext.strokeRect(this.x, this.y, this.w, this.h);
-    drawTarget(canvasContext, this.w / 2 + this.x, this.h / 2 + this.y, (this.w + this.h) / 4);
+    const oldFillStyle = canvasContext.fillStyle;
+    for (let i = 1; i <= 4; i++) {
+      canvasContext.fillStyle = i % 2 === 0 ? "white" : "red";
+      drawDisc(canvasContext, this.w / 2 + this.x, this.h / 2 + this.y, (this.w + this.h) / (4 + i));
+    }
+    canvasContext.fillStyle = oldFillStyle;
+
     canvasContext.fillText("Target ", this.w / 2 + this.x - 15, this.h / 2 + this.y);
     canvasContext.fillText("Practice!", this.w / 2 + this.x - 20, this.h / 2 + this.y + 10);
   }
@@ -463,14 +469,12 @@ class Input {
   };
 }
 
-class Target {
-  constructor(x, y, r) {
+class Entity {
+  constructor(x, y, health, damage) {
     this.x = x;
     this.y = y;
-    this.r = r;
-    this.value = 0;
-    this.health = 1;
-    this.damage = 1;
+    this.health = health;
+    this.damage = damage;
   }
 
   get coordinates() {
@@ -481,31 +485,35 @@ class Target {
   }
 }
 
-const drawTarget = (canvasContext, x, y, r) => {
-  const oldFillStyle = canvasContext.fillStyle;
-  // We want to alternate colours between white and red,
-  // starting with red. We can do so with a quick parity
-  // check based on the ring count.
-  for (let i = 1; i <= 4; i++) {
-    canvasContext.fillStyle = i % 2 === 0 ? "white" : "red";
-    drawDisc(canvasContext, x, y, r - 4 * i);
-    canvasContext.fillStyle = oldFillStyle;
+class Target extends Entity {
+  constructor(x, y, r) {
+    super(x, y, 1, 1);
+    this.r = r;
+    this.value = 0;
   }
-};
 
-class Brick {
+  draw(canvasContext) {
+    const oldFillStyle = canvasContext.fillStyle;
+    // We want to alternate colours between white and red,
+    // starting with red. We can do so with a quick parity
+    // check based on the ring count.
+    for (let i = 1; i <= 4; i++) {
+      canvasContext.fillStyle = i % 2 === 0 ? "white" : "red";
+      drawDisc(canvasContext, this.x, this.y, this.r - 4 * i);
+      canvasContext.fillStyle = oldFillStyle;
+    }
+  }
+}
+
+class Brick extends Entity {
   constructor(x, y, s) {
-    this.x = x;
-    this.y = y;
+    super(x, y, 12, 12);
     if (s % 2 !== 0) {
       throw new Error("Bricks must have even side lengths.");
     }
     this.s = s;
     this.r = r;
-
     this.value = 0;
-    this.health = 12;
-    this.damage = 12;
   }
 
   get coordinates() {
@@ -513,6 +521,10 @@ class Brick {
       x: this.x,
       y: this.y,
     };
+  }
+
+  draw(canvasContext) {
+    return;
   }
 }
 
@@ -879,7 +891,7 @@ const drawBattleField = (canvasContext) => {
   drawCatapultAimingLine(canvasContext, playerCatapult);
 
   onScreenTargets.map((target) => {
-    drawTarget(canvasContext, target.x, target.y, target.r);
+    target.draw(canvasContext);
   });
 
   onScreenProjectiles.map((projectile) => {
