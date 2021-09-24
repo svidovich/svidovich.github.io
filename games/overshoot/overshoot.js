@@ -506,14 +506,13 @@ class Target extends Entity {
 }
 
 class Brick extends Entity {
-  constructor(x, y, s) {
+  constructor(x, y, kind) {
     super(x, y, 12, 12);
-    if (s % 2 !== 0) {
-      throw new Error("Bricks must have even side lengths.");
-    }
-    this.s = s;
-    this.r = r;
+    this.r = 24;
     this.value = 0;
+    this.kind = kind;
+
+    this.loadImage();
   }
 
   get coordinates() {
@@ -523,14 +522,22 @@ class Brick extends Entity {
     };
   }
 
+  loadImage() {
+    this.image = new Image();
+    this.image.width = 12;
+    this.image.height = 12;
+    this.image.src = `./overshoot/media/brick-tiny-${this.kind}.png`;
+  }
+
   draw(canvasContext) {
+    for (let i = -2; i <= 1; i++) {
+      for (let j = -2; j <= 1; j++) {
+        canvasContext.drawImage(this.image, this.x + 12 * i, this.y + 12 * j, this.image.width, this.image.height);
+      }
+    }
     return;
   }
 }
-
-const drawBrick = (canvasContext, x, y, s) => {
-  return;
-};
 
 class Catapult {
   constructor(x, y, angle, size, ammoCount) {
@@ -861,12 +868,18 @@ let targetPracticePrepared = false;
 const prepareTargetPractice = () => {
   // Reset the current count of on screen targets.
   onScreenTargets.length = 0;
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= randomInt(4, 6); i++) {
     // Destruct & rename
     let { x: randomX, y: randomY } = getRandomTargetLocation();
     let nextTarget = new Target(randomX, randomY, 20);
     nextTarget.value = 3;
     onScreenTargets.push(nextTarget);
+  }
+  for (let i = 1; i <= randomInt(1, 3); i++) {
+    let { x: randomX, y: randomY } = getRandomTargetLocation();
+    let nextBrick = new Brick(randomX, randomY, "blank");
+    nextBrick.value = 1;
+    onScreenTargets.push(nextBrick);
   }
   targetPracticePrepared = true;
 };
