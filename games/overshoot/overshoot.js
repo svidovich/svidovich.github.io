@@ -511,8 +511,8 @@ class Brick extends Entity {
     this.r = 24;
     this.value = 0;
     this.kind = kind;
-
-    this.loadImage();
+    this.initialHealth = this.health;
+    this.loadImages();
   }
 
   get coordinates() {
@@ -522,17 +522,30 @@ class Brick extends Entity {
     };
   }
 
-  loadImage() {
+  loadImages() {
+    const imageWidth = 12;
+    const imageHeight = 12;
     this.image = new Image();
-    this.image.width = 12;
-    this.image.height = 12;
+    this.image.width = imageWidth;
+    this.image.height = imageHeight;
     this.image.src = `./overshoot/media/brick-tiny-${this.kind}.png`;
+
+    this.imageCrackedForm = new Image();
+    this.imageCrackedForm.width = imageWidth;
+    this.imageCrackedForm.height = imageHeight;
+    this.imageCrackedForm.src = `./overshoot/media/brick-tiny-${this.kind}-cracked.png`;
   }
 
   draw(canvasContext) {
     for (let i = -2; i <= 1; i++) {
       for (let j = -2; j <= 1; j++) {
-        canvasContext.drawImage(this.image, this.x + 12 * i, this.y + 12 * j, this.image.width, this.image.height);
+        let imageToDraw;
+        if (this.health <= this.initialHealth / 2) {
+          imageToDraw = this.imageCrackedForm;
+        } else {
+          imageToDraw = this.image;
+        }
+        canvasContext.drawImage(imageToDraw, this.x + 12 * i, this.y + 12 * j, imageToDraw.width, imageToDraw.height);
       }
     }
     return;
