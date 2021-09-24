@@ -888,9 +888,30 @@ const prepareTargetPractice = () => {
     nextTarget.value = 3;
     onScreenTargets.push(nextTarget);
   }
-  for (let i = 1; i <= randomInt(1, 3); i++) {
-    let { x: randomX, y: randomY } = getRandomTargetLocation();
-    let nextBrick = new Brick(randomX, randomY, "blank");
+  let { x: brickX, y: brickY } = getRandomTargetLocation();
+
+  // Randomize what kind of bricks we'll get!
+  let brickKindChance = randomInt(1, 100);
+  let brickKind;
+  if (1 <= brickKindChance && brickKindChance < 33) {
+    brickKind = "blank";
+  } else if (33 <= brickKindChance && brickKindChance < 66) {
+    brickKind = "jungle";
+  } else if (66 <= brickKindChance && brickKindChance < 99) {
+    brickKind = "purple-dark";
+  } else {
+    brickKind = "purple-bright";
+  }
+
+  // Randomize what kind of wall we'll make!
+  let wallIsVertical = randomInt(1, 100) <= 50;
+  for (let i = 0; i <= randomInt(1, 3); i++) {
+    let nextBrick;
+    if (wallIsVertical === true) {
+      nextBrick = new Brick(brickX, brickY + i * 48, brickKind);
+    } else {
+      nextBrick = new Brick(brickX + i * 48, brickY, brickKind);
+    }
     nextBrick.value = 1;
     onScreenTargets.push(nextBrick);
   }
