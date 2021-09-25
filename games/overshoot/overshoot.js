@@ -94,23 +94,46 @@ let currentInterface = GameInterfaces.mainMenu;
 // their effects happen in-game. The callables should be
 // somewhat close to idempotent.
 const upgradeStruct = {
-  moreAmmoOS: () => {
-    localStorage.setItem("playerAmmoCount", 6);
+  moreAmmoOS: (restore) => {
+    console.log(`Restore: ${restore}`);
+    if (restore === true) {
+      localStorage.setItem("playerAmmoCount", upgradableValues["playerAmmoCount"]);
+    } else {
+      localStorage.setItem("playerAmmoCount", 6);
+    }
   },
-  mostAmmoOS: () => {
-    localStorage.setItem("playerAmmoCount", 10);
+  mostAmmoOS: (restore) => {
+    if (restore === true) {
+      localStorage.setItem("playerAmmoCount", upgradableValues["playerAmmoCount"]);
+    } else {
+      localStorage.setItem("playerAmmoCount", 10);
+    }
   },
-  biggerAmmoOS: () => {
-    localStorage.setItem("ammoSize", 16);
+  biggerAmmoOS: (restore) => {
+    console.log(`Restore: ${restore}`);
+    if (restore === true) {
+      localStorage.setItem("ammoSize", upgradableValues["ammoSize"]);
+    } else {
+      localStorage.setItem("ammoSize", 16);
+    }
   },
-  hiPowerOS: () => {
-    localStorage.setItem("launchPowerDivisor", 0.4);
+  hiPowerOS: (restore) => {
+    if (restore === true) {
+      localStorage.setItem("launchPowerDivisor", upgradableValues["launchPowerDivisor"]);
+    } else {
+      localStorage.setItem("launchPowerDivisor", 0.4);
+    }
   },
-  crashThroughOS: () => {
-    localStorage.setItem("crashThroughActive", true);
-    localStorage.setItem("ammoHealthOS", 2);
+  crashThroughOS: (restore) => {
+    if (restore === true) {
+      localStorage.setItem("crashThroughActive", upgradableValues["crashThroughActive"]);
+      localStorage.setItem("ammoHealthOS", 1);
+    } else {
+      localStorage.setItem("crashThroughActive", true);
+      localStorage.setItem("ammoHealthOS", 2);
+    }
   },
-  drawAimLineOS: () => {
+  drawAimLineOS: (restore) => {
     localStorage.setItem("drawAimLineActive", true);
   },
 };
@@ -140,6 +163,7 @@ const setUpGameData = () => {
 };
 
 const updateUpgrades = () => {
+  console.log("Updating upgrades.");
   Object.entries(upgradeStruct).forEach((entry) => {
     // Destruct entries into key / value.
     const [key, value] = entry;
@@ -156,9 +180,22 @@ const updateUpgrades = () => {
     // like to see it in action to debug.
     if (!applied) {
       if (purchased && active) {
+        console.log("Purchased and active. Calling without restore.");
         // This is a callable, so let's call it.
-        value.call();
+        value.call(null, false);
         applied = true;
+        // Here, we've deactivated a powerup.
+      } else if (purchased && !active) {
+        console.log("Purchased and not active. Calling with restore.");
+        // We should call the callable with its restore arg set to true.
+        // This should restore whatever the powerup modified to its original
+        // value. When we .call(), we set the first argument to null. It's
+        // meant to be a value for 'this', but that doesn't matter in this
+        // this particular context. The second argument will be the first
+        // argument to the actual callable, in this instance, being the
+        // 'restore' argument, which we want to set to 'false'.
+        value.call(null, true);
+        applied = false;
       }
       putObjectToLocalStorage(key, {
         purchased: purchased,
@@ -328,6 +365,12 @@ class ShopItem extends MenuItem {
       if (currentItemStatus.purchased !== true) {
         putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
         localStorage.setItem("lootOS", currentCash - this.cost);
+      } else {
+        putObjectToLocalStorage(this.storageKey, {
+          purchased: true,
+          active: !currentItemStatus.active,
+          applied: false,
+        });
       }
       // Set a flag that we should check upgrades.
       needToCheckUpgrades = true;
@@ -356,6 +399,12 @@ class ShopItem extends MenuItem {
       canvasContext.stroke();
       canvasContext.strokeStyle = oldStrokeStyle;
       canvasContext.lineWidth = oldLineWidth;
+    }
+    if (currentItemStatus.active === true) {
+      const oldFillStyle = canvasContext.fillStyle;
+      canvasContext.fillStyle = "green";
+      canvasContext.fillText("Active!", this.x, this.y - 5);
+      canvasContext.fillStyle = oldFillStyle;
     }
     canvasContext.font = oldFont;
   }
@@ -933,6 +982,8 @@ const drawBattleField = (canvasContext) => {
   updateCatapultFromInput(playerInput, playerCatapult);
 
   drawStatusBar(canvasContext, playerCatapult);
+  // Right here is where the abstraction of these would be nice. Instead of calling all of these,
+  // we would just need to call one 'draw' method on any required given catapults.
   drawCatapultFrame(canvasContext, playerCatapult);
   drawCatapultArmAndBucket(canvasContext, playerCatapult);
   drawCatapultAimingLine(canvasContext, playerCatapult);
