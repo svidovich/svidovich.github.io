@@ -73,6 +73,8 @@ const upgradableValues = Object.freeze({
   // that we're reducing to 20% of some whole number. Thus, the higher this is,
   // the more power with which we launch projectiles.
   launchPowerDivisor: 0.2,
+  // How much should we add to the player's projectiles' damage?
+  playerProjectileDamageModifier: 0,
 });
 
 // Status stuff
@@ -131,6 +133,13 @@ const upgradeStruct = {
     } else {
       localStorage.setItem("crashThroughActive", true);
       localStorage.setItem("ammoHealthOS", 2);
+    }
+  },
+  leadShotOS: (restore) => {
+    if (restore === true) {
+      localStorage.setItem("playerProjectileDamageModifier", upgradableValues["playerProjectileDamageModifier"]);
+    } else {
+      localStorage.setItem("playerProjectileDamageModifier", 12);
     }
   },
   drawAimLineOS: (restore) => {
@@ -421,10 +430,11 @@ class ShopItem extends MenuItem {
 let shopItems = new Array();
 // moreAmmoOs mostAmmoOS biggerAmmoOS hiPowerOS crashThroughOS drawAimLineOS
 
-let biggerAmmo = new ShopItem(100, 125, 250, "Bigger Ammo", "biggerAmmoOS", "./overshoot/media/biggerAmmo.png");
+let biggerAmmo = new ShopItem(100, 125, 500, "Bigger Ammo", "biggerAmmoOS", "./overshoot/media/biggerAmmo.png");
 let moreAmmo = new ShopItem(250, 125, 500, "More Ammo", "moreAmmoOS", "./overshoot/media/moreAmmo.png");
 let crashThrough = new ShopItem(400, 125, 750, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
-let hiPower = new ShopItem(550, 125, 500, "High Power!", "hiPowerOS", "./overshoot/media/hiPower.png");
+let hiPower = new ShopItem(550, 125, 250, "High Power!", "hiPowerOS", "./overshoot/media/hiPower.png");
+let leadShot = new ShopItem(700, 125, 300, "Lead Shot", "leadShotOS", "./overshoot/media/leadShot.png");
 // let drawAimLine = new ShopItem(700, 125, 1500, "Aim Line", "aimLineOs", "./overshoot/media/drawAimLine.png")
 
 shopItems.push(new MainMenuLink(25, 25));
@@ -432,6 +442,7 @@ shopItems.push(biggerAmmo);
 shopItems.push(moreAmmo);
 shopItems.push(crashThrough);
 shopItems.push(hiPower);
+shopItems.push(leadShot);
 
 // Starting to feel moist
 const drawShop = (canvasContext) => {
@@ -610,14 +621,14 @@ class Brick extends Entity {
 }
 
 class Catapult {
-  constructor(x, y, angle, size, ammoCount) {
+  constructor(x, y, angle, size, ammoCount, damageModifier) {
     this.x = x;
     this.y = y;
     this.angle = angle || 0;
     this.size = size || 1;
 
     this.ammoCount = ammoCount || 3;
-
+    this.damageModifier = damageModifier || 0;
     this.launchingPower = 0;
     this.lastPowerChange = 0; // Becomes date time
     this.powerChangeDebounceTime = 0.1; // ms
@@ -664,7 +675,7 @@ class Catapult {
 }
 
 class Projectile {
-  constructor(x, y, size, v0, a0) {
+  constructor(x, y, size, v0, a0, damageModifier) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -672,9 +683,9 @@ class Projectile {
     this.v0 = v0; // Initial velocity
     this.a0 = a0; // Initial Angle
     this.t = 0;
-
+    damageModifier = damageModifier || 0;
     this.health = parseInt(localStorage.getItem("ammoHealthOS"));
-    this.damage = Math.floor(this.size / 2);
+    this.damage = Math.floor(this.size / 2) + damageModifier;
     this.queueDeletion = false;
   }
 
@@ -715,7 +726,8 @@ const fireCatapult = (catapult) => {
         parseInt(localStorage.getItem("ammoSize")),
         // If we don't reduce this a touch, it's too fast, lol.
         catapult.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
-        catapult.angle
+        catapult.angle,
+        catapult.damageModifier || 0
       )
     );
     catapult.ammoCount -= 1;
@@ -935,7 +947,14 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.font = oldFont;
 };
 
-let playerCatapult = new Catapult(75, 600, 0, 4, parseInt(localStorage.getItem("playerAmmoCount")));
+let playerCatapult = new Catapult(
+  75,
+  600,
+  0,
+  4,
+  parseInt(localStorage.getItem("playerAmmoCount")),
+  parseInt(localStorage.getItem("playerProjectileDamageModifier"))
+);
 let playerInput = new Input();
 
 let targetPracticePrepared = false;
