@@ -363,21 +363,25 @@ class ShopItem extends MenuItem {
   clickAction() {
     let currentCash = localStorage.getItem("lootOS");
     let currentItemStatus = getObjectFromLocalStorage(this.storageKey);
+    if (currentItemStatus.purchased === true) {
+      putObjectToLocalStorage(this.storageKey, {
+        purchased: true,
+        active: !currentItemStatus.active,
+        applied: false,
+      });
+      needToCheckUpgrades = true;
+      return;
+    }
     if (currentCash < this.cost) {
       return;
     } else {
       if (currentItemStatus.purchased !== true) {
         putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
         localStorage.setItem("lootOS", currentCash - this.cost);
-      } else {
-        putObjectToLocalStorage(this.storageKey, {
-          purchased: true,
-          active: !currentItemStatus.active,
-          applied: false,
-        });
       }
       // Set a flag that we should check upgrades.
       needToCheckUpgrades = true;
+      return;
     }
   }
 
