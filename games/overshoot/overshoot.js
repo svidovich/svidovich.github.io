@@ -381,7 +381,7 @@ class ShopItem extends MenuItem {
     canvasContext.strokeRect(this.x, this.y, this.w, this.h);
     // this.drawIcon();
     const oldFont = canvasContext.font;
-    canvasContext.font = `14px bold courier`;
+    canvasContext.font = `bold 14px courier`;
     canvasContext.fillText(this.description, this.x + this.w / 10, this.y + this.h + 14);
     canvasContext.fillText(`$${this.cost}`, this.x + this.w / 3, this.y + this.h + 28);
     if (this.image !== null) {
@@ -400,10 +400,18 @@ class ShopItem extends MenuItem {
       canvasContext.strokeStyle = oldStrokeStyle;
       canvasContext.lineWidth = oldLineWidth;
     }
-    if (currentItemStatus.active === true) {
+    // Only show active / inactive status if we've bought the powerup.
+    if (currentItemStatus.purchased === true) {
       const oldFillStyle = canvasContext.fillStyle;
-      canvasContext.fillStyle = "green";
-      canvasContext.fillText("Active!", this.x, this.y - 5);
+      let statusString;
+      if (currentItemStatus.active === true) {
+        canvasContext.fillStyle = "green";
+        statusString = "Active!";
+      } else {
+        canvasContext.fillStyle = "red";
+        statusString = "Inactive!";
+      }
+      canvasContext.fillText(statusString, this.x, this.y - 5);
       canvasContext.fillStyle = oldFillStyle;
     }
     canvasContext.font = oldFont;
