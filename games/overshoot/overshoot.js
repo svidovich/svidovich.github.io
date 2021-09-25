@@ -697,6 +697,10 @@ class Projectile {
       this.queueDeletion = true;
     }
   }
+
+  draw(canvasContext) {
+    drawCircle(canvasContext, this.x, this.y, this.r);
+  }
 }
 
 const fireCatapult = (catapult) => {
@@ -1002,8 +1006,9 @@ const drawBattleField = (canvasContext) => {
 
   onScreenProjectiles.map((projectile) => {
     projectile.adjustPosition();
-    drawCircle(canvasContext, projectile.x, projectile.y, projectile.r);
+    projectile.draw(canvasContext);
   });
+
   computeCollisions(onScreenProjectiles, onScreenTargets);
   garbageCollectObjects(onScreenProjectiles);
   garbageCollectObjects(onScreenTargets);
