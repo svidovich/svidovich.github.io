@@ -137,7 +137,7 @@ const upgradeStruct = {
     if (restore === true) {
       localStorage.setItem("playerProjectileDamageModifier", upgradableValues["playerProjectileDamageModifier"]);
     } else {
-      localStorage.setItem("playerProjectileDamageModifier", 12);
+      localStorage.setItem("playerProjectileDamageModifier", 14);
     }
   },
   drawAimLineOS: (restore) => {
