@@ -137,7 +137,7 @@ const upgradeStruct = {
     if (restore === true) {
       localStorage.setItem("playerProjectileDamageModifier", upgradableValues["playerProjectileDamageModifier"]);
     } else {
-      localStorage.setItem("playerProjectileDamageModifier", 14);
+      localStorage.setItem("playerProjectileDamageModifier", 10);
     }
   },
   drawAimLineOS: (restore) => {
@@ -396,6 +396,7 @@ class ShopItem extends MenuItem {
       canvasContext.drawImage(this.image, this.x, this.y, this.w, this.h);
     }
     let currentItemStatus = getObjectFromLocalStorage(this.storageKey);
+
     if (currentItemStatus.purchased === true) {
       let oldStrokeStyle = canvasContext.strokeStyle;
       let oldLineWidth = canvasContext.lineWidth;
@@ -574,7 +575,7 @@ class Target extends Entity {
 
 class Brick extends Entity {
   constructor(x, y, kind) {
-    super(x, y, 12, 12);
+    super(x, y, 16, 12);
     this.r = 24;
     this.value = 0;
     this.kind = kind;
@@ -955,7 +956,6 @@ let playerCatapult = new Catapult(
   parseInt(localStorage.getItem("playerProjectileDamageModifier"))
 );
 let playerInput = new Input();
-
 let targetPracticePrepared = false;
 const prepareTargetPractice = () => {
   // Reset the current count of on screen targets.
