@@ -97,7 +97,6 @@ let currentInterface = GameInterfaces.mainMenu;
 // somewhat close to idempotent.
 const upgradeStruct = {
   moreAmmoOS: (restore) => {
-    console.log(`Restore: ${restore}`);
     if (restore === true) {
       localStorage.setItem("playerAmmoCount", upgradableValues["playerAmmoCount"]);
     } else {
@@ -112,7 +111,6 @@ const upgradeStruct = {
     }
   },
   biggerAmmoOS: (restore) => {
-    console.log(`Restore: ${restore}`);
     if (restore === true) {
       localStorage.setItem("ammoSize", upgradableValues["ammoSize"]);
     } else {
@@ -172,7 +170,6 @@ const setUpGameData = () => {
 };
 
 const updateUpgrades = () => {
-  console.log("Updating upgrades.");
   Object.entries(upgradeStruct).forEach((entry) => {
     // Destruct entries into key / value.
     const [key, value] = entry;
@@ -189,13 +186,11 @@ const updateUpgrades = () => {
     // like to see it in action to debug.
     if (!applied) {
       if (purchased && active) {
-        console.log("Purchased and active. Calling without restore.");
         // This is a callable, so let's call it.
         value.call(null, false);
         applied = true;
         // Here, we've deactivated a powerup.
       } else if (purchased && !active) {
-        console.log("Purchased and not active. Calling with restore.");
         // We should call the callable with its restore arg set to true.
         // This should restore whatever the powerup modified to its original
         // value. When we .call(), we set the first argument to null. It's
@@ -369,7 +364,7 @@ class ShopItem extends MenuItem {
     let currentCash = localStorage.getItem("lootOS");
     let currentItemStatus = getObjectFromLocalStorage(this.storageKey);
     if (currentCash < this.cost) {
-      console.log("Not enough cash");
+      return;
     } else {
       if (currentItemStatus.purchased !== true) {
         putObjectToLocalStorage(this.storageKey, { purchased: true, active: true, applied: false });
