@@ -895,12 +895,11 @@ const computeCollisions = (projectiles, entities) => {
           entity.health -= projectile.damage;
           if (entity.health <= 0) {
             entity.queueDeletion = true;
-          }
-
-          // Let's earn some cash
-          if (typeof entity.value === "number") {
-            let currentLoot = parseInt(localStorage.getItem("lootOS"));
-            localStorage.setItem("lootOS", currentLoot + entity.value);
+            // Let's earn some cash
+            if (typeof entity.value === "number") {
+              let currentLoot = parseInt(localStorage.getItem("lootOS"));
+              localStorage.setItem("lootOS", currentLoot + entity.value);
+            }
           }
         }
       });
@@ -947,6 +946,10 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.font = oldFont;
 };
 
+// TODO: This induces a lot of bugs. If there's an upgrade that gets applied
+// to the catapult on construction ( ammo count, projectile damage ) it cannot
+// be applied until the catapult gets garbage collected. Thus, a catapult should
+// be constructed by every interface that needs one, that is fresh and clean.
 let playerCatapult = new Catapult(
   75,
   600,
