@@ -672,6 +672,96 @@ class Catapult {
       angle: this.angle,
     };
   }
+
+  drawCatapultFrame = (canvasContext) => {
+    let { x: catapultX, y: catapultY } = this.coordinates;
+    let catapultSize = this.size;
+    let baseStart = {
+      x: catapultX - 12 * catapultSize,
+      y: catapultY - 3 * catapultSize,
+    };
+    let baseFinish = {
+      x: catapultX + 12 * catapultSize,
+      // This is just Y because the coordinates of the catapult
+      // point to the very center at the very bottom.
+      y: catapultY,
+    };
+    drawRectangle(canvasContext, baseStart, baseFinish);
+
+    let pillarStart = {
+      x: catapultX + 1 * catapultSize,
+      y: catapultY - 12 * catapultSize,
+    };
+    let pillarFinish = {
+      x: catapultX + 4 * catapultSize,
+      y: catapultY - 3 * catapultSize,
+    };
+    drawRectangle(canvasContext, pillarStart, pillarFinish);
+
+    // Drawing the braces on the front
+    canvasContext.beginPath();
+    canvasContext.moveTo(catapultX + 4 * catapultSize, catapultY - 10 * catapultSize);
+    canvasContext.lineTo(catapultX + 12 * catapultSize, catapultY - 3 * catapultSize);
+    canvasContext.moveTo(catapultX + 4 * catapultSize, catapultY - 8 * catapultSize);
+    canvasContext.lineTo(catapultX + 10 * catapultSize, catapultY - 3 * catapultSize);
+    canvasContext.stroke();
+
+    // Decorating with some circles
+    drawCircle(canvasContext, catapultX + 2 * catapultSize + 2, catapultY - 2 * catapultSize + 2, catapultSize);
+    drawCircle(canvasContext, catapultX + 2 * catapultSize + 2, catapultY - 10 * catapultSize + 2, catapultSize);
+    drawCircle(canvasContext, catapultX - 10 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
+    drawCircle(canvasContext, catapultX + 11 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
+  };
+
+  drawCatapultArmAndBucket = (canvasContext) => {
+    const { x: catapultX, y: catapultY } = this.coordinates;
+    const catapultSize = this.size;
+    const hingeX = catapultX + 2 * catapultSize + 2;
+    const hingeY = catapultY - 2 * catapultSize + 2;
+
+    canvasContext.beginPath();
+
+    canvasContext.moveTo(hingeX, hingeY);
+    canvasContext.lineTo(hingeX, hingeY - 2 * catapultSize);
+    canvasContext.lineTo(hingeX - 10 * catapultSize, hingeY - 10 * catapultSize);
+    canvasContext.lineTo(hingeX - 12 * catapultSize, hingeY - 7 * catapultSize);
+    canvasContext.lineTo(hingeX - 9 * catapultSize, hingeY - 5 * catapultSize);
+    canvasContext.lineTo(hingeX - 7 * catapultSize, hingeY - 6 * catapultSize);
+    canvasContext.lineTo(hingeX, hingeY);
+
+    canvasContext.stroke();
+  };
+
+  drawCatapultAimingLine = (canvasContext) => {
+    const { x: catapultX, y: catapultY } = this.coordinates;
+    const yAimPoint = catapultY - 10 * this.size + 2;
+
+    const catapultSize = this.size;
+    const angle = this.angle;
+    const oldStrokeStyle = canvasContext.strokeStyle;
+    const oldLineWidth = canvasContext.lineWidth;
+
+    canvasContext.strokeStyle = "red";
+    canvasContext.lineWidth = 3;
+    canvasContext.beginPath();
+    canvasContext.moveTo(
+      catapultX + catapultSize * 14 * Math.cos(angle),
+      yAimPoint + catapultSize * 14 * Math.sin(angle)
+    );
+    canvasContext.lineTo(
+      catapultX + catapultSize * 28 * Math.cos(angle),
+      yAimPoint + catapultSize * 28 * Math.sin(angle)
+    );
+    canvasContext.stroke();
+    canvasContext.strokeStyle = oldStrokeStyle;
+    canvasContext.lineWidth = oldLineWidth;
+  };
+
+  draw(canvasContext) {
+    this.drawCatapultFrame(canvasContext);
+    this.drawCatapultArmAndBucket(canvasContext);
+    this.drawCatapultAimingLine(canvasContext);
+  }
 }
 
 class Projectile {
@@ -783,90 +873,6 @@ const updateGlobalEnvironmentFromInput = (inputObject) => {
   } else {
     aimAdjustInterval = 0.03;
   }
-};
-
-const drawCatapultFrame = (canvasContext, catapult) => {
-  let { x: catapultX, y: catapultY } = catapult.coordinates;
-  let catapultSize = catapult.size;
-  let baseStart = {
-    x: catapultX - 12 * catapultSize,
-    y: catapultY - 3 * catapultSize,
-  };
-  let baseFinish = {
-    x: catapultX + 12 * catapultSize,
-    // This is just Y because the coordinates of the catapult
-    // point to the very center at the very bottom.
-    y: catapultY,
-  };
-  drawRectangle(canvasContext, baseStart, baseFinish);
-
-  let pillarStart = {
-    x: catapultX + 1 * catapultSize,
-    y: catapultY - 12 * catapultSize,
-  };
-  let pillarFinish = {
-    x: catapultX + 4 * catapultSize,
-    y: catapultY - 3 * catapultSize,
-  };
-  drawRectangle(canvasContext, pillarStart, pillarFinish);
-
-  // Drawing the braces on the front
-  canvasContext.beginPath();
-  canvasContext.moveTo(catapultX + 4 * catapultSize, catapultY - 10 * catapultSize);
-  canvasContext.lineTo(catapultX + 12 * catapultSize, catapultY - 3 * catapultSize);
-  canvasContext.moveTo(catapultX + 4 * catapultSize, catapultY - 8 * catapultSize);
-  canvasContext.lineTo(catapultX + 10 * catapultSize, catapultY - 3 * catapultSize);
-  canvasContext.stroke();
-
-  // Decorating with some circles
-  drawCircle(canvasContext, catapultX + 2 * catapultSize + 2, catapultY - 2 * catapultSize + 2, catapultSize);
-  drawCircle(canvasContext, catapultX + 2 * catapultSize + 2, catapultY - 10 * catapultSize + 2, catapultSize);
-  drawCircle(canvasContext, catapultX - 10 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
-  drawCircle(canvasContext, catapultX + 11 * catapultSize, catapultY - 2 * catapultSize + 2, catapultSize);
-};
-
-const drawCatapultArmAndBucket = (canvasContext, catapult) => {
-  const { x: catapultX, y: catapultY } = catapult.coordinates;
-  const catapultSize = catapult.size;
-  const hingeX = catapultX + 2 * catapultSize + 2;
-  const hingeY = catapultY - 2 * catapultSize + 2;
-
-  canvasContext.beginPath();
-
-  canvasContext.moveTo(hingeX, hingeY);
-  canvasContext.lineTo(hingeX, hingeY - 2 * catapultSize);
-  canvasContext.lineTo(hingeX - 10 * catapultSize, hingeY - 10 * catapultSize);
-  canvasContext.lineTo(hingeX - 12 * catapultSize, hingeY - 7 * catapultSize);
-  canvasContext.lineTo(hingeX - 9 * catapultSize, hingeY - 5 * catapultSize);
-  canvasContext.lineTo(hingeX - 7 * catapultSize, hingeY - 6 * catapultSize);
-  canvasContext.lineTo(hingeX, hingeY);
-
-  canvasContext.stroke();
-};
-
-const drawCatapultAimingLine = (canvasContext, catapult) => {
-  const { x: catapultX, y: catapultY } = catapult.coordinates;
-  const yAimPoint = catapultY - 10 * catapult.size + 2;
-
-  const catapultSize = catapult.size;
-  const angle = catapult.angle;
-  const oldStrokeStyle = canvasContext.strokeStyle;
-  const oldLineWidth = canvasContext.lineWidth;
-
-  canvasContext.strokeStyle = "red";
-  canvasContext.lineWidth = 3;
-  canvasContext.beginPath();
-  canvasContext.moveTo(
-    catapultX + catapultSize * 14 * Math.cos(angle),
-    yAimPoint + catapultSize * 14 * Math.sin(angle)
-  );
-  canvasContext.lineTo(
-    catapultX + catapultSize * 28 * Math.cos(angle),
-    yAimPoint + catapultSize * 28 * Math.sin(angle)
-  );
-  canvasContext.stroke();
-  canvasContext.strokeStyle = oldStrokeStyle;
-  canvasContext.lineWidth = oldLineWidth;
 };
 
 const getRandomTargetLocation = () => {
@@ -1015,11 +1021,8 @@ const drawBattleField = (canvasContext, catapult) => {
   updateCatapultFromInput(playerInput, playerCatapult);
 
   drawStatusBar(canvasContext, catapult);
-  // Right here is where the abstraction of these would be nice. Instead of calling all of these,
-  // we would just need to call one 'draw' method on any required given catapults.
-  drawCatapultFrame(canvasContext, catapult);
-  drawCatapultArmAndBucket(canvasContext, catapult);
-  drawCatapultAimingLine(canvasContext, catapult);
+
+  catapult.draw(canvasContext);
 
   onScreenTargets.map((target) => {
     target.draw(canvasContext);
