@@ -722,7 +722,7 @@ const fireCatapult = (catapult) => {
         catapult.x,
         // This should prolly be constantized, but meh. It's the location of
         // the top bolt.
-        catapult.y - 10 * playerCatapult.size + 2,
+        catapult.y - 10 * catapult.size + 2,
         parseInt(localStorage.getItem("ammoSize")),
         // If we don't reduce this a touch, it's too fast, lol.
         catapult.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
@@ -915,7 +915,7 @@ const angleMeterLocationX = 50;
 const powerMeterLocationX = 400;
 const powerMeterLocationY = statusBarHeight / 2 - 4;
 const ammoMeterLocationX = 160;
-const drawStatusBar = (canvasContext, playerCatapult) => {
+const drawStatusBar = (canvasContext, catapult) => {
   const oldFillStyle = canvasContext.fillStyle;
   const oldStrokeStyle = canvasContext.strokeStyle;
   const oldFont = canvasContext.font;
@@ -923,7 +923,7 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
 
   canvasContext.strokeRect(0, 0, canvasWidth, statusBarHeight);
 
-  const convertedAngle = -parseFloat(`${(playerCatapult.angle * 180) / Math.PI}`).toFixed(2);
+  const convertedAngle = -parseFloat(`${(catapult.angle * 180) / Math.PI}`).toFixed(2);
   canvasContext.fillText(`Angle: ${convertedAngle}°`, angleMeterLocationX, midBarText);
 
   canvasContext.fillText("Power:", powerMeterLocationX - 50, midBarText);
@@ -933,11 +933,11 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   powerBarGradient.addColorStop(0.666, "orange");
   powerBarGradient.addColorStop(1.0, "red");
   canvasContext.fillStyle = powerBarGradient;
-  canvasContext.fillRect(powerMeterLocationX, powerMeterLocationY, playerCatapult.launchingPower, 10);
+  canvasContext.fillRect(powerMeterLocationX, powerMeterLocationY, catapult.launchingPower, 10);
   canvasContext.fillStyle = oldFillStyle;
 
   canvasContext.fillText("Ammo:", ammoMeterLocationX, midBarText);
-  for (let i = 1; i <= playerCatapult.ammoCount; i++) {
+  for (let i = 1; i <= catapult.ammoCount; i++) {
     drawCircle(canvasContext, ammoMeterLocationX + 35 + 10 * i, midBarText - 3, 3);
   }
 
@@ -946,21 +946,25 @@ const drawStatusBar = (canvasContext, playerCatapult) => {
   canvasContext.font = oldFont;
 };
 
-// TODO: This induces a lot of bugs. If there's an upgrade that gets applied
-// to the catapult on construction ( ammo count, projectile damage ) it cannot
-// be applied until the catapult gets garbage collected. Thus, a catapult should
-// be constructed by every interface that needs one, that is fresh and clean.
-let playerCatapult = new Catapult(
-  75,
-  600,
-  0,
-  4,
-  parseInt(localStorage.getItem("playerAmmoCount")),
-  parseInt(localStorage.getItem("playerProjectileDamageModifier"))
-);
+const generateStandardCatapult = () => {
+  return new Catapult(
+    75,
+    600,
+    0,
+    4,
+    parseInt(localStorage.getItem("playerAmmoCount")),
+    parseInt(localStorage.getItem("playerProjectileDamageModifier"))
+  );
+};
+
+let playerCatapult = generateStandardCatapult();
 let playerInput = new Input();
+
 let targetPracticePrepared = false;
 const prepareTargetPractice = () => {
+  // Any time we're starting target practice, make
+  // a fresh catapult.
+  playerCatapult = generateStandardCatapult();
   // Reset the current count of on screen targets.
   onScreenTargets.length = 0;
   for (let i = 1; i <= randomInt(4, 6); i++) {
@@ -1004,22 +1008,18 @@ let battleFieldItems = new Array();
 let targetPracticeMenuButton = new MainMenuLink(canvasWidth - 110, canvasHeight - 30);
 targetPracticeMenuButton.extraClickActions = () => {
   targetPracticePrepared = false;
-  // NOTE
-  // Is this an OK practice for state management? If this gets ugly, we'll
-  // rip it out in favor of some kind of meta state manager, I suppose.
-  playerCatapult.ammoCount = parseInt(localStorage.getItem("playerAmmoCount"));
 };
 battleFieldItems.push(targetPracticeMenuButton);
-const drawBattleField = (canvasContext) => {
+const drawBattleField = (canvasContext, catapult) => {
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
 
-  drawStatusBar(canvasContext, playerCatapult);
+  drawStatusBar(canvasContext, catapult);
   // Right here is where the abstraction of these would be nice. Instead of calling all of these,
   // we would just need to call one 'draw' method on any required given catapults.
-  drawCatapultFrame(canvasContext, playerCatapult);
-  drawCatapultArmAndBucket(canvasContext, playerCatapult);
-  drawCatapultAimingLine(canvasContext, playerCatapult);
+  drawCatapultFrame(canvasContext, catapult);
+  drawCatapultArmAndBucket(canvasContext, catapult);
+  drawCatapultAimingLine(canvasContext, catapult);
 
   onScreenTargets.map((target) => {
     target.draw(canvasContext);
@@ -1090,7 +1090,7 @@ const update = () => {
     if (targetPracticePrepared === false) {
       prepareTargetPractice();
     }
-    drawBattleField(canvasContext);
+    drawBattleField(canvasContext, playerCatapult);
   } else if (currentInterface === GameInterfaces.shop) {
     drawShop(canvasContext);
   }
