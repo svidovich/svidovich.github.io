@@ -620,6 +620,46 @@ class Brick extends Entity {
   }
 }
 
+class Projectile {
+  constructor(x, y, size, v0, a0, damageModifier) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.r = this.size;
+    this.v0 = v0; // Initial velocity
+    this.a0 = a0; // Initial Angle
+    this.t = 0;
+    damageModifier = damageModifier || 0;
+    this.health = parseInt(localStorage.getItem("ammoHealthOS"));
+    this.damage = Math.floor(this.size / 2) + damageModifier;
+    this.queueDeletion = false;
+  }
+
+  get coordinates() {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  adjustPosition() {
+    this.t += roughFrameRate;
+    this.x += this.v0 * Math.cos(this.a0) * this.t;
+    // The sign for the addition on the y term is positive here because of our reference
+    // frame. The origin is in the _top_ left, not the bottom left, so the math is
+    // slightly goofy. The x term is the same, because x is still increasing left-to-right.
+    this.y += this.t * this.v0 * Math.sin(this.a0) - 0.5 * gravity * Math.pow(this.t, 2);
+    // If we're off screen to the right or the bottom, we should get garbage collected
+    if (this.x > canvasWidth || this.y > canvasHeight) {
+      this.queueDeletion = true;
+    }
+  }
+
+  draw(canvasContext) {
+    drawCircle(canvasContext, this.x, this.y, this.r);
+  }
+}
+
 class Catapult {
   constructor(x, y, angle, size, ammoCount, damageModifier) {
     this.x = x;
@@ -762,68 +802,28 @@ class Catapult {
     this.drawCatapultArmAndBucket(canvasContext);
     this.drawCatapultAimingLine(canvasContext);
   }
-}
 
-class Projectile {
-  constructor(x, y, size, v0, a0, damageModifier) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.r = this.size;
-    this.v0 = v0; // Initial velocity
-    this.a0 = a0; // Initial Angle
-    this.t = 0;
-    damageModifier = damageModifier || 0;
-    this.health = parseInt(localStorage.getItem("ammoHealthOS"));
-    this.damage = Math.floor(this.size / 2) + damageModifier;
-    this.queueDeletion = false;
-  }
-
-  get coordinates() {
-    return {
-      x: this.x,
-      y: this.y,
-    };
-  }
-
-  adjustPosition() {
-    this.t += roughFrameRate;
-    this.x += this.v0 * Math.cos(this.a0) * this.t;
-    // The sign for the addition on the y term is positive here because of our reference
-    // frame. The origin is in the _top_ left, not the bottom left, so the math is
-    // slightly goofy. The x term is the same, because x is still increasing left-to-right.
-    this.y += this.t * this.v0 * Math.sin(this.a0) - 0.5 * gravity * Math.pow(this.t, 2);
-    // If we're off screen to the right or the bottom, we should get garbage collected
-    if (this.x > canvasWidth || this.y > canvasHeight) {
-      this.queueDeletion = true;
+  fire = () => {
+    // If we're not already in the middle of firing,
+    if (controlsPaused !== true && this.ammoCount > 0) {
+      onScreenProjectiles.push(
+        new Projectile(
+          this.x,
+          // This should prolly be constantized, but meh. It's the location of
+          // the top bolt.
+          this.y - 10 * this.size + 2,
+          parseInt(localStorage.getItem("ammoSize")),
+          // If we don't reduce this a touch, it's too fast, lol.
+          this.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
+          this.angle,
+          this.damageModifier || 0
+        )
+      );
+      this.ammoCount -= 1;
+      controlsPaused = true;
     }
-  }
-
-  draw(canvasContext) {
-    drawCircle(canvasContext, this.x, this.y, this.r);
-  }
+  };
 }
-
-const fireCatapult = (catapult) => {
-  // If we're not already in the middle of firing,
-  if (controlsPaused !== true && catapult.ammoCount > 0) {
-    onScreenProjectiles.push(
-      new Projectile(
-        catapult.x,
-        // This should prolly be constantized, but meh. It's the location of
-        // the top bolt.
-        catapult.y - 10 * catapult.size + 2,
-        parseInt(localStorage.getItem("ammoSize")),
-        // If we don't reduce this a touch, it's too fast, lol.
-        catapult.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
-        catapult.angle,
-        catapult.damageModifier || 0
-      )
-    );
-    catapult.ammoCount -= 1;
-    controlsPaused = true;
-  }
-};
 
 const updateCatapultFromInput = (inputObject, catapult) => {
   if (onScreenProjectiles.length === 0) {
@@ -853,7 +853,7 @@ const updateCatapultFromInput = (inputObject, catapult) => {
       // Otherwise, we aren't holding the space key.
     } else {
       if (inputObject.firedFlag === true) {
-        fireCatapult(catapult);
+        catapult.fire();
         inputObject.firedFlag = false;
       }
       // Don't poweradjust to 0 unless we have to. There's
