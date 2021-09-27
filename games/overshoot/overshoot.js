@@ -588,23 +588,21 @@ class MovingTarget extends Target {
     this.opp = this.destY - this.initialY;
 
     this.angle = Math.atan2(this.opp, this.adj);
-
     this.movingTowardDestination = true;
   }
 
   adjustPosition() {
     if (distance(this.coordinates, { x: this.destX, y: this.destY }) < 25 && this.movingTowardDestination === true) {
-      this.angle *= -1;
+      this.speed *= -1;
       this.movingTowardDestination = false;
     }
     if (
       distance(this.coordinates, { x: this.initialX, y: this.initialY }) < 25 &&
       this.movingTowardDestination === false
     ) {
-      this.angle = Math.PI - this.angle;
+      this.speed *= -1;
       this.movingTowardDestination = true;
     }
-    // console.log(this.angle);
     this.x += this.speed * Math.cos(this.angle);
     this.y += this.speed * Math.sin(this.angle);
   }
