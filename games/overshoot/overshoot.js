@@ -1010,7 +1010,7 @@ const prepareTargetPractice = () => {
   onScreenTargets.length = 0;
   for (let i = 1; i <= randomInt(4, 6); i++) {
     // Destruct & rename
-    let { x: randomX, y: randomY } = getRandomTargetLocation();
+    const { x: randomX, y: randomY } = getRandomTargetLocation();
     let nextTarget = new Target(randomX, randomY, 20);
     nextTarget.value = 3;
     onScreenTargets.push(nextTarget);
@@ -1018,10 +1018,13 @@ const prepareTargetPractice = () => {
   let { x: brickX, y: brickY } = getRandomTargetLocation();
 
   //  constructor(x, y, r, destX, destY, speed)
-  let movingGuy = new MovingTarget(200, 200, 20, 450, 450, 1);
-  let movingGuy0 = new MovingTarget(450, 450, 20, 400, 300, 1);
-  onScreenTargets.push(movingGuy);
-  onScreenTargets.push(movingGuy0);
+  for (let i = 0; i <= randomInt(1, 2); i++) {
+    const initialCoords = getRandomTargetLocation();
+    const destCoords = getRandomTargetLocation();
+    let nextMovingTarget = new MovingTarget(initialCoords.x, initialCoords.y, 20, destCoords.x, destCoords.y, 1);
+    nextMovingTarget.value = 4;
+    onScreenTargets.push(nextMovingTarget);
+  }
 
   // Randomize what kind of bricks we'll get!
   let brickKindChance = randomInt(1, 100);
