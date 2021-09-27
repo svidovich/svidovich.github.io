@@ -573,6 +573,43 @@ class Target extends Entity {
   }
 }
 
+class MovingTarget extends Target {
+  constructor(x, y, r, destX, destY, speed) {
+    super(x, y, r);
+
+    this.initialX = x;
+    this.initialY = y;
+    this.destX = destX;
+    this.destY = destY;
+
+    this.speed = speed;
+
+    this.adj = this.destX - this.initialX;
+    this.opp = this.destY - this.initialY;
+
+    this.angle = Math.atan2(this.opp, this.adj);
+
+    this.movingTowardDestination = true;
+  }
+
+  adjustPosition() {
+    if (distance(this.coordinates, { x: this.destX, y: this.destY }) < 25 && this.movingTowardDestination === true) {
+      this.angle *= -1;
+      this.movingTowardDestination = false;
+    }
+    if (
+      distance(this.coordinates, { x: this.initialX, y: this.initialY }) < 25 &&
+      this.movingTowardDestination === false
+    ) {
+      this.angle = Math.PI - this.angle;
+      this.movingTowardDestination = true;
+    }
+    // console.log(this.angle);
+    this.x += this.speed * Math.cos(this.angle);
+    this.y += this.speed * Math.sin(this.angle);
+  }
+}
+
 class Brick extends Entity {
   constructor(x, y, kind) {
     super(x, y, 16, 12);
@@ -982,6 +1019,12 @@ const prepareTargetPractice = () => {
   }
   let { x: brickX, y: brickY } = getRandomTargetLocation();
 
+  //  constructor(x, y, r, destX, destY, speed)
+  let movingGuy = new MovingTarget(200, 200, 20, 450, 450, 1);
+  let movingGuy0 = new MovingTarget(450, 450, 20, 400, 300, 1);
+  onScreenTargets.push(movingGuy);
+  onScreenTargets.push(movingGuy0);
+
   // Randomize what kind of bricks we'll get!
   let brickKindChance = randomInt(1, 100);
   let brickKind;
@@ -1026,6 +1069,9 @@ const drawBattleField = (canvasContext, catapult) => {
 
   onScreenTargets.map((target) => {
     target.draw(canvasContext);
+    if (target.adjustPosition !== undefined) {
+      target.adjustPosition();
+    }
   });
 
   onScreenProjectiles.map((projectile) => {
