@@ -910,12 +910,31 @@ const updateGlobalEnvironmentFromInput = (inputObject) => {
   }
 };
 
-const getRandomTargetLocation = () => {
+const getRandomTargetLocation = (quadrant) => {
   // Stick to QI?
-  return {
-    x: randomInt(canvasWidth / 2, canvasWidth),
-    y: randomInt(statusBarHeight, canvasHeight / 2),
-  };
+  if (quadrant === "Q1") {
+    return {
+      x: randomInt(canvasWidth / 2, canvasWidth),
+      y: randomInt(statusBarHeight, canvasHeight / 2),
+    };
+  } else if (quadrant === "Q2") {
+    return {
+      x: randomInt(0, canvasWidth / 2),
+      y: randomInt(statusBarHeight, canvasHeight / 2),
+    };
+  } else if (quadrant === "Q3") {
+    return {
+      x: randomInt(0, canvasWidth / 2),
+      y: randomInt(canvasHeight / 2, canvasHeight),
+    };
+  } else if (quadrant === "Q4") {
+    return {
+      x: randomInt(canvasWidth / 2, canvasWidth),
+      y: randomInt(canvasHeight / 2, canvasHeight),
+    };
+  } else {
+    throw new Error(`${quadrant} is not a valid quadrant. Choose Q1, Q2, Q3, or Q4.`);
+  }
 };
 
 // An updated version which accounts for the size of both the
@@ -1010,18 +1029,25 @@ const prepareTargetPractice = () => {
   onScreenTargets.length = 0;
   for (let i = 1; i <= randomInt(4, 6); i++) {
     // Destruct & rename
-    const { x: randomX, y: randomY } = getRandomTargetLocation();
+    const { x: randomX, y: randomY } = getRandomTargetLocation("Q1");
     let nextTarget = new Target(randomX, randomY, 20);
     nextTarget.value = 3;
     onScreenTargets.push(nextTarget);
   }
-  let { x: brickX, y: brickY } = getRandomTargetLocation();
+  let { x: brickX, y: brickY } = getRandomTargetLocation("Q1");
 
   //  constructor(x, y, r, destX, destY, speed)
-  for (let i = 0; i <= randomInt(1, 2); i++) {
-    const initialCoords = getRandomTargetLocation();
-    const destCoords = getRandomTargetLocation();
-    let nextMovingTarget = new MovingTarget(initialCoords.x, initialCoords.y, 20, destCoords.x, destCoords.y, 1);
+  for (let i = 1; i <= randomInt(1, 2); i++) {
+    const initialCoords = getRandomTargetLocation("Q2");
+    const destCoords = getRandomTargetLocation("Q3");
+    let nextMovingTarget = new MovingTarget(
+      initialCoords.x,
+      initialCoords.y,
+      20,
+      destCoords.x,
+      destCoords.y,
+      randomInt(1, 2)
+    );
     nextMovingTarget.value = 4;
     onScreenTargets.push(nextMovingTarget);
   }
