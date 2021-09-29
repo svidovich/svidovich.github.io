@@ -88,6 +88,7 @@ const GameInterfaces = Object.freeze({
   shop: "shop",
   targetPractice: "targetPractice",
   battlefield: "battlefield",
+  challenges: "challenges",
 });
 
 let currentInterface = GameInterfaces.mainMenu;
@@ -215,6 +216,11 @@ const updateUpgrades = () => {
 
 setUpGameData();
 
+// Looking back, menus should probably have been classes with methods like
+// ThisMenu.addMenuItem(...) to make my life easier
+// ThisMenu.clickHandler = () => {...}, and things like that.
+// I will remember that for next time. I think doing that now would be a
+// pretty significant refactor, unfortunately.
 class MenuItem {
   constructor(x, y, w, h) {
     if (this.constructor === MenuItem) {
@@ -289,6 +295,25 @@ class MainMenuShopLink extends MenuItem {
   }
 }
 
+class MainMenuChallengesLink extends MenuItem {
+  constructor(x, y, w, h) {
+    super(x, y, w, h);
+  }
+
+  draw(canvasContext) {
+    canvasContext.strokeRect(this.x, this.y, this.w, this.h);
+    const oldFont = canvasContext.font;
+    canvasContext.font = `bold ${this.w - this.w / 4}px courier`;
+    canvasContext.fillText("☄️", this.x, this.y + (3 * this.h) / 4);
+    canvasContext.font = `bold ${this.w / 8}px courier`;
+    canvasContext.fillText("Challenges", this.x + this.w / 8, this.y + this.h - this.w / 16);
+    canvasContext.font = oldFont;
+  }
+  clickAction() {
+    currentInterface = GameInterfaces.challenges;
+  }
+}
+
 // To be used Anywhere! Designed to be a rectangle.
 class MainMenuLink extends MenuItem {
   constructor(x, y) {
@@ -324,6 +349,8 @@ class MainMenuLink extends MenuItem {
 let mainMenuItems = new Array();
 mainMenuItems.push(new MainMenuTargetPractice(100, 100, 100, 100));
 mainMenuItems.push(new MainMenuShopLink(250, 100, 100, 100));
+mainMenuItems.push(new MainMenuChallengesLink(400, 100, 100, 100));
+
 const drawMainMenu = (canvasContext) => {
   mainMenuItems.forEach((item) => {
     item.draw(canvasContext);
@@ -1146,6 +1173,9 @@ const interfaceClickHandler = (canvasContext, clickEvent) => {
       break;
     case GameInterfaces.targetPractice:
       targetPracticeClickHandler(canvasContext, clickCoordinates);
+      break;
+    case GameInterfaces.challenges:
+      challengesClickHandler(canvasContext, clickCoordinates);
       break;
   }
 };
