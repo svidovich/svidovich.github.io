@@ -492,8 +492,55 @@ const shopClickHandler = (clickCoordinates) => {
   });
 };
 
+class ChallengesMenuItem extends MenuItem {
+  constructor(x, y, value, description, imagePath) {
+    let w = 100;
+    let h = 100;
+    super(x, y, w, h);
+    this.value = value;
+    this.description = description;
+    this.imagePath = imagePath;
+    this.loadImage();
+  }
+
+  loadImage() {
+    if (this.imagePath !== undefined) {
+      this.image = new Image();
+      this.image.src = this.imagePath;
+    } else {
+      this.image = null;
+    }
+  }
+
+  clickAction() {
+    console.log(`You clicked ${this.description}.`);
+  }
+
+  draw(canvasContext) {
+    canvasContext.strokeRect(this.x, this.y, this.w, this.h);
+    const oldFont = canvasContext.font;
+    canvasContext.font = `bold 14px courier`;
+    canvasContext.fillText(this.description, this.x - this.w / 8, this.y + this.h + 14);
+    canvasContext.fillText(`$${this.value}`, this.x + this.w / 3, this.y + this.h + 28);
+    if (this.image !== null) {
+      canvasContext.drawImage(this.image, this.x, this.y, this.w, this.h);
+    }
+    canvasContext.font = oldFont;
+  }
+}
+
 const challengesMenuItems = new Array();
 challengesMenuItems.push(new MainMenuLink(25, 25));
+
+const jungleChallengeMenuItem = new ChallengesMenuItem(
+  100,
+  125,
+  50,
+  "Jungle Challenge",
+  "./overshoot/media/jungleChallenge.png"
+);
+
+challengesMenuItems.push(jungleChallengeMenuItem);
 
 const challengesMenuClickHandler = (clickCoordinates) => {
   challengesMenuItems.forEach((item) => {
