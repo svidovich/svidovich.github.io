@@ -34,6 +34,9 @@ const canvasWidth = canvas.width;
 
 let { left: canvasLeftEdgeX, top: canvasTopEdgeY } = canvas.getBoundingClientRect();
 
+let onScreenProjectiles = new Array();
+let onScreenTargets = new Array();
+
 // Magic numbers
 // How big should the status bar be? This big:
 const statusBarHeight = 50;
@@ -483,16 +486,28 @@ const drawShop = (canvasContext) => {
 };
 
 // Definitely moist. Needs to be... DRY
-const shopClickHandler = (canvasContext, clickCoordinates) => {
+const shopClickHandler = (clickCoordinates) => {
   shopItems.forEach((item) => {
     return item.isClicked(clickCoordinates);
   });
 };
 
-const levelSelectClickHandler = (canvasContext) => {};
+const challengesMenuItems = new Array();
+challengesMenuItems.push(new MainMenuLink(25, 25));
 
-let onScreenProjectiles = new Array();
-let onScreenTargets = new Array();
+const challengesMenuClickHandler = (clickCoordinates) => {
+  challengesMenuItems.forEach((item) => {
+    return item.isClicked(clickCoordinates);
+  });
+};
+
+const drawChallengesMenu = (canvasContext) => {
+  challengesMenuItems.forEach((item) => {
+    item.draw(canvasContext);
+  });
+};
+
+const levelSelectClickHandler = (canvasContext) => {};
 
 const InputKeys = {
   space: 32,
@@ -1166,7 +1181,7 @@ const interfaceClickHandler = (canvasContext, clickEvent) => {
       levelSelectClickHandler(canvasContext);
       break;
     case GameInterfaces.shop:
-      shopClickHandler(canvasContext, clickCoordinates);
+      shopClickHandler(clickCoordinates);
       break;
     case GameInterfaces.battlefield:
       battlefieldClickHandler(canvasContext, clickCoordinates);
@@ -1175,7 +1190,7 @@ const interfaceClickHandler = (canvasContext, clickEvent) => {
       targetPracticeClickHandler(canvasContext, clickCoordinates);
       break;
     case GameInterfaces.challenges:
-      challengesClickHandler(canvasContext, clickCoordinates);
+      challengesMenuClickHandler(clickCoordinates);
       break;
   }
 };
@@ -1199,6 +1214,8 @@ const update = () => {
     drawBattleField(canvasContext, playerCatapult);
   } else if (currentInterface === GameInterfaces.shop) {
     drawShop(canvasContext);
+  } else if (currentInterface === GameInterfaces.challenges) {
+    drawChallengesMenu(canvasContext);
   }
 };
 
