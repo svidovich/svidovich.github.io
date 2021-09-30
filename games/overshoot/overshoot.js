@@ -338,7 +338,6 @@ class MainMenuLink extends MenuItem {
   }
 
   guaranteedClickActions() {
-    console.log("Fuckit");
     currentInterface = GameInterfaces.mainMenu;
   }
 
@@ -496,11 +495,10 @@ const shopClickHandler = (clickCoordinates) => {
 };
 
 class ChallengesMenuItem extends MenuItem {
-  constructor(x, y, value, description, imagePath, challengeType) {
+  constructor(x, y, description, imagePath, challengeType) {
     let w = 100;
     let h = 100;
     super(x, y, w, h);
-    this.value = value;
     this.description = description;
     this.imagePath = imagePath;
     this.challengeType = challengeType;
@@ -530,7 +528,6 @@ class ChallengesMenuItem extends MenuItem {
     const oldFont = canvasContext.font;
     canvasContext.font = `bold 14px courier`;
     canvasContext.fillText(this.description, this.x - this.w / 8, this.y + this.h + 14);
-    canvasContext.fillText(`$${this.value}`, this.x + this.w / 3, this.y + this.h + 28);
     if (this.image !== null) {
       canvasContext.drawImage(this.image, this.x, this.y, this.w, this.h);
     }
@@ -544,7 +541,6 @@ challengesMenuItems.push(new MainMenuLink(25, 25));
 const jungleChallengeMenuItem = new ChallengesMenuItem(
   100,
   125,
-  50,
   "Jungle Challenge",
   "./overshoot/media/jungleChallenge.png",
   "jungleChallenge"
@@ -1197,10 +1193,10 @@ const buildBattlefieldBase = () => {
 // targets shouldn't exceed the amount of ammo a player has, even if they
 // have smash-through ammo. It's not very fair to the player if they only
 // have 4 ammo but there are 8 targets, eh?
-// Challenges are also a little different from target practice. There should
-// be a victory condition that grants the player the cash they were looking
-// to get based on the front screen. Targets are also worth more than in
-// target practice when we're in challenge mode.
+// Challenges are also a little different from target practice.
+// Targets are worth more than in target practice when we're in
+// challenge mode, and walls are placed thematically. Probably there
+// are also monkey pictures.
 
 // The style of a jungle challenge is, generally, vertical walls that
 // block out targets. There should be at least a target out front to
@@ -1210,11 +1206,84 @@ const buildJungleChallenge = () => {
   buildBattlefieldBase();
   // For a touch of challenge, let's try and start with an x position
   // in the middle of the canvas
+  const availablePlayerAmmo = parseInt(localStorage.getItem("playerAmmoCount"));
   let firstTargetX = randomInt(canvasWidth / 2 - canvasWidth / 8, canvasWidth / 2 + canvasWidth / 8);
-  let firstTargetY = randomInt(100, canvasHeight - 100);
+  let firstTargetY = randomInt(300, canvasHeight - 300);
   let firstTarget = new Target(firstTargetX, firstTargetY, 20);
   firstTarget.value = 10;
   onScreenTargets.push(firstTarget);
+  let remainingTargets = availablePlayerAmmo - 1;
+  // Put some bricks in behind the first target.
+  let firstBrickX = firstTargetX + randomInt(50, 60);
+  let firstBrickY = firstTargetY + randomInt(70, 120);
+  for (let i = 0; i <= 3; i++) {
+    let nextBrick = new Brick(firstBrickX, firstBrickY + i * 48, "jungle");
+    nextBrick.value = 5;
+    onScreenTargets.push(nextBrick);
+  }
+  // Let's do some moving targets, up and down, behind the brick wall.
+  const movingTargetsX = firstBrickX + randomInt(50, 60);
+  if (remainingTargets === 1) {
+    let thisMovingTarget = new MovingTarget(movingTargetsX, statusBarHeight, 20, movingTargetsX, canvasHeight, 1);
+    thisMovingTarget.value = 15;
+    onScreenTargets.push(thisMovingTarget);
+    return;
+  } else {
+    let firstMovingTarget = new MovingTarget(movingTargetsX, firstBrickY + 90, 20, movingTargetsX, statusBarHeight, 1);
+    firstMovingTarget.value = 15;
+    onScreenTargets.push(firstMovingTarget);
+    let secondMovingTarget = new MovingTarget(movingTargetsX, firstBrickY + 110, 20, movingTargetsX, canvasHeight, 1);
+    secondMovingTarget.value = 15;
+    onScreenTargets.push(secondMovingTarget);
+    remainingTargets -= 2;
+  }
+  // Bail if we're out of targets now.
+  if (remainingTargets === 0) {
+    return;
+  }
+  // Now for another wall.
+  let secondBrickX = movingTargetsX + randomInt(50, 60);
+  let secondBrickY = randomInt(statusBarHeight, statusBarHeight + 100);
+  for (let i = 0; i <= 5; i++) {
+    let nextBrick = new Brick(secondBrickX, secondBrickY + i * 48, "jungle");
+    nextBrick.value = 5;
+    onScreenTargets.push(nextBrick);
+  }
+  // and, add some targets behind it
+  if (remainingTargets === 1) {
+    let targetBeyondSecondWall = new Target(secondBrickX + randomInt(5, 10), 144 + randomInt(0, 30), 20);
+    targetBeyondSecondWall.value = 20;
+    onScreenTargets.push(targetBeyondSecondWall);
+    return;
+  } else {
+    let firstTargetBeyondSecondWall = new Target(
+      secondBrickX + 50 + randomInt(5, 10),
+      secondBrickY + 144 - randomInt(20, 40),
+      20
+    );
+    firstTargetBeyondSecondWall.value = 20;
+    onScreenTargets.push(firstTargetBeyondSecondWall);
+
+    let secondTargetBeyondSecondWall = new Target(
+      secondBrickX + 50 + randomInt(5, 10),
+      secondBrickY + 144 + randomInt(40, 80),
+      20
+    );
+    firstTargetBeyondSecondWall.value = 20;
+    onScreenTargets.push(secondTargetBeyondSecondWall);
+
+    remainingTargets -= 2;
+  }
+  if (remainingTargets === 0) {
+    return;
+  }
+  for (let i = 1; i <= remainingTargets; i++) {
+    const { x, y } = getRandomTargetLocation(`Q${randomInt(1, 4)}`);
+    let randomTarget = new Target(x, y, 20);
+    randomTarget.value = 15;
+    onScreenTargets.push(randomTarget);
+  }
+  return;
 };
 
 const prepareChallenge = (challengeType) => {
