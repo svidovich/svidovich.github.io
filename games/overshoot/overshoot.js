@@ -92,8 +92,10 @@ const GameInterfaces = Object.freeze({
   targetPractice: "targetPractice",
   battlefield: "battlefield",
   challenges: "challenges",
+  challengeInit: "challengeInit",
 });
 
+let activeChallenge = null;
 let currentInterface = GameInterfaces.mainMenu;
 
 // This is a mapping of upgrade names to callables that make
@@ -336,6 +338,7 @@ class MainMenuLink extends MenuItem {
   }
 
   guaranteedClickActions() {
+    console.log("Fuckit");
     currentInterface = GameInterfaces.mainMenu;
   }
 
@@ -493,13 +496,14 @@ const shopClickHandler = (clickCoordinates) => {
 };
 
 class ChallengesMenuItem extends MenuItem {
-  constructor(x, y, value, description, imagePath) {
+  constructor(x, y, value, description, imagePath, challengeType) {
     let w = 100;
     let h = 100;
     super(x, y, w, h);
     this.value = value;
     this.description = description;
     this.imagePath = imagePath;
+    this.challengeType = challengeType;
     this.loadImage();
   }
 
@@ -513,7 +517,12 @@ class ChallengesMenuItem extends MenuItem {
   }
 
   clickAction() {
-    console.log(`You clicked ${this.description}.`);
+    if (!this.challengeType) {
+      throw new Error("No challenge type assigned!");
+    } else {
+      activeChallenge = this.challengeType;
+      currentInterface = GameInterfaces.challengeInit;
+    }
   }
 
   draw(canvasContext) {
@@ -537,7 +546,8 @@ const jungleChallengeMenuItem = new ChallengesMenuItem(
   125,
   50,
   "Jungle Challenge",
-  "./overshoot/media/jungleChallenge.png"
+  "./overshoot/media/jungleChallenge.png",
+  "jungleChallenge"
 );
 
 challengesMenuItems.push(jungleChallengeMenuItem);
@@ -1109,7 +1119,7 @@ const generateStandardCatapult = () => {
 let playerCatapult = generateStandardCatapult();
 let playerInput = new Input();
 
-let targetPracticePrepared = false;
+let battlefieldPrepared = false;
 const prepareTargetPractice = () => {
   // Any time we're starting target practice, make
   // a fresh catapult.
@@ -1166,18 +1176,70 @@ const prepareTargetPractice = () => {
     nextBrick.value = 1;
     onScreenTargets.push(nextBrick);
   }
-  targetPracticePrepared = true;
+  battlefieldPrepared = true;
+};
+
+// More generally,
+
+const buildBattlefieldBase = () => {
+  // Any time we're going to be entering the
+  // battlefield, we should do these things.
+
+  // Replace the global catapult with a new one.
+  playerCatapult = generateStandardCatapult();
+  // Reset the current count of on screen targets.
+  onScreenTargets.length = 0;
+};
+
+// About building challenge maps intelligently
+// Generally when constructing challenges, we need to be mindful of the
+// amount of ammo a player has available to them. The total number of
+// targets shouldn't exceed the amount of ammo a player has, even if they
+// have smash-through ammo. It's not very fair to the player if they only
+// have 4 ammo but there are 8 targets, eh?
+// Challenges are also a little different from target practice. There should
+// be a victory condition that grants the player the cash they were looking
+// to get based on the front screen. Targets are also worth more than in
+// target practice when we're in challenge mode.
+
+// The style of a jungle challenge is, generally, vertical walls that
+// block out targets. There should be at least a target out front to
+// give the player a bit of a freebie, but the rest of the challenge will
+// consist of vertical play.
+const buildJungleChallenge = () => {
+  buildBattlefieldBase();
+  // For a touch of challenge, let's try and start with an x position
+  // in the middle of the canvas
+  let firstTargetX = randomInt(canvasWidth / 2 - canvasWidth / 8, canvasWidth / 2 + canvasWidth / 8);
+  let firstTargetY = randomInt(100, canvasHeight - 100);
+  let firstTarget = new Target(firstTargetX, firstTargetY, 20);
+  firstTarget.value = 10;
+  onScreenTargets.push(firstTarget);
+};
+
+const prepareChallenge = (challengeType) => {
+  switch (challengeType) {
+    case "jungleChallenge":
+      buildJungleChallenge();
+      break;
+    default:
+      throw new Error(`${challengeType} is not a valid challenge type.`);
+  }
+  battlefieldPrepared = true;
 };
 
 let battleFieldItems = new Array();
-let targetPracticeMenuButton = new MainMenuLink(canvasWidth - 110, canvasHeight - 30);
-targetPracticeMenuButton.extraClickActions = () => {
-  targetPracticePrepared = false;
-};
-battleFieldItems.push(targetPracticeMenuButton);
+
 const drawBattleField = (canvasContext, catapult) => {
+  battleFieldItems.length = 0;
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
+
+  let battlefieldMainMenuButton = new MainMenuLink(canvasWidth - 110, canvasHeight - 30);
+  battlefieldMainMenuButton.extraClickActions = () => {
+    battlefieldPrepared = false;
+  };
+  battleFieldItems.push(battlefieldMainMenuButton);
 
   drawStatusBar(canvasContext, catapult);
 
@@ -1239,6 +1301,9 @@ const interfaceClickHandler = (canvasContext, clickEvent) => {
     case GameInterfaces.challenges:
       challengesMenuClickHandler(clickCoordinates);
       break;
+    case GameInterfaces.challengeInit:
+      battlefieldClickHandler(canvasContext, clickCoordinates);
+      break;
   }
 };
 
@@ -1255,7 +1320,7 @@ const update = () => {
   if (currentInterface === GameInterfaces.mainMenu) {
     drawMainMenu(canvasContext);
   } else if (currentInterface === GameInterfaces.targetPractice) {
-    if (targetPracticePrepared === false) {
+    if (battlefieldPrepared === false) {
       prepareTargetPractice();
     }
     drawBattleField(canvasContext, playerCatapult);
@@ -1263,6 +1328,11 @@ const update = () => {
     drawShop(canvasContext);
   } else if (currentInterface === GameInterfaces.challenges) {
     drawChallengesMenu(canvasContext);
+  } else if (currentInterface === GameInterfaces.challengeInit) {
+    if (battlefieldPrepared === false) {
+      prepareChallenge(activeChallenge);
+    }
+    drawBattleField(canvasContext, playerCatapult);
   }
 };
 
