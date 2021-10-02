@@ -78,6 +78,8 @@ const upgradableValues = Object.freeze({
   launchPowerDivisor: 0.2,
   // How much should we add to the player's projectiles' damage?
   playerProjectileDamageModifier: 0,
+  // How many projectiles should the player fire?
+  playerProjectileCount: 1,
 });
 
 // Status stuff
@@ -102,6 +104,13 @@ let currentInterface = GameInterfaces.mainMenu;
 // their effects happen in-game. The callables should be
 // somewhat close to idempotent.
 const upgradeStruct = {
+  doubleShotOS: (restore) => {
+    if (restore === true) {
+      localStorage.setItem("playerProjectileCount", upgradableValues["playerProjectileCount"]);
+    } else {
+      localStorage.setItem("playerProjectileCount", 2);
+    }
+  },
   moreAmmoOS: (restore) => {
     if (restore === true) {
       localStorage.setItem("playerAmmoCount", upgradableValues["playerAmmoCount"]);
@@ -466,6 +475,7 @@ let moreAmmo = new ShopItem(250, 125, 300, "More Ammo", "moreAmmoOS", "./oversho
 let crashThrough = new ShopItem(400, 125, 550, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
 let hiPower = new ShopItem(550, 125, 250, "Faster Shot!", "hiPowerOS", "./overshoot/media/hiPower.png");
 let leadShot = new ShopItem(700, 125, 300, "Lead Shot", "leadShotOS", "./overshoot/media/leadShot.png");
+let doubleShot = new ShopItem(1000, 125, 750, "Double Shot", "doubleShotOS", "./overshoot/media/doubleShot.png");
 // let drawAimLine = new ShopItem(700, 125, 1500, "Aim Line", "aimLineOs", "./overshoot/media/drawAimLine.png")
 
 shopItems.push(new MainMenuLink(25, 25));
@@ -474,6 +484,7 @@ shopItems.push(moreAmmo);
 shopItems.push(crashThrough);
 shopItems.push(hiPower);
 shopItems.push(leadShot);
+shopItems.push(doubleShot);
 
 // You'll have to come back to see it -- feature, not bug ;)
 let moreAmmoStatus = getObjectFromLocalStorage("moreAmmoOS");
