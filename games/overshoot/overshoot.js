@@ -1234,7 +1234,7 @@ const buildJungleChallenge = () => {
   let remainingTargets = availablePlayerAmmo - 1;
   // Put some bricks in behind the first target.
   let firstBrickX = firstTargetX + randomInt(50, 60);
-  let firstBrickY = firstTargetY + randomInt(70, 120);
+  let firstBrickY = firstTargetY + randomInt(20, 70);
   for (let i = 0; i <= 3; i++) {
     let nextBrick = new Brick(firstBrickX, firstBrickY + i * 48, "jungle");
     nextBrick.value = 5;
@@ -1297,7 +1297,7 @@ const buildJungleChallenge = () => {
     return;
   }
   for (let i = 1; i <= remainingTargets; i++) {
-    const { x, y } = getRandomTargetLocation(`Q${randomInt(1, 4)}`);
+    const { x, y } = getRandomTargetLocation(`Q${randomInt(1, 2)}`);
     let randomTarget = new Target(x, y, 20);
     randomTarget.value = 15;
     onScreenTargets.push(randomTarget);
