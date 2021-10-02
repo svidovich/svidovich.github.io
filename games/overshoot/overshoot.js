@@ -159,7 +159,7 @@ const setUpGameData = () => {
   };
   data.numbers.forEach((numericValue) => {
     if (localStorage.getItem(numericValue) === null) {
-      localStorage.setItem(numericValue, 0);
+      localStorage.setItem(numericValue, 125);
     }
   });
   data.upgrades.forEach((upgrade) => {
@@ -460,11 +460,10 @@ class ShopItem extends MenuItem {
 }
 
 let shopItems = new Array();
-// moreAmmoOs mostAmmoOS biggerAmmoOS hiPowerOS crashThroughOS drawAimLineOS
 
 let biggerAmmo = new ShopItem(100, 125, 500, "Bigger Ammo", "biggerAmmoOS", "./overshoot/media/biggerAmmo.png");
-let moreAmmo = new ShopItem(250, 125, 500, "More Ammo", "moreAmmoOS", "./overshoot/media/moreAmmo.png");
-let crashThrough = new ShopItem(400, 125, 750, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
+let moreAmmo = new ShopItem(250, 125, 300, "More Ammo", "moreAmmoOS", "./overshoot/media/moreAmmo.png");
+let crashThrough = new ShopItem(400, 125, 550, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
 let hiPower = new ShopItem(550, 125, 250, "Faster Shot!", "hiPowerOS", "./overshoot/media/hiPower.png");
 let leadShot = new ShopItem(700, 125, 300, "Lead Shot", "leadShotOS", "./overshoot/media/leadShot.png");
 // let drawAimLine = new ShopItem(700, 125, 1500, "Aim Line", "aimLineOs", "./overshoot/media/drawAimLine.png")
@@ -476,6 +475,7 @@ shopItems.push(crashThrough);
 shopItems.push(hiPower);
 shopItems.push(leadShot);
 
+// You'll have to come back to see it -- feature, not bug ;)
 let moreAmmoStatus = getObjectFromLocalStorage("moreAmmoOS");
 if (moreAmmoStatus.purchased === true) {
   let mostAmmo = new ShopItem(850, 125, 600, "Most Ammo", "mostAmmoOS", "./overshoot/media/mostAmmo.png");
