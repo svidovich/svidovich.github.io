@@ -953,19 +953,22 @@ class Catapult {
   fire = () => {
     // If we're not already in the middle of firing,
     if (controlsPaused !== true && this.ammoCount > 0) {
-      onScreenProjectiles.push(
-        new Projectile(
-          this.x,
-          // This should prolly be constantized, but meh. It's the location of
-          // the top bolt.
-          this.y - 10 * this.size + 2,
-          parseInt(localStorage.getItem("ammoSize")),
-          // If we don't reduce this a touch, it's too fast, lol.
-          this.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
-          this.angle,
-          this.damageModifier || 0
-        )
-      );
+      const playerProjectileCount = parseInt(localStorage.getItem("playerProjectileCount"));
+      for (let i = 0; i < playerProjectileCount; i++) {
+        onScreenProjectiles.push(
+          new Projectile(
+            this.x,
+            // This should prolly be constantized, but meh. It's the location of
+            // the top bolt.
+            this.y - 10 * this.size + 2,
+            parseInt(localStorage.getItem("ammoSize")),
+            // If we don't reduce this a touch, it's too fast, lol.
+            this.launchingPower * parseFloat(localStorage.getItem("launchPowerDivisor")),
+            this.angle + (i * 5 * Math.PI) / 180,
+            this.damageModifier || 0
+          )
+        );
+      }
       this.ammoCount -= 1;
       controlsPaused = true;
     }
