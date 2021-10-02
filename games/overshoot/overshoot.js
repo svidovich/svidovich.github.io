@@ -1187,6 +1187,24 @@ const buildBattlefieldBase = () => {
   onScreenTargets.length = 0;
 };
 
+// Let's get a rough implementation for this out and make it better later.
+let floorLoaded = false;
+let floorImage;
+const loadFloor = (imagePath, imageWidth, imageHeight) => {
+  floorImage = new Image();
+  floorImage.src = imagePath;
+  floorImage.width = imageWidth;
+  floorImage.height = imageHeight;
+  floorLoaded = true;
+};
+
+const drawFloor = (canvasContext) => {
+  let tileCount = Math.ceil(canvasWidth / floorImage.width);
+  for (let i = 0; i <= tileCount; i++) {
+    canvasContext.drawImage(floorImage, i * floorImage.width, canvasHeight - floorImage.height);
+  }
+};
+
 // About building challenge maps intelligently
 // Generally when constructing challenges, we need to be mindful of the
 // amount of ammo a player has available to them. The total number of
@@ -1204,6 +1222,7 @@ const buildBattlefieldBase = () => {
 // consist of vertical play.
 const buildJungleChallenge = () => {
   buildBattlefieldBase();
+  loadFloor("./overshoot/media/jungleGrass.png", 128, 24);
   // For a touch of challenge, let's try and start with an x position
   // in the middle of the canvas
   const availablePlayerAmmo = parseInt(localStorage.getItem("playerAmmoCount"));
@@ -1301,12 +1320,17 @@ let battleFieldItems = new Array();
 
 const drawBattleField = (canvasContext, catapult) => {
   battleFieldItems.length = 0;
+  if (floorLoaded) {
+    drawFloor(canvasContext);
+  }
   updateGlobalEnvironmentFromInput(playerInput);
   updateCatapultFromInput(playerInput, playerCatapult);
 
   let battlefieldMainMenuButton = new MainMenuLink(canvasWidth - 110, canvasHeight - 30);
   battlefieldMainMenuButton.extraClickActions = () => {
     battlefieldPrepared = false;
+    floorImage = undefined;
+    floorLoaded = false;
   };
   battleFieldItems.push(battlefieldMainMenuButton);
 
