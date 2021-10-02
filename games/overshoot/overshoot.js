@@ -465,7 +465,7 @@ let shopItems = new Array();
 let biggerAmmo = new ShopItem(100, 125, 500, "Bigger Ammo", "biggerAmmoOS", "./overshoot/media/biggerAmmo.png");
 let moreAmmo = new ShopItem(250, 125, 500, "More Ammo", "moreAmmoOS", "./overshoot/media/moreAmmo.png");
 let crashThrough = new ShopItem(400, 125, 750, "Two-Hit Ammo", "crashThroughOS", "./overshoot/media/crashThrough.png");
-let hiPower = new ShopItem(550, 125, 250, "High Power!", "hiPowerOS", "./overshoot/media/hiPower.png");
+let hiPower = new ShopItem(550, 125, 250, "Faster Shot!", "hiPowerOS", "./overshoot/media/hiPower.png");
 let leadShot = new ShopItem(700, 125, 300, "Lead Shot", "leadShotOS", "./overshoot/media/leadShot.png");
 // let drawAimLine = new ShopItem(700, 125, 1500, "Aim Line", "aimLineOs", "./overshoot/media/drawAimLine.png")
 
