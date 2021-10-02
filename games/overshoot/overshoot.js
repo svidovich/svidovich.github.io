@@ -476,6 +476,12 @@ shopItems.push(crashThrough);
 shopItems.push(hiPower);
 shopItems.push(leadShot);
 
+let moreAmmoStatus = getObjectFromLocalStorage("moreAmmoOS");
+if (moreAmmoStatus.purchased === true) {
+  let mostAmmo = new ShopItem(850, 125, 600, "Most Ammo", "mostAmmoOS", "./overshoot/media/mostAmmo.png");
+  shopItems.push(mostAmmo);
+}
+
 // Starting to feel moist
 const drawShop = (canvasContext) => {
   let oldFont = canvasContext.font;
