@@ -1337,8 +1337,46 @@ const buildJungleChallenge = () => {
 const buildSpookyChallenge = () => {
   buildBattlefieldBase();
   loadFloor("./overshoot/media/brick-tiny-purple-dark.png", 12, 12);
+  const availablePlayerAmmo = parseInt(localStorage.getItem("playerAmmoCount"));
+
+  // The floor here is rather opaque. Let's raise our catapult up a touch.
   playerCatapult = generateStandardCatapult(75, 588);
-  return;
+  // The play style here is going to be mostly horizontal. Let's set up some
+  // walls that are difficult to work with.
+  const initialWallY = randomInt(statusBarHeight + 20, statusBarHeight + 80);
+  const initialWallX = Math.floor(canvasWidth / 3);
+  const bricksFromStartToEdge = Math.ceil((canvasWidth - initialWallX) / 48);
+  for (let j = 0; j <= 3; j++) {
+    let nextBrickRowY = randomInt(100, 120);
+    const targetY = 40 + initialWallY + nextBrickRowY * j;
+    let nextMovingTarget = new MovingTarget(initialWallX + 25 * j, targetY, 20, canvasWidth - 20, targetY, 3);
+    nextMovingTarget.value = 35;
+    onScreenTargets.push(nextMovingTarget);
+    for (let i = 0; i < bricksFromStartToEdge; i++) {
+      let nextBrick = new Brick(initialWallX + 48 * i, initialWallY + nextBrickRowY * j, "purple-bright");
+      nextBrick.value = 2 * i;
+      onScreenTargets.push(nextBrick);
+    }
+  }
+  if (availablePlayerAmmo === 4) {
+    return;
+  }
+  let remainingTargets = availablePlayerAmmo - 4;
+  for (let i = 0; i <= remainingTargets; i++) {
+    let quadrant;
+    let quadrantChance = randomInt(1, 100);
+    if (quadrantChance > 50) {
+      quadrant = "Q1";
+    } else {
+      quadrant = "Q4";
+    }
+    let { x: targetX, y: targetY } = getRandomTargetLocation(quadrant);
+    targetX -= Math.floor(0.25 * targetX);
+    targetY += quadrant === "Q1" ? statusBarHeight : -statusBarHeight;
+    let nextTarget = new Target(targetX, targetY, 20);
+    nextTarget.value = 25;
+    onScreenTargets.push(nextTarget);
+  }
 };
 
 const prepareChallenge = (challengeType) => {
