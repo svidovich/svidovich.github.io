@@ -563,7 +563,16 @@ const jungleChallengeMenuItem = new ChallengesMenuItem(
   "jungleChallenge"
 );
 
+const spookyChallengeMenuItem = new ChallengesMenuItem(
+  250,
+  125,
+  "Spooky Challenge",
+  "./overshoot/media/spookyChallenge.png",
+  "spookyChallenge"
+);
+
 challengesMenuItems.push(jungleChallengeMenuItem);
+challengesMenuItems.push(spookyChallengeMenuItem);
 
 const challengesMenuClickHandler = (clickCoordinates) => {
   challengesMenuItems.forEach((item) => {
@@ -1121,10 +1130,10 @@ const drawStatusBar = (canvasContext, catapult) => {
   canvasContext.font = oldFont;
 };
 
-const generateStandardCatapult = () => {
+const generateStandardCatapult = (x, y) => {
   return new Catapult(
-    75,
-    600,
+    x || 75,
+    y || 600,
     0,
     4,
     parseInt(localStorage.getItem("playerAmmoCount")),
@@ -1325,10 +1334,20 @@ const buildJungleChallenge = () => {
   return;
 };
 
+const buildSpookyChallenge = () => {
+  buildBattlefieldBase();
+  loadFloor("./overshoot/media/brick-tiny-purple-dark.png", 12, 12);
+  playerCatapult = generateStandardCatapult(75, 588);
+  return;
+};
+
 const prepareChallenge = (challengeType) => {
   switch (challengeType) {
     case "jungleChallenge":
       buildJungleChallenge();
+      break;
+    case "spookyChallenge":
+      buildSpookyChallenge();
       break;
     default:
       throw new Error(`${challengeType} is not a valid challenge type.`);
