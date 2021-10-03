@@ -1334,6 +1334,8 @@ const buildJungleChallenge = () => {
   return;
 };
 
+// Spooky challenge has horizontal floors with standard moving targets. If the player
+// hasn't upgraded their ammo, they'll only get the moving targets.
 const buildSpookyChallenge = () => {
   buildBattlefieldBase();
   loadFloor("./overshoot/media/brick-tiny-purple-dark.png", 12, 12);
@@ -1346,9 +1348,11 @@ const buildSpookyChallenge = () => {
   const initialWallY = randomInt(statusBarHeight + 20, statusBarHeight + 80);
   const initialWallX = Math.floor(canvasWidth / 3);
   const bricksFromStartToEdge = Math.ceil((canvasWidth - initialWallX) / 48);
+  // The nested 'for' loop earns me four rows of bricks.
   for (let j = 0; j <= 3; j++) {
     let nextBrickRowY = randomInt(100, 120);
     const targetY = 40 + initialWallY + nextBrickRowY * j;
+    // Each row of bricks has a corresponding moving target.
     let nextMovingTarget = new MovingTarget(initialWallX + 25 * j, targetY, 20, canvasWidth - 20, targetY, 3);
     nextMovingTarget.value = 35;
     onScreenTargets.push(nextMovingTarget);
@@ -1363,6 +1367,7 @@ const buildSpookyChallenge = () => {
   }
   let remainingTargets = availablePlayerAmmo - 4;
   for (let i = 0; i <= remainingTargets; i++) {
+    // Seems like an OK way to do it.
     let quadrant;
     let quadrantChance = randomInt(1, 100);
     if (quadrantChance > 50) {
@@ -1372,6 +1377,8 @@ const buildSpookyChallenge = () => {
     }
     let { x: targetX, y: targetY } = getRandomTargetLocation(quadrant);
     targetX -= Math.floor(0.25 * targetX);
+    // If we're in Q1, make sure we don't collide with status bar; in Q4
+    // we should avoid going off-screen.
     targetY += quadrant === "Q1" ? statusBarHeight : -statusBarHeight;
     let nextTarget = new Target(targetX, targetY, 20);
     nextTarget.value = 25;
