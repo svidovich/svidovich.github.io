@@ -571,8 +571,17 @@ const spookyChallengeMenuItem = new ChallengesMenuItem(
   "spookyChallenge"
 );
 
+const matrixChallengeMenuItem = new ChallengesMenuItem(
+  400,
+  125,
+  "Matrix Challenge",
+  "./overshoot/media/matrixChallenge.png",
+  "matrixChallenge"
+);
+
 challengesMenuItems.push(jungleChallengeMenuItem);
 challengesMenuItems.push(spookyChallengeMenuItem);
+challengesMenuItems.push(matrixChallengeMenuItem);
 
 const challengesMenuClickHandler = (clickCoordinates) => {
   challengesMenuItems.forEach((item) => {
@@ -1386,6 +1395,17 @@ const buildSpookyChallenge = () => {
   }
 };
 
+const buildMatrixChallenge = () => {
+  buildBattlefieldBase();
+  loadFloor("./overshoot/media/matrixFloor.png", 160, 11);
+  const availablePlayerAmmo = parseInt(localStorage.getItem("playerAmmoCount"));
+
+  // The floor here is rather opaque. Let's raise our catapult up a touch.
+  playerCatapult = generateStandardCatapult(75, 589);
+
+  return;
+};
+
 const prepareChallenge = (challengeType) => {
   switch (challengeType) {
     case "jungleChallenge":
@@ -1393,6 +1413,9 @@ const prepareChallenge = (challengeType) => {
       break;
     case "spookyChallenge":
       buildSpookyChallenge();
+      break;
+    case "matrixChallenge":
+      buildMatrixChallenge();
       break;
     default:
       throw new Error(`${challengeType} is not a valid challenge type.`);
