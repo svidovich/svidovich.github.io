@@ -1398,10 +1398,41 @@ const buildSpookyChallenge = () => {
 const buildMatrixChallenge = () => {
   buildBattlefieldBase();
   loadFloor("./overshoot/media/matrixFloor.png", 160, 11);
-  const availablePlayerAmmo = parseInt(localStorage.getItem("playerAmmoCount"));
+  let targetsLeft = parseInt(localStorage.getItem("playerAmmoCount"));
 
   // The floor here is rather opaque. Let's raise our catapult up a touch.
   playerCatapult = generateStandardCatapult(75, 589);
+
+  const initialX = canvasWidth - canvasWidth / 2;
+  const initialY = statusBarHeight + 20;
+  let luckModifier = 0;
+  for (let i = 0; i < 5; i++) {
+    const locationX = 48 + initialX + 96 * i;
+    for (let j = 0; j < 5; j++) {
+      const locationY = 48 + initialY + 96 * j;
+      if (targetsLeft > 0) {
+        let targetChance = randomInt(1, 100);
+        if (i === 0) {
+          luckModifier = 50;
+        }
+        if (targetChance > 33 + luckModifier) {
+          let luckyTarget = new Target(locationX, locationY, 20);
+          luckyTarget.value = 23;
+          onScreenTargets.push(luckyTarget);
+          targetsLeft -= 1;
+        } else {
+          let luckyBrick = new Brick(locationX, locationY, "matrix");
+          luckyBrick.value = 7;
+          onScreenTargets.push(luckyBrick);
+        }
+      } else {
+        let thisBrick = new Brick(locationX, locationY, "matrix");
+        thisBrick.value = 7;
+        onScreenTargets.push(thisBrick);
+      }
+    }
+    luckModifier = 0;
+  }
 
   return;
 };
