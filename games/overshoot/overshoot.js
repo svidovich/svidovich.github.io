@@ -1453,6 +1453,47 @@ const buildCastleChallenge = () => {
 
   // The floor here is rather opaque. Let's raise our catapult up a touch.
   playerCatapult = generateStandardCatapult(75, 587);
+
+  const initialX = canvasWidth / 2;
+  let merlinY, roofY, backWallX;
+  // Building the front wall
+  for (let i = 0; i <= 7; i++) {
+    let nextBrickY = canvasHeight - 48 * i;
+    let nextBrick = new Brick(initialX, nextBrickY, "castle");
+    // Taking note of these values to build top wall & merlins
+    if (i === 6) {
+      roofY = nextBrickY;
+    }
+    if (i === 7) {
+      merlinY = nextBrickY;
+    }
+    nextBrick.value = 5;
+    onScreenTargets.push(nextBrick);
+  }
+  // Building the roof
+  for (let i = 1; i <= 9; i++) {
+    let nextBrickX = initialX + 48 * i;
+    let nextBrick = new Brick(nextBrickX, roofY, "castle");
+    nextBrick.value = 5;
+    onScreenTargets.push(nextBrick);
+    if (i === 9) {
+      backWallX = nextBrickX + 48;
+    }
+  }
+  // Building the back wall
+  for (let i = 0; i <= 7; i++) {
+    let nextBrickY = canvasHeight - 48 * i;
+    let nextBrick = new Brick(backWallX, nextBrickY, "castle");
+    nextBrick.value = 5;
+    onScreenTargets.push(nextBrick);
+  }
+  // Adding the merlins
+  for (let i = 1; i <= 4; i++) {
+    let nextBrickX = initialX + i * 2 * 48;
+    let nextBrick = new Brick(nextBrickX, merlinY, "castle");
+    nextBrick.value = 8;
+    onScreenTargets.push(nextBrick);
+  }
 };
 
 const prepareChallenge = (challengeType) => {
