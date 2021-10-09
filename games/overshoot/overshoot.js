@@ -1447,7 +1447,12 @@ const buildMatrixChallenge = () => {
 };
 
 const buildCastleChallenge = () => {
-  return;
+  buildBattlefieldBase();
+  loadFloor("./overshoot/media/castleFloor.png", 100, 13);
+  let targetsLeft = parseInt(localStorage.getItem("playerAmmoCount"));
+
+  // The floor here is rather opaque. Let's raise our catapult up a touch.
+  playerCatapult = generateStandardCatapult(75, 587);
 };
 
 const prepareChallenge = (challengeType) => {
