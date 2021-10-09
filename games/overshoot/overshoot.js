@@ -579,9 +579,18 @@ const matrixChallengeMenuItem = new ChallengesMenuItem(
   "matrixChallenge"
 );
 
+const castleChallengeMenuItem = new ChallengesMenuItem(
+  550,
+  125,
+  "Castle Challenge",
+  "./overshoot/media/castleChallenge.png",
+  "castleChallenge"
+);
+
 challengesMenuItems.push(jungleChallengeMenuItem);
 challengesMenuItems.push(spookyChallengeMenuItem);
 challengesMenuItems.push(matrixChallengeMenuItem);
+challengesMenuItems.push(castleChallengeMenuItem);
 
 const challengesMenuClickHandler = (clickCoordinates) => {
   challengesMenuItems.forEach((item) => {
@@ -1437,6 +1446,10 @@ const buildMatrixChallenge = () => {
   return;
 };
 
+const buildCastleChallenge = () => {
+  return;
+};
+
 const prepareChallenge = (challengeType) => {
   switch (challengeType) {
     case "jungleChallenge":
@@ -1447,6 +1460,9 @@ const prepareChallenge = (challengeType) => {
       break;
     case "matrixChallenge":
       buildMatrixChallenge();
+      break;
+    case "castleChallenge":
+      buildCastleChallenge();
       break;
     default:
       throw new Error(`${challengeType} is not a valid challenge type.`);
