@@ -1487,12 +1487,26 @@ const buildCastleChallenge = () => {
     nextBrick.value = 5;
     onScreenTargets.push(nextBrick);
   }
-  // Adding the merlins
+  // Adding the merlins & top targets
   for (let i = 1; i <= 4; i++) {
     let nextBrickX = initialX + i * 2 * 48;
     let nextBrick = new Brick(nextBrickX, merlinY, "castle");
     nextBrick.value = 8;
     onScreenTargets.push(nextBrick);
+
+    let nextTargetX = nextBrickX - 48;
+    let nextTarget = new Target(nextTargetX, merlinY, 20);
+    nextTarget.value = 15;
+    onScreenTargets.push(nextTarget);
+    if (i === 4) {
+      let lastTarget = new Target(nextBrickX + 48, merlinY, 20);
+      lastTarget.value = 15;
+      onScreenTargets.push(lastTarget);
+    }
+  }
+  targetsLeft -= 5;
+  if (targetsLeft <= 0) {
+    return;
   }
 };
 
