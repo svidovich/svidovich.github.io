@@ -1450,7 +1450,7 @@ const buildCastleChallenge = () => {
   buildBattlefieldBase();
   loadFloor("./overshoot/media/castleFloor.png", 100, 13);
   let targetsLeft = parseInt(localStorage.getItem("playerAmmoCount"));
-
+  console.log(`Targets: ${targetsLeft}`);
   // The floor here is rather opaque. Let's raise our catapult up a touch.
   playerCatapult = generateStandardCatapult(75, 587);
 
@@ -1507,6 +1507,14 @@ const buildCastleChallenge = () => {
   targetsLeft -= 5;
   if (targetsLeft <= 0) {
     return;
+  }
+  // Adding remaining targets to the inside of the castle
+  for (let i = 0; i < targetsLeft; i++) {
+    let innerTargetY = randomInt(roofY + 96, canvasHeight - 96);
+    let innerTargetX = randomInt(initialX + 96, backWallX - 96);
+    let innerTarget = new Target(innerTargetX, innerTargetY, 20);
+    innerTarget.value = 20;
+    onScreenTargets.push(innerTarget);
   }
 };
 
