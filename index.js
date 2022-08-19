@@ -78,10 +78,14 @@ const drawFrame = () => {
   canvasContext.beginPath();
   canvasContext.moveTo(0, 0);
   canvasContext.lineTo(0, canvasHeight);
+  canvasContext.moveTo(0, 0);
+  canvasContext.lineTo(10, 0);
   canvasContext.stroke();
 
   canvasContext.beginPath();
   canvasContext.moveTo(canvasWidth, 0);
+  canvasContext.lineTo(canvasWidth, canvasHeight);
+  canvasContext.moveTo(canvasWidth - 10, canvasHeight);
   canvasContext.lineTo(canvasWidth, canvasHeight);
   canvasContext.stroke();
 
