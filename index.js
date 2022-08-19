@@ -118,17 +118,22 @@ const garbageCollectBubbles = () => {
 };
 
 const moveBubbles = () => {
+  // Updates each global bubble's state
   bubblesArray.forEach((bubble) => {
     bubble.moveBy(bubble.speed, 0);
   });
 };
 
 const drawBubble = (bubble) => {
+  // Draws a single bubble.
+  let oldWidth = canvasContext.lineWidth;
   let oldStrokeStyle = canvas.strokeStyle;
-  canvas.strokeStyle = bubble.color;
+  canvasContext.lineWidth = 2;
+  canvasContext.strokeStyle = bubble.color;
   canvasContext.beginPath();
   canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
   canvasContext.stroke();
+  canvasContext.lineWidth = oldWidth;
   canvasContext.strokeStyle = oldStrokeStyle;
 };
 
