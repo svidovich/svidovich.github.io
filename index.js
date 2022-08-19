@@ -5,6 +5,7 @@ const canvasContext = canvas.getContext("2d");
 
 const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
 const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
+const ANAGLYPH_SHAPES = false;
 const BUBBLE_FREQUENCY_MS = 1000;
 const BUBBLE_MAX_AGE = 4000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
@@ -117,9 +118,9 @@ const drawName = () => {
   canvasContext.fillStyle = `rgb(${nameFontState.r}, ${nameFontState.g}, ${nameFontState.b})`;
   canvasContext.fillText("Samuel Vidovich", canvasWidth / 3, canvasHeight / 2);
   if (anaglyphNameActive) {
-    canvasContext.fillStyle = `rgb(255, 0, 0)`;
     let xOffset = generateRandomNumber(2, 4);
     let yOffset = generateRandomNumber(2, 4);
+    canvasContext.fillStyle = `rgb(255, 0, 0)`;
     canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 - xOffset, canvasHeight / 2 - yOffset);
     canvasContext.fillStyle = `rgb(0, 255, 255)`;
     canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 + xOffset, canvasHeight / 2 + yOffset);
@@ -209,10 +210,30 @@ const drawBubble = (bubble) => {
   canvasContext.beginPath();
   if (!bubble.isActuallyRectangle) {
     canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
+    canvasContext.stroke();
+    if (ANAGLYPH_SHAPES && anaglyphNameActive) {
+      let xOffset = generateRandomNumber(2, 4);
+      let yOffset = generateRandomNumber(2, 4);
+      canvasContext.beginPath();
+      canvasContext.strokeStyle = `rgb(255, 0, 0)`;
+      canvasContext.arc(bubble.x - xOffset, bubble.y - yOffset, bubble.r, 0, 2 * Math.PI);
+      canvasContext.stroke();
+      canvasContext.beginPath();
+      canvasContext.strokeStyle = `rgb(0, 255, 255)`;
+      canvasContext.arc(bubble.x + xOffset, bubble.y + yOffset, bubble.r, 0, 2 * Math.PI);
+      canvasContext.stroke();
+    }
   } else {
     canvasContext.strokeRect(bubble.x, bubble.y, bubble.r, bubble.r);
+    if (ANAGLYPH_SHAPES && anaglyphNameActive) {
+      let xOffset = generateRandomNumber(2, 4);
+      let yOffset = generateRandomNumber(2, 4);
+      canvasContext.strokeStyle = `rgb(255, 0, 0)`;
+      canvasContext.strokeRect(bubble.x - xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+      canvasContext.strokeStyle = `rgb(0, 255, 255)`;
+      canvasContext.strokeRect(bubble.x + xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+    }
   }
-  canvasContext.stroke();
   canvasContext.lineWidth = oldWidth;
   canvasContext.strokeStyle = oldStrokeStyle;
 };
