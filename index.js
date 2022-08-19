@@ -3,6 +3,7 @@ const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 const canvasContext = canvas.getContext("2d");
 
+const BUBBLE_FREQUENCY_MS = 1000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
@@ -28,8 +29,28 @@ const randomizeNameFontState = () => {
   nameFontState.b = generateRandomNumber(1, 255);
 };
 
+const drawFrame = () => {
+  // This function will draw a nice verdigris, vertical line
+  // on either side of our canvas.
+  let oldStyle = canvasContext.strokeStyle;
+  let oldWidth = canvasContext.lineWidth;
+  canvasContext.lineWidth = 3;
+  canvasContext.strokeStyle = "#43b3ae";
+  canvasContext.beginPath();
+  canvasContext.moveTo(0, 0);
+  canvasContext.lineTo(0, canvasHeight);
+  canvasContext.stroke();
+
+  canvasContext.beginPath();
+  canvasContext.moveTo(canvasWidth, 0);
+  canvasContext.lineTo(canvasWidth, canvasHeight);
+  canvasContext.stroke();
+
+  canvasContext.strokeStyle = oldStyle;
+  canvasContext.lineWidth = oldWidth;
+};
+
 const drawName = () => {
-  //   canvasContext.strokeRect(0, 0, canvasWidth, canvasHeight);
   let oldFont = canvasContext.font;
   let oldFillStyle = canvasContext.fillStyle;
   canvasContext.font = "25px Courier";
@@ -42,11 +63,12 @@ const drawName = () => {
 const bubblesArray = new Array();
 
 class Bubble {
-  constructor(x, y, r, speed) {
+  constructor(x, y, r, speed, color) {
     this.x = x;
     this.y = y;
     this.r = r;
     this.speed = speed;
+    this.color = color; // rgb(r, g, b) string
   }
   get coordinates() {
     return {
@@ -60,9 +82,71 @@ class Bubble {
   }
 }
 
-const randomBubbleFactory = () => {};
+const randomBubbleFactory = () => {
+  const randomBubbleRadius = generateRandomNumber(2, 10);
+  const randomBubbleSpeed = generateRandomNumber(3, 10);
+  const randomBubbleColor = `${generateRandomNumber(1, 255)}, ${generateRandomNumber(1, 255)}, ${generateRandomNumber(
+    1,
+    255
+  )}`;
+  return new Bubble(
+    -randomBubbleRadius / 2, // Start me off screen!
+    generateRandomNumber(0, canvasHeight),
+    randomBubbleRadius,
+    randomBubbleSpeed,
+    randomBubbleColor
+  );
+};
+
+const addNewBubble = () => {
+  bubblesArray.push(randomBubbleFactory());
+};
+
+const garbageCollectBubbles = () => {
+  // This method will search the bubblesArray for bubbles that
+  // are outside of the canvas, and delete them
+  const toBeDestroyed = new Array();
+  bubblesArray.forEach((bubble) => {
+    if (bubble.x + bubble.r > canvasWidth) {
+      toBeDestroyed.push(bubble);
+    }
+  });
+  toBeDestroyed.forEach((bubble) => {
+    const escapedBubbleIndex = bubblesArray.indexOf(bubble);
+    bubblesArray.splice(escapedBubbleIndex, 1);
+  });
+};
+
+const moveBubbles = () => {
+  bubblesArray.forEach((bubble) => {
+    bubble.moveBy(bubble.speed, 0);
+  });
+};
+
+const drawBubble = (bubble) => {
+  let oldStrokeStyle = canvas.strokeStyle;
+  canvas.strokeStyle = bubble.color;
+  //   console.log(bubble.color);
+  canvasContext.beginPath();
+  canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
+  canvasContext.stroke();
+  canvasContext.strokeStyle = oldStrokeStyle;
+};
+
+const drawBubbles = () => {
+  bubblesArray.forEach((bubble) => {
+    drawBubble(bubble);
+  });
+};
 
 const update = () => {
+  // Clear the canvas so old drawings do not stay.
+  canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  drawFrame();
+  //   console.log(bubblesArray);
+  moveBubbles();
+  drawBubbles();
+  garbageCollectBubbles();
   drawName();
 };
 
@@ -76,6 +160,8 @@ const update = () => {
   window.setInterval(advanceNameFontState, NAME_COLOR_CHANGE_SPEED_MS);
   // And reset it to something random rather less quickly.
   window.setInterval(randomizeNameFontState, NAME_COLOR_CHANGE_SPEED_MS * 100);
+  // Add some bubbles now and again
+  window.setInterval(addNewBubble, BUBBLE_FREQUENCY_MS);
 
   main = (hiResTimeStamp) => {
     try {
