@@ -118,9 +118,11 @@ const drawName = () => {
   canvasContext.fillText("Samuel Vidovich", canvasWidth / 3, canvasHeight / 2);
   if (anaglyphNameActive) {
     canvasContext.fillStyle = `rgb(255, 0, 0)`;
-    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 - 2, canvasHeight / 2 - 1);
+    let xOffset = generateRandomNumber(2, 4);
+    let yOffset = generateRandomNumber(2, 4);
+    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 - xOffset, canvasHeight / 2 - yOffset);
     canvasContext.fillStyle = `rgb(0, 255, 255)`;
-    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 + 2, canvasHeight / 2 + 1);
+    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 + xOffset, canvasHeight / 2 + yOffset);
   }
   canvasContext.font = oldFont;
   canvasContext.fillStyle = oldFillStyle;
