@@ -83,12 +83,12 @@ class Bubble {
 }
 
 const randomBubbleFactory = () => {
-  const randomBubbleRadius = generateRandomNumber(2, 10);
-  const randomBubbleSpeed = generateRandomNumber(3, 10);
-  const randomBubbleColor = `${generateRandomNumber(1, 255)}, ${generateRandomNumber(1, 255)}, ${generateRandomNumber(
+  const randomBubbleRadius = generateRandomNumber(6, 14);
+  const randomBubbleSpeed = generateRandomNumber(3, 6);
+  const randomBubbleColor = `rgb(${generateRandomNumber(1, 255)}, ${generateRandomNumber(
     1,
     255
-  )}`;
+  )}, ${generateRandomNumber(1, 255)})`;
   return new Bubble(
     -randomBubbleRadius / 2, // Start me off screen!
     generateRandomNumber(0, canvasHeight),
@@ -107,7 +107,7 @@ const garbageCollectBubbles = () => {
   // are outside of the canvas, and delete them
   const toBeDestroyed = new Array();
   bubblesArray.forEach((bubble) => {
-    if (bubble.x + bubble.r > canvasWidth) {
+    if (bubble.x - bubble.r - 1 > canvasWidth) {
       toBeDestroyed.push(bubble);
     }
   });
@@ -126,7 +126,6 @@ const moveBubbles = () => {
 const drawBubble = (bubble) => {
   let oldStrokeStyle = canvas.strokeStyle;
   canvas.strokeStyle = bubble.color;
-  //   console.log(bubble.color);
   canvasContext.beginPath();
   canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
   canvasContext.stroke();
@@ -143,7 +142,6 @@ const update = () => {
   // Clear the canvas so old drawings do not stay.
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
   drawFrame();
-  //   console.log(bubblesArray);
   moveBubbles();
   drawBubbles();
   garbageCollectBubbles();
