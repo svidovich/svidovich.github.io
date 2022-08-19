@@ -113,6 +113,7 @@ class Bubble {
     this.speed = speed;
     this.color = color; // rgb(r, g, b) string
     this.createdAt = Date.now();
+    this.isActuallyRectangle = false;
   }
   get coordinates() {
     return {
@@ -133,13 +134,17 @@ const randomBubbleFactory = () => {
     1,
     255
   )}, ${generateRandomNumber(1, 255)})`;
-  return new Bubble(
+  let assembledBubble = new Bubble(
     -randomBubbleRadius / 2, // Start me off screen!
     generateRandomNumber(0, canvasHeight),
     randomBubbleRadius,
     randomBubbleSpeed,
     randomBubbleColor
   );
+  if (generateRandomNumber(1, 100) > 93) {
+    assembledBubble.isActuallyRectangle = true;
+  }
+  return assembledBubble;
 };
 
 const addNewBubble = () => {
@@ -177,7 +182,11 @@ const drawBubble = (bubble) => {
   canvasContext.lineWidth = 2;
   canvasContext.strokeStyle = bubble.color;
   canvasContext.beginPath();
-  canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
+  if (!bubble.isActuallyRectangle) {
+    canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
+  } else {
+    canvasContext.strokeRect(bubble.x, bubble.y, bubble.r, bubble.r);
+  }
   canvasContext.stroke();
   canvasContext.lineWidth = oldWidth;
   canvasContext.strokeStyle = oldStrokeStyle;
