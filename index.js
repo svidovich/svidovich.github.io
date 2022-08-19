@@ -50,6 +50,14 @@ const generateRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
 };
 
+const coinFlipSign = () => {
+  // Flip a coin. If it's heads, return +1. If it's tails, return -1.
+  if (generateRandomNumber(1, 100) > 50) {
+    return 1;
+  }
+  return -1;
+};
+
 let nameFontState = {
   r: 0,
   g: 0,
@@ -57,9 +65,9 @@ let nameFontState = {
 };
 
 const advanceNameFontState = () => {
-  nameFontState.r = (nameFontState.r + NAME_COLOR_CHANGE_QUANTITY) % 255;
-  nameFontState.g = (nameFontState.g + NAME_COLOR_CHANGE_QUANTITY) % 255;
-  nameFontState.b = (nameFontState.b + NAME_COLOR_CHANGE_QUANTITY) % 255;
+  nameFontState.r = (nameFontState.r + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
+  nameFontState.g = (nameFontState.g + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
+  nameFontState.b = (nameFontState.b + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
 };
 
 const randomizeNameFontState = () => {
