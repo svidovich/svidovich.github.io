@@ -3,6 +3,8 @@ const canvasHeight = canvas.height;
 const canvasWidth = canvas.width;
 const canvasContext = canvas.getContext("2d");
 
+const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
+const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
 const BUBBLE_FREQUENCY_MS = 1000;
 const BUBBLE_MAX_AGE = 4000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
@@ -64,6 +66,13 @@ let nameFontState = {
   b: 0,
 };
 
+let anaglyphNameActive = false;
+const maybeFlipAnaglyph = () => {
+  if (generateRandomNumber(1, 100) < ANAGLYPH_FLOP_CHANCE) {
+    anaglyphNameActive = !anaglyphNameActive;
+  }
+};
+
 const advanceNameFontState = () => {
   nameFontState.r = (nameFontState.r + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
   nameFontState.g = (nameFontState.g + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
@@ -107,6 +116,12 @@ const drawName = () => {
   canvasContext.font = "25px Courier";
   canvasContext.fillStyle = `rgb(${nameFontState.r}, ${nameFontState.g}, ${nameFontState.b})`;
   canvasContext.fillText("Samuel Vidovich", canvasWidth / 3, canvasHeight / 2);
+  if (anaglyphNameActive) {
+    canvasContext.fillStyle = `rgb(255, 0, 0)`;
+    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 - 2, canvasHeight / 2 - 1);
+    canvasContext.fillStyle = `rgb(0, 255, 255)`;
+    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 + 2, canvasHeight / 2 + 1);
+  }
   canvasContext.font = oldFont;
   canvasContext.fillStyle = oldFillStyle;
 };
@@ -228,6 +243,8 @@ const update = () => {
   window.setInterval(randomizeNameFontState, NAME_COLOR_CHANGE_SPEED_MS * 100);
   // Add some bubbles now and again
   window.setInterval(addNewBubble, BUBBLE_FREQUENCY_MS);
+  // Maybe turn on / off cool 3D anaglyph text
+  window.setInterval(maybeFlipAnaglyph, ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS);
 
   main = (hiResTimeStamp) => {
     try {
