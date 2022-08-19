@@ -4,6 +4,7 @@ const canvasWidth = canvas.width;
 const canvasContext = canvas.getContext("2d");
 
 const BUBBLE_FREQUENCY_MS = 1000;
+const BUBBLE_MAX_AGE = 4000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
@@ -107,6 +108,7 @@ class Bubble {
     this.r = r;
     this.speed = speed;
     this.color = color; // rgb(r, g, b) string
+    this.createdAt = Date.now();
   }
   get coordinates() {
     return {
@@ -146,6 +148,8 @@ const garbageCollectBubbles = () => {
   const toBeDestroyed = new Array();
   bubblesArray.forEach((bubble) => {
     if (bubble.x - bubble.r - 1 > canvasWidth) {
+      toBeDestroyed.push(bubble);
+    } else if (Date.now() - bubble.createdAt > BUBBLE_MAX_AGE) {
       toBeDestroyed.push(bubble);
     }
   });
