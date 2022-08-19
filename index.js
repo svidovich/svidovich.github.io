@@ -7,6 +7,44 @@ const BUBBLE_FREQUENCY_MS = 1000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
+// This first segment is stuff to keep my little 'work experience' doodad working
+localStorage.setItem("workExperienceDescriptionState", "empty");
+localStorage.setItem("programmingExperienceDescriptionState", "empty");
+
+let workExperienceDescriptionDiv = document.getElementById("work-experience-description");
+
+const SetDescription = (descriptionElement, stateString, Description) => {
+  if (localStorage.getItem(stateString) === "empty" || localStorage.getItem(stateString) !== Description.id) {
+    localStorage.setItem(stateString, Description.id);
+    descriptionElement.innerHTML = Description.data;
+  } else {
+    localStorage.setItem(stateString, "empty");
+    descriptionElement.innerHTML = "";
+  }
+};
+
+const GetHTMLFromURI = async (uri) => {
+  return new Promise((resolve, reject) => {
+    fetch(uri).then((response) => {
+      return resolve(response.text());
+    });
+  });
+};
+
+let fsDescription = new Object();
+fsDescription.id = "finite-state-description";
+GetHTMLFromURI("./assets/elements/finite_state_description.html").then((data) => {
+  fsDescription.data = data;
+});
+
+let finiteStateHoverable = document.getElementById("fs-hoverable");
+
+finiteStateHoverable.addEventListener(
+  "click",
+  SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", fsDescription)
+);
+
+// From here down we're doing a cute header with canvas
 const generateRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
 };
