@@ -1,13 +1,27 @@
-const canvas = document.getElementById("headerCanvas");
-const canvasHeight = canvas.height;
-const canvasWidth = canvas.width;
-const canvasContext = canvas.getContext("2d");
+// TODO: This is thus only evaluated once, which is
+// problematic if we resize. Let's fix that later
+const resolutionHeight = window.screen.availHeight;
+const resolutionWidth = window.screen.availWidth;
+
+const headerCanvas = document.getElementById("headerCanvas");
+const headerCanvasHeight = headerCanvas.height;
+const headerCanvasWidth = headerCanvas.width;
+const headerCanvasContext = headerCanvas.getContext("2d");
+
+const backingCanvas = document.getElementById("backingCanvas");
+backingCanvas.height = resolutionHeight;
+backingCanvas.width = resolutionWidth;
+
+const backingCanvasHeight = backingCanvas.height;
+const backingCanvasWidth = backingCanvas.width;
+const backingCanvasContext = backingCanvas.getContext("2d");
 
 const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
 const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
 const ANAGLYPH_SHAPES = false;
 const BUBBLE_FREQUENCY_MS = 1000;
-const BUBBLE_MAX_AGE = 4000;
+const ENTITY_DEFAULT_MAX_AGE_MS = 6000;
+const DEBUG_ENTITY_POSITIONS = false;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
@@ -89,44 +103,44 @@ const randomizeNameFontState = () => {
 const drawFrame = () => {
   // This function will draw a nice verdigris, vertical line
   // on either side of our canvas.
-  let oldStyle = canvasContext.strokeStyle;
-  let oldWidth = canvasContext.lineWidth;
-  canvasContext.lineWidth = 3;
-  canvasContext.strokeStyle = "#43b3ae";
-  canvasContext.beginPath();
-  canvasContext.moveTo(0, 0);
-  canvasContext.lineTo(0, canvasHeight);
-  canvasContext.moveTo(0, 0);
-  canvasContext.lineTo(10, 0);
-  canvasContext.stroke();
+  let oldStyle = headerCanvasContext.strokeStyle;
+  let oldWidth = headerCanvasContext.lineWidth;
+  headerCanvasContext.lineWidth = 3;
+  headerCanvasContext.strokeStyle = "#43b3ae";
+  headerCanvasContext.beginPath();
+  headerCanvasContext.moveTo(0, 0);
+  headerCanvasContext.lineTo(0, headerCanvasHeight);
+  headerCanvasContext.moveTo(0, 0);
+  headerCanvasContext.lineTo(10, 0);
+  headerCanvasContext.stroke();
 
-  canvasContext.beginPath();
-  canvasContext.moveTo(canvasWidth, 0);
-  canvasContext.lineTo(canvasWidth, canvasHeight);
-  canvasContext.moveTo(canvasWidth - 10, canvasHeight);
-  canvasContext.lineTo(canvasWidth, canvasHeight);
-  canvasContext.stroke();
+  headerCanvasContext.beginPath();
+  headerCanvasContext.moveTo(headerCanvasWidth, 0);
+  headerCanvasContext.lineTo(headerCanvasWidth, headerCanvasHeight);
+  headerCanvasContext.moveTo(headerCanvasWidth - 10, headerCanvasHeight);
+  headerCanvasContext.lineTo(headerCanvasWidth, headerCanvasHeight);
+  headerCanvasContext.stroke();
 
-  canvasContext.strokeStyle = oldStyle;
-  canvasContext.lineWidth = oldWidth;
+  headerCanvasContext.strokeStyle = oldStyle;
+  headerCanvasContext.lineWidth = oldWidth;
 };
 
 const drawName = () => {
-  let oldFont = canvasContext.font;
-  let oldFillStyle = canvasContext.fillStyle;
-  canvasContext.font = "25px Courier";
-  canvasContext.fillStyle = `rgb(${nameFontState.r}, ${nameFontState.g}, ${nameFontState.b})`;
-  canvasContext.fillText("Samuel Vidovich", canvasWidth / 3, canvasHeight / 2);
+  let oldFont = headerCanvasContext.font;
+  let oldFillStyle = headerCanvasContext.fillStyle;
+  headerCanvasContext.font = "25px Courier";
+  headerCanvasContext.fillStyle = `rgb(${nameFontState.r}, ${nameFontState.g}, ${nameFontState.b})`;
+  headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3, headerCanvasHeight / 2);
   if (anaglyphNameActive) {
     let xOffset = generateRandomNumber(2, 4);
     let yOffset = generateRandomNumber(2, 4);
-    canvasContext.fillStyle = `rgb(255, 0, 0)`;
-    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 - xOffset, canvasHeight / 2 - yOffset);
-    canvasContext.fillStyle = `rgb(0, 255, 255)`;
-    canvasContext.fillText("Samuel Vidovich", canvasWidth / 3 + xOffset, canvasHeight / 2 + yOffset);
+    headerCanvasContext.fillStyle = `rgb(255, 0, 0)`;
+    headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3 - xOffset, headerCanvasHeight / 2 - yOffset);
+    headerCanvasContext.fillStyle = `rgb(0, 255, 255)`;
+    headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3 + xOffset, headerCanvasHeight / 2 + yOffset);
   }
-  canvasContext.font = oldFont;
-  canvasContext.fillStyle = oldFillStyle;
+  headerCanvasContext.font = oldFont;
+  headerCanvasContext.fillStyle = oldFillStyle;
 };
 
 const bubblesArray = new Array();
@@ -153,6 +167,23 @@ class Bubble {
   }
 }
 
+class Entity {
+  constructor(x, y, speed, sizeX, sizeY, image, direction) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.image = image;
+    this.createdAt = Date.now();
+    this.direction = direction || "E";
+  }
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+}
+
 const randomBubbleFactory = () => {
   const randomBubbleRadius = generateRandomNumber(6, 14);
   const randomBubbleSpeed = generateRandomNumber(3, 6);
@@ -162,7 +193,7 @@ const randomBubbleFactory = () => {
   )}, ${generateRandomNumber(1, 255)})`;
   let assembledBubble = new Bubble(
     -randomBubbleRadius / 2, // Start me off screen!
-    generateRandomNumber(0, canvasHeight),
+    generateRandomNumber(0, headerCanvasHeight),
     randomBubbleRadius,
     randomBubbleSpeed,
     randomBubbleColor
@@ -182,9 +213,9 @@ const garbageCollectBubbles = () => {
   // are outside of the canvas, and delete them
   const toBeDestroyed = new Array();
   bubblesArray.forEach((bubble) => {
-    if (bubble.x - bubble.r - 1 > canvasWidth) {
+    if (bubble.x - bubble.r - 1 > headerCanvasWidth) {
       toBeDestroyed.push(bubble);
-    } else if (Date.now() - bubble.createdAt > BUBBLE_MAX_AGE) {
+    } else if (Date.now() - bubble.createdAt > ENTITY_DEFAULT_MAX_AGE_MS) {
       toBeDestroyed.push(bubble);
     }
   });
@@ -203,39 +234,39 @@ const moveBubbles = () => {
 
 const drawBubble = (bubble) => {
   // Draws a single bubble.
-  let oldWidth = canvasContext.lineWidth;
-  let oldStrokeStyle = canvas.strokeStyle;
-  canvasContext.lineWidth = 2;
-  canvasContext.strokeStyle = bubble.color;
-  canvasContext.beginPath();
+  let oldWidth = headerCanvasContext.lineWidth;
+  let oldStrokeStyle = headerCanvasContext.strokeStyle;
+  headerCanvasContext.lineWidth = 2;
+  headerCanvasContext.strokeStyle = bubble.color;
+  headerCanvasContext.beginPath();
   if (!bubble.isActuallyRectangle) {
-    canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
-    canvasContext.stroke();
+    headerCanvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI);
+    headerCanvasContext.stroke();
     if (ANAGLYPH_SHAPES && anaglyphNameActive) {
       let xOffset = generateRandomNumber(2, 4);
       let yOffset = generateRandomNumber(2, 4);
-      canvasContext.beginPath();
-      canvasContext.strokeStyle = `rgb(255, 0, 0)`;
-      canvasContext.arc(bubble.x - xOffset, bubble.y - yOffset, bubble.r, 0, 2 * Math.PI);
-      canvasContext.stroke();
-      canvasContext.beginPath();
-      canvasContext.strokeStyle = `rgb(0, 255, 255)`;
-      canvasContext.arc(bubble.x + xOffset, bubble.y + yOffset, bubble.r, 0, 2 * Math.PI);
-      canvasContext.stroke();
+      headerCanvasContext.beginPath();
+      headerCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
+      headerCanvasContext.arc(bubble.x - xOffset, bubble.y - yOffset, bubble.r, 0, 2 * Math.PI);
+      headerCanvasContext.stroke();
+      headerCanvasContext.beginPath();
+      headerCanvasContext.strokeStyle = `rgb(0, 255, 255)`;
+      headerCanvasContext.arc(bubble.x + xOffset, bubble.y + yOffset, bubble.r, 0, 2 * Math.PI);
+      headerCanvasContext.stroke();
     }
   } else {
-    canvasContext.strokeRect(bubble.x, bubble.y, bubble.r, bubble.r);
+    headerCanvasContext.strokeRect(bubble.x, bubble.y, bubble.r, bubble.r);
     if (ANAGLYPH_SHAPES && anaglyphNameActive) {
       let xOffset = generateRandomNumber(2, 4);
       let yOffset = generateRandomNumber(2, 4);
-      canvasContext.strokeStyle = `rgb(255, 0, 0)`;
-      canvasContext.strokeRect(bubble.x - xOffset, bubble.y + yOffset, bubble.r, bubble.r);
-      canvasContext.strokeStyle = `rgb(0, 255, 255)`;
-      canvasContext.strokeRect(bubble.x + xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+      headerCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
+      headerCanvasContext.strokeRect(bubble.x - xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+      headerCanvasContext.strokeStyle = `rgb(0, 255, 255)`;
+      headerCanvasContext.strokeRect(bubble.x + xOffset, bubble.y + yOffset, bubble.r, bubble.r);
     }
   }
-  canvasContext.lineWidth = oldWidth;
-  canvasContext.strokeStyle = oldStrokeStyle;
+  headerCanvasContext.lineWidth = oldWidth;
+  headerCanvasContext.strokeStyle = oldStrokeStyle;
 };
 
 const drawBubbles = () => {
@@ -244,14 +275,154 @@ const drawBubbles = () => {
   });
 };
 
+const loadImage = (imagePath) => {
+  const loadedImage = new Image();
+  loadedImage.src = imagePath;
+  return loadedImage;
+};
+
+const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) => {
+  // I guess we're assuming that all entities are moving left-to-right.
+  const toBeDestroyed = new Array();
+  const { canvasHeight, canvasWidth } = canvasBoundaries;
+  entityArray.forEach((entity) => {
+    if (entity.x - entity.sizeX - 1 > canvasWidth) {
+      toBeDestroyed.push(entity);
+    } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_DEFAULT_MAX_AGE_MS)) {
+      toBeDestroyed.push(entity);
+    }
+  });
+  toBeDestroyed.forEach((entity) => {
+    const entityIndex = entityArray.indexOf(entity);
+    entityArray.splice(entityIndex, 1);
+  });
+};
+
+const interestingEntities = Object.freeze({
+  shootingStars: {
+    text: "Shooting Stars",
+    image: loadImage("media/cute-star.png"),
+    sizeX: 30,
+    sizeY: 30,
+    renderingCallable: () => {},
+  },
+  fishes: {
+    text: "Fishes",
+    image: loadImage("media/trout.png"),
+    sizeX: 102,
+    sizeY: 41,
+    renderingCallable: () => {},
+  },
+  magic: {
+    text: "Mysticism",
+    image: loadImage("media/heptagram.png"),
+    renderingCallable: () => {},
+  },
+});
+
+const moveEntities = (entityArray, direction) => {
+  entityArray.forEach((entity) => {
+    if (entity.direction === "E") {
+      entity.moveBy(entity.speed, 0);
+    } else if (entity.direction === "SE") {
+      // Y component should be positive to go down the page
+      entity.moveBy(entity.speed, entity.speed);
+    }
+  });
+};
+
+const drawEntityImage = (canvasContext, entity, imageSizeX, imageSizeY) => {
+  // The entity's image MUST be loaded before calling this function
+  canvasContext.drawImage(entity.image, entity.x, entity.y, imageSizeX, imageSizeY);
+  if (DEBUG_ENTITY_POSITIONS) {
+    const oldFont = canvasContext.font;
+    canvasContext.font = "18px Courier";
+    canvasContext.fillText(`(${entity.x}, ${entity.y})`, entity.x - 10, entity.y - 10);
+    canvasContext.font = oldFont;
+  }
+};
+
+const drawEntities = (canvasContext, entityArray) => {
+  entityArray.forEach((entity) => {
+    drawEntityImage(canvasContext, entity, entity.sizeX, entity.sizeY);
+  });
+};
+
+const updateEntitiesFromArray = (canvasContext, entityArray) => {
+  moveEntities(entityArray);
+  drawEntities(canvasContext, entityArray);
+  const boundaryData = {
+    canvasHeight: canvasContext.canvas.height,
+    canvasWidth: canvasContext.canvas.width,
+  };
+  garbageCollectEntityArray(entityArray, boundaryData, 10000);
+};
+
+const fishArray = new Array();
+const starsArray = new Array();
+const fishFactory = () => {
+  const { fishes } = interestingEntities;
+  const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
+  const fishSpeed = generateRandomNumber(3, 8);
+  return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
+};
+
+const starFactory = () => {
+  const { shootingStars } = interestingEntities;
+  const starStartingX = generateRandomNumber(0, backingCanvasWidth / 2);
+  const starStartingY = -shootingStars.sizeY;
+  const starFallSpeed = generateRandomNumber(5, 12);
+  return new Entity(
+    starStartingX,
+    starStartingY,
+    starFallSpeed,
+    shootingStars.sizeX,
+    shootingStars.sizeY,
+    shootingStars.image,
+    "SE"
+  );
+};
+
+const addRandomEntity = (entityArray, entityFactory) => {
+  entityArray.push(entityFactory());
+};
+
+const addSchoolOfFish = () => {
+  let i = 0;
+  while (i < 7) {
+    addRandomEntity(fishArray, fishFactory);
+    i += 1;
+  }
+};
+
+const addConstellationOfStars = () => {
+  let i = 0;
+  while (i < 7) {
+    addRandomEntity(starsArray, starFactory);
+    i += 1;
+  }
+};
+
+const somethingInterestingHappens = () => {
+  if (generateRandomNumber(1, 100) < 20) {
+    addSchoolOfFish();
+  } else if (generateRandomNumber(1, 100) > 80) {
+    addConstellationOfStars();
+  }
+};
+
 const update = () => {
   // Clear the canvas so old drawings do not stay.
-  canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  headerCanvasContext.clearRect(0, 0, headerCanvasWidth, headerCanvasHeight);
+  backingCanvasContext.clearRect(0, 0, backingCanvasWidth, backingCanvasHeight);
   drawFrame();
   moveBubbles();
   drawBubbles();
   garbageCollectBubbles();
   drawName();
+  [fishArray, starsArray].forEach((entityArray) => {
+    updateEntitiesFromArray(backingCanvasContext, entityArray);
+  });
 };
 
 (() => {
@@ -268,6 +439,9 @@ const update = () => {
   window.setInterval(addNewBubble, BUBBLE_FREQUENCY_MS);
   // Maybe turn on / off cool 3D anaglyph text
   window.setInterval(maybeFlipAnaglyph, ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS);
+
+  // I wonder what will happen?
+  window.setInterval(somethingInterestingHappens, 30000);
 
   main = (hiResTimeStamp) => {
     try {
