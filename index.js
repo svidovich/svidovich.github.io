@@ -20,7 +20,7 @@ const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
 const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
 const ANAGLYPH_SHAPES = false;
 const BUBBLE_FREQUENCY_MS = 1000;
-const BUBBLE_MAX_AGE = 6000;
+const ENTITY_MAX_AGE_MS = 6000;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
@@ -166,6 +166,22 @@ class Bubble {
   }
 }
 
+class Entity {
+  constructor(x, y, speed, sizeX, sizeY, image) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.image = image;
+    this.createdAt = Date.now();
+  }
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+}
+
 const randomBubbleFactory = () => {
   const randomBubbleRadius = generateRandomNumber(6, 14);
   const randomBubbleSpeed = generateRandomNumber(3, 6);
@@ -197,7 +213,7 @@ const garbageCollectBubbles = () => {
   bubblesArray.forEach((bubble) => {
     if (bubble.x - bubble.r - 1 > headerCanvasWidth) {
       toBeDestroyed.push(bubble);
-    } else if (Date.now() - bubble.createdAt > BUBBLE_MAX_AGE) {
+    } else if (Date.now() - bubble.createdAt > ENTITY_MAX_AGE_MS) {
       toBeDestroyed.push(bubble);
     }
   });
@@ -263,24 +279,24 @@ const loadImage = (imagePath) => {
   return loadedImage;
 };
 
-const garbageCollectEntityArray = (entityArray) => {
-  // This method will search the bubblesArray for bubbles that
-  // are outside of the canvas, and delete them
+const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) => {
+  // I guess we're assuming that all entities are moving left-to-right.
   const toBeDestroyed = new Array();
+  const { canvasHeight, canvasWidth } = canvasBoundaries;
   entityArray.forEach((entity) => {
-    if (entity.x - entity.imageSizeY - 1 > headerCanvasWidth) {
+    if (entity.x - entity.sizeX - 1 > canvasWidth) {
       toBeDestroyed.push(entity);
-    } else if (Date.now() - entity.createdAt > BUBBLE_MAX_AGE) {
+    } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_MAX_AGE_MS)) {
       toBeDestroyed.push(entity);
     }
   });
   toBeDestroyed.forEach((entity) => {
-    const escapedBubbleIndex = bubblesArray.indexOf(entity);
-    entityArray.splice(escapedBubbleIndex, 1);
+    const entityIndex = bubblesArray.indexOf(entity);
+    entityArray.splice(entityIndex, 1);
   });
 };
 
-const backingMenuItems = Object.freeze({
+const interestingEntities = Object.freeze({
   shootingStars: {
     text: "Shooting Stars",
     image: loadImage("media/cute-star.png"),
@@ -289,6 +305,8 @@ const backingMenuItems = Object.freeze({
   fishes: {
     text: "Fishes",
     image: loadImage("media/trout.png"),
+    sizeX: 102,
+    sizeY: 41,
     renderingCallable: () => {},
   },
   magic: {
@@ -299,6 +317,7 @@ const backingMenuItems = Object.freeze({
 });
 
 const fishArray = new Array();
+const starsArray = new Array();
 const moveEntities = (entityArray) => {
   entityArray.forEach((entity) => {
     entity.moveBy(entity.speed, 0);
@@ -310,6 +329,25 @@ const drawEntityImage = (canvasContext, entity, imageSizeX, imageSizeY) => {
   canvasContext.drawImage(entity.image, entity.x, entity.y, imageSizeX, imageSizeY);
 };
 
+const drawEntities = (canvasContext, entityArray) => {
+  entityArray.forEach((entity) => {
+    drawEntityImage(canvasContext, entity, entity.sizeX, entity.sizeY);
+  });
+};
+
+const fishFactory = () => {
+  const { fishes } = interestingEntities;
+  const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
+  const fishSpeed = generateRandomNumber(4, 18);
+  return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
+};
+
+const updateEntitiesFromArray = (canvasContext, entityArray) => {
+  moveEntities(entityArray);
+  drawEntities(canvasContext, entityArray);
+  garbageCollectEntityArray(entityArray);
+};
+
 const somethingInterestingHappens = () => {};
 
 const backingDrawCircleTest = () => {
@@ -317,7 +355,7 @@ const backingDrawCircleTest = () => {
   const oldStrokeStyle = backingCanvasContext.strokeStyle;
   const oldFont = backingCanvasContext.font;
   backingCanvasContext.font = "25px Courier";
-
+  let that = fishFactory();
   backingCanvasContext.lineWidth = 2;
   backingCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
 
@@ -325,7 +363,7 @@ const backingDrawCircleTest = () => {
   backingCanvasContext.strokeStyle = oldStrokeStyle;
   backingCanvasContext.lineWidth = oldWidth;
   backingCanvasContext.font = oldFont;
-  drawBackgroundMenu();
+  // drawBackgroundMenu();
 };
 
 const update = () => {
