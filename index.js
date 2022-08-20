@@ -20,7 +20,8 @@ const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
 const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
 const ANAGLYPH_SHAPES = false;
 const BUBBLE_FREQUENCY_MS = 1000;
-const ENTITY_MAX_AGE_MS = 6000;
+const ENTITY_DEFAULT_MAX_AGE_MS = 6000;
+const DEBUG_ENTITY_POSITIONS = false;
 const NAME_COLOR_CHANGE_SPEED_MS = 100;
 const NAME_COLOR_CHANGE_QUANTITY = 5;
 
@@ -213,7 +214,7 @@ const garbageCollectBubbles = () => {
   bubblesArray.forEach((bubble) => {
     if (bubble.x - bubble.r - 1 > headerCanvasWidth) {
       toBeDestroyed.push(bubble);
-    } else if (Date.now() - bubble.createdAt > ENTITY_MAX_AGE_MS) {
+    } else if (Date.now() - bubble.createdAt > ENTITY_DEFAULT_MAX_AGE_MS) {
       toBeDestroyed.push(bubble);
     }
   });
@@ -286,12 +287,13 @@ const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) 
   entityArray.forEach((entity) => {
     if (entity.x - entity.sizeX - 1 > canvasWidth) {
       toBeDestroyed.push(entity);
-    } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_MAX_AGE_MS)) {
+    } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_DEFAULT_MAX_AGE_MS)) {
+      console.log(`Max entity age was ${maxEntityAge}`);
       toBeDestroyed.push(entity);
     }
   });
   toBeDestroyed.forEach((entity) => {
-    const entityIndex = bubblesArray.indexOf(entity);
+    const entityIndex = entityArray.indexOf(entity);
     entityArray.splice(entityIndex, 1);
   });
 };
@@ -316,8 +318,6 @@ const interestingEntities = Object.freeze({
   },
 });
 
-const fishArray = new Array();
-const starsArray = new Array();
 const moveEntities = (entityArray) => {
   entityArray.forEach((entity) => {
     entity.moveBy(entity.speed, 0);
@@ -327,6 +327,12 @@ const moveEntities = (entityArray) => {
 const drawEntityImage = (canvasContext, entity, imageSizeX, imageSizeY) => {
   // The entity's image MUST be loaded before calling this function
   canvasContext.drawImage(entity.image, entity.x, entity.y, imageSizeX, imageSizeY);
+  if (DEBUG_ENTITY_POSITIONS) {
+    const oldFont = canvasContext.font;
+    canvasContext.font = "18px Courier";
+    canvasContext.fillText(`(${entity.x}, ${entity.y})`, entity.x - 10, entity.y - 10);
+    canvasContext.font = oldFont;
+  }
 };
 
 const drawEntities = (canvasContext, entityArray) => {
@@ -335,35 +341,42 @@ const drawEntities = (canvasContext, entityArray) => {
   });
 };
 
-const fishFactory = () => {
-  const { fishes } = interestingEntities;
-  const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
-  const fishSpeed = generateRandomNumber(4, 18);
-  return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
-};
-
 const updateEntitiesFromArray = (canvasContext, entityArray) => {
   moveEntities(entityArray);
   drawEntities(canvasContext, entityArray);
-  garbageCollectEntityArray(entityArray);
+  const boundaryData = {
+    canvasHeight: canvasContext.canvas.height,
+    canvasWidth: canvasContext.canvas.width,
+  };
+  garbageCollectEntityArray(entityArray, boundaryData, 10000);
 };
 
-const somethingInterestingHappens = () => {};
+const fishArray = new Array();
+const starsArray = new Array();
+const fishFactory = () => {
+  const { fishes } = interestingEntities;
+  const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
+  const fishSpeed = generateRandomNumber(4, 8);
+  return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
+};
+
+const addRandomFish = () => {
+  fishArray.push(fishFactory());
+};
 
 const backingDrawCircleTest = () => {
   const oldWidth = backingCanvasContext.lineWidth;
   const oldStrokeStyle = backingCanvasContext.strokeStyle;
   const oldFont = backingCanvasContext.font;
   backingCanvasContext.font = "25px Courier";
-  let that = fishFactory();
   backingCanvasContext.lineWidth = 2;
   backingCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
 
   backingCanvasContext.strokeRect(2, 2, backingCanvasWidth - 4, backingCanvasHeight - 4);
   backingCanvasContext.strokeStyle = oldStrokeStyle;
   backingCanvasContext.lineWidth = oldWidth;
+
   backingCanvasContext.font = oldFont;
-  // drawBackgroundMenu();
 };
 
 const update = () => {
@@ -376,6 +389,7 @@ const update = () => {
   garbageCollectBubbles();
   drawName();
   backingDrawCircleTest();
+  updateEntitiesFromArray(backingCanvasContext, fishArray);
 };
 
 (() => {
@@ -392,6 +406,8 @@ const update = () => {
   window.setInterval(addNewBubble, BUBBLE_FREQUENCY_MS);
   // Maybe turn on / off cool 3D anaglyph text
   window.setInterval(maybeFlipAnaglyph, ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS);
+
+  window.setInterval(addRandomFish, 1000);
 
   main = (hiResTimeStamp) => {
     try {
