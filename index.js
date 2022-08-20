@@ -257,6 +257,42 @@ const drawBubbles = () => {
   });
 };
 
+const backingMenuItems = Object.freeze({
+  shootingStars: {
+    text: "Shooting Stars",
+    imageURI: "media/cute-star.png",
+    renderingCallable: () => {},
+  },
+  fishes: {
+    text: "Fishes",
+    imageURI: "media/trout.png",
+    renderingCallable: () => {},
+  },
+  magic: {
+    text: "Mysticism",
+    imageURI: "media/heptagram.png",
+    renderingCallable: () => {},
+  },
+});
+
+const menuStartPositionX = 0;
+const menuStartPositionY = backingCanvasHeight / 3;
+const menuItemWidth = 120;
+const menuItemHeight = 120;
+const drawBackgroundMenu = () => {
+  let count = 0;
+  for (const menuItemKey in backingMenuItems) {
+    const menuItem = backingMenuItems[menuItemKey];
+    const thisMenuItemStartPositionY = menuStartPositionY + menuItemHeight * count;
+    backingCanvasContext.strokeRect(menuStartPositionX, thisMenuItemStartPositionY, menuItemWidth, menuItemHeight);
+    const oldFont = backingCanvasContext.font;
+    backingCanvasContext.font = "25px Courier";
+    backingCanvasContext.fillText(menuItem.text, menuStartPositionX, thisMenuItemStartPositionY, menuItemWidth);
+    backingCanvasContext.font = oldFont;
+    count += 1;
+  }
+};
+
 const backingDrawCircleTest = () => {
   const oldWidth = backingCanvasContext.lineWidth;
   const oldStrokeStyle = backingCanvasContext.strokeStyle;
@@ -274,6 +310,7 @@ const backingDrawCircleTest = () => {
   backingCanvasContext.strokeStyle = oldStrokeStyle;
   backingCanvasContext.lineWidth = oldWidth;
   backingCanvasContext.font = oldFont;
+  drawBackgroundMenu();
 };
 
 const update = () => {
