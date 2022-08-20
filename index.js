@@ -257,41 +257,60 @@ const drawBubbles = () => {
   });
 };
 
+const loadImage = (imagePath) => {
+  const loadedImage = new Image();
+  loadedImage.src = imagePath;
+  return loadedImage;
+};
+
+const garbageCollectEntityArray = (entityArray) => {
+  // This method will search the bubblesArray for bubbles that
+  // are outside of the canvas, and delete them
+  const toBeDestroyed = new Array();
+  entityArray.forEach((entity) => {
+    if (entity.x - entity.imageSizeY - 1 > headerCanvasWidth) {
+      toBeDestroyed.push(entity);
+    } else if (Date.now() - entity.createdAt > BUBBLE_MAX_AGE) {
+      toBeDestroyed.push(entity);
+    }
+  });
+  toBeDestroyed.forEach((entity) => {
+    const escapedBubbleIndex = bubblesArray.indexOf(entity);
+    entityArray.splice(escapedBubbleIndex, 1);
+  });
+};
+
 const backingMenuItems = Object.freeze({
   shootingStars: {
     text: "Shooting Stars",
-    imageURI: "media/cute-star.png",
+    image: loadImage("media/cute-star.png"),
     renderingCallable: () => {},
   },
   fishes: {
     text: "Fishes",
-    imageURI: "media/trout.png",
+    image: loadImage("media/trout.png"),
     renderingCallable: () => {},
   },
   magic: {
     text: "Mysticism",
-    imageURI: "media/heptagram.png",
+    image: loadImage("media/heptagram.png"),
     renderingCallable: () => {},
   },
 });
 
-const menuStartPositionX = 0;
-const menuStartPositionY = backingCanvasHeight / 3;
-const menuItemWidth = 120;
-const menuItemHeight = 120;
-const drawBackgroundMenu = () => {
-  let count = 0;
-  for (const menuItemKey in backingMenuItems) {
-    const menuItem = backingMenuItems[menuItemKey];
-    const thisMenuItemStartPositionY = menuStartPositionY + menuItemHeight * count;
-    backingCanvasContext.strokeRect(menuStartPositionX, thisMenuItemStartPositionY, menuItemWidth, menuItemHeight);
-    const oldFont = backingCanvasContext.font;
-    backingCanvasContext.font = "25px Courier";
-    backingCanvasContext.fillText(menuItem.text, menuStartPositionX, thisMenuItemStartPositionY, menuItemWidth);
-    backingCanvasContext.font = oldFont;
-    count += 1;
-  }
+const fishArray = new Array();
+const moveEntities = (entityArray) => {
+  entityArray.forEach((entity) => {
+    entity.moveBy(entity.speed, 0);
+  });
 };
+
+const drawEntityImage = (canvasContext, entity, imageSizeX, imageSizeY) => {
+  // The entity's image MUST be loaded before calling this function
+  canvasContext.drawImage(entity.image, entity.x, entity.y, imageSizeX, imageSizeY);
+};
+
+const somethingInterestingHappens = () => {};
 
 const backingDrawCircleTest = () => {
   const oldWidth = backingCanvasContext.lineWidth;
@@ -299,14 +318,10 @@ const backingDrawCircleTest = () => {
   const oldFont = backingCanvasContext.font;
   backingCanvasContext.font = "25px Courier";
 
-  // backingCanvasContext.beginPath();
   backingCanvasContext.lineWidth = 2;
   backingCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
-  // backingCanvasContext.arc(10, 10, 10, 0, 2 * Math.PI);
-  // backingCanvasContext.stroke();
+
   backingCanvasContext.strokeRect(2, 2, backingCanvasWidth - 4, backingCanvasHeight - 4);
-  backingCanvasContext.fillText("Monkey; test", 24, 24);
-  // backingCanvasContext.stroke();
   backingCanvasContext.strokeStyle = oldStrokeStyle;
   backingCanvasContext.lineWidth = oldWidth;
   backingCanvasContext.font = oldFont;
