@@ -168,7 +168,7 @@ class Bubble {
 }
 
 class Entity {
-  constructor(x, y, speed, sizeX, sizeY, image) {
+  constructor(x, y, speed, sizeX, sizeY, image, direction) {
     this.x = x;
     this.y = y;
     this.speed = speed;
@@ -176,6 +176,7 @@ class Entity {
     this.sizeY = sizeY;
     this.image = image;
     this.createdAt = Date.now();
+    this.direction = direction || "E";
   }
   moveBy(dx, dy) {
     this.x += dx;
@@ -288,7 +289,6 @@ const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) 
     if (entity.x - entity.sizeX - 1 > canvasWidth) {
       toBeDestroyed.push(entity);
     } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_DEFAULT_MAX_AGE_MS)) {
-      console.log(`Max entity age was ${maxEntityAge}`);
       toBeDestroyed.push(entity);
     }
   });
@@ -302,6 +302,8 @@ const interestingEntities = Object.freeze({
   shootingStars: {
     text: "Shooting Stars",
     image: loadImage("media/cute-star.png"),
+    sizeX: 30,
+    sizeY: 30,
     renderingCallable: () => {},
   },
   fishes: {
@@ -318,9 +320,14 @@ const interestingEntities = Object.freeze({
   },
 });
 
-const moveEntities = (entityArray) => {
+const moveEntities = (entityArray, direction) => {
   entityArray.forEach((entity) => {
-    entity.moveBy(entity.speed, 0);
+    if (entity.direction === "E") {
+      entity.moveBy(entity.speed, 0);
+    } else if (entity.direction === "SE") {
+      // Y component should be positive to go down the page
+      entity.moveBy(entity.speed, entity.speed);
+    }
   });
 };
 
@@ -356,27 +363,52 @@ const starsArray = new Array();
 const fishFactory = () => {
   const { fishes } = interestingEntities;
   const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
-  const fishSpeed = generateRandomNumber(4, 8);
+  const fishSpeed = generateRandomNumber(3, 8);
   return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
 };
 
-const addRandomFish = () => {
-  fishArray.push(fishFactory());
+const starFactory = () => {
+  const { shootingStars } = interestingEntities;
+  const starStartingX = generateRandomNumber(0, backingCanvasWidth / 2);
+  const starStartingY = -shootingStars.sizeY;
+  const starFallSpeed = generateRandomNumber(5, 12);
+  return new Entity(
+    starStartingX,
+    starStartingY,
+    starFallSpeed,
+    shootingStars.sizeX,
+    shootingStars.sizeY,
+    shootingStars.image,
+    "SE"
+  );
 };
 
-const backingDrawCircleTest = () => {
-  const oldWidth = backingCanvasContext.lineWidth;
-  const oldStrokeStyle = backingCanvasContext.strokeStyle;
-  const oldFont = backingCanvasContext.font;
-  backingCanvasContext.font = "25px Courier";
-  backingCanvasContext.lineWidth = 2;
-  backingCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
+const addRandomEntity = (entityArray, entityFactory) => {
+  entityArray.push(entityFactory());
+};
 
-  backingCanvasContext.strokeRect(2, 2, backingCanvasWidth - 4, backingCanvasHeight - 4);
-  backingCanvasContext.strokeStyle = oldStrokeStyle;
-  backingCanvasContext.lineWidth = oldWidth;
+const addSchoolOfFish = () => {
+  let i = 0;
+  while (i < 7) {
+    addRandomEntity(fishArray, fishFactory);
+    i += 1;
+  }
+};
 
-  backingCanvasContext.font = oldFont;
+const addConstellationOfStars = () => {
+  let i = 0;
+  while (i < 7) {
+    addRandomEntity(starsArray, starFactory);
+    i += 1;
+  }
+};
+
+const somethingInterestingHappens = () => {
+  if (generateRandomNumber(1, 100) < 20) {
+    addSchoolOfFish();
+  } else if (generateRandomNumber(1, 100) > 80) {
+    addConstellationOfStars();
+  }
 };
 
 const update = () => {
@@ -388,8 +420,9 @@ const update = () => {
   drawBubbles();
   garbageCollectBubbles();
   drawName();
-  backingDrawCircleTest();
-  updateEntitiesFromArray(backingCanvasContext, fishArray);
+  [fishArray, starsArray].forEach((entityArray) => {
+    updateEntitiesFromArray(backingCanvasContext, entityArray);
+  });
 };
 
 (() => {
@@ -407,7 +440,8 @@ const update = () => {
   // Maybe turn on / off cool 3D anaglyph text
   window.setInterval(maybeFlipAnaglyph, ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS);
 
-  window.setInterval(addRandomFish, 1000);
+  // I wonder what will happen?
+  window.setInterval(somethingInterestingHappens, 30000);
 
   main = (hiResTimeStamp) => {
     try {
