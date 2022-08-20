@@ -1,7 +1,20 @@
+// TODO: This is thus only evaluated once, which is
+// problematic if we resize. Let's fix that later
+const resolutionHeight = window.screen.availHeight;
+const resolutionWidth = window.screen.availWidth;
+
 const headerCanvas = document.getElementById("headerCanvas");
 const headerCanvasHeight = headerCanvas.height;
 const headerCanvasWidth = headerCanvas.width;
 const headerCanvasContext = headerCanvas.getContext("2d");
+
+const backingCanvas = document.getElementById("backingCanvas");
+backingCanvas.height = resolutionHeight;
+backingCanvas.width = resolutionWidth;
+
+const backingCanvasHeight = backingCanvas.height;
+const backingCanvasWidth = backingCanvas.width;
+const backingCanvasContext = backingCanvas.getContext("2d");
 
 const ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS = 3000;
 const ANAGLYPH_FLOP_CHANCE = 50; // 50% chance to turn it on
@@ -204,7 +217,7 @@ const moveBubbles = () => {
 const drawBubble = (bubble) => {
   // Draws a single bubble.
   let oldWidth = headerCanvasContext.lineWidth;
-  let oldStrokeStyle = canvas.strokeStyle;
+  let oldStrokeStyle = headerCanvasContext.strokeStyle;
   headerCanvasContext.lineWidth = 2;
   headerCanvasContext.strokeStyle = bubble.color;
   headerCanvasContext.beginPath();
@@ -227,7 +240,7 @@ const drawBubble = (bubble) => {
     headerCanvasContext.strokeRect(bubble.x, bubble.y, bubble.r, bubble.r);
     if (ANAGLYPH_SHAPES && anaglyphNameActive) {
       let xOffset = generateRandomNumber(2, 4);
-      let yOffset = generateRandomNumber(how many characters in a uuid many characters in a uuid, 4);
+      let yOffset = generateRandomNumber(2, 4);
       headerCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
       headerCanvasContext.strokeRect(bubble.x - xOffset, bubble.y + yOffset, bubble.r, bubble.r);
       headerCanvasContext.strokeStyle = `rgb(0, 255, 255)`;
@@ -244,14 +257,35 @@ const drawBubbles = () => {
   });
 };
 
+const backingDrawCircleTest = () => {
+  const oldWidth = backingCanvasContext.lineWidth;
+  const oldStrokeStyle = backingCanvasContext.strokeStyle;
+  const oldFont = backingCanvasContext.font;
+  backingCanvasContext.font = "25px Courier";
+
+  // backingCanvasContext.beginPath();
+  backingCanvasContext.lineWidth = 2;
+  backingCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
+  // backingCanvasContext.arc(10, 10, 10, 0, 2 * Math.PI);
+  // backingCanvasContext.stroke();
+  backingCanvasContext.strokeRect(2, 2, backingCanvasWidth - 4, backingCanvasHeight - 4);
+  backingCanvasContext.fillText("Monkey; test", 24, 24);
+  // backingCanvasContext.stroke();
+  backingCanvasContext.strokeStyle = oldStrokeStyle;
+  backingCanvasContext.lineWidth = oldWidth;
+  backingCanvasContext.font = oldFont;
+};
+
 const update = () => {
   // Clear the canvas so old drawings do not stay.
   headerCanvasContext.clearRect(0, 0, headerCanvasWidth, headerCanvasHeight);
+  backingCanvasContext.clearRect(0, 0, backingCanvasWidth, backingCanvasHeight);
   drawFrame();
   moveBubbles();
   drawBubbles();
   garbageCollectBubbles();
   drawName();
+  backingDrawCircleTest();
 };
 
 (() => {
