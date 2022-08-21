@@ -453,7 +453,7 @@ const resetCursor = () => {
   window.setInterval(maybeFlipAnaglyph, ANAGLYPH_NAME_CHANCE_TIME_INTERVAL_MS);
 
   // I wonder what will happen?
-  window.setInterval(somethingInterestingHappens, 30000);
+  window.setInterval(somethingInterestingHappens, 60000);
 
   window.setInterval(jumbleCursor, 120000);
 
