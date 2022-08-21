@@ -62,7 +62,9 @@ finiteStateHoverable.addEventListener(
   SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", fsDescription)
 );
 
-// From here down we're doing a cute header with canvas
+// From here down we're doing cool canvas stuff
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const generateRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
 };
@@ -425,6 +427,16 @@ const update = () => {
   });
 };
 
+const jumbleCursor = () => {
+  const cursorStyles = ["crosshair", "auto"];
+  const randomCursorStyle = cursorStyles[Math.floor(Math.random() * cursorStyles.length)];
+  document.body.style.cursor = randomCursorStyle;
+};
+
+const resetCursor = () => {
+  document.body.style.cursor = "auto";
+};
+
 (() => {
   let animationFrameRequestToken;
 
@@ -442,6 +454,8 @@ const update = () => {
 
   // I wonder what will happen?
   window.setInterval(somethingInterestingHappens, 30000);
+
+  window.setInterval(jumbleCursor, 120000);
 
   main = (hiResTimeStamp) => {
     try {
