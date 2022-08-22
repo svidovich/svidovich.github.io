@@ -69,6 +69,10 @@ const generateRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
 };
 
+const randomElement = (array) => {
+  return array[Math.floor(Math.random() * array.length)];
+};
+
 const coinFlipSign = () => {
   // Flip a coin. If it's heads, return +1. If it's tails, return -1.
   if (generateRandomNumber(1, 100) > 50) {
@@ -429,7 +433,7 @@ const update = () => {
 
 const jumbleCursor = () => {
   const cursorStyles = ["crosshair", "auto"];
-  const randomCursorStyle = cursorStyles[Math.floor(Math.random() * cursorStyles.length)];
+  const randomCursorStyle = randomElement(cursorStyles);
   document.body.style.cursor = randomCursorStyle;
 };
 
