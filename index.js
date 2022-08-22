@@ -417,8 +417,8 @@ const somethingInterestingHappens = () => {
   }
 };
 
-corruptions = new Array();
-const corruptLocation = (canvasContext, x, y) => {
+const corruptions = new Array();
+const corruptLocation = (x, y) => {
   const corruptCharacters = ["░", "▒", "▓", "█", "└", "┬", "┼", "°", "ƒ"];
 
   corruptions.push({
@@ -428,16 +428,16 @@ const corruptLocation = (canvasContext, x, y) => {
   });
 };
 
+const corruptRandomLocation = (canvasContext) => {
+  const randomX = generateRandomNumber(1, canvasContext.canvas.width);
+  const randomY = generateRandomNumber(1, canvasContext.canvas.height);
+  corruptLocation(randomX, randomY);
+};
+
 const drawCorruptions = (canvasContext) => {
   corruptions.forEach((corruption) => {
     canvasContext.fillText(corruption.character, corruption.x, corruption.y);
   });
-};
-
-const corruptRandomLocation = (canvasContext) => {
-  const randomX = generateRandomNumber(1, canvasContext.canvas.width);
-  const randomY = generateRandomNumber(1, canvasContext.canvas.height);
-  corruptLocation(canvasContext, randomX, randomY);
 };
 
 const update = () => {
