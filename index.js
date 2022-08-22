@@ -417,6 +417,29 @@ const somethingInterestingHappens = () => {
   }
 };
 
+corruptions = new Array();
+const corruptLocation = (canvasContext, x, y) => {
+  const corruptCharacters = ["░", "▒", "▓", "█", "└", "┬", "┼", "°", "ƒ"];
+
+  corruptions.push({
+    x: x,
+    y: y,
+    character: randomElement(corruptCharacters),
+  });
+};
+
+const drawCorruptions = (canvasContext) => {
+  corruptions.forEach((corruption) => {
+    canvasContext.fillText(corruption.character, corruption.x, corruption.y);
+  });
+};
+
+const corruptRandomLocation = (canvasContext) => {
+  const randomX = generateRandomNumber(1, canvasContext.canvas.width);
+  const randomY = generateRandomNumber(1, canvasContext.canvas.height);
+  corruptLocation(canvasContext, randomX, randomY);
+};
+
 const update = () => {
   // Clear the canvas so old drawings do not stay.
   headerCanvasContext.clearRect(0, 0, headerCanvasWidth, headerCanvasHeight);
@@ -429,6 +452,7 @@ const update = () => {
   [fishArray, starsArray].forEach((entityArray) => {
     updateEntitiesFromArray(backingCanvasContext, entityArray);
   });
+  drawCorruptions(backingCanvasContext);
 };
 
 const jumbleCursor = () => {
@@ -460,6 +484,10 @@ const resetCursor = () => {
   window.setInterval(somethingInterestingHappens, 60000);
 
   window.setInterval(jumbleCursor, 120000);
+
+  window.setInterval(() => {
+    corruptRandomLocation(backingCanvasContext);
+  }, 10000);
 
   main = (hiResTimeStamp) => {
     try {
