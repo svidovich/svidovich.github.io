@@ -81,6 +81,12 @@ const coinFlipSign = () => {
   return -1;
 };
 
+const loadImage = (imagePath) => {
+  const loadedImage = new Image();
+  loadedImage.src = imagePath;
+  return loadedImage;
+};
+
 let nameFontState = {
   r: 0,
   g: 0,
@@ -190,6 +196,77 @@ class Entity {
   }
 }
 
+class SpriteSequence {
+  constructor(name, sheetFile, sequence) {
+    this.name = name;
+    // sample sequence
+    // [
+    //   {
+    //     corner: {
+    //       x: 100, // Where in the sprite sheet we should look for
+    //       y: 150, // this particular state of the sprite
+    //     },
+    //     size: {
+    //       x: 25, // How big this particular state of the sprite is
+    //       y: 25,
+    //     },
+    //   },
+    // ];
+    this.sequence = sequence;
+    this.spriteSheet = loadImage(sheetFile);
+    // Size should be an array [x, y] representing the width
+    // and height of the sprite in the given sprite sheet file
+  }
+}
+
+class Sprite {
+  constructor(x, y) {
+    this.currentState = null;
+    this.sequences = new Object();
+    this.spriteIndex = 0;
+    // TODO: Make me moveable!
+    this.x = x;
+    this.y = y;
+  }
+
+  getCurrentState() {
+    return this.currentState;
+  }
+
+  setCurrentState(sequence) {
+    this.currentState = sequence;
+  }
+
+  getSpriteSequence(spriteSequenceName) {
+    if (!this.sequences.hasOwnProperty(spriteSequenceName)) return null;
+    return this.sequences[spriteSequenceName];
+  }
+
+  addSpriteSequence(spriteSequence) {
+    this.sequences[spriteSequence.name] = spriteSequence;
+  }
+
+  drawSpriteSequence(canvasContext, spriteSequence, x, y) {
+    // Here, x and y arguments define where the sprite will appear ( by its
+    // top left corner ) on the canvas.
+    const { corner, size } = spriteSequence.sequence[this.spriteIndex];
+
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    canvasContext.drawImage(spriteSequence.spriteSheet, corner.x, corner.y, size.x, size.y, x, y, size.x, size.y);
+    // Make sure that the next time we draw this sprite,
+    // we're drawing from the correct index in the sequence
+    if (this.spriteIndex === spriteSequence.sequence.length - 1) {
+      this.spriteIndex = 0;
+    } else {
+      this.spriteIndex += 1;
+    }
+  }
+
+  drawCurrentState(canvasContext) {
+    this.drawSpriteSequence(canvasContext, this.currentState, this.x, this.y);
+  }
+}
+
 const randomBubbleFactory = () => {
   const randomBubbleRadius = generateRandomNumber(6, 14);
   const randomBubbleSpeed = generateRandomNumber(3, 6);
@@ -279,12 +356,6 @@ const drawBubbles = () => {
   bubblesArray.forEach((bubble) => {
     drawBubble(bubble);
   });
-};
-
-const loadImage = (imagePath) => {
-  const loadedImage = new Image();
-  loadedImage.src = imagePath;
-  return loadedImage;
 };
 
 const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) => {
@@ -440,6 +511,71 @@ const drawCorruptions = (canvasContext) => {
   });
 };
 
+const linkRunningSequence = new SpriteSequence("linkRunning", "media/link-sprites.png", [
+  {
+    corner: {
+      x: 241,
+      y: 30,
+    },
+    size: {
+      x: 18,
+      y: 23,
+    },
+  },
+  {
+    corner: {
+      x: 272,
+      y: 30,
+    },
+    size: {
+      x: 17,
+      y: 23,
+    },
+  },
+  {
+    corner: {
+      x: 301,
+      y: 30,
+    },
+    size: {
+      x: 18,
+      y: 22,
+    },
+  },
+  {
+    corner: {
+      x: 331,
+      y: 30,
+    },
+    size: {
+      x: 18,
+      y: 22,
+    },
+  },
+  {
+    corner: {
+      x: 361,
+      y: 30,
+    },
+    size: {
+      x: 18,
+      y: 23,
+    },
+  },
+  {
+    corner: {
+      x: 392,
+      y: 30,
+    },
+    size: {
+      x: 17,
+      y: 23,
+    },
+  },
+]);
+
+const allSprites = new Array();
+
 const update = () => {
   // Clear the canvas so old drawings do not stay.
   headerCanvasContext.clearRect(0, 0, headerCanvasWidth, headerCanvasHeight);
@@ -453,6 +589,9 @@ const update = () => {
     updateEntitiesFromArray(backingCanvasContext, entityArray);
   });
   drawCorruptions(backingCanvasContext);
+  allSprites.forEach((sprite) => {
+    sprite.drawCurrentState(backingCanvasContext);
+  });
 };
 
 const jumbleCursor = () => {
@@ -488,6 +627,11 @@ const resetCursor = () => {
   window.setInterval(() => {
     corruptRandomLocation(backingCanvasContext);
   }, 10000);
+
+  const linkSprite = new Sprite(10, 10);
+  linkSprite.addSpriteSequence(linkRunningSequence);
+  linkSprite.setCurrentState(linkRunningSequence);
+  allSprites.push(linkSprite);
 
   main = (hiResTimeStamp) => {
     try {
