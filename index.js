@@ -361,7 +361,7 @@ const updateEntitiesFromArray = (canvasContext, entityArray) => {
     canvasHeight: canvasContext.canvas.height,
     canvasWidth: canvasContext.canvas.width,
   };
-  garbageCollectEntityArray(entityArray, boundaryData, 10000);
+  garbageCollectEntityArray(entityArray, boundaryData, 20000);
 };
 
 const fishArray = new Array();
