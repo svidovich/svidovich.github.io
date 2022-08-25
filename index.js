@@ -81,6 +81,12 @@ const coinFlipSign = () => {
   return -1;
 };
 
+const loadImage = (imagePath) => {
+  const loadedImage = new Image();
+  loadedImage.src = imagePath;
+  return loadedImage;
+};
+
 let nameFontState = {
   r: 0,
   g: 0,
@@ -190,6 +196,92 @@ class Entity {
   }
 }
 
+class SpriteSequence {
+  constructor(name, sheetFile, sequence, scale = 1) {
+    this.name = name;
+    // sample sequence
+    // [
+    //   {
+    //     corner: {
+    //       x: 100, // Where in the sprite sheet we should look for
+    //       y: 150, // this particular state of the sprite
+    //     },
+    //     size: {
+    //       x: 25, // How big this particular state of the sprite is
+    //       y: 25,
+    //     },
+    //   },
+    // ];
+    this.sequence = sequence;
+    this.spriteSheet = loadImage(sheetFile);
+    // Size should be an array [x, y] representing the width
+    // and height of the sprite in the given sprite sheet file
+    this.scale = scale;
+  }
+}
+
+class Sprite {
+  constructor(x, y) {
+    this.currentState = null;
+    this.sequences = new Object();
+    this.spriteIndex = 0;
+    this.x = x;
+    this.y = y;
+  }
+
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+  }
+
+  getCurrentState() {
+    return this.currentState;
+  }
+
+  setCurrentState(sequence) {
+    this.currentState = sequence;
+  }
+
+  getSpriteSequence(spriteSequenceName) {
+    if (!this.sequences.hasOwnProperty(spriteSequenceName)) return null;
+    return this.sequences[spriteSequenceName];
+  }
+
+  addSpriteSequence(spriteSequence) {
+    this.sequences[spriteSequence.name] = spriteSequence;
+  }
+
+  drawSpriteSequence(canvasContext, spriteSequence, x, y) {
+    // Here, x and y arguments define where the sprite will appear ( by its
+    // top left corner ) on the canvas.
+    const { corner, size } = spriteSequence.sequence[this.spriteIndex];
+
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    canvasContext.drawImage(
+      spriteSequence.spriteSheet,
+      corner.x,
+      corner.y,
+      size.x,
+      size.y,
+      x,
+      y,
+      size.x * spriteSequence.scale,
+      size.y * spriteSequence.scale
+    );
+    // Make sure that the next time we draw this sprite,
+    // we're drawing from the correct index in the sequence
+    if (this.spriteIndex === spriteSequence.sequence.length - 1) {
+      this.spriteIndex = 0;
+    } else {
+      this.spriteIndex += 1;
+    }
+  }
+
+  drawCurrentState(canvasContext) {
+    this.drawSpriteSequence(canvasContext, this.currentState, this.x, this.y);
+  }
+}
+
 const randomBubbleFactory = () => {
   const randomBubbleRadius = generateRandomNumber(6, 14);
   const randomBubbleSpeed = generateRandomNumber(3, 6);
@@ -279,12 +371,6 @@ const drawBubbles = () => {
   bubblesArray.forEach((bubble) => {
     drawBubble(bubble);
   });
-};
-
-const loadImage = (imagePath) => {
-  const loadedImage = new Image();
-  loadedImage.src = imagePath;
-  return loadedImage;
 };
 
 const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) => {
@@ -409,14 +495,6 @@ const addConstellationOfStars = () => {
   }
 };
 
-const somethingInterestingHappens = () => {
-  if (generateRandomNumber(1, 100) < 20) {
-    addSchoolOfFish();
-  } else if (generateRandomNumber(1, 100) > 80) {
-    addConstellationOfStars();
-  }
-};
-
 const corruptions = new Array();
 const corruptLocation = (x, y) => {
   const corruptCharacters = ["░", "▒", "▓", "█", "└", "┬", "┼", "°", "ƒ"];
@@ -440,6 +518,144 @@ const drawCorruptions = (canvasContext) => {
   });
 };
 
+const linkRunningLeftSequence = new SpriteSequence(
+  "linkRunningLeft",
+  "media/link-sprites.png",
+  [
+    {
+      corner: {
+        x: 241,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 272,
+        y: 30,
+      },
+      size: {
+        x: 18,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 301,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 23,
+      },
+    },
+    {
+      corner: {
+        x: 331,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 23,
+      },
+    },
+    {
+      corner: {
+        x: 361,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 392,
+        y: 30,
+      },
+      size: {
+        x: 18,
+        y: 24,
+      },
+    },
+  ],
+  2
+);
+
+const linkRunningRightSequence = new SpriteSequence(
+  "linkRunningRight",
+  "media/link-sprites.png",
+  [
+    {
+      corner: {
+        x: 240,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 271,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 300,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 330,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 360,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 391,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+  ],
+  2
+);
+
+const allSprites = new Array();
+
 const update = () => {
   // Clear the canvas so old drawings do not stay.
   headerCanvasContext.clearRect(0, 0, headerCanvasWidth, headerCanvasHeight);
@@ -453,6 +669,16 @@ const update = () => {
     updateEntitiesFromArray(backingCanvasContext, entityArray);
   });
   drawCorruptions(backingCanvasContext);
+  allSprites.forEach((sprite) => {
+    // Junk code to move link across the screen
+    sprite.moveBy(4, 0);
+    sprite.drawCurrentState(backingCanvasContext);
+    // Junk code to dumpster sprites when they leave the right side
+    // I would like to say I'll fix but...
+    if (sprite.x - 4 > backingCanvas.width) {
+      allSprites.splice(allSprites.indexOf(sprite), 1);
+    }
+  });
 };
 
 const jumbleCursor = () => {
@@ -461,8 +687,18 @@ const jumbleCursor = () => {
   document.body.style.cursor = randomCursorStyle;
 };
 
-const resetCursor = () => {
-  document.body.style.cursor = "auto";
+const somethingInterestingHappens = () => {
+  const randomRoll = generateRandomNumber(1, 100);
+  if (randomRoll < 20) {
+    addSchoolOfFish();
+  } else if (randomRoll > 80) {
+    addConstellationOfStars();
+  } else if ((randomRoll) => 20 && randomRoll <= 80) {
+    const linkSprite = new Sprite(-10, 220);
+    linkSprite.addSpriteSequence(linkRunningRightSequence);
+    linkSprite.setCurrentState(linkRunningRightSequence);
+    allSprites.push(linkSprite);
+  }
 };
 
 (() => {
