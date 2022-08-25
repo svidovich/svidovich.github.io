@@ -197,7 +197,7 @@ class Entity {
 }
 
 class SpriteSequence {
-  constructor(name, sheetFile, sequence) {
+  constructor(name, sheetFile, sequence, scale = 1) {
     this.name = name;
     // sample sequence
     // [
@@ -216,6 +216,7 @@ class SpriteSequence {
     this.spriteSheet = loadImage(sheetFile);
     // Size should be an array [x, y] representing the width
     // and height of the sprite in the given sprite sheet file
+    this.scale = scale;
   }
 }
 
@@ -252,7 +253,17 @@ class Sprite {
     const { corner, size } = spriteSequence.sequence[this.spriteIndex];
 
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-    canvasContext.drawImage(spriteSequence.spriteSheet, corner.x, corner.y, size.x, size.y, x, y, size.x, size.y);
+    canvasContext.drawImage(
+      spriteSequence.spriteSheet,
+      corner.x,
+      corner.y,
+      size.x,
+      size.y,
+      x,
+      y,
+      size.x * spriteSequence.scale,
+      size.y * spriteSequence.scale
+    );
     // Make sure that the next time we draw this sprite,
     // we're drawing from the correct index in the sequence
     if (this.spriteIndex === spriteSequence.sequence.length - 1) {
@@ -511,65 +522,83 @@ const drawCorruptions = (canvasContext) => {
   });
 };
 
-const linkRunningSequence = new SpriteSequence("linkRunning", "media/link-sprites.png", [
+const linkRunningLeftSequence = new SpriteSequence(
+  "linkRunningLeft",
+  "media/link-sprites.png",
+  [
+    {
+      corner: {
+        x: 241,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 272,
+        y: 30,
+      },
+      size: {
+        x: 18,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 301,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 23,
+      },
+    },
+    {
+      corner: {
+        x: 331,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 23,
+      },
+    },
+    {
+      corner: {
+        x: 361,
+        y: 30,
+      },
+      size: {
+        x: 19,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 392,
+        y: 30,
+      },
+      size: {
+        x: 18,
+        y: 24,
+      },
+    },
+  ],
+  4
+);
+
+const linkRunningRightSequence = new SpriteSequence("linkRunningRight", "media/link-sprites.png", [
   {
     corner: {
-      x: 241,
-      y: 30,
+      x: 0,
+      y: 0,
     },
     size: {
-      x: 18,
-      y: 23,
-    },
-  },
-  {
-    corner: {
-      x: 272,
-      y: 30,
-    },
-    size: {
-      x: 17,
-      y: 23,
-    },
-  },
-  {
-    corner: {
-      x: 301,
-      y: 30,
-    },
-    size: {
-      x: 18,
-      y: 22,
-    },
-  },
-  {
-    corner: {
-      x: 331,
-      y: 30,
-    },
-    size: {
-      x: 18,
-      y: 22,
-    },
-  },
-  {
-    corner: {
-      x: 361,
-      y: 30,
-    },
-    size: {
-      x: 18,
-      y: 23,
-    },
-  },
-  {
-    corner: {
-      x: 392,
-      y: 30,
-    },
-    size: {
-      x: 17,
-      y: 23,
+      x: 0,
+      y: 0,
     },
   },
 ]);
@@ -629,8 +658,8 @@ const resetCursor = () => {
   }, 10000);
 
   const linkSprite = new Sprite(10, 10);
-  linkSprite.addSpriteSequence(linkRunningSequence);
-  linkSprite.setCurrentState(linkRunningSequence);
+  linkSprite.addSpriteSequence(linkRunningLeftSequence);
+  linkSprite.setCurrentState(linkRunningLeftSequence);
   allSprites.push(linkSprite);
 
   main = (hiResTimeStamp) => {
