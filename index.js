@@ -225,9 +225,13 @@ class Sprite {
     this.currentState = null;
     this.sequences = new Object();
     this.spriteIndex = 0;
-    // TODO: Make me moveable!
     this.x = x;
     this.y = y;
+  }
+
+  moveBy(dx, dy) {
+    this.x += dx;
+    this.y += dy;
   }
 
   getCurrentState() {
@@ -491,14 +495,6 @@ const addConstellationOfStars = () => {
   }
 };
 
-const somethingInterestingHappens = () => {
-  if (generateRandomNumber(1, 100) < 20) {
-    addSchoolOfFish();
-  } else if (generateRandomNumber(1, 100) > 80) {
-    addConstellationOfStars();
-  }
-};
-
 const corruptions = new Array();
 const corruptLocation = (x, y) => {
   const corruptCharacters = ["░", "▒", "▓", "█", "└", "┬", "┼", "°", "ƒ"];
@@ -587,7 +583,7 @@ const linkRunningLeftSequence = new SpriteSequence(
       },
     },
   ],
-  4
+  2
 );
 
 const linkRunningRightSequence = new SpriteSequence(
@@ -655,7 +651,7 @@ const linkRunningRightSequence = new SpriteSequence(
       },
     },
   ],
-  8
+  2
 );
 
 const allSprites = new Array();
@@ -674,7 +670,14 @@ const update = () => {
   });
   drawCorruptions(backingCanvasContext);
   allSprites.forEach((sprite) => {
+    // Junk code to move link across the screen
+    sprite.moveBy(4, 0);
     sprite.drawCurrentState(backingCanvasContext);
+    // Junk code to dumpster sprites when they leave the right side
+    // I would like to say I'll fix but...
+    if (sprite.x - 4 > backingCanvas.width) {
+      allSprites.splice(allSprites.indexOf(sprite), 1);
+    }
   });
 };
 
@@ -684,8 +687,18 @@ const jumbleCursor = () => {
   document.body.style.cursor = randomCursorStyle;
 };
 
-const resetCursor = () => {
-  document.body.style.cursor = "auto";
+const somethingInterestingHappens = () => {
+  const randomRoll = generateRandomNumber(1, 100);
+  if (randomRoll < 20) {
+    addSchoolOfFish();
+  } else if (randomRoll > 80) {
+    addConstellationOfStars();
+  } else if ((randomRoll) => 20 && randomRoll <= 80) {
+    const linkSprite = new Sprite(-10, 220);
+    linkSprite.addSpriteSequence(linkRunningRightSequence);
+    linkSprite.setCurrentState(linkRunningRightSequence);
+    allSprites.push(linkSprite);
+  }
 };
 
 (() => {
@@ -711,12 +724,6 @@ const resetCursor = () => {
   window.setInterval(() => {
     corruptRandomLocation(backingCanvasContext);
   }, 10000);
-
-  const linkSprite = new Sprite(10, 10);
-  // linkSprite.addSpriteSequence(linkRunningLeftSequence);
-  linkSprite.addSpriteSequence(linkRunningRightSequence);
-  linkSprite.setCurrentState(linkRunningRightSequence);
-  allSprites.push(linkSprite);
 
   main = (hiResTimeStamp) => {
     try {
