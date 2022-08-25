@@ -590,18 +590,73 @@ const linkRunningLeftSequence = new SpriteSequence(
   4
 );
 
-const linkRunningRightSequence = new SpriteSequence("linkRunningRight", "media/link-sprites.png", [
-  {
-    corner: {
-      x: 0,
-      y: 0,
+const linkRunningRightSequence = new SpriteSequence(
+  "linkRunningRight",
+  "media/link-sprites.png",
+  [
+    {
+      corner: {
+        x: 240,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
     },
-    size: {
-      x: 0,
-      y: 0,
+    {
+      corner: {
+        x: 271,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
     },
-  },
-]);
+    {
+      corner: {
+        x: 300,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 330,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 360,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+    {
+      corner: {
+        x: 391,
+        y: 120,
+      },
+      size: {
+        x: 20,
+        y: 24,
+      },
+    },
+  ],
+  8
+);
 
 const allSprites = new Array();
 
@@ -658,8 +713,9 @@ const resetCursor = () => {
   }, 10000);
 
   const linkSprite = new Sprite(10, 10);
-  linkSprite.addSpriteSequence(linkRunningLeftSequence);
-  linkSprite.setCurrentState(linkRunningLeftSequence);
+  // linkSprite.addSpriteSequence(linkRunningLeftSequence);
+  linkSprite.addSpriteSequence(linkRunningRightSequence);
+  linkSprite.setCurrentState(linkRunningRightSequence);
   allSprites.push(linkSprite);
 
   main = (hiResTimeStamp) => {
