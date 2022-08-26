@@ -744,17 +744,21 @@ const somethingInterestingHappens = () => {
   } else if (randomRoll > 80) {
     addConstellationOfStars();
   } else if (randomRoll >= 20 && randomRoll <= 40) {
-    const linkSprite = new Sprite(-10, generateRandomNumber(15, 700));
-    linkSprite.setSpeed([4, 0]);
-    linkSprite.addSpriteSequence(linkRunningRightSequence);
-    linkSprite.setCurrentState(linkRunningRightSequence);
-    allSprites.push(linkSprite);
+    if (allSprites.length === 0) {
+      const linkSprite = new Sprite(-10, generateRandomNumber(15, 700));
+      linkSprite.setSpeed([4, 0]);
+      linkSprite.addSpriteSequence(linkRunningRightSequence);
+      linkSprite.setCurrentState(linkRunningRightSequence);
+      allSprites.push(linkSprite);
+    }
   } else if (randomRoll > 40 && randomRoll <= 80) {
-    const goriya = new Sprite(-10, generateRandomNumber(15, 700));
-    goriya.addSpriteSequence(redGoriyaRunningRightSequence);
-    goriya.setCurrentState(redGoriyaRunningRightSequence);
-    goriya.setSpeed([4, 0]);
-    allSprites.push(goriya);
+    if (allSprites.length === 0) {
+      const goriya = new Sprite(-10, generateRandomNumber(15, 700));
+      goriya.addSpriteSequence(redGoriyaRunningRightSequence);
+      goriya.setCurrentState(redGoriyaRunningRightSequence);
+      goriya.setSpeed([4, 0]);
+      allSprites.push(goriya);
+    }
   }
 };
 
