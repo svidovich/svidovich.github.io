@@ -227,9 +227,11 @@ class Sprite {
     this.spriteIndex = 0;
     this.x = x;
     this.y = y;
+    this.speed = [0, 0];
   }
 
-  moveBy(dx, dy) {
+  moveBy(vector2d) {
+    const [dx, dy] = vector2d;
     this.x += dx;
     this.y += dy;
   }
@@ -240,6 +242,10 @@ class Sprite {
 
   setCurrentState(sequence) {
     this.currentState = sequence;
+  }
+
+  setSpeed(vector2d) {
+    this.speed = vector2d;
   }
 
   getSpriteSequence(spriteSequenceName) {
@@ -654,6 +660,49 @@ const linkRunningRightSequence = new SpriteSequence(
   2
 );
 
+const redGoriyaRunningRightStep1 = {
+  corner: {
+    x: 448,
+    y: 276,
+  },
+  size: {
+    x: 18,
+    y: 25,
+  },
+};
+
+const redGoriyaRunningRightStep2 = {
+  corner: {
+    x: 470,
+    y: 277,
+  },
+  size: {
+    x: 18,
+    y: 24,
+  },
+};
+
+const redGoriyaRunningRightSequence = new SpriteSequence(
+  "redGoriyaRunningRight",
+  "media/bruces_alttp_enemy_sprites.png",
+  [
+    // hack so I don't have to invent... a clock
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep1,
+    redGoriyaRunningRightStep2,
+    redGoriyaRunningRightStep2,
+    redGoriyaRunningRightStep2,
+    redGoriyaRunningRightStep2,
+    redGoriyaRunningRightStep2,
+    redGoriyaRunningRightStep2,
+  ],
+  2
+);
+
 const allSprites = new Array();
 
 const update = () => {
@@ -671,7 +720,7 @@ const update = () => {
   drawCorruptions(backingCanvasContext);
   allSprites.forEach((sprite) => {
     // Junk code to move link across the screen
-    sprite.moveBy(4, 0);
+    sprite.moveBy(sprite.speed);
     sprite.drawCurrentState(backingCanvasContext);
     // Junk code to dumpster sprites when they leave the right side
     // I would like to say I'll fix but...
@@ -693,11 +742,18 @@ const somethingInterestingHappens = () => {
     addSchoolOfFish();
   } else if (randomRoll > 80) {
     addConstellationOfStars();
-  } else if ((randomRoll) => 20 && randomRoll <= 80) {
-    const linkSprite = new Sprite(-10, 220);
+  } else if (randomRoll >= 20 && randomRoll <= 40) {
+    const linkSprite = new Sprite(-10, generateRandomNumber(15, 700));
+    linkSprite.setSpeed([4, 0]);
     linkSprite.addSpriteSequence(linkRunningRightSequence);
     linkSprite.setCurrentState(linkRunningRightSequence);
     allSprites.push(linkSprite);
+  } else if (randomRoll > 40 && randomRoll <= 80) {
+    const goriya = new Sprite(-10, generateRandomNumber(15, 700));
+    goriya.addSpriteSequence(redGoriyaRunningRightSequence);
+    goriya.setCurrentState(redGoriyaRunningRightSequence);
+    goriya.setSpeed([4, 0]);
+    allSprites.push(goriya);
   }
 };
 
@@ -720,10 +776,6 @@ const somethingInterestingHappens = () => {
   window.setInterval(somethingInterestingHappens, 60000);
 
   window.setInterval(jumbleCursor, 120000);
-
-  window.setInterval(() => {
-    corruptRandomLocation(backingCanvasContext);
-  }, 10000);
 
   main = (hiResTimeStamp) => {
     try {
