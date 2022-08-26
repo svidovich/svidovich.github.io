@@ -684,6 +684,7 @@ const redGoriyaRunningRightStep2 = {
 
 const redGoriyaRunningRightSequence = new SpriteSequence(
   "redGoriyaRunningRight",
+  // Thanks to Bruce Juice for the sprite sheet!
   "media/bruces_alttp_enemy_sprites.png",
   [
     // hack so I don't have to invent... a clock
