@@ -62,6 +62,19 @@ finiteStateHoverable.addEventListener(
   SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", fsDescription)
 );
 
+let reachDescription = new Object();
+reachDescription.id = "reach-security-description";
+GetHTMLFromURI("./assets/elements/reach_security_description.html").then((data) => {
+  reachDescription.data = data;
+});
+
+let reachHoverable = document.getElementById("reach-hoverable");
+
+reachHoverable.addEventListener(
+  "click",
+  SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", reachDescription)
+);
+
 // From here down we're doing cool canvas stuff
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
