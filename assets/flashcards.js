@@ -74,7 +74,6 @@ loadStageButton.addEventListener("click", () => {
 const fillPracticeOptionsDropdown = (vocabularySections) => {
   const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
   vocabularySections.forEach((vocabularySection) => {
-    console.log(vocabularySection);
     // Create a new option that we'll shortly add to the dropdown
     const vocabularySectionOption = document.createElement("option");
     // Add a 'value' to the option. NOTE: in the future it might be good to have
@@ -200,5 +199,4 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
 
 (() => {
   fillPracticeOptionsDropdown(Object.values(practiceMap));
-  console.log(practiceMap);
 })();
