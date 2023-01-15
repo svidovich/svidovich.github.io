@@ -193,6 +193,45 @@ export const UNIT_5_VOCAB = new VocabularySection('"Teach Yourself" Unit 5 Vocab
   new VocabularyObject("Yogurt", "Jogurt"),
 ]);
 
+export const UNIT_6_VOCAB = new VocabularySection('"Teach Yourself" Unit 6 Vocab', "teachYourselfUnit6Vocab", [
+  new VocabularyObject("This", "Ovaj"),
+  new VocabularyObject("How many", "Koliko"),
+  new VocabularyObject("It costs", "Košta"),
+  new VocabularyObject("Map", "Mapa"),
+  new VocabularyObject("We don't have...", "Nemamo..."),
+  new VocabularyObject("We don't sell...", "Ne prodajemo..."),
+  new VocabularyObject("That (m)", "Taj"),
+  new VocabularyObject("Something else", "Još nešto"),
+  new VocabularyObject("That's all", "To je sve"),
+  new VocabularyObject("Your change ($)", "Vaš kusur"),
+  new VocabularyObject("See ya!", "Prijatno!"),
+  new VocabularyObject("Salesman", "Prodavac"),
+  new VocabularyObject("Postcards", "Razglednice"),
+  new VocabularyObject("Only", "Samo"),
+  new VocabularyObject("These", "Ove"),
+  new VocabularyObject("Plan", "Plan"),
+  new VocabularyObject("New", "Nov"),
+  new VocabularyObject("Nothing more", "Ništa više"),
+  new VocabularyObject("That (f)", "Ta"),
+  new VocabularyObject("That (n)", "To"),
+  new VocabularyObject("Can (drink)", "Limenka"),
+  new VocabularyObject("Litre", "Litar"),
+  new VocabularyObject("Milk", "Mleko"),
+  new VocabularyObject("Kilogram", "Kilo"),
+  new VocabularyObject("Lemon", "Limun"),
+  new VocabularyObject("Butter", "Buter"),
+  new VocabularyObject("Soap", "Sapun"),
+  new VocabularyObject("Shampoo", "Šampon"),
+  new VocabularyObject("Toothpaste", "Zubna pasta"),
+  new VocabularyObject("I don't want...", "Neću..."),
+  new VocabularyObject("I must...", "Moram..."),
+  new VocabularyObject("Something", "Nešto"),
+  new VocabularyObject("Breakfast", "Doručak"),
+  new VocabularyObject("There", "Tamo"),
+  new VocabularyObject("Grocery Store", "Bakalnica"),
+  new VocabularyObject("Thing", "Stvar"),
+]);
+
 export const NUMBERS_5_to_100 = new VocabularySection("Numbers 5 to 100", "numbers5To100", [
   new VocabularyObject("5", "pet"),
   new VocabularyObject("6", "šest"),
@@ -262,7 +301,7 @@ export const ANIMALS = new VocabularySection("Animals", "animals", [
 // {
 //   <object.unfriendlyName>: object,...
 // }
-export const practiceMap = [ANIMALS, COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB].reduce(
+export const practiceMap = [ANIMALS, COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB, UNIT_6_VOCAB].reduce(
   (newObject, practiceObject) => {
     newObject[practiceObject.unfriendlyName] = practiceObject;
     return newObject;
