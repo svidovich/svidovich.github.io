@@ -1,5 +1,25 @@
 import { UNIT_4_VOCAB } from "./flashcarddata.js";
 
+// Global for storing practice document state
+const practiceState = new Array();
+
+// Function for clearing the working stage
+const clearStage = () => {
+  // Clear the practice state. This dumps everything from the
+  // array while returning it as a copy.
+  const stateCopy = practiceState.splice(0, practiceState.length);
+  // Drop all of the elements from the DOM.
+  stateCopy.forEach((element) => {
+    element.remove();
+  });
+};
+
+// Button for clearing the working stage
+const clearStageButton = document.getElementById("clearstagebutton");
+clearStageButton.addEventListener("click", () => {
+  clearStage();
+});
+
 // Stolen UUID generator.
 const UUIDGeneratorBrowser = () =>
   ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
@@ -31,7 +51,7 @@ const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const addCard = (front, back) => {
+const addFlashcard = (front, back) => {
   const flashCardContainer = document.getElementById("flashcardcontainer");
   const id = UUIDGeneratorBrowser();
   const scene = document.createElement("div");
@@ -54,13 +74,14 @@ const addCard = (front, back) => {
   scene.setAttribute("scene-id", id);
   card.setAttribute("card-id", id);
 
+  practiceState.push(scene);
   card.addEventListener("click", () => {
     card.classList.toggle("is-flipped");
   });
 };
 
 (() => {
-  let vocabCopy = [...UNIT_4_VOCAB];
+  let vocabCopy = [...UNIT_4_VOCAB.vocabularyObjects];
   shuffle(vocabCopy);
   vocabCopy.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
@@ -86,6 +107,6 @@ const addCard = (front, back) => {
         rear = vocabularyObject.latin;
       }
     }
-    addCard(front, rear);
+    addFlashcard(front, rear);
   });
 })();
