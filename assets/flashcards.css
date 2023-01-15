@@ -1,0 +1,59 @@
+.flashcardcontainer {
+  /* display: flex;
+  flex-wrap: wrap;
+  gap: 10px; */
+  display: grid;
+  grid-template-columns: repeat(4, 200px);
+  grid-gap: 10px;
+  justify-content: center;
+  align-content: center;
+}
+
+/* 
+For the love of God,
+do not modify below this line.
+
+*/
+
+.scene {
+  width: 200px;
+  height: 150px;
+  border: 1px solid #ccc;
+  margin: 40px 0;
+  perspective: 200px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform-origin: center right;
+  transition: transform 1s;
+}
+
+.card.is-flipped {
+  transform: translateX(-100%) rotateY(-180deg);
+}
+
+.card__face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 150px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  backface-visibility: hidden;
+}
+
+.card__face--front {
+  background: #43b3ae;
+}
+
+.card__face--back {
+  background: #a862e0;
+  transform: rotateY(180deg);
+}
