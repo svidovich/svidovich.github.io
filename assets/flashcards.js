@@ -144,9 +144,33 @@ const addFlashcard = (front, back) => {
     cardFace.classList.toggle(`card__face--${faceType}`);
     cardFace.setAttribute(`face-${faceType}-id`, id);
     // Dynamically create the text for this face as a DOM node
-    const textContent = document.createTextNode(faceType === "front" ? front : back);
-    // and add our newly created elements to the card
-    cardFace.appendChild(textContent);
+
+    // NOTE: This is all gnarly inefficient, but I'm wasted. So.
+    const textContentArray = new Array();
+    const textBlock = faceType === "front" ? front : back;
+    if (textBlock.match("\n")) {
+      textBlock.split("\n").forEach((line) => {
+        textContentArray.push(line);
+      });
+    } else {
+      textContentArray.push(textBlock);
+    }
+    if (textBlock.match("\n")) {
+      textContentArray.forEach((textContentItem) => {
+        const textContent = document.createTextNode(textContentItem);
+        const lineBreak = document.createElement("br");
+        // and add our newly created elements to the card
+        cardFace.style.textSize = "10px";
+        cardFace.style.lineHeight = "75px";
+        cardFace.appendChild(textContent);
+        cardFace.appendChild(lineBreak);
+      });
+    } else {
+      textContentArray.forEach((textContentItem) => {
+        const textContent = document.createTextNode(textContentItem);
+        cardFace.appendChild(textContent);
+      });
+    }
     card.appendChild(cardFace);
   });
   // Add the card to our scene,
@@ -168,31 +192,64 @@ const addFlashcard = (front, back) => {
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
   const vocabCopy = [...vocabularyObjects];
+
+  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  console.log(scriptOption);
+
   shuffle(vocabCopy);
   vocabCopy.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    if (randomInt(0, 100) > 50) {
-      // In this case, we've got Yugo on the front.
-      // Cyrillic, or latin?
+    if (scriptOption === "scriptmix") {
+      // TODO: Constants
+      // We want a mix of cyrillic and latin
       if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.cyrillic;
+        // In this case, we've got Yugo on the front.
+        // Cyrillic, or latin?
+        if (randomInt(0, 100) > 50) {
+          front = vocabularyObject.cyrillic;
+        } else {
+          front = vocabularyObject.latin;
+        }
+        rear = vocabularyObject.english;
       } else {
-        front = vocabularyObject.latin;
+        // Now, the front is English.
+        front = vocabularyObject.english;
+        // In this case, we've got Yugo on the rear.
+        // Cyrillic, or latin?
+        if (randomInt(0, 100) > 50) {
+          rear = vocabularyObject.cyrillic;
+        } else {
+          rear = vocabularyObject.latin;
+        }
       }
-      rear = vocabularyObject.english;
-    } else {
-      // Now, the front is English.
-      front = vocabularyObject.english;
-      // In this case, we've got Yugo on the rear.
-      // Cyrillic, or latin?
+    } else if (scriptOption === "scriptboth") {
       if (randomInt(0, 100) > 50) {
-        rear = vocabularyObject.cyrillic;
+        front = vocabularyObject.english;
+        rear = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
+      } else {
+        front = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
+        rear = vocabularyObject.english;
+      }
+    } else if (scriptOption === "scriptlatin") {
+      if (randomInt(0, 100) > 50) {
+        front = vocabularyObject.latin;
+        rear = vocabularyObject.english;
       } else {
         rear = vocabularyObject.latin;
+        front = vocabularyObject.english;
+      }
+    } else if (scriptOption === "scriptcyrillic") {
+      if (randomInt(0, 100) > 50) {
+        front = vocabularyObject.cyrillic;
+        rear = vocabularyObject.english;
+      } else {
+        rear = vocabularyObject.cyrillic;
+        front = vocabularyObject.english;
       }
     }
+
     addFlashcard(front, rear);
   });
 };
