@@ -9,6 +9,25 @@
   align-content: center;
 }
 
+.actionButtons {
+  background-color: #318888;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: grab;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
 /* 
 For the love of God,
 do not modify below this line.
@@ -18,9 +37,9 @@ do not modify below this line.
 .scene {
   width: 200px;
   height: 150px;
-  border: 1px solid #ccc;
   margin: 40px 0;
   perspective: 200px;
+  border-radius: 4px;
 }
 
 .card {
@@ -47,6 +66,7 @@ do not modify below this line.
   font-weight: bold;
   font-size: 20px;
   backface-visibility: hidden;
+  border-radius: 4px;
 }
 
 .card__face--front {

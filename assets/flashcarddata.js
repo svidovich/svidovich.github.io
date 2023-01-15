@@ -15,6 +15,24 @@ class VocabularyObject {
   }
 }
 
+class VocabularySection {
+  constructor(friendlyName, unfriendlyName, vocabularyObjects) {
+    this.friendlyName = friendlyName;
+    this.unfriendlyName = unfriendlyName;
+    this.vocabularyObjects = vocabularyObjects;
+  }
+
+  get asObject() {
+    return {
+      friendlyName: this.friendlyName,
+      unfriendlyName: this.unfriendlyName,
+      vocabularyObjects: [...this.vocabularyObjects].map((obj) => {
+        obj.asObject;
+      }),
+    };
+  }
+}
+
 const JUGOSLAV_SINGLE_CHARACTER_MAP = {
   A: "А",
   a: "а",
@@ -95,7 +113,7 @@ export const latinToJugoslavCyrillic = (inputString) => {
   return newString;
 };
 
-export const UNIT_4_VOCAB = [
+export const UNIT_4_VOCAB = new VocabularySection('"Teach Yourself" Unit 4 Vocab', "teachYourselfUnit4Vocab", [
   new VocabularyObject("Can I help you?", "Izvolite?", "Изволите?"),
   new VocabularyObject("Here you go.", "Izvolite.", "Изволите."),
   new VocabularyObject("Waitress", "Konobarica", "Конобарица"),
@@ -118,4 +136,8 @@ export const UNIT_4_VOCAB = [
   new VocabularyObject("I'm thirsty.", "Žedan sam.", "Жедан сам"),
   new VocabularyObject("You too", "I vi", "И ви"),
   new VocabularyObject("Give us...", "Dajte nam...", "Дајте нам..."),
-];
+]);
+
+export const practiceMap = {
+  [UNIT_4_VOCAB.unfriendlyName]: UNIT_4_VOCAB,
+};
