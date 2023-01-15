@@ -142,55 +142,55 @@ export const latinToJugoslavCyrillic = (inputString) => {
 // Š š
 
 export const UNIT_4_VOCAB = new VocabularySection('"Teach Yourself" Unit 4 Vocab', "teachYourselfUnit4Vocab", [
+  new VocabularyObject("Apple", "Jabuka"),
+  new VocabularyObject("Blueberry", "Borovnica"),
   new VocabularyObject("Can I help you?", "Izvolite?"),
-  new VocabularyObject("Here you go.", "Izvolite."),
-  new VocabularyObject("Waitress", "Konobarica"),
-  new VocabularyObject("You're welcome", "Molim"),
-  new VocabularyObject("Thank you", "Hvala vam"),
-  new VocabularyObject("Please", "Molim vas"),
   new VocabularyObject("Cheers!", "Živeli!"),
-  new VocabularyObject("Two beers", "Dva piva"),
-  new VocabularyObject("One juice", "Jedan sok"),
-  new VocabularyObject("Or", "Ili", "Или"),
   new VocabularyObject("Give me a coffee", "Dajte mi kafu"),
+  new VocabularyObject("Give us...", "Dajte nam..."),
+  new VocabularyObject("Here you go.", "Izvolite."),
+  new VocabularyObject("I'm thirsty.", "Žedan sam."),
+  new VocabularyObject("Immediately", "Odmah"),
   new VocabularyObject("Mineral water", "Kisela voda"),
   new VocabularyObject("OK", "U redu"),
-  new VocabularyObject("Immediately", "Odmah"),
-  new VocabularyObject("Blueberry", "Borovnica"),
+  new VocabularyObject("One juice", "Jedan sok"),
+  new VocabularyObject("Or", "Ili", "Или"),
+  new VocabularyObject("Please", "Molim vas"),
   new VocabularyObject("Raspberry", "Malina"),
   new VocabularyObject("Strawberry", "Jagoda"),
-  new VocabularyObject("Apple", "Jabuka"),
+  new VocabularyObject("Thank you", "Hvala vam"),
+  new VocabularyObject("Two beers", "Dva piva"),
+  new VocabularyObject("Waitress", "Konobarica"),
   new VocabularyObject("What do you want?", "Šta želite?"),
-  new VocabularyObject("I'm thirsty.", "Žedan sam."),
   new VocabularyObject("You too", "I vi"),
-  new VocabularyObject("Give us...", "Dajte nam..."),
+  new VocabularyObject("You're welcome", "Molim"),
 ]);
 
 export const UNIT_5_VOCAB = new VocabularySection('"Teach Yourself" Unit 5 Vocab', "teachYourselfUnit5Vocab", [
-  new VocabularyObject("Hungry", "Gladan"),
-  new VocabularyObject("Sandwich", "Sendvić"),
-  new VocabularyObject("Here", "Ovde"),
-  new VocabularyObject("With ham", "Sa šunkom"),
-  new VocabularyObject("Saleswoman", "Prodavačica"),
-  new VocabularyObject("We have", "Imamo"),
+  new VocabularyObject("Beef soup", "Goveđa supa"),
+  new VocabularyObject("Bill ($)", "Račun"),
+  new VocabularyObject("Bottle", "Flaša"),
   new VocabularyObject("Bread", "Hleb"),
-  new VocabularyObject("Filo pie", "Burek"),
-  new VocabularyObject("With cheese", "Sa sirom"),
+  new VocabularyObject("Clear soup", "Supa"),
   new VocabularyObject("Crescent roll", "Kifle"),
+  new VocabularyObject("Desserts", "Slatkiši"),
+  new VocabularyObject("Filo pie", "Burek"),
+  new VocabularyObject("Grilled Mushrooms", "Pečurka na žaru"),
+  new VocabularyObject("Here", "Ovde"),
+  new VocabularyObject("Hungry", "Gladan"),
+  new VocabularyObject("Menu", "Jelovnik"),
+  new VocabularyObject("Mince burger", "Pljeskavica"),
+  new VocabularyObject("Mince Sausage", "Ćevapčići"),
+  new VocabularyObject("Prosciutto", "Pršut"),
+  new VocabularyObject("Salad", "Salata"),
+  new VocabularyObject("Saleswoman", "Prodavačica"),
+  new VocabularyObject("Sandwich", "Sendvić"),
+  new VocabularyObject("Thick soup", "Čorba"),
+  new VocabularyObject("We have", "Imamo"),
+  new VocabularyObject("With cheese", "Sa sirom"),
+  new VocabularyObject("With ham", "Sa šunkom"),
   new VocabularyObject("With meat", "Sa mesom"),
   new VocabularyObject("Yogurt", "Jogurt"),
-  new VocabularyObject("Menu", "Jelovnik"),
-  new VocabularyObject("Mince Sausage", "Ćevapčići"),
-  new VocabularyObject("Bottle", "Flaša"),
-  new VocabularyObject("Bill ($)", "Račun"),
-  new VocabularyObject("Desserts", "Slatkiši"),
-  new VocabularyObject("Salad", "Salata"),
-  new VocabularyObject("Clear soup", "Supa"),
-  new VocabularyObject("Thick soup", "Čorba"),
-  new VocabularyObject("Prosciutto", "Pršut"),
-  new VocabularyObject("Beef soup", "Goveđa supa"),
-  new VocabularyObject("Grilled Mushrooms", "Pečurka na žaru"),
-  new VocabularyObject("Mince burger", "Pljeskavica"),
 ]);
 
 export const NUMBERS_5_to_100 = new VocabularySection("Numbers 5 to 100", "numbers5To100", [
@@ -220,11 +220,31 @@ export const NUMBERS_5_to_100 = new VocabularySection("Numbers 5 to 100", "numbe
   new VocabularyObject("100", "sto"),
 ]);
 
+export const COLORS = new VocabularySection("Colors", "colors", [
+  new VocabularyObject("Black", "Crn"),
+  new VocabularyObject("Blue", "Plav"),
+  new VocabularyObject("Brown", "Smeđ"),
+  new VocabularyObject("Color", "Boja"),
+  new VocabularyObject("Gold", "Zlat"),
+  new VocabularyObject("Green", "Zelen"),
+  new VocabularyObject("Grey", "Siv"),
+  new VocabularyObject("Orange", "Narančast"),
+  new VocabularyObject("Pink", "Ruž"),
+  new VocabularyObject("Purple", "Ljubičast"),
+  new VocabularyObject("Red", "Crven"),
+  new VocabularyObject("Silver", "Srebro"),
+  new VocabularyObject("White", "Beo"),
+  new VocabularyObject("Yellow", "Žut"),
+]);
+
 // Generates a mapping like
 // {
 //   <object.unfriendlyName>: object,...
 // }
-export const practiceMap = [NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB].reduce((newObject, practiceObject) => {
-  newObject[practiceObject.unfriendlyName] = practiceObject;
-  return newObject;
-}, {});
+export const practiceMap = [COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB].reduce(
+  (newObject, practiceObject) => {
+    newObject[practiceObject.unfriendlyName] = practiceObject;
+    return newObject;
+  },
+  {}
+);
