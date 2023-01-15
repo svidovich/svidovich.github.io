@@ -26,6 +26,27 @@
       <select id="practiceoptionsdropdown" name="practiceoptionsdropdown">
         <option value="" selected disabled hidden>Choose a Practice</option>
       </select>
+      <br />
+      Text Options
+      <br />
+      <form class="scriptoptionsform">
+        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptlatin" id="scriptlatin" />
+        <label for="scriptlatin">Latin</label>
+        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptcyrillic" id="scriptcyrillic" />
+        <label for="scriptcyrillic">Cyrillic</label>
+        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptboth" id="scriptboth" />
+        <label for="scriptboth">Latin + Cyrillic</label>
+        <input
+          class="scriptoptions"
+          name="scriptoptions"
+          type="radio"
+          value="scriptmix"
+          id="scriptmix"
+          checked="true"
+        />
+        <label for="scriptmix">Mix</label>
+      </form>
+
       <div id="choosePracticeWarning" hidden>I said choose a practice.</div>
       <br /><br />
       <div id="loadstagebutton" class="actionButtons">Do it!</div>
