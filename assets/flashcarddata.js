@@ -237,11 +237,32 @@ export const COLORS = new VocabularySection("Colors", "colors", [
   new VocabularyObject("Yellow", "Žut"),
 ]);
 
+export const ANIMALS = new VocabularySection("Animals", "animals", [
+  new VocabularyObject("Animal", "Životinja"),
+  new VocabularyObject("Badger", "Jazavac"),
+  new VocabularyObject("Bear", "Medved"),
+  new VocabularyObject("Bird", "Ptica"),
+  new VocabularyObject("Cat", "Mačka"),
+  new VocabularyObject("Chicken", "Piletina"),
+  new VocabularyObject("Cow", "Krava"),
+  new VocabularyObject("Dog", "Pas"),
+  new VocabularyObject("Fox", "Lisica"),
+  new VocabularyObject("Goat", "Koza"),
+  new VocabularyObject("Goose", "Guska"),
+  new VocabularyObject("Horse", "Konj"),
+  new VocabularyObject("Lion", "Lav"),
+  new VocabularyObject("Mouse", "Miš"),
+  new VocabularyObject("Pig", "Svinja"),
+  new VocabularyObject("Rabbit", "Zec"),
+  new VocabularyObject("Rooster", "Petao"),
+  new VocabularyObject("Sheep", "Ovca"),
+]);
+
 // Generates a mapping like
 // {
 //   <object.unfriendlyName>: object,...
 // }
-export const practiceMap = [COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB].reduce(
+export const practiceMap = [ANIMALS, COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB].reduce(
   (newObject, practiceObject) => {
     newObject[practiceObject.unfriendlyName] = practiceObject;
     return newObject;
