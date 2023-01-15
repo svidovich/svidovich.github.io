@@ -20,16 +20,46 @@ clearStageButton.addEventListener("click", () => {
   clearStage();
 });
 
+let warningCount = 0;
 const loadStage = () => {
   // Get the practice options dropdown,
   const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  const choosePracticeWarning = document.getElementById("choosePracticeWarning");
   const selectedPractice = practiceOptionsDropDown.value;
   if (selectedPractice) {
+    choosePracticeWarning.hidden = true;
     // Make sure we have a clean slate to work with.
     clearStage();
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
     loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+  } else {
+    choosePracticeWarning.hidden = false;
+    let shouldIncreaseSizeOnWarning = true;
+    if (warningCount > 0) {
+      choosePracticeWarning.style.color = "red";
+    }
+    if (warningCount > 10 && warningCount < 20) {
+      choosePracticeWarning.innerHTML = "<u>BRO.</u>";
+    } else if (warningCount >= 20 && warningCount < 30) {
+      choosePracticeWarning.innerHTML = "<u><strong>PICK IT</strong></u>";
+    } else if (warningCount >= 30 && warningCount < 30) {
+      choosePracticeWarning.innerHTML = "<u><strong><em>WHAT ARE YOU DOING</em></strong></u>";
+    } else if (warningCount >= 40 && warningCount < 50) {
+      choosePracticeWarning.innerHTML = "<u><strong><em>STOP</em></strong></u>";
+    } else if (warningCount >= 50 && warningCount < 60) {
+      choosePracticeWarning.innerHTML = "Why. This is not a feature.";
+    } else if (warningCount >= 60 && warningCount < 70) {
+      choosePracticeWarning.innerHTML = "<strong>???????</strong>";
+    } else if (warningCount >= 80) {
+      choosePracticeWarning.innerHTML = `Fine. FINE. Here's a score. This is a game now. Are you happy?<br/>${warningCount}`;
+      choosePracticeWarning.style.fontSize = 16;
+      shouldIncreaseSizeOnWarning = false;
+    }
+    if (shouldIncreaseSizeOnWarning) {
+      choosePracticeWarning.style.fontSize = 16 + warningCount;
+    }
+    warningCount += 1;
   }
 };
 
