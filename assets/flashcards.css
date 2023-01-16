@@ -67,6 +67,12 @@ do not modify below this line.
   font-size: 20px;
   backface-visibility: hidden;
   border-radius: 4px;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 }
 
 .card__face--front {
