@@ -20,6 +20,8 @@ clearStageButton.addEventListener("click", () => {
   clearStage();
 });
 
+const insertPracticeFormatForm = () => {};
+
 let warningCount = 0;
 const loadStage = () => {
   // Get the practice options dropdown,
@@ -61,6 +63,60 @@ const loadStage = () => {
     }
     warningCount += 1;
   }
+};
+
+const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+practiceOptionsDropDown.addEventListener("change", () => {
+  displayAvailablePracticeFormats();
+});
+
+const displayAvailablePracticeFormats = () => {
+  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  const practiceFormatsContainer = document.getElementById("practiceformatscontainer");
+  // First, make sure we have a clean state by deleting any extant form
+  while (practiceFormatsContainer.firstChild) {
+    practiceFormatsContainer.removeChild(practiceFormatsContainer.lastChild);
+  }
+  // Load the available practice formats for our selected practice
+  const selectedPractice = practiceOptionsDropDown.value;
+  const sectionObject = practiceMap[selectedPractice];
+  // Create a new form in which we'll contain these formats.
+  const practiceFormatsRadioForm = document.createElement("form");
+  practiceFormatsRadioForm.className = "practiceformatsradioform";
+  // For each of our available formats...
+  sectionObject.formats.forEach((format) => {
+    // Create a new input.
+    const formatRadioInput = document.createElement("input");
+    formatRadioInput.className = "practiceformatoptions";
+    formatRadioInput.name = "practiceformatoptions";
+    // It needs to be a radio button whose value is the
+    // format we're looking at right now.
+    formatRadioInput.type = "radio";
+    formatRadioInput.value = format;
+    formatRadioInput.id = format;
+    // By default, check the first radio button.
+    if (sectionObject.formats.indexOf(format) === 0) {
+      formatRadioInput.checked = true;
+    }
+    // To give a radio button text, we need to give it a label
+    const formatRadioInputLabel = document.createElement("label");
+    formatRadioInputLabel.for = format;
+    // Adding text to the label requires us to create a text node
+    const formatRadioInputLabelText = document.createTextNode(format);
+    formatRadioInputLabel.appendChild(formatRadioInputLabelText);
+    // The incoming formats are ugly: use CSS to make them beautiful
+    formatRadioInputLabel.style.textTransform = "capitalize";
+    // Finally, add the radio button to the form,
+    practiceFormatsRadioForm.appendChild(formatRadioInput);
+    // add the label text to the label itself,
+    formatRadioInput.appendChild(formatRadioInputLabel);
+    // and add the label to the form.
+    practiceFormatsRadioForm.appendChild(formatRadioInputLabel);
+  });
+  // Put the completed form into its container,
+  practiceFormatsContainer.appendChild(practiceFormatsRadioForm);
+  // and make the container visible.
+  practiceFormatsContainer.hidden = false;
 };
 
 // Button for filling the working stage
