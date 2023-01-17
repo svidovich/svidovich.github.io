@@ -317,6 +317,19 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
 
     addFlashcard(front, rear);
   });
+  const endnl = document.createElement("br");
+  const topLink = document.createElement("a");
+  const topLinkText = document.createTextNode("Back to Top");
+  topLink.href = "#";
+  topLink.appendChild(topLinkText);
+  const topLinkContainer = document.createElement("div");
+  topLinkContainer.style.textAlign = "center";
+  topLinkContainer.appendChild(topLink);
+  flashCardContainer.parentNode.insertBefore(endnl, flashCardContainer.nextElementSibling);
+  flashCardContainer.parentNode.insertBefore(topLinkContainer, flashCardContainer.nextElementSibling);
+
+  practiceState.push(endnl);
+  practiceState.push(topLinkContainer);
 };
 
 // Given an array and an object known to be in it,
@@ -447,6 +460,13 @@ const loadQuiz = (vocabularyObjects) => {
     practiceState.push(quizOptionsContainer);
     practiceState.push(endnl);
   });
+  const topLink = document.createElement("a");
+  const topLinkText = document.createTextNode("Back to Top");
+  topLink.href = "#";
+  topLink.style.placeSelf = "center";
+  topLink.appendChild(topLinkText);
+  quizBox.appendChild(topLink);
+  practiceState.push(topLink);
 };
 
 (() => {
