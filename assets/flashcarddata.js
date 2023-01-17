@@ -1,3 +1,6 @@
+const FORMAT_FLASHCARDS = "flashcards";
+const FORMAT_QUIZ = "quiz";
+
 class VocabularyObject {
   constructor(english, latin) {
     this.english = english;
@@ -19,6 +22,7 @@ class VocabularySection {
     this.friendlyName = friendlyName;
     this.unfriendlyName = unfriendlyName;
     this.vocabularyObjects = vocabularyObjects;
+    this.formats = [FORMAT_FLASHCARDS, FORMAT_QUIZ];
   }
 
   get asObject() {
@@ -297,14 +301,46 @@ export const ANIMALS = new VocabularySection("Animals", "animals", [
   new VocabularyObject("Sheep", "Ovca"),
 ]);
 
+export const INDEFINITE_PRONOUNS = new VocabularySection("Indefinite Pronouns", "indefinitePronouns", [
+  new VocabularyObject("Who", "Ko"),
+  new VocabularyObject("Somebody", "Neko"),
+  new VocabularyObject("Nobody", "Niko"),
+  new VocabularyObject("Anybody", "Iko"),
+  new VocabularyObject("When", "Kada"),
+  new VocabularyObject("Once", "Nekada"),
+  new VocabularyObject("Never", "Nikada"),
+  new VocabularyObject("Anytime", "Ikada"),
+  new VocabularyObject("How", "Kako"),
+  new VocabularyObject("Somehow", "Nekako"),
+  new VocabularyObject("No way", "Nikako"),
+  new VocabularyObject("Anyhow", "Ikako"),
+  new VocabularyObject("Something", "Ko"),
+  new VocabularyObject("What", "Šta"),
+  new VocabularyObject("Something", "Nešto"),
+  new VocabularyObject("Nothing", "Ništa"),
+  new VocabularyObject("Where", "Đe"),
+  new VocabularyObject("Somewhere", "Negde"),
+  new VocabularyObject("Nowhere", "Nigde"),
+  new VocabularyObject("Anywhere", "Igde"),
+  new VocabularyObject("To where", "Kude"),
+  new VocabularyObject("To somewhere", "Nekuda"),
+  new VocabularyObject("To nowhere", "Nikuda"),
+  new VocabularyObject("To anywhere", "Ikuda"),
+]);
+
 // Generates a mapping like
 // {
 //   <object.unfriendlyName>: object,...
 // }
-export const practiceMap = [ANIMALS, COLORS, NUMBERS_5_to_100, UNIT_4_VOCAB, UNIT_5_VOCAB, UNIT_6_VOCAB].reduce(
-  (newObject, practiceObject) => {
-    newObject[practiceObject.unfriendlyName] = practiceObject;
-    return newObject;
-  },
-  {}
-);
+export const practiceMap = [
+  ANIMALS,
+  COLORS,
+  INDEFINITE_PRONOUNS,
+  NUMBERS_5_to_100,
+  UNIT_4_VOCAB,
+  UNIT_5_VOCAB,
+  UNIT_6_VOCAB,
+].reduce((newObject, practiceObject) => {
+  newObject[practiceObject.unfriendlyName] = practiceObject;
+  return newObject;
+}, {});
