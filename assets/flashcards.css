@@ -1,9 +1,37 @@
+/* Stuff for quizzes below */
+.quizcontainer {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 50%;
+  background-color: #f1f1f1;
+  overflow: auto;
+}
+
+.quizoption {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.quizoption.active {
+  background-color: #04aa6d;
+  color: white;
+}
+
+.quizoption:hover {
+  background-color: #555;
+  color: white;
+}
+
+/* Stuff for flashcards below */
+
 .flashcardcontainer {
   /* display: flex;
   flex-wrap: wrap;
   gap: 10px; */
   display: grid;
-  grid-template-columns: repeat(4, 200px);
   grid-gap: 10px;
   justify-content: center;
   align-content: center;

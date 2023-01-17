@@ -1,4 +1,5 @@
-import { UNIT_4_VOCAB, practiceMap } from "./flashcarddata.js";
+import { FORMAT_FLASHCARDS, FORMAT_QUIZ } from "./flashcarddata.js";
+import { practiceMap } from "./flashcarddata.js";
 
 // Global for storing practice document state
 const practiceState = new Array();
@@ -34,7 +35,13 @@ const loadStage = () => {
     clearStage();
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
-    loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+    const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
+    console.log(practiceFormatOption);
+    if (practiceFormatOption === FORMAT_FLASHCARDS) {
+      loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+    } else if (practiceFormatOption === FORMAT_QUIZ) {
+      loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+    }
   } else {
     choosePracticeWarning.hidden = false;
     let shouldIncreaseSizeOnWarning = true;
@@ -180,6 +187,7 @@ const randomInt = (min, max) => {
 // on the front and back of the card, respectively.
 const addFlashcard = (front, back) => {
   const flashCardContainer = document.getElementById("flashcardcontainer");
+
   // I don't know _why_ I feel the need to make these unique, but something
   // tells me I will thank myself later.
   const id = UUIDGeneratorBrowser();
@@ -248,9 +256,10 @@ const addFlashcard = (front, back) => {
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
   const vocabCopy = [...vocabularyObjects];
+  const flashCardContainer = document.getElementById("flashcardcontainer");
+  flashCardContainer.style.gridTemplateColumns = "repeat(4, 200px)";
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
-  console.log(scriptOption);
 
   shuffle(vocabCopy);
   vocabCopy.forEach((vocabularyObject) => {
@@ -307,6 +316,52 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
     }
 
     addFlashcard(front, rear);
+  });
+};
+
+// Given an array and an object known to be in it,
+// choose a random item from the iterable that isn't
+// the object we chose.
+const chooseRandomExcept = (arr, exception) => {
+  const exceptionIndex = arr.indexOf(exception);
+  while (true) {
+    const randomIndex = randomInt(0, arr.length - 1);
+    if (exceptionIndex !== randomIndex) {
+      return arr[randomIndex];
+    }
+  }
+};
+
+// Loads a gang of vocabulary objects as a quiz.
+const loadQuiz = (vocabularyObjects) => {
+  const vocabCopy = [...vocabularyObjects];
+
+  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+
+  shuffle(vocabCopy);
+  const quizBox = document.getElementById("flashcardcontainer");
+  quizBox.style.gridTemplateColumns = "1fr";
+  vocabCopy.forEach((vocabularyObject) => {
+    const quizOptionsContainer = document.createElement("ul");
+    quizOptionsContainer.className = "quizcontainer";
+    const quizOptions = shuffle([
+      vocabularyObject,
+      chooseRandomExcept(vocabCopy, vocabularyObject),
+      chooseRandomExcept(vocabCopy, vocabularyObject),
+      chooseRandomExcept(vocabCopy, vocabularyObject),
+    ]);
+    quizOptions.forEach((quizOption) => {
+      const optionElement = document.createElement("li");
+      optionElement.className = "quizoption";
+      const optionText = document.createTextNode(quizOption.english);
+      optionElement.appendChild(optionText);
+      quizOptionsContainer.appendChild(optionElement);
+    });
+    quizBox.appendChild(quizOptionsContainer);
+    const nl = document.createElement("br");
+    quizBox.appendChild(nl);
+    practiceState.push(quizOptionsContainer);
+    practiceState.push(nl);
   });
 };
 
