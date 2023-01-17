@@ -1,5 +1,5 @@
-const FORMAT_FLASHCARDS = "flashcards";
-const FORMAT_QUIZ = "quiz";
+export const FORMAT_FLASHCARDS = "flashcards";
+export const FORMAT_QUIZ = "quiz";
 
 class VocabularyObject {
   constructor(english, latin) {

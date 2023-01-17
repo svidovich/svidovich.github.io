@@ -1,4 +1,5 @@
-import { UNIT_4_VOCAB, practiceMap } from "./flashcarddata.js";
+import { FORMAT_FLASHCARDS, FORMAT_QUIZ } from "./flashcarddata.js";
+import { practiceMap } from "./flashcarddata.js";
 
 // Global for storing practice document state
 const practiceState = new Array();
@@ -20,6 +21,8 @@ clearStageButton.addEventListener("click", () => {
   clearStage();
 });
 
+const insertPracticeFormatForm = () => {};
+
 let warningCount = 0;
 const loadStage = () => {
   // Get the practice options dropdown,
@@ -32,7 +35,13 @@ const loadStage = () => {
     clearStage();
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
-    loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+    const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
+
+    if (practiceFormatOption === FORMAT_FLASHCARDS) {
+      loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+    } else if (practiceFormatOption === FORMAT_QUIZ) {
+      loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+    }
   } else {
     choosePracticeWarning.hidden = false;
     let shouldIncreaseSizeOnWarning = true;
@@ -61,6 +70,60 @@ const loadStage = () => {
     }
     warningCount += 1;
   }
+};
+
+const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+practiceOptionsDropDown.addEventListener("change", () => {
+  displayAvailablePracticeFormats();
+});
+
+const displayAvailablePracticeFormats = () => {
+  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  const practiceFormatsContainer = document.getElementById("practiceformatscontainer");
+  // First, make sure we have a clean state by deleting any extant form
+  while (practiceFormatsContainer.firstChild) {
+    practiceFormatsContainer.removeChild(practiceFormatsContainer.lastChild);
+  }
+  // Load the available practice formats for our selected practice
+  const selectedPractice = practiceOptionsDropDown.value;
+  const sectionObject = practiceMap[selectedPractice];
+  // Create a new form in which we'll contain these formats.
+  const practiceFormatsRadioForm = document.createElement("form");
+  practiceFormatsRadioForm.className = "practiceformatsradioform";
+  // For each of our available formats...
+  sectionObject.formats.forEach((format) => {
+    // Create a new input.
+    const formatRadioInput = document.createElement("input");
+    formatRadioInput.className = "practiceformatoptions";
+    formatRadioInput.name = "practiceformatoptions";
+    // It needs to be a radio button whose value is the
+    // format we're looking at right now.
+    formatRadioInput.type = "radio";
+    formatRadioInput.value = format;
+    formatRadioInput.id = format;
+    // By default, check the first radio button.
+    if (sectionObject.formats.indexOf(format) === 0) {
+      formatRadioInput.checked = true;
+    }
+    // To give a radio button text, we need to give it a label
+    const formatRadioInputLabel = document.createElement("label");
+    formatRadioInputLabel.for = format;
+    // Adding text to the label requires us to create a text node
+    const formatRadioInputLabelText = document.createTextNode(format);
+    formatRadioInputLabel.appendChild(formatRadioInputLabelText);
+    // The incoming formats are ugly: use CSS to make them beautiful
+    formatRadioInputLabel.style.textTransform = "capitalize";
+    // Finally, add the radio button to the form,
+    practiceFormatsRadioForm.appendChild(formatRadioInput);
+    // add the label text to the label itself,
+    formatRadioInput.appendChild(formatRadioInputLabel);
+    // and add the label to the form.
+    practiceFormatsRadioForm.appendChild(formatRadioInputLabel);
+  });
+  // Put the completed form into its container,
+  practiceFormatsContainer.appendChild(practiceFormatsRadioForm);
+  // and make the container visible.
+  practiceFormatsContainer.hidden = false;
 };
 
 // Button for filling the working stage
@@ -124,6 +187,7 @@ const randomInt = (min, max) => {
 // on the front and back of the card, respectively.
 const addFlashcard = (front, back) => {
   const flashCardContainer = document.getElementById("flashcardcontainer");
+
   // I don't know _why_ I feel the need to make these unique, but something
   // tells me I will thank myself later.
   const id = UUIDGeneratorBrowser();
@@ -192,9 +256,10 @@ const addFlashcard = (front, back) => {
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
   const vocabCopy = [...vocabularyObjects];
+  const flashCardContainer = document.getElementById("flashcardcontainer");
+  flashCardContainer.style.gridTemplateColumns = "repeat(4, 200px)";
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
-  console.log(scriptOption);
 
   shuffle(vocabCopy);
   vocabCopy.forEach((vocabularyObject) => {
@@ -252,6 +317,156 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
 
     addFlashcard(front, rear);
   });
+  const endnl = document.createElement("br");
+  const topLink = document.createElement("a");
+  const topLinkText = document.createTextNode("Back to Top");
+  topLink.href = "#";
+  topLink.appendChild(topLinkText);
+  const topLinkContainer = document.createElement("div");
+  topLinkContainer.style.textAlign = "center";
+  topLinkContainer.appendChild(topLink);
+  flashCardContainer.parentNode.insertBefore(endnl, flashCardContainer.nextElementSibling);
+  flashCardContainer.parentNode.insertBefore(topLinkContainer, flashCardContainer.nextElementSibling);
+
+  practiceState.push(endnl);
+  practiceState.push(topLinkContainer);
+};
+
+// Given an array and an object known to be in it,
+// choose a random item from the iterable that isn't
+// the object we chose.
+const chooseRandomExcept = (arr, exceptions) => {
+  const exceptionIndices = new Array();
+  exceptions.map((exception) => {
+    exceptionIndices.push(arr.indexOf(exception));
+  });
+  while (true) {
+    const randomIndex = randomInt(0, arr.length - 1);
+    if (!exceptionIndices.includes(randomIndex)) {
+      return arr[randomIndex];
+    }
+  }
+};
+
+const colorizeQuizOption = (quizOption) => {
+  // Only colorize list items.
+  if (quizOption.tagName.toLowerCase() === "li") {
+    // For whatever reason, chrome isn't very happy about using
+    // contains on classList, nor includes. Spread it to find out.
+    if ([...quizOption.classList].includes("correctanswer")) {
+      quizOption.style.backgroundColor = "green";
+    } else {
+      quizOption.style.backgroundColor = "red";
+    }
+  }
+};
+
+// Loads a gang of vocabulary objects as a quiz.
+const loadQuiz = (vocabularyObjects) => {
+  const vocabCopy = [...vocabularyObjects];
+
+  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+
+  shuffle(vocabCopy);
+  const quizBox = document.getElementById("flashcardcontainer");
+  const startnl = document.createElement("br");
+  quizBox.appendChild(startnl);
+  practiceState.push(startnl);
+  let isEnglish;
+  quizBox.style.gridTemplateColumns = "1fr";
+  let questionNumber = 0;
+  vocabCopy.forEach((vocabularyObject) => {
+    questionNumber += 1;
+    // Add a header for each of the quiz questions
+    let headerScript;
+    // Flip a coin to decide whether our header is english or Jugoslav
+    if (randomInt(0, 100) > 50) {
+      isEnglish = true;
+      headerScript = `"${vocabularyObject.english}" translates to...`;
+    } else {
+      isEnglish = false;
+      if (scriptOption === "scriptboth") {
+        headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
+      } else if (scriptOption === "scriptlatin") {
+        headerScript = `"${vocabularyObject.latin}" means...`;
+      } else if (scriptOption === "scriptcyrillic") {
+        headerScript = `"${vocabularyObject.cyrillic}" means...`;
+      } else if (scriptOption === "scriptmix") {
+        // Roll a coin to see if we'll have latin or cyrillic
+        if (randomInt(0, 100) > 50) {
+          headerScript = `"${vocabularyObject.cyrillic}" means...`;
+        } else {
+          headerScript = `"${vocabularyObject.latin}" means...`;
+        }
+      }
+    }
+    const quizQuestionHeader = document.createElement("h3");
+    quizQuestionHeader.style.placeSelf = "center";
+    const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
+    quizQuestionHeader.appendChild(quizQuestionText);
+    quizBox.appendChild(quizQuestionHeader);
+    practiceState.push(quizQuestionHeader);
+    // Create the unordered list that will represent the options for this quiz question
+    const quizOptionsContainer = document.createElement("ul");
+    quizOptionsContainer.style.placeSelf = "center";
+    // Add a listener for this quiz question to colorize its babies on click!
+    quizOptionsContainer.addEventListener("click", (event) => {
+      colorizeQuizOption(event.target);
+    });
+    // Name it correctly so that it picks up our style.
+    quizOptionsContainer.className = "quizcontainer";
+    // We're dong multiple choice. We need to choose random other options
+    // from the incoming list of vocabulary options, without ever choosing
+    // the word we're currently looking at, or choosing the same thing twice.
+    const optionTwo = chooseRandomExcept(vocabCopy, [vocabularyObject]);
+    const optionThree = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo]);
+    const optionFour = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo, optionThree]);
+    const quizOptions = shuffle([vocabularyObject, optionTwo, optionThree, optionFour]);
+
+    quizOptions.forEach((quizOption) => {
+      const optionElement = document.createElement("li");
+      optionElement.className = "quizoption";
+      // Yes, you can inspect element to cheat. But who would do that?
+      // Go on the internet, and tell lies?
+      if (quizOption === vocabularyObject) {
+        optionElement.classList.toggle("correctanswer");
+      }
+      let optionText;
+      if (isEnglish) {
+        if (scriptOption === "scriptboth") {
+          optionText = `"${quizOption.latin}", or "${quizOption.cyrillic}"`;
+        } else if (scriptOption === "scriptlatin") {
+          optionText = quizOption.latin;
+        } else if (scriptOption === "scriptcyrillic") {
+          optionText = quizOption.cyrillic;
+        } else if (scriptOption === "scriptmix") {
+          // Roll a coin to see if we'll have latin or cyrillic
+          if (randomInt(0, 100) > 50) {
+            optionText = quizOption.cyrillic;
+          } else {
+            optionText = quizOption.latin;
+          }
+        }
+      } else {
+        optionText = quizOption.english;
+      }
+      const optionTextNode = document.createTextNode(optionText);
+      optionElement.appendChild(optionTextNode);
+      quizOptionsContainer.appendChild(optionElement);
+    });
+    quizBox.appendChild(quizOptionsContainer);
+    const endnl = document.createElement("br");
+    quizBox.appendChild(endnl);
+    practiceState.push(quizOptionsContainer);
+    practiceState.push(endnl);
+  });
+  const topLink = document.createElement("a");
+  const topLinkText = document.createTextNode("Back to Top");
+  topLink.href = "#";
+  topLink.style.placeSelf = "center";
+  topLink.appendChild(topLinkText);
+  quizBox.appendChild(topLink);
+  practiceState.push(topLink);
 };
 
 (() => {

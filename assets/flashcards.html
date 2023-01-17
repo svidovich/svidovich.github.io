@@ -7,12 +7,12 @@
     <link rel="stylesheet" type="text/css" href="../style.css" />
     <link rel="stylesheet" type="text/css" href="flashcards.css" />
     <link rel="icon" href="../media/favicon.png" />
-    <title>Yugoslavian Flashcards, by Samuel Vidovich</title>
+    <title>Learn Yugoslavian, by Samuel Vidovich</title>
   </head>
   <body>
     <a href="../index.html">Back to Home</a>
     <div align="center" class="headers">
-      <h3>Hey! Want to do some flashcards?</h3>
+      <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
     </div>
     <div align="center">
       I call these Yugoslavian, because they represent a language shared by a lot of different people. If you go to the
@@ -26,13 +26,13 @@
       <br />
       🇸🇮🇭🇷🇷🇸🇲🇪🇽🇰🇲🇰🇧🇦
       <br />
-      Note: This is the first iteration of flashcards. I think this gets better over time.
     </div>
     <br />
     <div align="center">
       <select id="practiceoptionsdropdown" name="practiceoptionsdropdown">
         <option value="" selected disabled hidden>Choose a Practice</option>
       </select>
+      <div id="practiceformatscontainer" hidden></div>
       <br />
       Text Options
       <br />
@@ -53,7 +53,6 @@
         />
         <label for="scriptmix">Mix</label>
       </form>
-
       <div id="choosePracticeWarning" hidden>I said choose a practice.</div>
       <br /><br />
       <div id="loadstagebutton" class="actionButtons">Do it!</div>
@@ -61,7 +60,6 @@
     </div>
     <div id="flashcardcontainer" class="flashcardcontainer"></div>
     <br /><br /><br /><br /><br /><br />
-    <a href="../index.html">Back to Home</a>
   </body>
   <script type="module" src="flashcards.js"></script>
   <script type="module" src="flashcarddata.js"></script>

@@ -1,9 +1,42 @@
+/* Stuff for quizzes below */
+h3 {
+  font-family: "Arvo", sans-serif;
+}
+
+.quizcontainer {
+  list-style-type: none;
+  align-items: center;
+  align-content: center;
+  margin-top: 4px;
+  padding: 0;
+  width: 30%;
+  background-color: #f1f1f1;
+  overflow: auto;
+}
+
+.quizoption {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-family: "Arvo", sans-serif;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.quizoption:hover {
+  background-color: rgb(4, 65, 83);
+  color: white;
+}
+
+/* Stuff for flashcards below */
+
 .flashcardcontainer {
-  /* display: flex;
-  flex-wrap: wrap;
-  gap: 10px; */
   display: grid;
-  grid-template-columns: repeat(4, 200px);
   grid-gap: 10px;
   justify-content: center;
   align-content: center;
