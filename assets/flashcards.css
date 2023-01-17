@@ -1,9 +1,16 @@
 /* Stuff for quizzes below */
+h3 {
+  font-family: "Arvo", sans-serif;
+}
+
 .quizcontainer {
   list-style-type: none;
-  margin: 0;
+  align-items: center;
+  align-content: center;
+  margin-top: 4px;
+  margin-left: 20px;
   padding: 0;
-  width: 50%;
+  width: 30%;
   background-color: #f1f1f1;
   overflow: auto;
 }
@@ -13,6 +20,7 @@
   color: #000;
   padding: 8px 16px;
   text-decoration: none;
+  font-family: "Arvo", sans-serif;
 }
 
 .quizoption.active {

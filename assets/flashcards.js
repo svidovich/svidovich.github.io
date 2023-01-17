@@ -322,11 +322,15 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
 // Given an array and an object known to be in it,
 // choose a random item from the iterable that isn't
 // the object we chose.
-const chooseRandomExcept = (arr, exception) => {
-  const exceptionIndex = arr.indexOf(exception);
+const chooseRandomExcept = (arr, exceptions) => {
+  const exceptionIndices = new Array();
+  exceptions.map((exception) => {
+    exceptionIndices.push(arr.indexOf(exception));
+  });
+  console.log(exceptionIndices);
   while (true) {
     const randomIndex = randomInt(0, arr.length - 1);
-    if (exceptionIndex !== randomIndex) {
+    if (!exceptionIndices.includes(randomIndex)) {
       return arr[randomIndex];
     }
   }
@@ -340,28 +344,88 @@ const loadQuiz = (vocabularyObjects) => {
 
   shuffle(vocabCopy);
   const quizBox = document.getElementById("flashcardcontainer");
+  const startnl = document.createElement("br");
+  quizBox.appendChild(startnl);
+  practiceState.push(startnl);
+  let isEnglish;
   quizBox.style.gridTemplateColumns = "1fr";
   vocabCopy.forEach((vocabularyObject) => {
+    // Add a header for each of the quiz questions
+    let headerScript;
+    // Flip a coin to decide whether our header is english or Jugoslav
+    if (randomInt(0, 100) > 50) {
+      isEnglish = true;
+      headerScript = `"${vocabularyObject.english}" translates to...`;
+    } else {
+      isEnglish = false;
+      if (scriptOption === "scriptboth") {
+        headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
+      } else if (scriptOption === "scriptlatin") {
+        headerScript = `"${vocabularyObject.latin}" means...`;
+      } else if (scriptOption === "scriptcyrillic") {
+        headerScript = `"${vocabularyObject.cyrillic}" means...`;
+      } else if (scriptOption === "scriptmix") {
+        // Roll a coin to see if we'll have latin or cyrillic
+        if (randomInt(0, 100) > 50) {
+          headerScript = `"${vocabularyObject.cyrillic}" means...`;
+        } else {
+          headerScript = `"${vocabularyObject.latin}" means...`;
+        }
+      }
+    }
+    const quizQuestionHeader = document.createElement("h3");
+    const quizQuestionText = document.createTextNode(headerScript);
+    quizQuestionHeader.appendChild(quizQuestionText);
+    quizBox.appendChild(quizQuestionHeader);
+    practiceState.push(quizQuestionHeader);
+    // Create the unordered list that will represent the options for this quiz question
     const quizOptionsContainer = document.createElement("ul");
+    // Name it correctly so that it picks up our style.
     quizOptionsContainer.className = "quizcontainer";
-    const quizOptions = shuffle([
-      vocabularyObject,
-      chooseRandomExcept(vocabCopy, vocabularyObject),
-      chooseRandomExcept(vocabCopy, vocabularyObject),
-      chooseRandomExcept(vocabCopy, vocabularyObject),
-    ]);
+    // We're dong multiple choice. We need to choose random other options
+    // from the incoming list of vocabulary options, without ever choosing
+    // the word we're currently looking at, or choosing the same thing twice.
+    const optionTwo = chooseRandomExcept(vocabCopy, [vocabularyObject]);
+    const optionThree = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo]);
+    const optionFour = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo, optionThree]);
+    const quizOptions = shuffle([vocabularyObject, optionTwo, optionThree, optionFour]);
+
     quizOptions.forEach((quizOption) => {
       const optionElement = document.createElement("li");
       optionElement.className = "quizoption";
-      const optionText = document.createTextNode(quizOption.english);
-      optionElement.appendChild(optionText);
+      // Yes, you can inspect element to cheat. But who would do that?
+      // Go on the internet, and tell lies?
+      if (quizOption === vocabularyObject) {
+        optionElement.classList.toggle("correctanswer");
+      }
+      let optionText;
+      if (isEnglish) {
+        if (scriptOption === "scriptboth") {
+          optionText = `"${quizOption.latin}", or "${quizOption.cyrillic}"`;
+        } else if (scriptOption === "scriptlatin") {
+          optionText = quizOption.latin;
+        } else if (scriptOption === "scriptcyrillic") {
+          optionText = quizOption.cyrillic;
+        } else if (scriptOption === "scriptmix") {
+          // Roll a coin to see if we'll have latin or cyrillic
+          if (randomInt(0, 100) > 50) {
+            optionText = quizOption.cyrillic;
+          } else {
+            optionText = quizOption.latin;
+          }
+        }
+      } else {
+        optionText = quizOption.english;
+      }
+      const optionTextNode = document.createTextNode(optionText);
+      optionElement.appendChild(optionTextNode);
       quizOptionsContainer.appendChild(optionElement);
     });
     quizBox.appendChild(quizOptionsContainer);
-    const nl = document.createElement("br");
-    quizBox.appendChild(nl);
+    const endnl = document.createElement("br");
+    quizBox.appendChild(endnl);
     practiceState.push(quizOptionsContainer);
-    practiceState.push(nl);
+    practiceState.push(endnl);
   });
 };
 
