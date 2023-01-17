@@ -361,8 +361,9 @@ const loadQuiz = (vocabularyObjects) => {
   practiceState.push(startnl);
   let isEnglish;
   quizBox.style.gridTemplateColumns = "1fr";
-
+  let questionNumber = 0;
   vocabCopy.forEach((vocabularyObject) => {
+    questionNumber += 1;
     // Add a header for each of the quiz questions
     let headerScript;
     // Flip a coin to decide whether our header is english or Jugoslav
@@ -387,12 +388,14 @@ const loadQuiz = (vocabularyObjects) => {
       }
     }
     const quizQuestionHeader = document.createElement("h3");
-    const quizQuestionText = document.createTextNode(headerScript);
+    quizQuestionHeader.style.placeSelf = "center";
+    const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
     quizQuestionHeader.appendChild(quizQuestionText);
     quizBox.appendChild(quizQuestionHeader);
     practiceState.push(quizQuestionHeader);
     // Create the unordered list that will represent the options for this quiz question
     const quizOptionsContainer = document.createElement("ul");
+    quizOptionsContainer.style.placeSelf = "center";
     // Add a listener for this quiz question to colorize its babies on click!
     quizOptionsContainer.addEventListener("click", (event) => {
       colorizeQuizOption(event.target);
