@@ -36,7 +36,7 @@ const loadStage = () => {
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
     const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
-    console.log(practiceFormatOption);
+
     if (practiceFormatOption === FORMAT_FLASHCARDS) {
       loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_QUIZ) {
@@ -327,11 +327,23 @@ const chooseRandomExcept = (arr, exceptions) => {
   exceptions.map((exception) => {
     exceptionIndices.push(arr.indexOf(exception));
   });
-  console.log(exceptionIndices);
   while (true) {
     const randomIndex = randomInt(0, arr.length - 1);
     if (!exceptionIndices.includes(randomIndex)) {
       return arr[randomIndex];
+    }
+  }
+};
+
+const colorizeQuizOption = (quizOption) => {
+  // Only colorize list items.
+  if (quizOption.tagName.toLowerCase() === "li") {
+    // For whatever reason, chrome isn't very happy about using
+    // contains on classList, nor includes. Spread it to find out.
+    if ([...quizOption.classList].includes("correctanswer")) {
+      quizOption.style.backgroundColor = "green";
+    } else {
+      quizOption.style.backgroundColor = "red";
     }
   }
 };
@@ -349,6 +361,7 @@ const loadQuiz = (vocabularyObjects) => {
   practiceState.push(startnl);
   let isEnglish;
   quizBox.style.gridTemplateColumns = "1fr";
+
   vocabCopy.forEach((vocabularyObject) => {
     // Add a header for each of the quiz questions
     let headerScript;
@@ -380,6 +393,10 @@ const loadQuiz = (vocabularyObjects) => {
     practiceState.push(quizQuestionHeader);
     // Create the unordered list that will represent the options for this quiz question
     const quizOptionsContainer = document.createElement("ul");
+    // Add a listener for this quiz question to colorize its babies on click!
+    quizOptionsContainer.addEventListener("click", (event) => {
+      colorizeQuizOption(event.target);
+    });
     // Name it correctly so that it picks up our style.
     quizOptionsContainer.className = "quizcontainer";
     // We're dong multiple choice. We need to choose random other options
