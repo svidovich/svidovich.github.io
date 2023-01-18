@@ -255,6 +255,10 @@ const addFlashcard = (front, back) => {
 
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === false) {
+    toggleScoreBar(scoreBar);
+  }
   const vocabCopy = [...vocabularyObjects];
   const flashCardContainer = document.getElementById("flashcardcontainer");
   flashCardContainer.style.gridTemplateColumns = "repeat(4, 200px)";
@@ -348,21 +352,79 @@ const chooseRandomExcept = (arr, exceptions) => {
   }
 };
 
-const colorizeQuizOption = (quizOption) => {
+const handleScoringInteraction = (quizOption, scoreBar) => {
   // Only colorize list items.
   if (quizOption.tagName.toLowerCase() === "li") {
     // For whatever reason, chrome isn't very happy about using
     // contains on classList, nor includes. Spread it to find out.
+
+    const hasBeenAnswered = Object.values(quizOption.parentNode.attributes).some(
+      (attr) => attr.name === "answeredcorrectly"
+    );
+
     if ([...quizOption.classList].includes("correctanswer")) {
       quizOption.style.backgroundColor = "green";
+      if (!hasBeenAnswered) {
+        quizOption.parentNode.setAttribute("answeredcorrectly", true);
+        incrementScoreBarScore(scoreBar, 1);
+      }
     } else {
       quizOption.style.backgroundColor = "red";
+      if (!hasBeenAnswered) {
+        quizOption.parentNode.setAttribute("answeredcorrectly", false);
+      }
     }
   }
 };
 
+const scoreBarHidden = (scoreBar) => {
+  return scoreBar.hidden === true;
+};
+
+const hideScoreBar = (scoreBar) => {
+  scoreBar.hidden = true;
+};
+
+const toggleScoreBar = (scoreBar) => {
+  if (scoreBar.hidden) {
+    scoreBar.hidden = false;
+  } else {
+    scoreBar.hidden = true;
+  }
+};
+
+const setScoreBarScore = (scoreBar, score, maxScore) => {
+  if (scoreBar.firstChild) {
+    scoreBar.removeChild(scoreBar.firstChild);
+  }
+  let barText = document.createTextNode(`${score} / ${maxScore}`);
+  scoreBar.appendChild(barText);
+  scoreBar.setAttribute("score", String(score));
+  scoreBar.setAttribute("maxscore", String(maxScore));
+};
+
+const getScoreBarScore = (scoreBar) => {
+  return Number(scoreBar.getAttribute("score"));
+};
+
+const getScoreBarMax = (scoreBar) => {
+  return Number(scoreBar.getAttribute("maxscore"));
+};
+
+const incrementScoreBarScore = (scoreBar, amount) => {
+  const currentScore = getScoreBarScore(scoreBar);
+  const scoreMax = getScoreBarMax(scoreBar);
+  setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
+};
+
 // Loads a gang of vocabulary objects as a quiz.
 const loadQuiz = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === true) {
+    toggleScoreBar(scoreBar);
+  }
+  const scoreMax = vocabularyObjects.length;
+  setScoreBarScore(scoreBar, 0, scoreMax);
   const vocabCopy = [...vocabularyObjects];
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
@@ -411,7 +473,7 @@ const loadQuiz = (vocabularyObjects) => {
     quizOptionsContainer.style.placeSelf = "center";
     // Add a listener for this quiz question to colorize its babies on click!
     quizOptionsContainer.addEventListener("click", (event) => {
-      colorizeQuizOption(event.target);
+      handleScoringInteraction(event.target, scoreBar);
     });
     // Name it correctly so that it picks up our style.
     quizOptionsContainer.className = "quizcontainer";
