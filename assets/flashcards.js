@@ -37,6 +37,21 @@ const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
 const LAST_VISIT_KEY = "lastVisit";
 
+// For a number on [0, 1], return a score-y color.
+const decimalToColor = (number) => {
+  if (number <= 0.25) {
+    return "red";
+  } else if (number > 0.25 && number <= 0.5) {
+    return "yellow";
+  } else if (number > 0.5 && number <= 0.75) {
+    return "green";
+  } else if (number > 0.75 && number <= 1.0) {
+    return "blue";
+  } else {
+    return "white";
+  }
+};
+
 const getYesterday = (date) => {
   const previous = new Date(date.getTime());
   previous.setDate(date.getDate() - 1);
@@ -500,6 +515,7 @@ const setScoreBarScore = (scoreBar, score, maxScore) => {
   }
   let barText = document.createTextNode(`${score} / ${maxScore}`);
   scoreBar.appendChild(barText);
+  scoreBar.style.color = decimalToColor(score / maxScore);
   scoreBar.setAttribute("score", String(score));
   scoreBar.setAttribute("maxscore", String(maxScore));
 };
