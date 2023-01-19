@@ -1,6 +1,10 @@
 import { FORMAT_FLASHCARDS, FORMAT_QUIZ } from "./flashcarddata.js";
 import { practiceMap } from "./flashcarddata.js";
 
+// Some globally available stuff
+export const streakDisplay = document.getElementById("streakdisplay");
+export const flashCardStyleSheet = document.getElementById("flashcardstylesheet");
+
 const PLATFORMS = Object.freeze({
   MACOS: "macos",
   IOS: "ios",
@@ -9,6 +13,9 @@ const PLATFORMS = Object.freeze({
   LINUX: "linux",
   UNKNOWN: "unknown",
 });
+
+const MOBILE_PLATFORMS = [PLATFORMS.IOS, PLATFORMS.ANDROID];
+const DESKTOP_PLATFORMS = [PLATFORMS.LINUX, PLATFORMS.WINDOWS, PLATFORMS.MACOS];
 // Stolen OS Detector. See:
 // https://stackoverflow.com/questions/38241480/detect-macos-ios-windows-android-and-linux-os-with-js
 const getOS = () => {
@@ -32,11 +39,16 @@ const getOS = () => {
   return PLATFORMS.UNKNOWN;
 };
 
+const isDesktop = () => {
+  return DESKTOP_PLATFORMS.includes(getOS());
+};
+
+const isMobile = () => {
+  return MOBILE_PLATFORMS.includes(getOS());
+};
+
 // Global for storing practice document state
 const practiceState = new Array();
-
-// Some globally available stuff
-const streakDisplay = document.getElementById("streakdisplay");
 
 // Warning about cookies
 const cookieBanner = document.getElementById("cookie-banner");
@@ -697,16 +709,32 @@ const loadQuiz = (vocabularyObjects) => {
   quizBox.addEventListener("click", (event) => checkQuizComplete(event));
 };
 
+const showDebugMessage = (message) => {
+  const debugMessage = document.getElementById("debugmessage");
+  const debugText = document.createTextNode(message);
+  debugMessage.appendChild(debugText);
+
+  debugMessage.hidden = false;
+};
+
+const setPlatformStyle = () => {
+  // const os = getOS();
+  if (isMobile()) {
+    flashCardStyleSheet.href = "flashcardsmobile.css";
+  } else if (isDesktop()) {
+    showDebugMessage("You're desktop");
+    flashCardStyleSheet.href = "flashcards.css";
+  } else {
+    showDebugMessage("I don't know what you are");
+  }
+};
+
 const main = () => {
+  setPlatformStyle();
   fillPracticeOptionsDropdown(Object.values(practiceMap));
   setStreakDisplay(streakDisplay);
 };
 
 (() => {
   main();
-  const debugMessage = document.getElementById("debugmessage");
-  const debugText = document.createTextNode(`os: ${getOS()} raw platform: ${navigator.platform}`);
-  debugMessage.appendChild(debugText);
-
-  debugMessage.hidden = false;
 })();
