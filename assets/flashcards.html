@@ -11,13 +11,17 @@
   </head>
   <body>
     <a href="../index.html">Back to Home</a>
+    <br />
+    <div id="streakdisplay"></div>
+
+    <div id="scorebar" class="scorebar" score="0" hidden></div>
     <div align="center" class="headers">
       <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
     </div>
     <div align="center">
       I call these Yugoslavian, because they represent a language shared by a lot of different people. If you go to the
-      Balkans, folks will probably know what you're talking about if you use the words here. Well? What do you say?
-      Wanna give it a try?
+      Balkans, folks will probably know what you're talking about if you use the words here. You can increase your
+      streak by returning every day and taking a quiz. Well? What do you say? Wanna give it a try?
       <br />
       If you speak one of the many fabulous languages of the Balkans and notice that a word in here isn't what you
       recognize, please feel free to reach out by
@@ -60,6 +64,16 @@
     </div>
     <div id="flashcardcontainer" class="flashcardcontainer"></div>
     <br /><br /><br /><br /><br /><br />
+    <div id="cookie-banner" class="cookie-banner">
+      <div class="cookieitem">
+        This page ( specifically ) uses cookies to stash data about your progress! I don't send anything to the cloud.
+        It's just you, this page, and a neat language.
+      </div>
+      <br />
+      <div class="cookieitem">
+        <button id="close">OK Chief!</button> | <button id="noway">Get me outta here!</button>
+      </div>
+    </div>
   </body>
   <script type="module" src="flashcards.js"></script>
   <script type="module" src="flashcarddata.js"></script>

@@ -4,6 +4,122 @@ import { practiceMap } from "./flashcarddata.js";
 // Global for storing practice document state
 const practiceState = new Array();
 
+// Some globally available stuff
+const streakDisplay = document.getElementById("streakdisplay");
+
+// Warning about cookies
+const cookieBanner = document.getElementById("cookie-banner");
+const cookieCloseButton = document.getElementById("close");
+const cookieBailButton = document.getElementById("noway");
+if (localStorage.getItem("cookieSeenFlashCards") === "shown") {
+  cookieBanner.style.display = "none";
+}
+
+cookieCloseButton.onclick = () => {
+  cookieBanner.style.display = "none";
+  localStorage.setItem("cookieSeenFlashCards", "shown");
+};
+
+cookieBailButton.onclick = () => {
+  // Send 'em home
+  location.href = "../index.html";
+};
+
+const getObjectFromLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key));
+};
+
+const putObjectToLocalStorage = (key, object) => {
+  localStorage.setItem(key, JSON.stringify(object));
+};
+
+const STREAK_COUNT_KEY = "streak";
+const STREAK_LAST_CHECK_KEY = "streakLastCheck";
+const LAST_VISIT_KEY = "lastVisit";
+
+// For a number on [0, 1], return a score-y color.
+const decimalToColor = (number) => {
+  if (number <= 0.25) {
+    return "red";
+  } else if (number > 0.25 && number <= 0.5) {
+    return "yellow";
+  } else if (number > 0.5 && number <= 0.75) {
+    return "green";
+  } else if (number > 0.75 && number <= 1.0) {
+    return "blue";
+  } else {
+    return "white";
+  }
+};
+
+const getYesterday = (date) => {
+  const previous = new Date(date.getTime());
+  previous.setDate(date.getDate() - 1);
+  return previous;
+};
+
+const dateAsObject = (date) => {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+};
+
+const getStreakForDisplay = () => {
+  return getObjectFromLocalStorage(STREAK_COUNT_KEY) || 0;
+};
+
+const setStreakDisplay = (displayElement) => {
+  while (displayElement.firstChild) {
+    displayElement.removeChild(displayElement.lastChild);
+  }
+  const streakText = document.createTextNode(`Your Streak: ${String(getStreakForDisplay())}`);
+  displayElement.appendChild(streakText);
+};
+
+const handleStreak = () => {
+  const dateToday = new Date();
+  const { year, month, day } = dateAsObject(dateToday);
+  const today = `${year}.${month}.${day}`;
+  const streakCount = getObjectFromLocalStorage(STREAK_COUNT_KEY);
+  let newStreak;
+  // If they have no streak count, they've never been here --
+  // set their streak count to 0 and set their last visit to today.
+  if (streakCount === null) {
+    newStreak = 0;
+    putObjectToLocalStorage(STREAK_COUNT_KEY, newStreak);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+    return;
+  }
+
+  const lastVisit = getObjectFromLocalStorage(LAST_VISIT_KEY);
+  const lastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY);
+  const yesterdayDate = getYesterday(dateToday);
+
+  const { year: yesterdayYear, month: yesterdayMonth, day: yesterdayDay } = dateAsObject(yesterdayDate);
+  const yesterday = `${yesterdayYear}.${yesterdayMonth}.${yesterdayDay}`;
+  // If they last visited today, we don't need to update their streak.
+
+  if (lastVisit === today || lastCheck === today) {
+    console.log("Welcome back!<3");
+    return;
+  } else if (lastVisit === yesterday && lastCheck === yesterday) {
+    // If they last visited yesterday, good job! Let's update them.
+    console.log("Congrats, you showed up again!");
+    putObjectToLocalStorage(STREAK_COUNT_KEY, streakCount + 1);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+  } else {
+    // Oops! You suck! Back to zero, zero!
+    console.log("Sending user back to 0 streak");
+    putObjectToLocalStorage(STREAK_COUNT_KEY, 0);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+  }
+};
+
 // Function for clearing the working stage
 const clearStage = () => {
   // Clear the practice state. This dumps everything from the
@@ -255,6 +371,10 @@ const addFlashcard = (front, back) => {
 
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === false) {
+    toggleScoreBar(scoreBar);
+  }
   const vocabCopy = [...vocabularyObjects];
   const flashCardContainer = document.getElementById("flashcardcontainer");
   flashCardContainer.style.gridTemplateColumns = "repeat(4, 200px)";
@@ -348,21 +468,95 @@ const chooseRandomExcept = (arr, exceptions) => {
   }
 };
 
-const colorizeQuizOption = (quizOption) => {
+const handleScoringInteraction = (quizOption, scoreBar) => {
   // Only colorize list items.
   if (quizOption.tagName.toLowerCase() === "li") {
     // For whatever reason, chrome isn't very happy about using
     // contains on classList, nor includes. Spread it to find out.
+
+    const hasBeenAnswered = Object.values(quizOption.parentNode.attributes).some(
+      (attr) => attr.name === "answeredcorrectly"
+    );
+
     if ([...quizOption.classList].includes("correctanswer")) {
       quizOption.style.backgroundColor = "green";
+      if (!hasBeenAnswered) {
+        quizOption.parentNode.setAttribute("answeredcorrectly", true);
+        incrementScoreBarScore(scoreBar, 1);
+      }
     } else {
       quizOption.style.backgroundColor = "red";
+      if (!hasBeenAnswered) {
+        quizOption.parentNode.setAttribute("answeredcorrectly", false);
+      }
     }
+  }
+};
+
+const scoreBarHidden = (scoreBar) => {
+  return scoreBar.hidden === true;
+};
+
+const hideScoreBar = (scoreBar) => {
+  scoreBar.hidden = true;
+};
+
+const toggleScoreBar = (scoreBar) => {
+  if (scoreBar.hidden) {
+    scoreBar.hidden = false;
+  } else {
+    scoreBar.hidden = true;
+  }
+};
+
+const setScoreBarScore = (scoreBar, score, maxScore) => {
+  if (scoreBar.firstChild) {
+    scoreBar.removeChild(scoreBar.firstChild);
+  }
+  let barText = document.createTextNode(`${score} / ${maxScore}`);
+  scoreBar.appendChild(barText);
+  scoreBar.style.color = decimalToColor(score / maxScore);
+  scoreBar.setAttribute("score", String(score));
+  scoreBar.setAttribute("maxscore", String(maxScore));
+};
+
+const getScoreBarScore = (scoreBar) => {
+  return Number(scoreBar.getAttribute("score"));
+};
+
+const getScoreBarMax = (scoreBar) => {
+  return Number(scoreBar.getAttribute("maxscore"));
+};
+
+const incrementScoreBarScore = (scoreBar, amount) => {
+  const currentScore = getScoreBarScore(scoreBar);
+  const scoreMax = getScoreBarMax(scoreBar);
+  setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
+};
+
+const checkQuizComplete = (event) => {
+  let complete = true;
+  [...document.getElementsByClassName("quizcontainer")].forEach((q) => {
+    if (!q.hasAttribute("answeredcorrectly")) {
+      complete = false;
+    }
+  });
+  if (complete) {
+    handleStreak();
+    setStreakDisplay(streakDisplay);
+  } else {
+    return;
   }
 };
 
 // Loads a gang of vocabulary objects as a quiz.
 const loadQuiz = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === true) {
+    toggleScoreBar(scoreBar);
+  }
+  const scoreMax = vocabularyObjects.length;
+  setScoreBarScore(scoreBar, 0, scoreMax);
   const vocabCopy = [...vocabularyObjects];
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
@@ -411,7 +605,7 @@ const loadQuiz = (vocabularyObjects) => {
     quizOptionsContainer.style.placeSelf = "center";
     // Add a listener for this quiz question to colorize its babies on click!
     quizOptionsContainer.addEventListener("click", (event) => {
-      colorizeQuizOption(event.target);
+      handleScoringInteraction(event.target, scoreBar);
     });
     // Name it correctly so that it picks up our style.
     quizOptionsContainer.className = "quizcontainer";
@@ -467,8 +661,14 @@ const loadQuiz = (vocabularyObjects) => {
   topLink.appendChild(topLinkText);
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
+  quizBox.addEventListener("click", (event) => checkQuizComplete(event));
+};
+
+const main = () => {
+  fillPracticeOptionsDropdown(Object.values(practiceMap));
+  setStreakDisplay(streakDisplay);
 };
 
 (() => {
-  fillPracticeOptionsDropdown(Object.values(practiceMap));
+  main();
 })();
