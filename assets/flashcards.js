@@ -116,9 +116,9 @@ const handleStreak = () => {
   const streakCount = getObjectFromLocalStorage(STREAK_COUNT_KEY);
   let newStreak;
   // If they have no streak count, they've never been here --
-  // set their streak count to 0 and set their last visit to today.
+  // set their streak count to 1 and set their last visit to today.
   if (streakCount === null) {
-    newStreak = 0;
+    newStreak = 1;
     putObjectToLocalStorage(STREAK_COUNT_KEY, newStreak);
     putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
     putObjectToLocalStorage(LAST_VISIT_KEY, today);
@@ -160,6 +160,8 @@ const clearStage = () => {
   stateCopy.forEach((element) => {
     element.remove();
   });
+  const scoreBar = document.getElementById("scorebar");
+  hideScoreBar(scoreBar);
 };
 
 // Button for clearing the working stage
