@@ -4,6 +4,9 @@ import { practiceMap } from "./flashcarddata.js";
 // Global for storing practice document state
 const practiceState = new Array();
 
+// Some globally available stuff
+const streakDisplay = document.getElementById("streakdisplay");
+
 // Warning about cookies
 const cookieBanner = document.getElementById("cookie-banner");
 const cookieCloseButton = document.getElementById("close");
@@ -18,7 +21,88 @@ cookieCloseButton.onclick = () => {
 };
 
 cookieBailButton.onclick = () => {
+  // Send 'em home
   location.href = "../index.html";
+};
+
+const getObjectFromLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key));
+};
+
+const putObjectToLocalStorage = (key, object) => {
+  localStorage.setItem(key, JSON.stringify(object));
+};
+
+const STREAK_COUNT_KEY = "streak";
+const STREAK_LAST_CHECK_KEY = "streakLastCheck";
+const LAST_VISIT_KEY = "lastVisit";
+
+const getYesterday = (date) => {
+  const previous = new Date(date.getTime());
+  previous.setDate(date.getDate() - 1);
+  return previous;
+};
+
+const dateAsObject = (date) => {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+};
+
+const getStreakForDisplay = () => {
+  return getObjectFromLocalStorage(STREAK_COUNT_KEY) || 0;
+};
+
+const setStreakDisplay = (displayElement) => {
+  const streakText = document.createTextNode(`Your Streak: ${String(getStreakForDisplay())}`);
+  displayElement.appendChild(streakText);
+};
+
+const handleStreak = () => {
+  const dateToday = new Date();
+  const { year, month, day } = dateAsObject(dateToday);
+  const today = `${year}.${month}.${day}`;
+  const streakCount = getObjectFromLocalStorage(STREAK_COUNT_KEY);
+  let newStreak;
+  // If they have no streak count, they've never been here --
+  // set their streak count to 0 and set their last visit to today.
+  if (streakCount === null) {
+    newStreak = 0;
+    putObjectToLocalStorage(STREAK_COUNT_KEY, newStreak);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+    return;
+  }
+
+  const lastVisit = getObjectFromLocalStorage(LAST_VISIT_KEY);
+  const lastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY);
+  const yesterdayDate = getYesterday(dateToday);
+
+  const { year: yesterdayYear, month: yesterdayMonth, day: yesterdayDay } = dateAsObject(yesterdayDate);
+  const yesterday = `${yesterdayYear}.${yesterdayMonth}.${yesterdayDay}`;
+  // If they last visited today, we don't need to update their streak.
+  console.log(`last visit ${lastVisit}`);
+  console.log(`last check ${lastCheck}`);
+  console.log(`today ${today}`);
+  console.log(`yesterday ${yesterday}`);
+  if (lastVisit === today || lastCheck === today) {
+    console.log("Welcome back!<3");
+    return;
+  } else if (lastVisit === yesterday && lastCheck === yesterday) {
+    // If they last visited yesterday, good job! Let's update them.
+    console.log("Congrats, you showed up again!");
+    putObjectToLocalStorage(STREAK_COUNT_KEY, streakCount + 1);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+  } else {
+    // Oops! You suck! Back to zero, zero!
+    console.log("Sending user back to 0 streak");
+    putObjectToLocalStorage(STREAK_COUNT_KEY, 0);
+    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+    putObjectToLocalStorage(LAST_VISIT_KEY, today);
+  }
 };
 
 // Function for clearing the working stage
@@ -550,4 +634,5 @@ const loadQuiz = (vocabularyObjects) => {
 
 (() => {
   fillPracticeOptionsDropdown(Object.values(practiceMap));
+  setStreakDisplay(streakDisplay);
 })();
