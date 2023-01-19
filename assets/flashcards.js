@@ -268,12 +268,12 @@ const displayAvailablePracticeFormats = () => {
     }
     // To give a radio button text, we need to give it a label
     const formatRadioInputLabel = document.createElement("label");
+    formatRadioInputLabel.className = "practiceformatoptionslabel";
     formatRadioInputLabel.for = format;
     // Adding text to the label requires us to create a text node
     const formatRadioInputLabelText = document.createTextNode(format);
     formatRadioInputLabel.appendChild(formatRadioInputLabelText);
     // The incoming formats are ugly: use CSS to make them beautiful
-    formatRadioInputLabel.style.textTransform = "capitalize";
     // Finally, add the radio button to the form,
     practiceFormatsRadioForm.appendChild(formatRadioInput);
     // add the label text to the label itself,
@@ -640,7 +640,7 @@ const loadQuiz = (vocabularyObjects) => {
       }
     }
     const quizQuestionHeader = document.createElement("h3");
-    quizQuestionHeader.style.placeSelf = "center";
+    quizQuestionHeader.className = "quizquestionheader";
     const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
     quizQuestionHeader.appendChild(quizQuestionText);
     quizBox.appendChild(quizQuestionHeader);

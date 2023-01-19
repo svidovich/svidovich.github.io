@@ -12,8 +12,9 @@
 
 .scorebar {
   width: 160px; /* Set the width of the sidebar */
-  height: 60px;
-  line-height: 25px;
+  height: 120px;
+  line-height: 70px;
+  font-size: 40px;
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 50%; /* Stay at the top */
@@ -44,15 +45,38 @@ h3 {
   font-size: 40px;
 }
 
+.practiceformatoptionslabel {
+  font-size: 40px;
+  text-transform: capitalize;
+}
+
+.practiceformatsradioform {
+  margin-top: 40px;
+}
+
+.scriptoptionstitletext {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
 .quizcontainer {
   list-style-type: none;
   align-items: center;
   align-content: center;
   margin-top: 4px;
   padding: 0;
-  width: 30%;
+  width: 60%;
   background-color: #f1f1f1;
   overflow: auto;
+}
+
+.quizquestionheader {
+  place-self: center;
+}
+
+.practiceoptionsdropdown {
+  font-size: 40px;
 }
 
 .quizoption {
@@ -60,6 +84,8 @@ h3 {
   color: #000;
   padding: 8px 16px;
   text-decoration: none;
+  text-align: center;
+  font-size: 50px;
   font-family: "Arvo", sans-serif;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -91,7 +117,7 @@ h3 {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 40px;
   border-radius: 4px;
   cursor: grab;
   -webkit-touch-callout: none; /* iOS Safari */

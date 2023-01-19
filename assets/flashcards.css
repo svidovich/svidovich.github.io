@@ -1,3 +1,7 @@
+.practiceformatoptionslabel {
+  text-transform: capitalize;
+}
+
 .cookie-banner {
   display: grid;
   justify-content: center;
@@ -26,7 +30,9 @@
   text-align: center;
 }
 
-/* height: 100%; Full-height: remove this if you want "auto" height */
+.quizquestionheader {
+  place-self: center;
+}
 
 h3 {
   font-family: "Arvo", sans-serif;
