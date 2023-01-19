@@ -56,6 +56,9 @@ const getStreakForDisplay = () => {
 };
 
 const setStreakDisplay = (displayElement) => {
+  while (displayElement.firstChild) {
+    displayElement.removeChild(displayElement.lastChild);
+  }
   const streakText = document.createTextNode(`Your Streak: ${String(getStreakForDisplay())}`);
   displayElement.appendChild(streakText);
 };
@@ -83,10 +86,7 @@ const handleStreak = () => {
   const { year: yesterdayYear, month: yesterdayMonth, day: yesterdayDay } = dateAsObject(yesterdayDate);
   const yesterday = `${yesterdayYear}.${yesterdayMonth}.${yesterdayDay}`;
   // If they last visited today, we don't need to update their streak.
-  console.log(`last visit ${lastVisit}`);
-  console.log(`last check ${lastCheck}`);
-  console.log(`today ${today}`);
-  console.log(`yesterday ${yesterday}`);
+
   if (lastVisit === today || lastCheck === today) {
     console.log("Welcome back!<3");
     return;
@@ -518,6 +518,21 @@ const incrementScoreBarScore = (scoreBar, amount) => {
   setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
 };
 
+const checkQuizComplete = (event) => {
+  let complete = true;
+  [...document.getElementsByClassName("quizcontainer")].forEach((q) => {
+    if (!q.hasAttribute("answeredcorrectly")) {
+      complete = false;
+    }
+  });
+  if (complete) {
+    handleStreak();
+    setStreakDisplay(streakDisplay);
+  } else {
+    return;
+  }
+};
+
 // Loads a gang of vocabulary objects as a quiz.
 const loadQuiz = (vocabularyObjects) => {
   const scoreBar = document.getElementById("scorebar");
@@ -630,9 +645,14 @@ const loadQuiz = (vocabularyObjects) => {
   topLink.appendChild(topLinkText);
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
+  quizBox.addEventListener("click", (event) => checkQuizComplete(event));
+};
+
+const main = () => {
+  fillPracticeOptionsDropdown(Object.values(practiceMap));
+  setStreakDisplay(streakDisplay);
 };
 
 (() => {
-  fillPracticeOptionsDropdown(Object.values(practiceMap));
-  setStreakDisplay(streakDisplay);
+  main();
 })();
