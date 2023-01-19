@@ -722,10 +722,7 @@ const setPlatformStyle = () => {
   if (isMobile()) {
     flashCardStyleSheet.href = "flashcardsmobile.css";
   } else if (isDesktop()) {
-    showDebugMessage("You're desktop");
     flashCardStyleSheet.href = "flashcards.css";
-  } else {
-    showDebugMessage("I don't know what you are");
   }
 };
 
