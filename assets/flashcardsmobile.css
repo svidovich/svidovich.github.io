@@ -30,7 +30,16 @@
 
 h3 {
   font-family: "Arvo", sans-serif;
-  color: red;
+}
+
+.scriptoptions,
+.practiceformatoptions {
+  height: 50px;
+  width: 50px;
+}
+
+.scriptoptionslabel {
+  font-size: 40px;
 }
 
 .quizcontainer {
