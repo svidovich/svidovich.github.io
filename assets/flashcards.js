@@ -703,7 +703,8 @@ const main = () => {
 (() => {
   main();
   const debugMessage = document.getElementById("debugmessage");
-  const debugText = document.createTextNode(`${navigator.userAgent} ${navigator.platform}`);
+  const debugText = document.createTextNode(`os: ${getOS()} raw platform: ${navigator.platform}`);
   debugMessage.appendChild(debugText);
+
   debugMessage.hidden = false;
 })();
