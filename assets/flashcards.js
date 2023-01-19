@@ -1,11 +1,54 @@
 import { FORMAT_FLASHCARDS, FORMAT_QUIZ } from "./flashcarddata.js";
 import { practiceMap } from "./flashcarddata.js";
 
+// Some globally available stuff
+export const streakDisplay = document.getElementById("streakdisplay");
+export const flashCardStyleSheet = document.getElementById("flashcardstylesheet");
+
+const PLATFORMS = Object.freeze({
+  MACOS: "macos",
+  IOS: "ios",
+  WINDOWS: "windows",
+  ANDROID: "android",
+  LINUX: "linux",
+  UNKNOWN: "unknown",
+});
+
+const MOBILE_PLATFORMS = [PLATFORMS.IOS, PLATFORMS.ANDROID];
+const DESKTOP_PLATFORMS = [PLATFORMS.LINUX, PLATFORMS.WINDOWS, PLATFORMS.MACOS];
+// Stolen OS Detector. See:
+// https://stackoverflow.com/questions/38241480/detect-macos-ios-windows-android-and-linux-os-with-js
+const getOS = () => {
+  const userAgent = window.navigator.userAgent;
+  const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
+  const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
+  const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+  const iosPlatforms = ["iPhone", "iPad", "iPod"];
+
+  if (macosPlatforms.indexOf(platform) !== -1) {
+    return PLATFORMS.MACOS;
+  } else if (iosPlatforms.indexOf(platform) !== -1) {
+    return PLATFORMS.IOS;
+  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+    return PLATFORMS.WINDOWS;
+  } else if (/Android/.test(userAgent)) {
+    return PLATFORMS.ANDROID;
+  } else if (/Linux/.test(platform)) {
+    return PLATFORMS.LINUX;
+  }
+  return PLATFORMS.UNKNOWN;
+};
+
+const isDesktop = () => {
+  return DESKTOP_PLATFORMS.includes(getOS());
+};
+
+const isMobile = () => {
+  return MOBILE_PLATFORMS.includes(getOS());
+};
+
 // Global for storing practice document state
 const practiceState = new Array();
-
-// Some globally available stuff
-const streakDisplay = document.getElementById("streakdisplay");
 
 // Warning about cookies
 const cookieBanner = document.getElementById("cookie-banner");
@@ -225,12 +268,12 @@ const displayAvailablePracticeFormats = () => {
     }
     // To give a radio button text, we need to give it a label
     const formatRadioInputLabel = document.createElement("label");
+    formatRadioInputLabel.className = "practiceformatoptionslabel";
     formatRadioInputLabel.for = format;
     // Adding text to the label requires us to create a text node
     const formatRadioInputLabelText = document.createTextNode(format);
     formatRadioInputLabel.appendChild(formatRadioInputLabelText);
     // The incoming formats are ugly: use CSS to make them beautiful
-    formatRadioInputLabel.style.textTransform = "capitalize";
     // Finally, add the radio button to the form,
     practiceFormatsRadioForm.appendChild(formatRadioInput);
     // add the label text to the label itself,
@@ -597,7 +640,7 @@ const loadQuiz = (vocabularyObjects) => {
       }
     }
     const quizQuestionHeader = document.createElement("h3");
-    quizQuestionHeader.style.placeSelf = "center";
+    quizQuestionHeader.className = "quizquestionheader";
     const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
     quizQuestionHeader.appendChild(quizQuestionText);
     quizBox.appendChild(quizQuestionHeader);
@@ -666,7 +709,25 @@ const loadQuiz = (vocabularyObjects) => {
   quizBox.addEventListener("click", (event) => checkQuizComplete(event));
 };
 
+const showDebugMessage = (message) => {
+  const debugMessage = document.getElementById("debugmessage");
+  const debugText = document.createTextNode(message);
+  debugMessage.appendChild(debugText);
+
+  debugMessage.hidden = false;
+};
+
+const setPlatformStyle = () => {
+  // const os = getOS();
+  if (isMobile()) {
+    flashCardStyleSheet.href = "flashcardsmobile.css";
+  } else if (isDesktop()) {
+    flashCardStyleSheet.href = "flashcards.css";
+  }
+};
+
 const main = () => {
+  setPlatformStyle();
   fillPracticeOptionsDropdown(Object.values(practiceMap));
   setStreakDisplay(streakDisplay);
 };

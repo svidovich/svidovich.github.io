@@ -5,8 +5,9 @@
     <meta name="description" content="Flashcards for learning Bosnian, Croatian, Serbian, etc. by Sam Vidovich" />
     <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="../style.css" />
-    <link rel="stylesheet" type="text/css" href="flashcards.css" />
+    <link rel="stylesheet" type="text/css" id="flashcardstylesheet" href="flashcards.css" />
     <link rel="icon" href="../media/favicon.png" />
+    <div></div>
     <title>Learn Yugoslavian, by Samuel Vidovich</title>
   </head>
   <body>
@@ -18,6 +19,7 @@
     <div align="center" class="headers">
       <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
     </div>
+    <div id="debugmessage" align="center" hidden></div>
     <div align="center">
       I call these Yugoslavian, because they represent a language shared by a lot of different people. If you go to the
       Balkans, folks will probably know what you're talking about if you use the words here. You can increase your
@@ -33,20 +35,20 @@
     </div>
     <br />
     <div align="center">
-      <select id="practiceoptionsdropdown" name="practiceoptionsdropdown">
+      <select class="practiceoptionsdropdown" id="practiceoptionsdropdown" name="practiceoptionsdropdown">
         <option value="" selected disabled hidden>Choose a Practice</option>
       </select>
       <div id="practiceformatscontainer" hidden></div>
       <br />
-      Text Options
+      <div class="scriptoptionstitletext">Text Options</div>
       <br />
       <form class="scriptoptionsform">
         <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptlatin" id="scriptlatin" />
-        <label for="scriptlatin">Latin</label>
+        <label class="scriptoptionslabel" for="scriptlatin">Latin</label>
         <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptcyrillic" id="scriptcyrillic" />
-        <label for="scriptcyrillic">Cyrillic</label>
+        <label class="scriptoptionslabel" for="scriptcyrillic">Cyrillic</label>
         <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptboth" id="scriptboth" />
-        <label for="scriptboth">Latin + Cyrillic</label>
+        <label class="scriptoptionslabel" for="scriptboth">Latin + Cyrillic</label>
         <input
           class="scriptoptions"
           name="scriptoptions"
@@ -55,7 +57,7 @@
           id="scriptmix"
           checked="true"
         />
-        <label for="scriptmix">Mix</label>
+        <label class="scriptoptionslabel" for="scriptmix">Mix</label>
       </form>
       <div id="choosePracticeWarning" hidden>I said choose a practice.</div>
       <br /><br />
@@ -65,14 +67,17 @@
     <div id="flashcardcontainer" class="flashcardcontainer"></div>
     <br /><br /><br /><br /><br /><br />
     <div id="cookie-banner" class="cookie-banner">
+      <hr />
       <div class="cookieitem">
         This page ( specifically ) uses cookies to stash data about your progress! I don't send anything to the cloud.
         It's just you, this page, and a neat language.
       </div>
       <br />
       <div class="cookieitem">
-        <button id="close">OK Chief!</button> | <button id="noway">Get me outta here!</button>
+        <button class="cookiebutton" id="close">OK Chief!</button> |
+        <button class="cookiebutton" id="noway">Get me outta here!</button>
       </div>
+      <hr />
     </div>
   </body>
   <script type="module" src="flashcards.js"></script>
