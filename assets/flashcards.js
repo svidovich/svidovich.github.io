@@ -129,6 +129,8 @@ const clearStage = () => {
   stateCopy.forEach((element) => {
     element.remove();
   });
+  const scoreBar = document.getElementById("scorebar");
+  hideScoreBar(scoreBar);
 };
 
 // Button for clearing the working stage
