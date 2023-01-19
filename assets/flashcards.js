@@ -4,6 +4,23 @@ import { practiceMap } from "./flashcarddata.js";
 // Global for storing practice document state
 const practiceState = new Array();
 
+// Warning about cookies
+const cookieBanner = document.getElementById("cookie-banner");
+const cookieCloseButton = document.getElementById("close");
+const cookieBailButton = document.getElementById("noway");
+if (localStorage.getItem("cookieSeenFlashCards") === "shown") {
+  cookieBanner.style.display = "none";
+}
+
+cookieCloseButton.onclick = () => {
+  cookieBanner.style.display = "none";
+  localStorage.setItem("cookieSeenFlashCards", "shown");
+};
+
+cookieBailButton.onclick = () => {
+  location.href = "../index.html";
+};
+
 // Function for clearing the working stage
 const clearStage = () => {
   // Clear the practice state. This dumps everything from the

@@ -1,3 +1,13 @@
+.cookie-banner {
+  display: grid;
+  justify-content: center;
+}
+
+.cookieitem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Stuff for quizzes below */
 
 .scorebar {
