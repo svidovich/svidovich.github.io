@@ -639,7 +639,7 @@ const loadQuiz = (vocabularyObjects) => {
         }
       }
     }
-    const quizQuestionHeader = document.createElement("h3");
+    const quizQuestionHeader = document.createElement("div");
     quizQuestionHeader.className = "quizquestionheader";
     const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
     quizQuestionHeader.appendChild(quizQuestionText);
@@ -718,7 +718,6 @@ const showDebugMessage = (message) => {
 };
 
 const setPlatformStyle = () => {
-  // const os = getOS();
   if (isMobile()) {
     flashCardStyleSheet.href = "flashcardsmobile.css";
   } else if (isDesktop()) {
