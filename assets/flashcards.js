@@ -114,6 +114,12 @@ const getStreakForDisplay = () => {
 };
 
 const setStreakDisplay = (displayElement) => {
+  const today = dateCookieStringFromDate(new Date());
+  putObjectToLocalStorage(LAST_VISIT_KEY, today);
+  if (streakIsOld()) {
+    console.log("Streak is old: Sending user back to 0 streak");
+    putObjectToLocalStorage(STREAK_COUNT_KEY, 0);
+  }
   while (displayElement.firstChild) {
     displayElement.removeChild(displayElement.lastChild);
   }
@@ -121,10 +127,31 @@ const setStreakDisplay = (displayElement) => {
   displayElement.appendChild(streakText);
 };
 
+const streakIsOld = () => {
+  const streakLastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY) || null;
+  if (!streakLastCheck) {
+    return false;
+  }
+  const dateToday = new Date();
+  const [year, month, day] = streakLastCheck.split(".");
+
+  const lastCheckAsDate = new Date(year, month - 1, day);
+  const hoursSinceLastCheck = Math.abs((lastCheckAsDate - dateToday) / (1000 * 60 * 60));
+
+  if (hoursSinceLastCheck > 48) {
+    return true;
+  }
+  return false;
+};
+
+const dateCookieStringFromDate = (date) => {
+  const { year, month, day } = dateAsObject(date);
+  return `${year}.${month}.${day}`;
+};
+
 const handleStreak = () => {
   const dateToday = new Date();
-  const { year, month, day } = dateAsObject(dateToday);
-  const today = `${year}.${month}.${day}`;
+  const today = dateCookieStringFromDate(dateToday);
   const streakCount = getObjectFromLocalStorage(STREAK_COUNT_KEY);
   let newStreak;
   // If they have no streak count, they've never been here --
@@ -136,31 +163,19 @@ const handleStreak = () => {
     putObjectToLocalStorage(LAST_VISIT_KEY, today);
     return;
   }
-
   const lastVisit = getObjectFromLocalStorage(LAST_VISIT_KEY);
   const lastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY);
   const yesterdayDate = getYesterday(dateToday);
-
-  const { year: yesterdayYear, month: yesterdayMonth, day: yesterdayDay } = dateAsObject(yesterdayDate);
-  const yesterday = `${yesterdayYear}.${yesterdayMonth}.${yesterdayDay}`;
+  const yesterday = dateCookieStringFromDate(getYesterday(dateToday));
   // If they last visited today, we don't need to update their streak.
-
-  if (lastVisit === today || lastCheck === today) {
+  if (lastCheck === today) {
     console.log("Welcome back!<3");
     return;
-  } else if (lastVisit === yesterday && lastCheck === yesterday) {
-    // If they last visited yesterday, good job! Let's update them.
-    console.log("Congrats, you showed up again!");
-    putObjectToLocalStorage(STREAK_COUNT_KEY, streakCount + 1);
-    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
-    putObjectToLocalStorage(LAST_VISIT_KEY, today);
-  } else {
-    // Oops! You suck! Back to zero, zero!
-    console.log("Sending user back to 0 streak");
-    putObjectToLocalStorage(STREAK_COUNT_KEY, 0);
-    putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
-    putObjectToLocalStorage(LAST_VISIT_KEY, today);
   }
+  console.log("Congrats, you showed up again!");
+  putObjectToLocalStorage(STREAK_COUNT_KEY, streakCount + 1);
+  putObjectToLocalStorage(STREAK_LAST_CHECK_KEY, today);
+  putObjectToLocalStorage(LAST_VISIT_KEY, today);
 };
 
 // Function for clearing the working stage

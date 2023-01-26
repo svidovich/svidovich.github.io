@@ -427,11 +427,19 @@ export const NUMBERS_5_to_100 = new VocabularySection("Numbers 5 to 100", "numbe
   new VocabularyObject("one-hundred", "sto"),
 ]);
 
+const _DEBUG_SECTION = new VocabularySection("Debug", "debug", [
+  new VocabularyObject("0", "0"),
+  new VocabularyObject("1", "1"),
+  new VocabularyObject("2", "2"),
+  new VocabularyObject("3", "3"),
+]);
+
 // Generates a mapping like
 // {
 //   <object.unfriendlyName>: object,...
 // }
 export const practiceMap = [
+  // _DEBUG_SECTION,
   ANIMALS,
   COLORS,
   FAMILY,
