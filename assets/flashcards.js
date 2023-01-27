@@ -288,7 +288,6 @@ const displayAvailablePracticeFormats = () => {
     // Adding text to the label requires us to create a text node
     const formatRadioInputLabelText = document.createTextNode(format);
     formatRadioInputLabel.appendChild(formatRadioInputLabelText);
-    // The incoming formats are ugly: use CSS to make them beautiful
     // Finally, add the radio button to the form,
     practiceFormatsRadioForm.appendChild(formatRadioInput);
     // add the label text to the label itself,
@@ -714,6 +713,9 @@ const loadQuiz = (vocabularyObjects) => {
     practiceState.push(quizOptionsContainer);
     practiceState.push(endnl);
   });
+  // NOTE: Since you wrote this while you were drunk, you induced bad state,
+  // because the link is in the quiz box. Luckily it'll never actually cause
+  // a quiz completion, but it's still shitty code.
   const topLink = document.createElement("a");
   const topLinkText = document.createTextNode("Back to Top");
   topLink.href = "#";
