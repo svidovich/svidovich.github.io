@@ -399,14 +399,20 @@ const addFlashcard = (front, back) => {
         const textContent = document.createTextNode(textContentItem);
         const lineBreak = document.createElement("br");
         // and add our newly created elements to the card
-        cardFace.style.textSize = "10px";
-        cardFace.style.lineHeight = "75px";
+        const mobile = isMobile();
+        // NOTE: What's the better pattern for this...?
+        cardFace.style.lineHeight = mobile ? "5em" : "75px";
         cardFace.appendChild(textContent);
         cardFace.appendChild(lineBreak);
       });
     } else {
       textContentArray.forEach((textContentItem) => {
         const textContent = document.createTextNode(textContentItem);
+        // If the text is long, shrink it
+        if (textContentItem.length >= 12) {
+          const cardFaceMaxFontSize = isMobile() ? 40 : 20;
+          cardFace.style.fontSize = `${cardFaceMaxFontSize - (textContentItem.length - 12)}px`;
+        }
         cardFace.appendChild(textContent);
       });
     }
@@ -436,7 +442,9 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   }
   const vocabCopy = [...vocabularyObjects];
   const flashCardContainer = document.getElementById("flashcardcontainer");
-  flashCardContainer.style.gridTemplateColumns = "repeat(4, 200px)";
+  const cardCountPerRow = isMobile() ? 2 : 4;
+  const rowHeight = isMobile() ? "40vw" : "200px";
+  flashCardContainer.style.gridTemplateColumns = `repeat(${cardCountPerRow}, ${rowHeight})`;
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
 
