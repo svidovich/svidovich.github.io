@@ -409,6 +409,10 @@ const addFlashcard = (front, back) => {
       textContentArray.forEach((textContentItem) => {
         const textContent = document.createTextNode(textContentItem);
         // If the text is long, shrink it
+        // TODO: We're hardcoding styles here. I don't know what best
+        // practices are, or what to do about it, and I'm not happy
+        // about it. I think I could make this dynamic somehow, but I
+        // am not sure how to read styles. Let's look into this later.
         if (textContentItem.length >= 12) {
           const cardFaceMaxFontSize = isMobile() ? 40 : 20;
           cardFace.style.fontSize = `${cardFaceMaxFontSize - (textContentItem.length - 12)}px`;
