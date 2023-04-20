@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <meta name="description" content="Jumply: Jump! Or else..." />
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="icon" href="../media/favicon.png" />
+    <title>Jumply! Jump!</title>
+  </head>
+
+  <body>
+    <div align="left">
+      <a href="index.html"><<< Home</a> |
+      <a href="https://github.com/svidovich/svidovich.github.io/blob/master/games/jumply/jumply.js">Source >>></a>
+    </div>
+    <center>
+      <canvas style="border: 1px solid black" id="mainCanvas" height="600" width="400">Failed to render.</canvas>
+      <br />
+      <kbd><-</kbd> & <kbd>↓</kbd>: Move Left-to-Right<br />
+      <kbd>Space</kbd>: Jump!
+
+      <br />
+      <br /><br />
+      <div id="cookie-banner" class="cookie-banner">
+        This page ( specifically ) uses cookies to stash game data, so that you can come back and your catapult upgrades
+        won't be gone!<br />
+        <button id="close">OK Chief!</button> | <button id="noway">Get me outta here!</button>
+      </div>
+    </center>
+    <script type="module" src="jumply/jumply.js"></script>
+    <script type="module" src="common.js"></script>
+    <script type="module" src="constants.js"></script>
+  </body>
+</html>

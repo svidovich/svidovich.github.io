@@ -1,9 +1,23 @@
 export const name = "common";
 
+// Wrapper for general interaction with local storage
+export const getObjectFromLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key));
+};
+
+export const putObjectToLocalStorage = (key, object) => {
+  localStorage.setItem(key, JSON.stringify(object));
+};
+
 // For computing the distance between two points
 // A and B, each with a component x and a component y
 export const distance = (A, B) => {
   return Math.sqrt(Math.pow(B.y - A.y, 2) + Math.pow(B.x - A.x, 2));
+};
+
+export const drawSquare = (canvasContext, x, y, s) => {
+  canvasContext.beginPath();
+  canvasContext.strokeRect(x, y, s, s);
 };
 
 export const drawCircle = (canvasContext, x, y, r) => {
