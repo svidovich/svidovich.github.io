@@ -466,6 +466,30 @@ export const UNIT_10_VOCAB = new VocabularySection('"Teach Yourself" Unit 10 Voc
   new VocabularyObject("Year", "Godina"),
 ]);
 
+export const UNIT_19_VOCAB = new VocabularySection('"Teach Yourself" Unit 19 Vocab', "teachYourselfUnit19Vocab", [
+  new VocabularyObject("Welcome", "Dobro Došli"),
+  new VocabularyObject("Relative", "Rođaka"),
+  new VocabularyObject("To bother", "Smetati"),
+  new VocabularyObject("To interrupt", "Prekidati"),
+  new VocabularyObject("Conversation", "Razgovor"),
+  new VocabularyObject("Cooperation", "Saradnja"),
+  new VocabularyObject("To gather", "Sakupiti"),
+  new VocabularyObject("Interested", "Zainteresovan"),
+  new VocabularyObject("Party", "Stranka"),
+  new VocabularyObject("'All the best!'", "Sve Najbolje!"),
+  new VocabularyObject("To apologize", "Izviniti se"),
+  new VocabularyObject("At the moment", "trenutno"),
+  new VocabularyObject("To meet", "Sastati se"),
+  new VocabularyObject("A bit ago", "Malopre"),
+  new VocabularyObject("To receive", "Primati"),
+  new VocabularyObject("Special", "Naročit"),
+  new VocabularyObject("To open", "Otvoriti"),
+  new VocabularyObject("OK!", "Važi!"),
+  new VocabularyObject("To win", "Pobediti"),
+  new VocabularyObject("Certainly", "Svakako"),
+  new VocabularyObject("Journey", "Put"),
+]);
+
 export const ANIMALS = new VocabularySection("Animals", "animals", [
   new VocabularyObject("Animal", "Životinja"),
   new VocabularyObject("Badger", "Jazavac"),
@@ -636,6 +660,7 @@ export const practiceMap = [
   UNIT_8_VOCAB,
   UNIT_9_VOCAB,
   UNIT_10_VOCAB,
+  UNIT_19_VOCAB,
   KAD_SU_BILI_1,
 ].reduce((newObject, practiceObject) => {
   newObject[practiceObject.unfriendlyName] = practiceObject;
