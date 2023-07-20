@@ -80,7 +80,7 @@ class Input {
         this.right = this.changeInputByEventType(eventType);
         break;
       case InputKeys.space:
-        this.jumping = this.changeInputByEventType(eventType);
+        this.space = this.changeInputByEventType(eventType);
         break;
     }
   };
@@ -93,6 +93,7 @@ class Character {
     this.color = color || "rgb(67, 179, 174)";
     this.x = x;
     this.y = y;
+    this.jumping = false;
     this.queueDeletion = false;
   }
 
@@ -127,7 +128,13 @@ class Character {
   }
 
   draw(canvasContext) {
+    const originalStyle = canvasContext.strokeStyle;
+    let oldWidth = canvasContext.lineWidth;
+    canvasContext.strokeStyle = this.color;
+    canvasContext.lineWidth = 3;
     drawSquare(canvasContext, this.x, this.y, this.size);
+    canvasContext.strokeStyle = originalStyle;
+    canvasContext.lineWidth = oldWidth;
   }
 }
 
@@ -136,6 +143,7 @@ class Player extends Character {
     super(x, y, size, color);
     this.health = 3;
     this.input = new Input();
+    this.jumpTimer;
   }
   update(t) {
     if (!t) {
@@ -147,15 +155,23 @@ class Player extends Character {
     if (this.input.left === true) {
       this.moveBy(-this.speed * t);
     }
+    if (this.input.space === true && this.jumping === false) {
+      console.log("NOW JUMPING");
+      this.jumpTimer = new Date().getTime();
+      this.jumping = true;
+    }
+    if (this.jumping === true) {
+      const tStep = new Date().getTime() - this.jumpTimer;
+      this.moveBy(tStep, -Math.pow(tStep - this.speed, 2) + this.speed);
+    }
   }
 }
 
-let playerCharacter = new Player(5, canvasHeight - PLAYERSIZE, PLAYERSIZE, "rgb(255,0,0)");
+let playerCharacter = new Player(5, canvasHeight - PLAYERSIZE, PLAYERSIZE, "rgb(255,0,255)");
 
-const update = (timestamp) => {
+const update = (t) => {
   globalContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-  playerCharacter.update(1);
+  playerCharacter.update(t);
   playerCharacter.draw(globalContext);
 };
 
@@ -165,7 +181,8 @@ const update = (timestamp) => {
   const main = (hiResTimeStamp) => {
     animationFrameRequestToken = window.requestAnimationFrame(main);
     const tsNow = new Date().getTime();
-    update(tsNow);
+    const timeDiffMs = (tsNow - lastTime) / 10;
+    update(timeDiffMs);
     lastTime = tsNow;
   };
   main();
