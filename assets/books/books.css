@@ -1,0 +1,46 @@
+.book {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: larger;
+}
+
+.bookcase {
+  display: flex;
+  flex-direction: column;
+  border-color: black;
+  border-style: double solid;
+  border-width: 7px 4px;
+  border-radius: 7px;
+  padding: 7px;
+  height: 90%;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.workspaceframe {
+  border-color: black;
+  border-style: double solid;
+  border-width: 7px 4px;
+  border-radius: 7px;
+  padding: 7px;
+}
+
+.workspacecanvas {
+  border: 1px solid black;
+  margin: auto;
+  display: block;
+  /* width: 99%;
+  height: 99%; */
+}
+
+a {
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+}
+
+a:visited {
+  color: black;
+}
+
+a:hover {
+  color: #43b3ae;
+}
