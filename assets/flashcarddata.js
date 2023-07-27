@@ -496,6 +496,44 @@ export const UNIT_19_VOCAB = new VocabularySection('"Teach Yourself" Unit 19 Voc
   new VocabularyObject("From where...", "Odakle"),
 ]);
 
+export const UNIT_20_VOCAB = new VocabularySection('"Teach Yourself" Unit 20 Vocab', "teachYourselfUnit20Vocab", [
+  new VocabularyObject("Dormitory", "Studentski dom"),
+  new VocabularyObject("Since", "Otkad"),
+  new VocabularyObject("Not at all", "Uopšte ne"),
+  new VocabularyObject("To move", "Seliti se"),
+  new VocabularyObject("Studies", "Studije"),
+  new VocabularyObject("To teach", "Predavati"),
+  new VocabularyObject("Never-the-less", "Ipak"),
+  new VocabularyObject("To earn", "Zaraditi"),
+  new VocabularyObject("Rent", "Kirija"),
+  new VocabularyObject("Private", "Privatan"),
+  new VocabularyObject("Sufficient", "Dovoljan"),
+  new VocabularyObject("Offer", "Ponuda"),
+  new VocabularyObject("To be friends", "Družiti se"),
+  new VocabularyObject("Advertisement", "Oglas"),
+  new VocabularyObject("In advance", "Unapred"),
+  new VocabularyObject("The very center", "Uži centar"),
+  new VocabularyObject("Narrow", "Uzak"),
+  new VocabularyObject("Furnished", "Namešten"),
+  new VocabularyObject("Central heating", "Centralno grejanje"),
+  new VocabularyObject("Intercom", "Interfon"),
+  new VocabularyObject("Advantage", "Prednost"),
+  new VocabularyObject("Wide", "Širok"),
+  new VocabularyObject("Empty", "Prazan"),
+  new VocabularyObject("Space", "Prostor"),
+  new VocabularyObject("By agreement", "Po dogovoru"),
+  new VocabularyObject("Big-ish flat", "Veći stan"),
+  new VocabularyObject("Small-ish flat", "Manji stan"),
+  new VocabularyObject("Terrace", "Terasa"),
+  new VocabularyObject("Translation", "Prevod"),
+  new VocabularyObject("Experience", "Iskustvo"),
+  new VocabularyObject("Grammar", "Gramatika"),
+  new VocabularyObject("Age", "Uzrast"),
+  new VocabularyObject("Adult", "Odrastao"),
+  new VocabularyObject("Intense", "Intenzivan"),
+  new VocabularyObject("Course", "Kurs"),
+]);
+
 export const ANIMALS = new VocabularySection("Animals", "animals", [
   new VocabularyObject("Animal", "Životinja"),
   new VocabularyObject("Badger", "Jazavac"),
@@ -667,6 +705,7 @@ export const practiceMap = [
   UNIT_9_VOCAB,
   UNIT_10_VOCAB,
   UNIT_19_VOCAB,
+  UNIT_20_VOCAB,
   KAD_SU_BILI_1,
 ].reduce((newObject, practiceObject) => {
   newObject[practiceObject.unfriendlyName] = practiceObject;
