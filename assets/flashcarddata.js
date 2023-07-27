@@ -488,6 +488,12 @@ export const UNIT_19_VOCAB = new VocabularySection('"Teach Yourself" Unit 19 Voc
   new VocabularyObject("To win", "Pobediti"),
   new VocabularyObject("Certainly", "Svakako"),
   new VocabularyObject("Journey", "Put"),
+  new VocabularyObject("To depend on", "Zavisiti od"),
+  new VocabularyObject("To be late", "Zakasniti"),
+  new VocabularyObject("Of course", "To se zna"),
+  new VocabularyObject("To bump into", "Sresti se"),
+  new VocabularyObject("With myself", "Kod sebe"),
+  new VocabularyObject("From where...", "Odakle"),
 ]);
 
 export const ANIMALS = new VocabularySection("Animals", "animals", [
