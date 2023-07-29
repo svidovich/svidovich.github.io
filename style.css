@@ -1,55 +1,54 @@
 .hoverable-image {
-    transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .hoverable-image:hover {
-    transform: scale(1.1)
+  transform: scale(1.1);
 }
 
 .headers {
-    font-family: 'Arvo', sans-serif;
+  font-family: "Arvo", sans-serif;
 }
 
 a {
-    color: black;
-    text-decoration: underline;
+  color: black;
+  text-decoration: underline;
 }
 
 #backingCanvas {
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    touch-action: none;
-    width: calc(100% - 1px);
-    height: calc(100% - 1px);
-    top:0;
-    left:0;
-    z-index: -1;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  touch-action: none;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .containers {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
 .grid-container {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-
 .descriptions {
-    border-radius: 5px;
-    font-family: 'Arvo', sans-serif;
+  border-radius: 5px;
+  font-family: "Arvo", sans-serif;
 }
 
 a:hover {
-    color: #43b3ae;
+  color: #43b3ae;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .row {
@@ -71,10 +70,27 @@ a:hover {
 }
 
 .row * {
-    padding: 8px;
-    border-radius: 6px;
+  padding: 8px;
+  border-radius: 6px;
 }
 
 .gridcontent {
-    box-shadow: 3px 3px #43b3ae;
+  box-shadow: 3px 3px #43b3ae;
+}
+
+.phrasetable {
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  text-align: center;
+}
+
+.phrasetable tr,
+td {
+  padding: 10px;
+  font-size: 1.5vmax;
+}
+
+.phrasetable tr:nth-child(even) {
+  background-color: #e0faf9;
 }
