@@ -572,6 +572,30 @@ export const COLORS = new VocabularySection("Colors", "colors", [
   new VocabularyObject("Yellow", "Žut"),
 ]);
 
+export const CRAFT_TOOLS = new VocabularySection("Craft Tools", "crafttools", [
+  new VocabularyObject("Anvil", "Nakovanj"),
+  new VocabularyObject("Auger", "Svrdlo"),
+  new VocabularyObject("Awl", "Šilo"),
+  new VocabularyObject("Bellows", "Meh"),
+  new VocabularyObject("Clothing iron", "Metalna pegla"),
+  new VocabularyObject("File", "Turpija"),
+  new VocabularyObject("Hammer", "Čekić"),
+  new VocabularyObject("Hoe", "Motika"),
+  new VocabularyObject("Hole punch", "Zumba"),
+  new VocabularyObject("Mallet", "Bat"),
+  new VocabularyObject("Needle", "Igle"),
+  new VocabularyObject("Pattern", "Šablon za krojenje"),
+  new VocabularyObject("Pliers", "Klešta"),
+  new VocabularyObject("Plow", "Plug"),
+  new VocabularyObject("Rake", "Grabulje"),
+  new VocabularyObject("Scissors", "Makaze"),
+  new VocabularyObject("Scythe", "Kosa"),
+  new VocabularyObject("Shovel", "Lopata"),
+  new VocabularyObject("Thimble", "Naprstak"),
+  new VocabularyObject("Tool", "Alat"),
+  new VocabularyObject("Workshop", "Radionica"),
+]);
+
 export const FAMILY = new VocabularySection("Family", "family", [
   new VocabularyObject("Ancestor ( female )", "Pređa"),
   new VocabularyObject("Ancestor ( male )", "Predak"),
@@ -627,6 +651,15 @@ export const INDEFINITE_PRONOUNS = new VocabularySection("Indefinite Pronouns", 
   new VocabularyObject("To somewhere", "Nekuda"),
   new VocabularyObject("To nowhere", "Nikuda"),
   new VocabularyObject("To anywhere", "Ikuda"),
+]);
+
+export const JEWELRY = new VocabularySection("Jewelry", "jewelry", [
+  new VocabularyObject("Bracelet", "Narukvica"),
+  new VocabularyObject("Brooch", "Broš"),
+  new VocabularyObject("Jewelry", "Nakita"),
+  new VocabularyObject("Necklace", "Ogrlica"),
+  new VocabularyObject("Pin", "Špala"),
+  new VocabularyObject("Ring", "Prsten"),
 ]);
 
 export const NUMBERS_5_to_100 = new VocabularySection("Numbers 5 to 100", "numbers5To100", [
@@ -694,7 +727,9 @@ export const practiceMap = [
   // _DEBUG_SECTION,
   ANIMALS,
   COLORS,
+  CRAFT_TOOLS,
   FAMILY,
+  JEWELRY,
   INDEFINITE_PRONOUNS,
   NUMBERS_5_to_100,
   UNIT_4_VOCAB,
