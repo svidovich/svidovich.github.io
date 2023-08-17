@@ -114,33 +114,9 @@ export const latinToJugoslavCyrillic = (inputString) => {
 };
 
 // For your copy-pasting pleasure
-// A a
-// B b
-// V v
-// G g
-// D d
 // Đ đ
-// E e
 // Ž ž
-// Z z
-// I i
-// J j
-// K k
-// L l
-// Lj lj
-// M m
-// N n
-// Nj nj
-// O o
-// P p
-// R r
-// S s
-// T t
 // Ć ć
-// U u
-// F f
-// H h
-// C c
 // Č č
 // Dž dž
 // Š š
@@ -712,6 +688,38 @@ const KAD_SU_BILI_1 = new VocabularySection("Kad Su Bili Dokoni, Ch. 1", "kadSuB
   new VocabularyObject("Window", "Prozor"),
 ]);
 
+const REGIONALISMS_KORDUN = new VocabularySection("Regionalisms: Kordun", "regionalismsKordun", [
+  new VocabularyObject("Apron", "Vertun"),
+  new VocabularyObject("Bewitch", "Ocoprati"),
+  new VocabularyObject("Chestnut", "Gorać"),
+  new VocabularyObject("Closed", "Rešt"),
+  new VocabularyObject("Curtain", "Firanga"),
+  new VocabularyObject("Feathered Blanket", "Blazina"),
+  new VocabularyObject("Flax", "Keten"),
+  new VocabularyObject("Foundation", "Podumjenta"),
+  new VocabularyObject("Frying Pan", "Tava"),
+  new VocabularyObject("Hemp Thread", "Pređa"),
+  new VocabularyObject("Hemp Thread", "Pređa"),
+  new VocabularyObject("Housewife", "Planinka"),
+  new VocabularyObject("Kitchenette", "Pecana"),
+  new VocabularyObject("Ladders", "Lotra"),
+  new VocabularyObject("Little", "Zeru"),
+  new VocabularyObject("Milk", "Varenika"),
+  new VocabularyObject("Plantation", "Padik"),
+  new VocabularyObject("Rough Land", "Prljuga"),
+  new VocabularyObject("Saw", "Žara"),
+  new VocabularyObject("Sheet", "Plahta"),
+  new VocabularyObject("Skirt", "Roklje"),
+  new VocabularyObject("Testicle", "Stucka"),
+  new VocabularyObject("Towel", "Ručinik"),
+  new VocabularyObject("Turkey Polenta", "Žganjci"),
+  new VocabularyObject("Wallet", "Šajtog"),
+  new VocabularyObject("Water Vessel", "Kabao"),
+  new VocabularyObject("Water Well", "Šternja"),
+  new VocabularyObject("Wool Blanket", "Biljac"),
+  new VocabularyObject("Wool Hat", "Škiljak"),
+]);
+
 const _DEBUG_SECTION = new VocabularySection("Debug", "debug", [
   new VocabularyObject("0", "0"),
   new VocabularyObject("1", "1"),
@@ -742,6 +750,7 @@ export const practiceMap = [
   UNIT_19_VOCAB,
   UNIT_20_VOCAB,
   KAD_SU_BILI_1,
+  REGIONALISMS_KORDUN,
 ].reduce((newObject, practiceObject) => {
   newObject[practiceObject.unfriendlyName] = practiceObject;
   return newObject;
