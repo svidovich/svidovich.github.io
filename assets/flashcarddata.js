@@ -121,6 +121,49 @@ export const latinToJugoslavCyrillic = (inputString) => {
 // Dž dž
 // Š š
 
+export const ADJECTIVES_1 = new VocabularySection("Adjectives I", "adjectives1", [
+  new VocabularyObject("Good", "Dobar"),
+  new VocabularyObject("New", "Nov"),
+  new VocabularyObject("First", "Prv"),
+  new VocabularyObject("Last", "Poslednji"),
+  new VocabularyObject("Long", "Dug"),
+  new VocabularyObject("Own", "Svoj"),
+  new VocabularyObject("Other", "Drug"),
+  new VocabularyObject("Old", "Star"),
+  new VocabularyObject("Right", "Desni"),
+  new VocabularyObject("Big", "Velik"),
+  new VocabularyObject("High", "Visok"),
+  new VocabularyObject("Different", "Razni"),
+  new VocabularyObject("Small", "Mali"),
+  new VocabularyObject("Next", "Sljedeći"),
+  new VocabularyObject("Early", "Rano"),
+  new VocabularyObject("Young", "Mladi"),
+  new VocabularyObject("Important", "Važan"),
+]);
+
+export const ADJECTIVES_2 = new VocabularySection("Adjectives II", "adjectives2", [
+  new VocabularyObject("Few", "Nekolicini"),
+  new VocabularyObject("Public", "Državni"),
+  new VocabularyObject("Bad", "Loš"),
+  new VocabularyObject("Able", "Sposoban"),
+  new VocabularyObject("Specific", "Naročit"),
+  new VocabularyObject("General", "Opšti"),
+  new VocabularyObject("Certain", "Siguran"),
+  new VocabularyObject("Free", "Slobod"),
+  new VocabularyObject("Open", "Otvoren"),
+  new VocabularyObject("Whole", "Ceo"),
+  new VocabularyObject("Short", "Kratak"),
+  new VocabularyObject("Easy", "Lak"),
+  new VocabularyObject("Strong", "Jak"),
+  new VocabularyObject("Special", "Poseban"),
+  new VocabularyObject("Clear", "Jasan"),
+  new VocabularyObject("Recent", "Nedavan"),
+  new VocabularyObject("Late", "Kasan"),
+  new VocabularyObject("Single", "Jedan"),
+  new VocabularyObject("Medical", "Medicinski"),
+  new VocabularyObject("Central", "Centralan"),
+]);
+
 export const UNIT_4_VOCAB = new VocabularySection('"Teach Yourself" Unit 4 Vocab', "teachYourselfUnit4Vocab", [
   new VocabularyObject("Apple", "Jabuka"),
   new VocabularyObject("Blueberry", "Borovnica"),
