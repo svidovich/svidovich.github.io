@@ -26,13 +26,27 @@ class VocabularySection {
   }
 
   get asObject() {
+    const vocabularyObjects = new Array();
+    this.vocabularyObjects.forEach((obj) => {
+      vocabularyObjects.push(obj.asObject);
+    });
     return {
       friendlyName: this.friendlyName,
       unfriendlyName: this.unfriendlyName,
-      vocabularyObjects: [...this.vocabularyObjects].map((obj) => {
-        obj.asObject;
-      }),
+      vocabularyObjects: vocabularyObjects,
     };
+  }
+
+  get asJSON() {
+    return JSON.stringify(this.asObject.vocabularyObjects);
+  }
+
+  get asCSV() {
+    let textCSV = `english,latin,cyrillic\n`;
+    this.vocabularyObjects.forEach((vocabularyObject) => {
+      textCSV = textCSV.concat(`${vocabularyObject.english},${vocabularyObject.latin},${vocabularyObject.cyrillic}\n`);
+    });
+    return textCSV;
   }
 }
 
@@ -140,6 +154,8 @@ export const ADJECTIVES_1 = new VocabularySection("Adjectives I", "adjectives1",
   new VocabularyObject("Young", "Mladi"),
   new VocabularyObject("Important", "Važan"),
 ]);
+
+console.log(ADJECTIVES_1.asCSV);
 
 export const ADJECTIVES_2 = new VocabularySection("Adjectives II", "adjectives2", [
   new VocabularyObject("Few", "Nekolicini"),
