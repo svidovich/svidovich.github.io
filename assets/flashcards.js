@@ -5,6 +5,37 @@ import { practiceMap } from "./flashcarddata.js";
 export const streakDisplay = document.getElementById("streakdisplay");
 export const flashCardStyleSheet = document.getElementById("flashcardstylesheet");
 
+const loadAudio = (path) => {
+  const audio = new Audio(path);
+  return audio;
+};
+
+export const SOUNDS = {
+  pageFlip: "../media/page_turn.mp3",
+  fart: "../media/fart_1.mp3",
+  maraca: "../media/maraca.mp3",
+  whoosh: "../media/whoosh.mp3",
+};
+
+function playSound(soundName) {
+  // We lazily load sounds by only fetching them when
+  // they're needed instead of loading all of our sound
+  // effects with the page. We mutate the SOUNDS object
+  // to contain audio tracks as we load them.
+  try {
+    const soundEntry = SOUNDS[soundName];
+    if (typeof soundEntry === "string") {
+      const sound = loadAudio(soundEntry);
+      SOUNDS[soundName] = sound;
+      sound.play();
+    } else {
+      soundEntry.play();
+    }
+  } catch (error) {
+    console.log(`Failed to play ${soundName}: ${error}`);
+  }
+}
+
 const PLATFORMS = Object.freeze({
   MACOS: "macos",
   IOS: "ios",
@@ -68,6 +99,10 @@ cookieBailButton.onclick = () => {
   location.href = "../index.html";
 };
 
+const localStorageKeyExists = (key) => {
+  return localStorage.getItem(key) !== null;
+};
+
 const getObjectFromLocalStorage = (key) => {
   return JSON.parse(localStorage.getItem(key));
 };
@@ -76,9 +111,46 @@ const putObjectToLocalStorage = (key, object) => {
   localStorage.setItem(key, JSON.stringify(object));
 };
 
+const putValueToLocalStorage = (key, value) => {
+  localStorage.setItem(key, value);
+};
+
+const SOUND_EFFECT_KEY = "soundOn";
 const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
 const LAST_VISIT_KEY = "lastVisit";
+
+// NOTE: By default, we play sound.
+if (!localStorageKeyExists(SOUND_EFFECT_KEY)) {
+  putValueToLocalStorage(SOUND_EFFECT_KEY, "true");
+}
+
+const shouldPlaySound = () => {
+  return localStorage.getItem(SOUND_EFFECT_KEY) === "true";
+};
+
+const toggleSound = () => {
+  if (shouldPlaySound()) {
+    putValueToLocalStorage(SOUND_EFFECT_KEY, "false");
+  } else {
+    putValueToLocalStorage(SOUND_EFFECT_KEY, "true");
+  }
+};
+
+const soundToggleSwitch = document.getElementById("soundtoggle");
+const soundToggleSwitchMessage = document.getElementById("soundtogglestatusmessage");
+const setSoundToggleSwitchMessage = () => {
+  const shouldPlay = shouldPlaySound();
+  soundToggleSwitchMessage.style = shouldPlay ? `color: green;` : `color: red;`;
+  soundToggleSwitchMessage.textContent = shouldPlay ? `ON` : `OFF`;
+};
+// Put this in global scope so that the sound toggler reflects our cookie
+setSoundToggleSwitchMessage();
+
+soundToggleSwitch.addEventListener("click", () => {
+  toggleSound();
+  setSoundToggleSwitchMessage();
+});
 
 // For a number on [0, 1], return a score-y color.
 const decimalToColor = (number) => {
@@ -179,9 +251,12 @@ const handleStreak = () => {
 };
 
 // Function for clearing the working stage
-const clearStage = () => {
+const clearStage = (callerPlaySound) => {
   // Clear the practice state. This dumps everything from the
   // array while returning it as a copy.
+  if (shouldPlaySound() && callerPlaySound) {
+    playSound("whoosh");
+  }
   const stateCopy = practiceState.splice(0, practiceState.length);
   // Drop all of the elements from the DOM.
   stateCopy.forEach((element) => {
@@ -194,7 +269,7 @@ const clearStage = () => {
 // Button for clearing the working stage
 const clearStageButton = document.getElementById("clearstagebutton");
 clearStageButton.addEventListener("click", () => {
-  clearStage();
+  clearStage(true);
 });
 
 const insertPracticeFormatForm = () => {};
@@ -206,9 +281,12 @@ const loadStage = () => {
   const choosePracticeWarning = document.getElementById("choosePracticeWarning");
   const selectedPractice = practiceOptionsDropDown.value;
   if (selectedPractice) {
+    if (shouldPlaySound()) {
+      playSound("maraca");
+    }
     choosePracticeWarning.hidden = true;
     // Make sure we have a clean slate to work with.
-    clearStage();
+    clearStage(false);
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
     const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
@@ -554,11 +632,17 @@ const handleScoringInteraction = (quizOption, scoreBar) => {
       if (!hasBeenAnswered) {
         quizOption.parentNode.setAttribute("answeredcorrectly", true);
         incrementScoreBarScore(scoreBar, 1);
+        if (shouldPlaySound()) {
+          playSound("pageFlip");
+        }
       }
     } else {
       quizOption.style.backgroundColor = "red";
       if (!hasBeenAnswered) {
         quizOption.parentNode.setAttribute("answeredcorrectly", false);
+        if (shouldPlaySound()) {
+          playSound("fart");
+        }
       }
     }
   }
