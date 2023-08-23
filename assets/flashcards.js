@@ -326,6 +326,10 @@ const loadStage = () => {
   }
 };
 
+const csvDownloadIconImage = document.getElementById("csvdownloadicon");
+const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
+const prepareSectionDownloadOptions = (sectionObject) => {};
+
 const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
 practiceOptionsDropDown.addEventListener("change", () => {
   displayAvailablePracticeFormats();
