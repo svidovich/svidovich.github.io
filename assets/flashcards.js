@@ -15,9 +15,11 @@ export const SOUNDS = {
   fart: "../media/fart_1.mp3",
   maraca: "../media/maraca.mp3",
   whoosh: "../media/whoosh.mp3",
+  whoosh2: "../media/whoosh2.mp3",
+  tap: "../media/tap.mp3",
 };
 
-function playSound(soundName) {
+function playSound(soundName, volume) {
   // We lazily load sounds by only fetching them when
   // they're needed instead of loading all of our sound
   // effects with the page. We mutate the SOUNDS object
@@ -27,8 +29,10 @@ function playSound(soundName) {
     if (typeof soundEntry === "string") {
       const sound = loadAudio(soundEntry);
       SOUNDS[soundName] = sound;
+      sound.volume = volume || 1;
       sound.play();
     } else {
+      soundEntry.volume = volume || 1;
       soundEntry.play();
     }
   } catch (error) {
@@ -255,7 +259,7 @@ const clearStage = (callerPlaySound) => {
   // Clear the practice state. This dumps everything from the
   // array while returning it as a copy.
   if (shouldPlaySound() && callerPlaySound) {
-    playSound("whoosh");
+    playSound("whoosh", 0.6);
   }
   const stateCopy = practiceState.splice(0, practiceState.length);
   // Drop all of the elements from the DOM.
@@ -282,7 +286,7 @@ const loadStage = () => {
   const selectedPractice = practiceOptionsDropDown.value;
   if (selectedPractice) {
     if (shouldPlaySound()) {
-      playSound("maraca");
+      playSound("maraca", 0.6);
     }
     choosePracticeWarning.hidden = true;
     // Make sure we have a clean slate to work with.
@@ -513,6 +517,9 @@ const addFlashcard = (front, back) => {
   // Add a listener that lets us flip the card over.
   card.addEventListener("click", () => {
     card.classList.toggle("is-flipped");
+    if (shouldPlaySound()) {
+      playSound("tap", 0.5);
+    }
   });
 };
 
