@@ -1,3 +1,9 @@
+// TODO What in the hell is this file?
+// You can tell I just sort of piled random horseshit into here over the
+// course of a year on and off because the coding style and organization
+// are nonexistent. At some point I should probably come in and organize
+// a little bit. But that is not today. Heehaw.
+
 import { FORMAT_FLASHCARDS, FORMAT_QUIZ } from "./flashcarddata.js";
 import { practiceMap } from "./flashcarddata.js";
 
