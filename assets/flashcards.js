@@ -330,18 +330,96 @@ const loadStage = () => {
     }
     warningCount += 1;
     if (warningCount >= 100) {
+      // I tried to have a volume > 1 but...
       playSound("fart", 1);
     }
   }
 };
 
+const iconReadyCursor = `pointer`;
+const iconDefaultFilter = `grayscale(100%)`;
+
+const downloadImagesDiv = document.getElementById("downloads");
 const csvDownloadIconImage = document.getElementById("csvdownloadicon");
 const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
-const prepareSectionDownloadOptions = (sectionObject) => {};
+
+const downloadIconsInactive = () => {
+  // Checks whether the download icons are in an active state
+  // or not by eyeballing their style. They come in pairs like
+  // salt and pepper. We don't change one without the other.
+  return [csvDownloadIconImage, jsonDownloadIconImage].every((icon) => {
+    return icon.style.filter === iconDefaultFilter;
+  });
+};
+
+const toggleDownloadIconStyles = () => {
+  // Download icons active? Make them grayscale and unpointy.
+  // Inactive? Make them colorful and pointy.
+  [csvDownloadIconImage, jsonDownloadIconImage].forEach((icon) => {
+    if (icon.style.filter === iconDefaultFilter) {
+      icon.style.filter = null;
+      icon.style.cursor = iconReadyCursor;
+    } else {
+      icon.style.filter = iconDefaultFilter;
+      icon.style.cursor = null;
+    }
+  });
+};
+
+const prepareSectionDownloadOptions = (sectionObject) => {
+  // Remove the grayscale from the download icon images.
+  // Prepare links for the images that are clickable that allow
+  // the user to download the lesson in CSV and JSON formats.
+  if (downloadIconsInactive()) {
+    toggleDownloadIconStyles();
+  }
+
+  const csvLinkId = "csvdownloadlink";
+  const jsonLinkId = "jsondownloadlink";
+
+  // This is state handling. If we're clicking between lessons,
+  // the download links will already exist. We need to find them
+  // and clear them, then ready up the new links. Otherwise, we
+  // just make fresh links.
+  const latentCsvLink = document.getElementById(csvLinkId);
+  if (latentCsvLink !== null) {
+    // Do some DOM manip
+    // <div><a><img/></a><div> -> <div><img/><a></a></div> -> <div><img/></div>
+    downloadImagesDiv.appendChild(csvDownloadIconImage);
+    downloadImagesDiv.removeChild(latentCsvLink);
+  }
+  const latentJSONLink = document.getElementById(jsonLinkId);
+  if (latentJSONLink !== null) {
+    downloadImagesDiv.appendChild(jsonDownloadIconImage);
+    downloadImagesDiv.removeChild(latentJSONLink);
+  }
+
+  const csvLink = window.document.createElement("a");
+  const jsonLink = window.document.createElement("a");
+
+  csvLink.id = csvLinkId;
+  jsonLink.id = jsonLinkId;
+  // For a brief moment our image leaves the div.
+  csvLink.appendChild(csvDownloadIconImage);
+  jsonLink.appendChild(jsonDownloadIconImage);
+
+  // We put our image back into the div as a child of the link here.
+  downloadImagesDiv.appendChild(csvLink);
+  downloadImagesDiv.appendChild(jsonLink);
+
+  // Add the content as CSV to the href in a blobby link.
+  csvLink.href = window.URL.createObjectURL(new Blob([sectionObject.asCSV], { type: "text/csv" }));
+  // This lets us name the file.
+  csvLink.download = `${sectionObject.unfriendlyName}.csv`;
+  // Here we use application/octet-stream instead of application/json so that we force a download dialog
+  jsonLink.href = window.URL.createObjectURL(new Blob([sectionObject.asJSON], { type: "application/octet-stream" }));
+  jsonLink.download = `${sectionObject.unfriendlyName}.json`;
+};
 
 const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
 practiceOptionsDropDown.addEventListener("change", () => {
-  displayAvailablePracticeFormats();
+  const sectionObject = displayAvailablePracticeFormats();
+  prepareSectionDownloadOptions(sectionObject);
 });
 
 const displayAvailablePracticeFormats = () => {
@@ -390,6 +468,7 @@ const displayAvailablePracticeFormats = () => {
   practiceFormatsContainer.appendChild(practiceFormatsRadioForm);
   // and make the container visible.
   practiceFormatsContainer.hidden = false;
+  return sectionObject;
 };
 
 // Button for filling the working stage
