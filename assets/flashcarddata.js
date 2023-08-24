@@ -824,7 +824,6 @@ const REGIONALISMS_KORDUN = new VocabularySection("Regionalisms: Kordun", "regio
   new VocabularyObject("Foundation", "Podumjenta"),
   new VocabularyObject("Frying Pan", "Tava"),
   new VocabularyObject("Hemp Thread", "Pređa"),
-  new VocabularyObject("Hemp Thread", "Pređa"),
   new VocabularyObject("Housewife", "Planinka"),
   new VocabularyObject("Kitchenette", "Pecana"),
   new VocabularyObject("Ladders", "Lotra"),
@@ -842,7 +841,7 @@ const REGIONALISMS_KORDUN = new VocabularySection("Regionalisms: Kordun", "regio
   new VocabularyObject("Water Vessel", "Kabao"),
   new VocabularyObject("Water Well", "Šternja"),
   new VocabularyObject("Wool Blanket", "Biljac"),
-  new VocabularyObject("Wool Hat", "Škiljak"),
+  new VocabularyObject("Wool Fedora", "Škiljak"),
 ]);
 
 const _DEBUG_SECTION = new VocabularySection("Debug", "debug", [
