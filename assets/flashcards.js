@@ -24,19 +24,21 @@ function playSound(soundName, volume) {
   // they're needed instead of loading all of our sound
   // effects with the page. We mutate the SOUNDS object
   // to contain audio tracks as we load them.
-  try {
-    const soundEntry = SOUNDS[soundName];
-    if (typeof soundEntry === "string") {
-      const sound = loadAudio(soundEntry);
-      SOUNDS[soundName] = sound;
-      sound.volume = volume || 1;
-      sound.play();
-    } else {
-      soundEntry.volume = volume || 1;
-      soundEntry.play();
+  if (shouldPlaySound()) {
+    try {
+      const soundEntry = SOUNDS[soundName];
+      if (typeof soundEntry === "string") {
+        const sound = loadAudio(soundEntry);
+        SOUNDS[soundName] = sound;
+        sound.volume = volume || 1;
+        sound.play();
+      } else {
+        soundEntry.volume = volume || 1;
+        soundEntry.play();
+      }
+    } catch (error) {
+      console.log(`Failed to play ${soundName}: ${error}`);
     }
-  } catch (error) {
-    console.log(`Failed to play ${soundName}: ${error}`);
   }
 }
 
@@ -259,7 +261,7 @@ const clearStage = (callerPlaySound) => {
   // Clear the practice state. This dumps everything from the
   // array while returning it as a copy.
   if (shouldPlaySound() && callerPlaySound) {
-    playSound("whoosh", 0.6);
+    playSound("whoosh", 0.3);
   }
   const stateCopy = practiceState.splice(0, practiceState.length);
   // Drop all of the elements from the DOM.
@@ -286,7 +288,7 @@ const loadStage = () => {
   const selectedPractice = practiceOptionsDropDown.value;
   if (selectedPractice) {
     if (shouldPlaySound()) {
-      playSound("maraca", 0.6);
+      playSound("maraca", 0.3);
     }
     choosePracticeWarning.hidden = true;
     // Make sure we have a clean slate to work with.
@@ -327,6 +329,9 @@ const loadStage = () => {
       choosePracticeWarning.style.fontSize = 16 + warningCount;
     }
     warningCount += 1;
+    if (warningCount >= 100) {
+      playSound("fart", 1);
+    }
   }
 };
 
@@ -518,7 +523,7 @@ const addFlashcard = (front, back) => {
   card.addEventListener("click", () => {
     card.classList.toggle("is-flipped");
     if (shouldPlaySound()) {
-      playSound("tap", 0.5);
+      playSound("tap", 0.25);
     }
   });
 };
