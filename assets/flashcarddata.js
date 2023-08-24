@@ -155,8 +155,6 @@ export const ADJECTIVES_1 = new VocabularySection("Adjectives I", "adjectives1",
   new VocabularyObject("Important", "Važan"),
 ]);
 
-console.log(ADJECTIVES_1.asCSV);
-
 export const ADJECTIVES_2 = new VocabularySection("Adjectives II", "adjectives2", [
   new VocabularyObject("Few", "Nekolicini"),
   new VocabularyObject("Public", "Državni"),
