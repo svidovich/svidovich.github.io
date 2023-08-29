@@ -1,5 +1,6 @@
 export const FORMAT_FLASHCARDS = "flashcards";
 export const FORMAT_QUIZ = "quiz";
+export const FORMAT_T_OR_F = "trueorfalse";
 
 class VocabularyObject {
   constructor(english, latin) {

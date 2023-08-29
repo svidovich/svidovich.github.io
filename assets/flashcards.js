@@ -67,6 +67,22 @@ const addSoundToggleClickListener = () => {
   });
 };
 
+const addClearStageClickListener = () => {
+  // Button for clearing the working stage
+  const clearStageButton = document.getElementById("clearstagebutton");
+  clearStageButton.addEventListener("click", () => {
+    clearStage(true);
+  });
+};
+
+const addLoadStageClickListener = () => {
+  // Button for filling the working stage
+  const loadStageButton = document.getElementById("loadstagebutton");
+  loadStageButton.addEventListener("click", () => {
+    loadStage();
+  });
+};
+
 const getStreakForDisplay = () => {
   return getObjectFromLocalStorage(STREAK_COUNT_KEY) || 0;
 };
@@ -145,14 +161,6 @@ const clearStage = (callerPlaySound) => {
   });
   const scoreBar = document.getElementById("scorebar");
   hideScoreBar(scoreBar);
-};
-
-const addClearStageClickListener = () => {
-  // Button for clearing the working stage
-  const clearStageButton = document.getElementById("clearstagebutton");
-  clearStageButton.addEventListener("click", () => {
-    clearStage(true);
-  });
 };
 
 const insertPracticeFormatForm = () => {};
@@ -346,14 +354,6 @@ const displayAvailablePracticeFormats = () => {
   // and make the container visible.
   practiceFormatsContainer.hidden = false;
   return sectionObject;
-};
-
-const addLoadStageClickListener = () => {
-  // Button for filling the working stage
-  const loadStageButton = document.getElementById("loadstagebutton");
-  loadStageButton.addEventListener("click", () => {
-    loadStage();
-  });
 };
 
 // NOTE: In the future, this won't just be VocabularySection objects.
@@ -629,6 +629,42 @@ const checkQuizComplete = (event) => {
   } else {
     return;
   }
+};
+
+const loadTrueOrFalse = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === true) {
+    toggleScoreBar(scoreBar);
+  }
+  const scoreMax = vocabularyObjects.length;
+  setScoreBarScore(scoreBar, 0, scoreMax);
+  const vocabCopy = [...vocabularyObjects];
+  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+
+  const pairs = new Array();
+  // Generate pairs of vocabulary objects. "Source" is the object we're comparing to,
+  // "Destination" is the object we're comparing against.
+  // T/F: Makaze means Scissors ?
+  //      ^ Source     ^ Destination
+  // Each object should be represented.
+  vocabularyObjects.forEach((vocabularyObject) => {
+    // Decide if it should be true or false. Do a coin flip.
+    if (randomInt(0, 100) > 50) {
+      // When it's true, source and dest are same, and set value true
+      pairs.push({
+        sourceObject: vocabularyObject,
+        destinationObject: vocabularyObject,
+        value: true,
+      });
+    } else {
+      const falseObject = chooseRandomExcept(vocabularyObjects, [vocabularyObject]);
+      pairs.push({
+        sourceObject: vocabularyObject,
+        destinationObject: falseObject,
+        value: false,
+      });
+    }
+  });
 };
 
 // Loads a gang of vocabulary objects as a quiz.
