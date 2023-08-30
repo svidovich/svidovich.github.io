@@ -10,7 +10,7 @@ import {
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
-import { FORMAT_FLASHCARDS, FORMAT_QUIZ, practiceMap } from "./flashcarddata.js";
+import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F, practiceMap } from "./flashcarddata.js";
 
 import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 
@@ -20,6 +20,11 @@ const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
+
+const SCRIPT_BOTH = "scriptboth";
+const SCRIPT_LATIN = "scriptlatin";
+const SCRIPT_CYRILLIC = "scriptcyrillic";
+const SCRIPT_MIX = "scriptmix";
 
 // TODO this file could use some OOP.
 
@@ -185,6 +190,8 @@ const loadStage = () => {
       loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_QUIZ) {
       loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+    } else if (practiceFormatOption === FORMAT_T_OR_F) {
+      loadTrueOrFalse(practiceMap[selectedPractice].vocabularyObjects);
     }
   } else {
     choosePracticeWarning.hidden = false;
@@ -637,33 +644,101 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     toggleScoreBar(scoreBar);
   }
   const scoreMax = vocabularyObjects.length;
+  const trueOrFalseHeader = "True or False:";
   setScoreBarScore(scoreBar, 0, scoreMax);
-  const vocabCopy = [...vocabularyObjects];
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  const quizBox = document.getElementById("flashcardcontainer");
+  const vocabCopy = [...vocabularyObjects];
+  shuffleArray(vocabCopy);
 
-  const pairs = new Array();
+  // add a newline before we begin.
+  const startnl = document.createElement("br");
+  quizBox.appendChild(startnl);
+  practiceState.push(startnl);
+
   // Generate pairs of vocabulary objects. "Source" is the object we're comparing to,
   // "Destination" is the object we're comparing against.
   // T/F: Makaze means Scissors ?
   //      ^ Source     ^ Destination
   // Each object should be represented.
-  vocabularyObjects.forEach((vocabularyObject) => {
+  let sourceEnglish;
+  vocabCopy.forEach((vocabularyObject) => {
     // Decide if it should be true or false. Do a coin flip.
+    let pair;
     if (randomInt(0, 100) > 50) {
       // When it's true, source and dest are same, and set value true
-      pairs.push({
+      pair = {
         sourceObject: vocabularyObject,
         destinationObject: vocabularyObject,
         value: true,
-      });
+      };
     } else {
       const falseObject = chooseRandomExcept(vocabularyObjects, [vocabularyObject]);
-      pairs.push({
+      pair = {
         sourceObject: vocabularyObject,
         destinationObject: falseObject,
         value: false,
-      });
+      };
     }
+    // Flip a coin to see if the left side is english or not.
+    sourceEnglish = randomInt(0, 100) > 50 ? true : false;
+    const jugoObject = sourceEnglish ? pair.destinationObject : pair.sourceObject;
+    const englishSide = sourceEnglish ? pair.sourceObject.english : pair.destinationObject.english;
+    let jugoSide;
+    if (scriptOption === SCRIPT_BOTH) {
+      const conjunction = sourceEnglish ? "or" : "and";
+      jugoSide = `${jugoObject.cyrillic} ${conjunction} ${jugoObject.latin}`;
+    } else if (scriptOption === SCRIPT_LATIN) {
+      jugoSide = jugoObject.latin;
+    } else if (scriptOption === SCRIPT_CYRILLIC) {
+      jugoSide = jugoObject.cyrillic;
+    } else if (scriptOption === SCRIPT_MIX) {
+      jugoSide = randomInt(0, 100) > 50 ? jugoObject.cyrillic : jugoObject.latin;
+    }
+    const questionTable = document.createElement("table");
+    questionTable.className = "truthtable";
+
+    const questionTableHeaderRow = document.createElement("tr");
+
+    // Add a header for our question table
+    const questionTableHeader = document.createElement("th");
+    questionTableHeader.className = "truthtable-question-header";
+    questionTableHeader.colSpan = "3";
+    questionTableHeader.textContent = trueOrFalseHeader;
+    questionTableHeaderRow.appendChild(questionTableHeader);
+    questionTable.appendChild(questionTableHeaderRow);
+
+    // Add a row to contain our question
+    const questionTableQuestionRow = document.createElement("tr");
+    const questionTableQuestionLeft = document.createElement("td");
+    questionTableQuestionLeft.className = "truthtable-question-left";
+    // If our source is english, then the left hand side should be in english.
+    questionTableQuestionLeft.textContent = sourceEnglish ? englishSide : jugoSide;
+
+    const questionTableQuestionCenter = document.createElement("td");
+    questionTableQuestionCenter.className = "truthtable-question-center";
+    // Careful logic -- only use singular "mean" if the left-hand side is both
+    // the cyrillic and latin versions of a jugo word together
+    questionTableQuestionCenter.textContent = sourceEnglish
+      ? "... translates to ..."
+      : scriptOption === SCRIPT_BOTH && !sourceEnglish
+      ? "... mean ..."
+      : "... means ...";
+
+    const questionTableQuestionRight = document.createElement("td");
+    questionTableQuestionRight.className = "truthtable-question-right";
+    questionTableQuestionRight.textContent = sourceEnglish ? jugoSide : englishSide;
+
+    questionTableQuestionRow.appendChild(questionTableQuestionLeft);
+    questionTableQuestionRow.appendChild(questionTableQuestionCenter);
+    questionTableQuestionRow.appendChild(questionTableQuestionRight);
+    questionTable.appendChild(questionTableQuestionRow);
+
+    const lineBreak = document.createElement("br");
+    quizBox.appendChild(questionTable);
+    practiceState.push(questionTable);
+    quizBox.appendChild(lineBreak);
+    practiceState.push(lineBreak);
   });
 };
 
@@ -697,13 +772,13 @@ const loadQuiz = (vocabularyObjects) => {
       headerScript = `"${vocabularyObject.english}" translates to...`;
     } else {
       isEnglish = false;
-      if (scriptOption === "scriptboth") {
+      if (scriptOption === SCRIPT_BOTH) {
         headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
-      } else if (scriptOption === "scriptlatin") {
+      } else if (scriptOption === SCRIPT_LATIN) {
         headerScript = `"${vocabularyObject.latin}" means...`;
-      } else if (scriptOption === "scriptcyrillic") {
+      } else if (scriptOption === SCRIPT_CYRILLIC) {
         headerScript = `"${vocabularyObject.cyrillic}" means...`;
-      } else if (scriptOption === "scriptmix") {
+      } else if (scriptOption === SCRIPT_MIX) {
         // Roll a coin to see if we'll have latin or cyrillic
         if (randomInt(0, 100) > 50) {
           headerScript = `"${vocabularyObject.cyrillic}" means...`;

@@ -2,6 +2,40 @@
   text-transform: capitalize;
 }
 
+.truthtable {
+  border: 1px solid black;
+  width: 70vw;
+}
+
+.truthtable-question-left {
+  /* border: 1px solid blue; */
+  width: 33%;
+  /*
+  This may seem counter-intuitive, but we want to 
+  smoosh the left text close to the center, and the
+  right text close to the center.
+  */
+  text-align: right;
+}
+
+.truthtable-question-center {
+  /* border: 1px solid green; */
+  width: 33%;
+  text-align: center;
+}
+
+.truthtable-question-right {
+  /* border: 1px solid red; */
+  width: 33%;
+  text-align: left;
+}
+
+.truthtable-question-header {
+  /* border: 1px solid purple; */
+  text-align: center;
+  font-size: x-large;
+}
+
 .cookie-banner {
   display: grid;
   justify-content: center;

@@ -1,6 +1,6 @@
 export const FORMAT_FLASHCARDS = "flashcards";
 export const FORMAT_QUIZ = "quiz";
-export const FORMAT_T_OR_F = "trueorfalse";
+export const FORMAT_T_OR_F = "true or false";
 
 class VocabularyObject {
   constructor(english, latin) {
@@ -23,7 +23,7 @@ class VocabularySection {
     this.friendlyName = friendlyName;
     this.unfriendlyName = unfriendlyName;
     this.vocabularyObjects = vocabularyObjects;
-    this.formats = [FORMAT_FLASHCARDS, FORMAT_QUIZ];
+    this.formats = [FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F];
   }
 
   get asObject() {
