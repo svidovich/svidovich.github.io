@@ -88,6 +88,14 @@ const addLoadStageClickListener = () => {
   });
 };
 
+const addPracticeOptionsDropdownChangeListener = () => {
+  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  practiceOptionsDropDown.addEventListener("change", () => {
+    const sectionObject = displayAvailablePracticeFormats();
+    prepareSectionDownloadOptions(sectionObject);
+  });
+};
+
 const getStreakForDisplay = () => {
   return getObjectFromLocalStorage(STREAK_COUNT_KEY) || 0;
 };
@@ -307,12 +315,6 @@ const prepareSectionDownloadOptions = (sectionObject) => {
   jsonLink.href = window.URL.createObjectURL(new Blob([sectionObject.asJSON], { type: "application/octet-stream" }));
   jsonLink.download = `${sectionObject.unfriendlyName}.json`;
 };
-
-const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
-practiceOptionsDropDown.addEventListener("change", () => {
-  const sectionObject = displayAvailablePracticeFormats();
-  prepareSectionDownloadOptions(sectionObject);
-});
 
 const displayAvailablePracticeFormats = () => {
   const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
@@ -891,6 +893,8 @@ const main = () => {
 
   addClearStageClickListener();
   addLoadStageClickListener();
+
+  addPracticeOptionsDropdownChangeListener();
 };
 
 (() => {
