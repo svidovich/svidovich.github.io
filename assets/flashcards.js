@@ -487,7 +487,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    if (scriptOption === "scriptmix") {
+    if (scriptOption === SCRIPT_MIX) {
       // TODO: Constants
       // We want a mix of cyrillic and latin
       if (randomInt(0, 100) > 50) {
@@ -510,7 +510,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
           rear = vocabularyObject.latin;
         }
       }
-    } else if (scriptOption === "scriptboth") {
+    } else if (scriptOption === SCRIPT_BOTH) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.english;
         rear = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
@@ -518,7 +518,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
         front = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
         rear = vocabularyObject.english;
       }
-    } else if (scriptOption === "scriptlatin") {
+    } else if (scriptOption === SCRIPT_LATIN) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.latin;
         rear = vocabularyObject.english;
@@ -526,7 +526,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
         rear = vocabularyObject.latin;
         front = vocabularyObject.english;
       }
-    } else if (scriptOption === "scriptcyrillic") {
+    } else if (scriptOption === SCRIPT_CYRILLIC) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.cyrillic;
         rear = vocabularyObject.english;
@@ -822,13 +822,13 @@ const loadQuiz = (vocabularyObjects) => {
       }
       let optionText;
       if (isEnglish) {
-        if (scriptOption === "scriptboth") {
+        if (scriptOption === SCRIPT_BOTH) {
           optionText = `"${quizOption.latin}", or "${quizOption.cyrillic}"`;
-        } else if (scriptOption === "scriptlatin") {
+        } else if (scriptOption === SCRIPT_LATIN) {
           optionText = quizOption.latin;
-        } else if (scriptOption === "scriptcyrillic") {
+        } else if (scriptOption === SCRIPT_CYRILLIC) {
           optionText = quizOption.cyrillic;
-        } else if (scriptOption === "scriptmix") {
+        } else if (scriptOption === SCRIPT_MIX) {
           // Roll a coin to see if we'll have latin or cyrillic
           if (randomInt(0, 100) > 50) {
             optionText = quizOption.cyrillic;
