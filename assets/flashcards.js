@@ -707,7 +707,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     questionTableHeader.className = "truthtable-question-header";
     questionTableHeader.colSpan = "3";
     questionTableHeader.textContent = trueOrFalseHeader;
+    // Add the header itself to the header row,
     questionTableHeaderRow.appendChild(questionTableHeader);
+    // then add the header row to the table
     questionTable.appendChild(questionTableHeaderRow);
 
     // Add a row to contain our question
@@ -717,26 +719,35 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     // If our source is english, then the left hand side should be in english.
     questionTableQuestionLeft.textContent = sourceEnglish ? englishSide : jugoSide;
 
+    // The center cell should contain some conjunction or whatever that helps
+    // create a sentence out of the "true or false" statement.
+    // If the left is english, we should say "translates to"; if the right is english,
+    // we should use "mean" or "means"
     const questionTableQuestionCenter = document.createElement("td");
     questionTableQuestionCenter.className = "truthtable-question-center";
-    // Careful logic -- only use singular "mean" if the left-hand side is both
-    // the cyrillic and latin versions of a jugo word together
     questionTableQuestionCenter.textContent = sourceEnglish
       ? "... translates to ..."
-      : scriptOption === SCRIPT_BOTH && !sourceEnglish
+      : // Careful logic -- only use singular "mean" if the left-hand side is both
+      // the cyrillic and latin versions of a jugo word together
+      scriptOption === SCRIPT_BOTH && !sourceEnglish
       ? "... mean ..."
       : "... means ...";
 
+    // Finally, the rightmost cell in this row should contain the opposite language
+    // of the leftmost cell.
     const questionTableQuestionRight = document.createElement("td");
     questionTableQuestionRight.className = "truthtable-question-right";
     questionTableQuestionRight.textContent = sourceEnglish ? jugoSide : englishSide;
 
+    // Add all three of our cells to the question row,
     questionTableQuestionRow.appendChild(questionTableQuestionLeft);
     questionTableQuestionRow.appendChild(questionTableQuestionCenter);
     questionTableQuestionRow.appendChild(questionTableQuestionRight);
+    // and add the question row to the table
     questionTable.appendChild(questionTableQuestionRow);
 
     const lineBreak = document.createElement("br");
+    // Add the question table to the box and add a line break.
     quizBox.appendChild(questionTable);
     practiceState.push(questionTable);
     quizBox.appendChild(lineBreak);
