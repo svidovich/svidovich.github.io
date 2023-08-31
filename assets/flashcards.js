@@ -802,8 +802,16 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     practiceState.push(questionTable);
     quizBox.appendChild(lineBreak);
     practiceState.push(lineBreak);
-    quizBox.addEventListener("click", (event) => checkQuizComplete(event, "truthtable"));
   });
+  const topLink = document.createElement("a");
+  const topLinkText = document.createTextNode("Back to Top");
+  topLink.href = "#";
+  topLink.style.placeSelf = "center";
+  topLink.appendChild(topLinkText);
+  quizBox.appendChild(topLink);
+  practiceState.push(topLink);
+
+  quizBox.addEventListener("click", (event) => checkQuizComplete(event, "truthtable"));
 };
 
 // Loads a gang of vocabulary objects as a quiz.
