@@ -174,6 +174,8 @@ const clearStage = (callerPlaySound) => {
   });
   const scoreBar = document.getElementById("scorebar");
   hideScoreBar(scoreBar);
+  const flashCardContainer = document.getElementById("flashcardcontainer");
+  flashCardContainer.attributeStyleMap.clear();
 };
 
 const insertPracticeFormatForm = () => {};
@@ -625,9 +627,9 @@ const incrementScoreBarScore = (scoreBar, amount) => {
   setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
 };
 
-const checkQuizComplete = (event) => {
+const checkQuizComplete = (event, className) => {
   let complete = true;
-  [...document.getElementsByClassName("quizcontainer")].forEach((q) => {
+  [...document.getElementsByClassName(className)].forEach((q) => {
     if (!q.hasAttribute("answeredcorrectly")) {
       complete = false;
     }
@@ -665,6 +667,8 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   // Each object should be represented.
   let sourceEnglish;
   vocabCopy.forEach((vocabularyObject) => {
+    // Get an ID for the question.
+    const questionUUID = UUIDGeneratorBrowser();
     // Decide if it should be true or false. Do a coin flip.
     let pair;
     if (randomInt(0, 100) > 50) {
@@ -699,6 +703,8 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     }
     const questionTable = document.createElement("table");
     questionTable.className = "truthtable";
+    questionTable.id = questionUUID;
+    questionTable.setAttribute("value", pair.value);
 
     const questionTableHeaderRow = document.createElement("tr");
 
@@ -746,12 +752,57 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     // and add the question row to the table
     questionTable.appendChild(questionTableQuestionRow);
 
+    // Now: We want some buttons to help the user decide whether the statement
+    // in our table is "true" or "false".
+    const questionTableButtonRow = document.createElement("tr");
+    const questionTableButtonCell = document.createElement("td");
+    questionTableButtonCell.className = "truthtable-button-cell";
+    questionTableButtonCell.colSpan = "3";
+
+    const trueButton = document.createElement("button");
+    trueButton.value = "true";
+    trueButton.textContent = "True";
+    trueButton.className = "truthtable-button-true";
+    questionTableButtonCell.appendChild(trueButton);
+
+    const falseButton = document.createElement("button");
+    falseButton.value = "false";
+    falseButton.textContent = "False";
+    falseButton.className = "truthtable-button-false";
+    questionTableButtonCell.appendChild(falseButton);
+
+    [trueButton, falseButton].forEach((button) => {
+      button.addEventListener("click", () => {
+        const relevantTable = document.getElementById(questionUUID);
+        const wasAnswered = relevantTable.getAttribute("answered");
+        if (wasAnswered !== "true") {
+          const questionValue = relevantTable.getAttribute("value");
+          if (questionValue === button.value) {
+            relevantTable.style.border = "2px solid green";
+            playSound("pageFlip");
+            relevantTable.setAttribute("answeredcorrectly", "true");
+            const scoreBar = document.getElementById("scorebar");
+            incrementScoreBarScore(scoreBar, 1);
+          } else {
+            relevantTable.style.border = "2px solid red";
+            playSound("fart");
+            relevantTable.setAttribute("answeredcorrectly", "false");
+          }
+          relevantTable.setAttribute("answered", "true");
+        }
+      });
+    });
+
+    questionTableButtonRow.appendChild(questionTableButtonCell);
+    questionTable.appendChild(questionTableButtonRow);
+
     const lineBreak = document.createElement("br");
     // Add the question table to the box and add a line break.
     quizBox.appendChild(questionTable);
     practiceState.push(questionTable);
     quizBox.appendChild(lineBreak);
     practiceState.push(lineBreak);
+    quizBox.addEventListener("click", (event) => checkQuizComplete(event, "truthtable"));
   });
 };
 
@@ -870,7 +921,7 @@ const loadQuiz = (vocabularyObjects) => {
   topLink.appendChild(topLinkText);
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
-  quizBox.addEventListener("click", (event) => checkQuizComplete(event));
+  quizBox.addEventListener("click", (event) => checkQuizComplete(event, "quizcontainer"));
 };
 
 const showDebugMessage = (message) => {
