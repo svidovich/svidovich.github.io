@@ -10,7 +10,7 @@ import {
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
-import { FORMAT_FLASHCARDS, FORMAT_QUIZ, practiceMap } from "./flashcarddata.js";
+import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F, practiceMap } from "./flashcarddata.js";
 
 import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 
@@ -20,6 +20,11 @@ const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
+
+const SCRIPT_BOTH = "scriptboth";
+const SCRIPT_LATIN = "scriptlatin";
+const SCRIPT_CYRILLIC = "scriptcyrillic";
+const SCRIPT_MIX = "scriptmix";
 
 // TODO this file could use some OOP.
 
@@ -64,6 +69,30 @@ const addSoundToggleClickListener = () => {
   soundToggleSwitch.addEventListener("click", () => {
     toggleSound();
     setSoundToggleSwitchMessage();
+  });
+};
+
+const addClearStageClickListener = () => {
+  // Button for clearing the working stage
+  const clearStageButton = document.getElementById("clearstagebutton");
+  clearStageButton.addEventListener("click", () => {
+    clearStage(true);
+  });
+};
+
+const addLoadStageClickListener = () => {
+  // Button for filling the working stage
+  const loadStageButton = document.getElementById("loadstagebutton");
+  loadStageButton.addEventListener("click", () => {
+    loadStage();
+  });
+};
+
+const addPracticeOptionsDropdownChangeListener = () => {
+  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  practiceOptionsDropDown.addEventListener("change", () => {
+    const sectionObject = displayAvailablePracticeFormats();
+    prepareSectionDownloadOptions(sectionObject);
   });
 };
 
@@ -145,14 +174,8 @@ const clearStage = (callerPlaySound) => {
   });
   const scoreBar = document.getElementById("scorebar");
   hideScoreBar(scoreBar);
-};
-
-const addClearStageClickListener = () => {
-  // Button for clearing the working stage
-  const clearStageButton = document.getElementById("clearstagebutton");
-  clearStageButton.addEventListener("click", () => {
-    clearStage(true);
-  });
+  const flashCardContainer = document.getElementById("flashcardcontainer");
+  flashCardContainer.attributeStyleMap.clear();
 };
 
 const insertPracticeFormatForm = () => {};
@@ -177,6 +200,8 @@ const loadStage = () => {
       loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_QUIZ) {
       loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+    } else if (practiceFormatOption === FORMAT_T_OR_F) {
+      loadTrueOrFalse(practiceMap[selectedPractice].vocabularyObjects);
     }
   } else {
     choosePracticeWarning.hidden = false;
@@ -293,12 +318,6 @@ const prepareSectionDownloadOptions = (sectionObject) => {
   jsonLink.download = `${sectionObject.unfriendlyName}.json`;
 };
 
-const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
-practiceOptionsDropDown.addEventListener("change", () => {
-  const sectionObject = displayAvailablePracticeFormats();
-  prepareSectionDownloadOptions(sectionObject);
-});
-
 const displayAvailablePracticeFormats = () => {
   const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
   const practiceFormatsContainer = document.getElementById("practiceformatscontainer");
@@ -346,14 +365,6 @@ const displayAvailablePracticeFormats = () => {
   // and make the container visible.
   practiceFormatsContainer.hidden = false;
   return sectionObject;
-};
-
-const addLoadStageClickListener = () => {
-  // Button for filling the working stage
-  const loadStageButton = document.getElementById("loadstagebutton");
-  loadStageButton.addEventListener("click", () => {
-    loadStage();
-  });
 };
 
 // NOTE: In the future, this won't just be VocabularySection objects.
@@ -478,7 +489,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    if (scriptOption === "scriptmix") {
+    if (scriptOption === SCRIPT_MIX) {
       // TODO: Constants
       // We want a mix of cyrillic and latin
       if (randomInt(0, 100) > 50) {
@@ -501,7 +512,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
           rear = vocabularyObject.latin;
         }
       }
-    } else if (scriptOption === "scriptboth") {
+    } else if (scriptOption === SCRIPT_BOTH) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.english;
         rear = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
@@ -509,7 +520,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
         front = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
         rear = vocabularyObject.english;
       }
-    } else if (scriptOption === "scriptlatin") {
+    } else if (scriptOption === SCRIPT_LATIN) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.latin;
         rear = vocabularyObject.english;
@@ -517,7 +528,7 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
         rear = vocabularyObject.latin;
         front = vocabularyObject.english;
       }
-    } else if (scriptOption === "scriptcyrillic") {
+    } else if (scriptOption === SCRIPT_CYRILLIC) {
       if (randomInt(0, 100) > 50) {
         front = vocabularyObject.cyrillic;
         rear = vocabularyObject.english;
@@ -616,9 +627,9 @@ const incrementScoreBarScore = (scoreBar, amount) => {
   setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
 };
 
-const checkQuizComplete = (event) => {
+const checkQuizComplete = (event, className) => {
   let complete = true;
-  [...document.getElementsByClassName("quizcontainer")].forEach((q) => {
+  [...document.getElementsByClassName(className)].forEach((q) => {
     if (!q.hasAttribute("answeredcorrectly")) {
       complete = false;
     }
@@ -629,6 +640,170 @@ const checkQuizComplete = (event) => {
   } else {
     return;
   }
+};
+
+const loadTrueOrFalse = (vocabularyObjects) => {
+  const scoreBar = document.getElementById("scorebar");
+  if (scoreBarHidden(scoreBar) === true) {
+    toggleScoreBar(scoreBar);
+  }
+  const scoreMax = vocabularyObjects.length;
+  const trueOrFalseHeader = "True or False:";
+  setScoreBarScore(scoreBar, 0, scoreMax);
+  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  const quizBox = document.getElementById("flashcardcontainer");
+  const vocabCopy = [...vocabularyObjects];
+  shuffleArray(vocabCopy);
+
+  // add a newline before we begin.
+  const startnl = document.createElement("br");
+  quizBox.appendChild(startnl);
+  practiceState.push(startnl);
+
+  // Generate pairs of vocabulary objects. "Source" is the object we're comparing to,
+  // "Destination" is the object we're comparing against.
+  // T/F: Makaze means Scissors ?
+  //      ^ Source     ^ Destination
+  // Each object should be represented.
+  let sourceEnglish;
+  vocabCopy.forEach((vocabularyObject) => {
+    // Get an ID for the question.
+    const questionUUID = UUIDGeneratorBrowser();
+    // Decide if it should be true or false. Do a coin flip.
+    let pair;
+    if (randomInt(0, 100) > 50) {
+      // When it's true, source and dest are same, and set value true
+      pair = {
+        sourceObject: vocabularyObject,
+        destinationObject: vocabularyObject,
+        value: true,
+      };
+    } else {
+      const falseObject = chooseRandomExcept(vocabularyObjects, [vocabularyObject]);
+      pair = {
+        sourceObject: vocabularyObject,
+        destinationObject: falseObject,
+        value: false,
+      };
+    }
+    // Flip a coin to see if the left side is english or not.
+    sourceEnglish = randomInt(0, 100) > 50 ? true : false;
+    const jugoObject = sourceEnglish ? pair.destinationObject : pair.sourceObject;
+    const englishSide = sourceEnglish ? pair.sourceObject.english : pair.destinationObject.english;
+    let jugoSide;
+    if (scriptOption === SCRIPT_BOTH) {
+      const conjunction = sourceEnglish ? "or" : "and";
+      jugoSide = `${jugoObject.cyrillic} ${conjunction} ${jugoObject.latin}`;
+    } else if (scriptOption === SCRIPT_LATIN) {
+      jugoSide = jugoObject.latin;
+    } else if (scriptOption === SCRIPT_CYRILLIC) {
+      jugoSide = jugoObject.cyrillic;
+    } else if (scriptOption === SCRIPT_MIX) {
+      jugoSide = randomInt(0, 100) > 50 ? jugoObject.cyrillic : jugoObject.latin;
+    }
+    const questionTable = document.createElement("table");
+    questionTable.className = "truthtable";
+    questionTable.id = questionUUID;
+    questionTable.setAttribute("value", pair.value);
+
+    const questionTableHeaderRow = document.createElement("tr");
+
+    // Add a header for our question table
+    const questionTableHeader = document.createElement("th");
+    questionTableHeader.className = "truthtable-question-header";
+    questionTableHeader.colSpan = "3";
+    questionTableHeader.textContent = trueOrFalseHeader;
+    // Add the header itself to the header row,
+    questionTableHeaderRow.appendChild(questionTableHeader);
+    // then add the header row to the table
+    questionTable.appendChild(questionTableHeaderRow);
+
+    // Add a row to contain our question
+    const questionTableQuestionRow = document.createElement("tr");
+    const questionTableQuestionLeft = document.createElement("td");
+    questionTableQuestionLeft.className = "truthtable-question-left";
+    // If our source is english, then the left hand side should be in english.
+    questionTableQuestionLeft.textContent = sourceEnglish ? englishSide : jugoSide;
+
+    // The center cell should contain some conjunction or whatever that helps
+    // create a sentence out of the "true or false" statement.
+    // If the left is english, we should say "translates to"; if the right is english,
+    // we should use "mean" or "means"
+    const questionTableQuestionCenter = document.createElement("td");
+    questionTableQuestionCenter.className = "truthtable-question-center";
+    questionTableQuestionCenter.textContent = sourceEnglish
+      ? "... translates to ..."
+      : // Careful logic -- only use singular "mean" if the left-hand side is both
+      // the cyrillic and latin versions of a jugo word together
+      scriptOption === SCRIPT_BOTH && !sourceEnglish
+      ? "... mean ..."
+      : "... means ...";
+
+    // Finally, the rightmost cell in this row should contain the opposite language
+    // of the leftmost cell.
+    const questionTableQuestionRight = document.createElement("td");
+    questionTableQuestionRight.className = "truthtable-question-right";
+    questionTableQuestionRight.textContent = sourceEnglish ? jugoSide : englishSide;
+
+    // Add all three of our cells to the question row,
+    questionTableQuestionRow.appendChild(questionTableQuestionLeft);
+    questionTableQuestionRow.appendChild(questionTableQuestionCenter);
+    questionTableQuestionRow.appendChild(questionTableQuestionRight);
+    // and add the question row to the table
+    questionTable.appendChild(questionTableQuestionRow);
+
+    // Now: We want some buttons to help the user decide whether the statement
+    // in our table is "true" or "false".
+    const questionTableButtonRow = document.createElement("tr");
+    const questionTableButtonCell = document.createElement("td");
+    questionTableButtonCell.className = "truthtable-button-cell";
+    questionTableButtonCell.colSpan = "3";
+
+    const trueButton = document.createElement("button");
+    trueButton.value = "true";
+    trueButton.textContent = "True";
+    trueButton.className = "truthtable-button-true";
+    questionTableButtonCell.appendChild(trueButton);
+
+    const falseButton = document.createElement("button");
+    falseButton.value = "false";
+    falseButton.textContent = "False";
+    falseButton.className = "truthtable-button-false";
+    questionTableButtonCell.appendChild(falseButton);
+
+    [trueButton, falseButton].forEach((button) => {
+      button.addEventListener("click", () => {
+        const relevantTable = document.getElementById(questionUUID);
+        const wasAnswered = relevantTable.getAttribute("answered");
+        if (wasAnswered !== "true") {
+          const questionValue = relevantTable.getAttribute("value");
+          if (questionValue === button.value) {
+            relevantTable.style.border = "2px solid green";
+            playSound("pageFlip");
+            relevantTable.setAttribute("answeredcorrectly", "true");
+            const scoreBar = document.getElementById("scorebar");
+            incrementScoreBarScore(scoreBar, 1);
+          } else {
+            relevantTable.style.border = "2px solid red";
+            playSound("fart");
+            relevantTable.setAttribute("answeredcorrectly", "false");
+          }
+          relevantTable.setAttribute("answered", "true");
+        }
+      });
+    });
+
+    questionTableButtonRow.appendChild(questionTableButtonCell);
+    questionTable.appendChild(questionTableButtonRow);
+
+    const lineBreak = document.createElement("br");
+    // Add the question table to the box and add a line break.
+    quizBox.appendChild(questionTable);
+    practiceState.push(questionTable);
+    quizBox.appendChild(lineBreak);
+    practiceState.push(lineBreak);
+    quizBox.addEventListener("click", (event) => checkQuizComplete(event, "truthtable"));
+  });
 };
 
 // Loads a gang of vocabulary objects as a quiz.
@@ -661,13 +836,13 @@ const loadQuiz = (vocabularyObjects) => {
       headerScript = `"${vocabularyObject.english}" translates to...`;
     } else {
       isEnglish = false;
-      if (scriptOption === "scriptboth") {
+      if (scriptOption === SCRIPT_BOTH) {
         headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
-      } else if (scriptOption === "scriptlatin") {
+      } else if (scriptOption === SCRIPT_LATIN) {
         headerScript = `"${vocabularyObject.latin}" means...`;
-      } else if (scriptOption === "scriptcyrillic") {
+      } else if (scriptOption === SCRIPT_CYRILLIC) {
         headerScript = `"${vocabularyObject.cyrillic}" means...`;
-      } else if (scriptOption === "scriptmix") {
+      } else if (scriptOption === SCRIPT_MIX) {
         // Roll a coin to see if we'll have latin or cyrillic
         if (randomInt(0, 100) > 50) {
           headerScript = `"${vocabularyObject.cyrillic}" means...`;
@@ -709,13 +884,13 @@ const loadQuiz = (vocabularyObjects) => {
       }
       let optionText;
       if (isEnglish) {
-        if (scriptOption === "scriptboth") {
+        if (scriptOption === SCRIPT_BOTH) {
           optionText = `"${quizOption.latin}", or "${quizOption.cyrillic}"`;
-        } else if (scriptOption === "scriptlatin") {
+        } else if (scriptOption === SCRIPT_LATIN) {
           optionText = quizOption.latin;
-        } else if (scriptOption === "scriptcyrillic") {
+        } else if (scriptOption === SCRIPT_CYRILLIC) {
           optionText = quizOption.cyrillic;
-        } else if (scriptOption === "scriptmix") {
+        } else if (scriptOption === SCRIPT_MIX) {
           // Roll a coin to see if we'll have latin or cyrillic
           if (randomInt(0, 100) > 50) {
             optionText = quizOption.cyrillic;
@@ -746,7 +921,7 @@ const loadQuiz = (vocabularyObjects) => {
   topLink.appendChild(topLinkText);
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
-  quizBox.addEventListener("click", (event) => checkQuizComplete(event));
+  quizBox.addEventListener("click", (event) => checkQuizComplete(event, "quizcontainer"));
 };
 
 const showDebugMessage = (message) => {
@@ -760,6 +935,12 @@ const showDebugMessage = (message) => {
 const setPlatformStyle = () => {
   if (isMobile()) {
     flashCardStyleSheet.href = "flashcardsmobile.css";
+    const manifestLink = document.createElement("link");
+    manifestLink.rel = "manifest";
+    manifestLink.href = "cards/manifest.json";
+    const head = document.getElementsByTagName("head")[0];
+    console.log(head);
+    head.appendChild(manifestLink);
   } else if (isDesktop()) {
     flashCardStyleSheet.href = "flashcards.css";
   }
@@ -780,6 +961,8 @@ const main = () => {
 
   addClearStageClickListener();
   addLoadStageClickListener();
+
+  addPracticeOptionsDropdownChangeListener();
 };
 
 (() => {
