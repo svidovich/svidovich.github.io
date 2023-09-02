@@ -16,6 +16,8 @@ import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/da
 
 import { isDesktop, isMobile } from "./cards/os.js";
 
+import { Cycle } from "./cards/cycle.js";
+
 const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
@@ -25,6 +27,25 @@ const SCRIPT_BOTH = "scriptboth";
 const SCRIPT_LATIN = "scriptlatin";
 const SCRIPT_CYRILLIC = "scriptcyrillic";
 const SCRIPT_MIX = "scriptmix";
+
+// This might get heavier
+const CHOICE_MIXED = "mixed";
+const CHOICE_ENG_2_JUG = "eng2jug";
+const CHOICE_JUG_2_ENG = "jug2eng";
+const LANG_CHOICE_CYCLE = new Cycle([
+  {
+    imgSrc: "../media/mixengjug.png",
+    languageChoice: CHOICE_MIXED,
+  },
+  {
+    imgSrc: "../media/eng2jug.png",
+    languageChoice: CHOICE_ENG_2_JUG,
+  },
+  {
+    imgSrc: "../media/jug2eng.png",
+    languageChoice: CHOICE_JUG_2_ENG,
+  },
+]);
 
 // TODO this file could use some OOP.
 
@@ -93,6 +114,13 @@ const addPracticeOptionsDropdownChangeListener = () => {
   practiceOptionsDropDown.addEventListener("change", () => {
     const sectionObject = displayAvailablePracticeFormats();
     prepareSectionDownloadOptions(sectionObject);
+  });
+};
+
+const addLangChoiceClickListener = () => {
+  const langChoiceImg = document.getElementById("langdirchoiceimg");
+  langChoiceImg.addEventListener("click", () => {
+    langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
   });
 };
 
@@ -971,6 +999,7 @@ const main = () => {
   addLoadStageClickListener();
 
   addPracticeOptionsDropdownChangeListener();
+  addLangChoiceClickListener();
 };
 
 (() => {
