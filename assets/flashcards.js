@@ -50,6 +50,10 @@ const LANG_CHOICE_CYCLE = new Cycle([
   },
 ]);
 
+const getLanguageChoice = () => {
+  return LANG_CHOICE_CYCLE.current.value.languageChoice;
+};
+
 // TODO this file could use some OOP.
 
 // Some globally available stuff
@@ -448,6 +452,7 @@ const addFlashcard = (front, back) => {
     // NOTE: This is all gnarly inefficient, but I'm wasted. So.
     const textContentArray = new Array();
     const textBlock = faceType === "front" ? front : back;
+
     if (textBlock.match("\n")) {
       textBlock.split("\n").forEach((line) => {
         textContentArray.push(line);
@@ -517,57 +522,53 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
 
   shuffleArray(vocabCopy);
+  const languageChoice = getLanguageChoice();
+  // TODO Where should this live?
+  const getJugoScriptForCard = (vocabularyObject) => {
+    let script;
+    switch (scriptOption) {
+      case SCRIPT_MIX:
+        script = randomInt(0, 100) > 50 ? vocabularyObject.cyrillic : vocabularyObject.latin;
+        break;
+      case SCRIPT_CYRILLIC:
+        script = vocabularyObject.cyrillic;
+        break;
+      case SCRIPT_LATIN:
+        script = vocabularyObject.latin;
+        break;
+      case SCRIPT_BOTH:
+        script = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
+        break;
+      default:
+        throw new Error(`Invalid script choice: ${scriptOption}. How did you do this?`);
+    }
+    return script;
+  };
   vocabCopy.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    if (scriptOption === SCRIPT_MIX) {
-      // TODO: Constants
-      // We want a mix of cyrillic and latin
-      if (randomInt(0, 100) > 50) {
-        // In this case, we've got Yugo on the front.
-        // Cyrillic, or latin?
-        if (randomInt(0, 100) > 50) {
-          front = vocabularyObject.cyrillic;
-        } else {
-          front = vocabularyObject.latin;
-        }
-        rear = vocabularyObject.english;
-      } else {
-        // Now, the front is English.
-        front = vocabularyObject.english;
-        // In this case, we've got Yugo on the rear.
-        // Cyrillic, or latin?
-        if (randomInt(0, 100) > 50) {
-          rear = vocabularyObject.cyrillic;
-        } else {
-          rear = vocabularyObject.latin;
-        }
-      }
-    } else if (scriptOption === SCRIPT_BOTH) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.english;
-        rear = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
-      } else {
-        front = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
-        rear = vocabularyObject.english;
-      }
-    } else if (scriptOption === SCRIPT_LATIN) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.latin;
-        rear = vocabularyObject.english;
-      } else {
-        rear = vocabularyObject.latin;
-        front = vocabularyObject.english;
-      }
-    } else if (scriptOption === SCRIPT_CYRILLIC) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.cyrillic;
-        rear = vocabularyObject.english;
-      } else {
-        rear = vocabularyObject.cyrillic;
-        front = vocabularyObject.english;
-      }
+    const jugoScriptForCard = getJugoScriptForCard(vocabularyObject);
+
+    if (languageChoice === CHOICE_ENG_2_JUG) {
+      // English is on the front for sure.
+      front = vocabularyObject.english;
+      rear = jugoScriptForCard;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      // Jugo is on the front for sure.
+      front = jugoScriptForCard;
+      rear = vocabularyObject.english;
+    } else if (languageChoice === CHOICE_MIXED) {
+      const pair =
+        randomInt(0, 100) > 50
+          ? { front: vocabularyObject.english, rear: jugoScriptForCard }
+          : {
+              front: jugoScriptForCard,
+              rear: vocabularyObject.english,
+            };
+      // Why can't I destructure here?
+      front = pair.front;
+      rear = pair.rear;
     }
 
     addFlashcard(front, rear);
