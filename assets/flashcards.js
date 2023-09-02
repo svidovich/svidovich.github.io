@@ -16,6 +16,8 @@ import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/da
 
 import { isDesktop, isMobile } from "./cards/os.js";
 
+import { Cycle } from "./cards/cycle.js";
+
 const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
@@ -25,6 +27,32 @@ const SCRIPT_BOTH = "scriptboth";
 const SCRIPT_LATIN = "scriptlatin";
 const SCRIPT_CYRILLIC = "scriptcyrillic";
 const SCRIPT_MIX = "scriptmix";
+
+// This might get heavier
+const CHOICE_MIXED = "mixed";
+const CHOICE_ENG_2_JUG = "eng2jug";
+const CHOICE_JUG_2_ENG = "jug2eng";
+const LANG_CHOICE_CYCLE = new Cycle([
+  {
+    imgSrc: "../media/mixengjug.png",
+    languageChoice: CHOICE_MIXED,
+    choiceTitle: "Mixed English & Jugoslavian",
+  },
+  {
+    imgSrc: "../media/eng2jug.png",
+    languageChoice: CHOICE_ENG_2_JUG,
+    choiceTitle: "English to Jugoslavian",
+  },
+  {
+    imgSrc: "../media/jug2eng.png",
+    languageChoice: CHOICE_JUG_2_ENG,
+    choiceTitle: "Jugoslavian to English",
+  },
+]);
+
+const getLanguageChoice = () => {
+  return LANG_CHOICE_CYCLE.current.value.languageChoice;
+};
 
 // TODO this file could use some OOP.
 
@@ -93,6 +121,14 @@ const addPracticeOptionsDropdownChangeListener = () => {
   practiceOptionsDropDown.addEventListener("change", () => {
     const sectionObject = displayAvailablePracticeFormats();
     prepareSectionDownloadOptions(sectionObject);
+  });
+};
+
+const addLangChoiceClickListener = () => {
+  const langChoiceImg = document.getElementById("langdirchoiceimg");
+  langChoiceImg.addEventListener("click", () => {
+    langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
+    langChoiceImg.title = LANG_CHOICE_CYCLE.current.value.choiceTitle;
   });
 };
 
@@ -416,6 +452,7 @@ const addFlashcard = (front, back) => {
     // NOTE: This is all gnarly inefficient, but I'm wasted. So.
     const textContentArray = new Array();
     const textBlock = faceType === "front" ? front : back;
+
     if (textBlock.match("\n")) {
       textBlock.split("\n").forEach((line) => {
         textContentArray.push(line);
@@ -470,6 +507,27 @@ const addFlashcard = (front, back) => {
   });
 };
 
+const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
+  let script;
+  switch (scriptOption) {
+    case SCRIPT_MIX:
+      script = randomInt(0, 100) > 50 ? vocabularyObject.cyrillic : vocabularyObject.latin;
+      break;
+    case SCRIPT_CYRILLIC:
+      script = vocabularyObject.cyrillic;
+      break;
+    case SCRIPT_LATIN:
+      script = vocabularyObject.latin;
+      break;
+    case SCRIPT_BOTH:
+      script = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
+      break;
+    default:
+      throw new Error(`Invalid script choice: ${scriptOption}. How did you do this?`);
+  }
+  return script;
+};
+
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
   const scoreBar = document.getElementById("scorebar");
@@ -485,57 +543,34 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
 
   shuffleArray(vocabCopy);
+  const languageChoice = getLanguageChoice();
+  // TODO Where should this live?
+
   vocabCopy.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    if (scriptOption === SCRIPT_MIX) {
-      // TODO: Constants
-      // We want a mix of cyrillic and latin
-      if (randomInt(0, 100) > 50) {
-        // In this case, we've got Yugo on the front.
-        // Cyrillic, or latin?
-        if (randomInt(0, 100) > 50) {
-          front = vocabularyObject.cyrillic;
-        } else {
-          front = vocabularyObject.latin;
-        }
-        rear = vocabularyObject.english;
-      } else {
-        // Now, the front is English.
-        front = vocabularyObject.english;
-        // In this case, we've got Yugo on the rear.
-        // Cyrillic, or latin?
-        if (randomInt(0, 100) > 50) {
-          rear = vocabularyObject.cyrillic;
-        } else {
-          rear = vocabularyObject.latin;
-        }
-      }
-    } else if (scriptOption === SCRIPT_BOTH) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.english;
-        rear = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
-      } else {
-        front = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
-        rear = vocabularyObject.english;
-      }
-    } else if (scriptOption === SCRIPT_LATIN) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.latin;
-        rear = vocabularyObject.english;
-      } else {
-        rear = vocabularyObject.latin;
-        front = vocabularyObject.english;
-      }
-    } else if (scriptOption === SCRIPT_CYRILLIC) {
-      if (randomInt(0, 100) > 50) {
-        front = vocabularyObject.cyrillic;
-        rear = vocabularyObject.english;
-      } else {
-        rear = vocabularyObject.cyrillic;
-        front = vocabularyObject.english;
-      }
+    const jugoScriptForCard = getJugoScriptForObject(scriptOption, vocabularyObject);
+
+    if (languageChoice === CHOICE_ENG_2_JUG) {
+      // English is on the front for sure.
+      front = vocabularyObject.english;
+      rear = jugoScriptForCard;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      // Jugo is on the front for sure.
+      front = jugoScriptForCard;
+      rear = vocabularyObject.english;
+    } else if (languageChoice === CHOICE_MIXED) {
+      const pair =
+        randomInt(0, 100) > 50
+          ? { front: vocabularyObject.english, rear: jugoScriptForCard }
+          : {
+              front: jugoScriptForCard,
+              rear: vocabularyObject.english,
+            };
+      // Why can't I destructure here?
+      front = pair.front;
+      rear = pair.rear;
     }
 
     addFlashcard(front, rear);
@@ -667,6 +702,7 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   // Each object should be represented.
   let sourceEnglish;
   vocabCopy.forEach((vocabularyObject) => {
+    const jugoScript = getJugoScriptForObject(scriptOption, vocabularyObject);
     // Get an ID for the question.
     const questionUUID = UUIDGeneratorBrowser();
     // Decide if it should be true or false. Do a coin flip.
@@ -687,9 +723,18 @@ const loadTrueOrFalse = (vocabularyObjects) => {
       };
     }
     // Flip a coin to see if the left side is english or not.
-    sourceEnglish = randomInt(0, 100) > 50 ? true : false;
+    const languageChoice = getLanguageChoice();
+    if (languageChoice === CHOICE_ENG_2_JUG) {
+      sourceEnglish = true;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      sourceEnglish = false;
+    } else if (languageChoice === CHOICE_MIXED) {
+      sourceEnglish = randomInt(0, 100) > 50;
+    }
+
     const jugoObject = sourceEnglish ? pair.destinationObject : pair.sourceObject;
     const englishSide = sourceEnglish ? pair.sourceObject.english : pair.destinationObject.english;
+
     let jugoSide;
     if (scriptOption === SCRIPT_BOTH) {
       const conjunction = sourceEnglish ? "or" : "and";
@@ -839,11 +884,17 @@ const loadQuiz = (vocabularyObjects) => {
     // Add a header for each of the quiz questions
     let headerScript;
     // Flip a coin to decide whether our header is english or Jugoslav
-    if (randomInt(0, 100) > 50) {
+    const languageChoice = getLanguageChoice();
+    if (languageChoice === CHOICE_ENG_2_JUG) {
       isEnglish = true;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      isEnglish = false;
+    } else if (languageChoice === CHOICE_MIXED) {
+      isEnglish = randomInt(0, 100) > 50;
+    }
+    if (isEnglish) {
       headerScript = `"${vocabularyObject.english}" translates to...`;
     } else {
-      isEnglish = false;
       if (scriptOption === SCRIPT_BOTH) {
         headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
       } else if (scriptOption === SCRIPT_LATIN) {
@@ -971,6 +1022,7 @@ const main = () => {
   addLoadStageClickListener();
 
   addPracticeOptionsDropdownChangeListener();
+  addLangChoiceClickListener();
 };
 
 (() => {

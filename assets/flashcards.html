@@ -30,6 +30,7 @@
         height="40px"
         style="filter: grayscale(100%)"
         alt="CSV Download"
+        title="CSV Download"
       />
       <img
         id="jsondownloadicon"
@@ -38,6 +39,18 @@
         height="40px"
         style="filter: grayscale(100%)"
         alt="JSON Download"
+        title="JSON Download"
+      />
+    </div>
+    <!-- beat the CSS into submission -->
+    <div id="langdirchoice" style="position: absolute; top: 50px; right: 5px; cursor: pointer">
+      <img
+        id="langdirchoiceimg"
+        src="../media/mixengjug.png"
+        width="98"
+        height="18"
+        alt="Mixed English & Jugoslavian"
+        title="Mixed English & Jugoslavian"
       />
     </div>
     <div id="scorebar" class="scorebar" score="0" hidden></div>
@@ -65,7 +78,6 @@
         <option value="" selected disabled hidden>Choose a Practice</option>
       </select>
       <div id="practiceformatscontainer" hidden></div>
-      <br />
       <div class="practiceformatoption" id="practiceformatoption" hidden></div>
       <div class="scriptoptionstitletext">Text Options</div>
       <br />
@@ -114,4 +126,5 @@
   <script type="module" src="cards/utilities.js"></script>
   <script type="module" src="cards/os.js"></script>
   <script type="module" src="cards/dateutils.js"></script>
+  <script type="module" src="cards/cycle.js"></script>
 </html>
