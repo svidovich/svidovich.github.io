@@ -507,6 +507,27 @@ const addFlashcard = (front, back) => {
   });
 };
 
+const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
+  let script;
+  switch (scriptOption) {
+    case SCRIPT_MIX:
+      script = randomInt(0, 100) > 50 ? vocabularyObject.cyrillic : vocabularyObject.latin;
+      break;
+    case SCRIPT_CYRILLIC:
+      script = vocabularyObject.cyrillic;
+      break;
+    case SCRIPT_LATIN:
+      script = vocabularyObject.latin;
+      break;
+    case SCRIPT_BOTH:
+      script = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
+      break;
+    default:
+      throw new Error(`Invalid script choice: ${scriptOption}. How did you do this?`);
+  }
+  return script;
+};
+
 // Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
   const scoreBar = document.getElementById("scorebar");
@@ -524,31 +545,12 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   shuffleArray(vocabCopy);
   const languageChoice = getLanguageChoice();
   // TODO Where should this live?
-  const getJugoScriptForCard = (vocabularyObject) => {
-    let script;
-    switch (scriptOption) {
-      case SCRIPT_MIX:
-        script = randomInt(0, 100) > 50 ? vocabularyObject.cyrillic : vocabularyObject.latin;
-        break;
-      case SCRIPT_CYRILLIC:
-        script = vocabularyObject.cyrillic;
-        break;
-      case SCRIPT_LATIN:
-        script = vocabularyObject.latin;
-        break;
-      case SCRIPT_BOTH:
-        script = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
-        break;
-      default:
-        throw new Error(`Invalid script choice: ${scriptOption}. How did you do this?`);
-    }
-    return script;
-  };
+
   vocabCopy.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    const jugoScriptForCard = getJugoScriptForCard(vocabularyObject);
+    const jugoScriptForCard = getJugoScriptForObject(scriptOption, vocabularyObject);
 
     if (languageChoice === CHOICE_ENG_2_JUG) {
       // English is on the front for sure.
@@ -700,6 +702,7 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   // Each object should be represented.
   let sourceEnglish;
   vocabCopy.forEach((vocabularyObject) => {
+    const jugoScript = getJugoScriptForObject(scriptOption, vocabularyObject);
     // Get an ID for the question.
     const questionUUID = UUIDGeneratorBrowser();
     // Decide if it should be true or false. Do a coin flip.
@@ -720,9 +723,18 @@ const loadTrueOrFalse = (vocabularyObjects) => {
       };
     }
     // Flip a coin to see if the left side is english or not.
-    sourceEnglish = randomInt(0, 100) > 50 ? true : false;
+    const languageChoice = getLanguageChoice();
+    if (languageChoice === CHOICE_ENG_2_JUG) {
+      sourceEnglish = true;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      sourceEnglish = false;
+    } else if (languageChoice === CHOICE_MIXED) {
+      sourceEnglish = randomInt(0, 100) > 50;
+    }
+
     const jugoObject = sourceEnglish ? pair.destinationObject : pair.sourceObject;
     const englishSide = sourceEnglish ? pair.sourceObject.english : pair.destinationObject.english;
+
     let jugoSide;
     if (scriptOption === SCRIPT_BOTH) {
       const conjunction = sourceEnglish ? "or" : "and";
@@ -872,11 +884,17 @@ const loadQuiz = (vocabularyObjects) => {
     // Add a header for each of the quiz questions
     let headerScript;
     // Flip a coin to decide whether our header is english or Jugoslav
-    if (randomInt(0, 100) > 50) {
+    const languageChoice = getLanguageChoice();
+    if (languageChoice === CHOICE_ENG_2_JUG) {
       isEnglish = true;
+    } else if (languageChoice === CHOICE_JUG_2_ENG) {
+      isEnglish = false;
+    } else if (languageChoice === CHOICE_MIXED) {
+      isEnglish = randomInt(0, 100) > 50;
+    }
+    if (isEnglish) {
       headerScript = `"${vocabularyObject.english}" translates to...`;
     } else {
-      isEnglish = false;
       if (scriptOption === SCRIPT_BOTH) {
         headerScript = `"${vocabularyObject.latin}" and "${vocabularyObject.cyrillic}" mean...`;
       } else if (scriptOption === SCRIPT_LATIN) {
