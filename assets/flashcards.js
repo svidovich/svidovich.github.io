@@ -36,14 +36,17 @@ const LANG_CHOICE_CYCLE = new Cycle([
   {
     imgSrc: "../media/mixengjug.png",
     languageChoice: CHOICE_MIXED,
+    choiceTitle: "Mixed English & Jugoslavian",
   },
   {
     imgSrc: "../media/eng2jug.png",
     languageChoice: CHOICE_ENG_2_JUG,
+    choiceTitle: "English to Jugoslavian",
   },
   {
     imgSrc: "../media/jug2eng.png",
     languageChoice: CHOICE_JUG_2_ENG,
+    choiceTitle: "Jugoslavian to English",
   },
 ]);
 
@@ -121,6 +124,7 @@ const addLangChoiceClickListener = () => {
   const langChoiceImg = document.getElementById("langdirchoiceimg");
   langChoiceImg.addEventListener("click", () => {
     langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
+    langChoiceImg.title = LANG_CHOICE_CYCLE.current.value.choiceTitle;
   });
 };
 
