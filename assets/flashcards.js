@@ -10,7 +10,8 @@ import {
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
-import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F, practiceMap } from "./flashcarddata.js";
+import { practiceMap } from "./flashcarddata.js";
+import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F } from "./cards/vocabulary.js";
 
 import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 
