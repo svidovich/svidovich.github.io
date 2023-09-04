@@ -101,6 +101,134 @@ const addSoundToggleClickListener = () => {
   });
 };
 
+const handleNewCustomLessonSave = (dialog) => {
+  console.log("lesson saved");
+  dialog.close();
+};
+
+const clearLanguageEntryFieldsFromDialog = () => {
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  const rows = document.getElementsByClassName("newcustomexercisefieldrow");
+  Array.from(rows).forEach((row) => {
+    row.remove();
+  });
+};
+
+const addCustomPracticeNameEntryFieldToDialog = () => {
+  // Add an "Exercise Name" dialog after the little title text and
+  // before the table full of crap
+  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
+  const customExerciseDialogTable = document.getElementById("newcustomexerciseformtable");
+  const customPracticeNameInput = document.createElement("input");
+  customPracticeNameInput.type = "text";
+  customPracticeNameInput.className = "newcustomexercisename";
+  customPracticeNameInput.id = "newcustomexercisename";
+  customPracticeNameInput.name = "exercisename";
+
+  // The UUID of the practice will be different from the UUID of
+  // any of the individual terms on the practice
+  customPracticeNameInput.setAttribute("uuid", UUIDGeneratorBrowser());
+
+  // Add a lil' label for it too
+  const customPracticeNameInputLabel = document.createElement("label");
+  customPracticeNameInputLabel.for = "exercisename";
+  customPracticeNameInputLabel.textContent = "Exercise Name: ";
+
+  // And finally define the form
+  const customPracticeNameInputForm = document.createElement("form");
+  customPracticeNameInputForm.appendChild(customPracticeNameInputLabel);
+  customPracticeNameInputForm.appendChild(customPracticeNameInput);
+  customPracticeNameInputForm.id = "custompracticenameinputform";
+  customPracticeNameInputForm.style.display = "block";
+  customPracticeNameInputForm.style.textAlign = "center";
+
+  // Now we can insert it above the table.
+  customExerciseDialog.insertBefore(customPracticeNameInputForm, customExerciseDialogTable);
+};
+
+const clearCustomPracticeNameEntryFieldFromDialog = () => {
+  // Dumpsters the trash created by addCustomPracticeNameEntryFieldToDialog
+  const nameInputForm = document.getElementById("custompracticenameinputform");
+  if (nameInputForm) {
+    nameInputForm.remove();
+  }
+};
+
+const addLanguageEntryFieldToDialog = () => {
+  // Adds an input row to the custom exercise dialog
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  const newFieldRow = document.createElement("tr");
+  const entryFieldUUID = UUIDGeneratorBrowser();
+  newFieldRow.className = "newcustomexercisefieldrow";
+  newFieldRow.id = `newcustomexercisefieldrow-${entryFieldUUID}`;
+  newFieldRow.setAttribute("uuid", entryFieldUUID);
+
+  const englishTd = document.createElement("td");
+  englishTd.className = "newcustomexercisefieldenglish";
+  englishTd.id = `newcustomexercisefieldenglish-${entryFieldUUID}`;
+  englishTd.setAttribute("uuid", entryFieldUUID);
+
+  const englishInput = document.createElement("input");
+  englishInput.type = "text";
+  englishInput.id = `newcustomexerciseinputenglish-${entryFieldUUID}`;
+  englishInput.style.display = "block";
+  englishInput.style.margin = "0 auto";
+  englishInput.name = "english";
+  englishInput.setAttribute("uuid", entryFieldUUID);
+  englishTd.appendChild(englishInput);
+
+  const latinTd = document.createElement("td");
+  latinTd.className = "newcustomexercisefieldlatin";
+  latinTd.id = `newcustomexercisefieldlatin-${entryFieldUUID}`;
+  latinTd.setAttribute("uuid", entryFieldUUID);
+
+  const latinInput = document.createElement("input");
+  latinInput.type = "text";
+  latinInput.id = `newcustomexerciseinputlatin-${entryFieldUUID}`;
+  latinInput.style.display = "block";
+  latinInput.style.margin = "0 auto";
+  latinInput.setAttribute("uuid", entryFieldUUID);
+  latinInput.name = "latin";
+  latinTd.appendChild(latinInput);
+
+  newFieldRow.appendChild(englishTd);
+  newFieldRow.appendChild(latinTd);
+  formTable.appendChild(newFieldRow);
+};
+
+const handleNewCustomLessonCancel = (dialog) => {
+  console.log("canceled uh, editing new lesson");
+  dialog.close();
+};
+
+const addNewCustomLessonClickListeners = () => {
+  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
+  const newCustomLessonIcon = document.getElementById("addexerciseicon");
+  newCustomLessonIcon.addEventListener("click", () => {
+    clearCustomPracticeNameEntryFieldFromDialog();
+    addCustomPracticeNameEntryFieldToDialog();
+
+    clearLanguageEntryFieldsFromDialog();
+    addLanguageEntryFieldToDialog();
+    customExerciseDialog.showModal();
+  });
+  // What happens when we press "Save"?
+  const newCustomLessonSaveButton = document.getElementById("newcustomexercisedialogbuttonsave");
+  newCustomLessonSaveButton.addEventListener("click", () => {
+    handleNewCustomLessonSave(customExerciseDialog);
+  });
+  // What happens when we press "Cancel"?
+  const newCustomLessonCancelButton = document.getElementById("newcustomexercisedialogbuttoncancel");
+  newCustomLessonCancelButton.addEventListener("click", () => {
+    handleNewCustomLessonCancel(customExerciseDialog);
+  });
+  // This button helps us add more entries to our practice
+  const newCustomLessonAddEntryButton = document.getElementById("newcustomexerciseaddbutton");
+  newCustomLessonAddEntryButton.addEventListener("click", () => {
+    addLanguageEntryFieldToDialog();
+  });
+};
+
 const addClearStageClickListener = () => {
   // Button for clearing the working stage
   const clearStageButton = document.getElementById("clearstagebutton");
@@ -1018,6 +1146,7 @@ const main = () => {
 
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
+  addNewCustomLessonClickListeners();
 };
 
 (() => {
