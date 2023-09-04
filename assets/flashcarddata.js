@@ -1,4 +1,4 @@
-import { vocabularySectionFromArray, VocabularySection, VocabularyObject } from "./cards/vocabulary.js";
+import { vocabularySectionFromArray } from "./cards/vocabulary.js";
 
 const ADJECTIVES_1_JSON = [
   { english: "Good", latin: "Dobar" },
@@ -799,11 +799,11 @@ const REGIONALISMS_KORDUN = vocabularySectionFromArray(
   REGIONALISMS_KORDUN_JSON
 );
 
-const _DEBUG_SECTION = new VocabularySection("Debug", "debug", [
-  new VocabularyObject("0", "0"),
-  new VocabularyObject("1", "1"),
-  new VocabularyObject("2", "2"),
-  new VocabularyObject("3", "3"),
+const _DEBUG_SECTION = vocabularySectionFromArray("Debug", "debug", [
+  { english: "0", latin: "0" },
+  { english: "1", latin: "1" },
+  { english: "2", latin: "2" },
+  { english: "3", latin: "3" },
 ]);
 
 // Generates a mapping like
