@@ -6,6 +6,9 @@ class Node {
 }
 
 export class Cycle {
+  // NOTE: This cycle is a piece of garbage. It is read-only after construction
+  // right now because I didn't want to deal with any complex logic. Use at your
+  // own risk, or improve it.
   constructor(nodes) {
     for (const [index, node] of nodes.entries()) {
       const inserted = this.insert(node);
@@ -33,6 +36,10 @@ export class Cycle {
     }
   }
   get next() {
+    // NOTE This implicitly modifies the cycle's
+    // state. This should probably be a method
+    // instead of a property to make that more
+    // obvious to consumers of its API
     this.current = this.current.next;
     return this.current;
   }
