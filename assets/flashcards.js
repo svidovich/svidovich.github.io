@@ -995,12 +995,6 @@ const showDebugMessage = (message) => {
 const setPlatformStyle = () => {
   if (isMobile()) {
     flashCardStyleSheet.href = "flashcardsmobile.css";
-    const manifestLink = document.createElement("link");
-    manifestLink.rel = "manifest";
-    manifestLink.href = "cards/manifest.json";
-    const head = document.getElementsByTagName("head")[0];
-    console.log(head);
-    head.appendChild(manifestLink);
   } else if (isDesktop()) {
     flashCardStyleSheet.href = "flashcards.css";
   }
