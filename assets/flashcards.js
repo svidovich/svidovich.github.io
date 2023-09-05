@@ -173,6 +173,10 @@ const handleNewCustomLessonSave = (dialog) => {
     practicesToStore = allCustomPractices;
   }
   putObjectToLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY, practicesToStore);
+  // This lets us read our own writes so we don't have to refresh
+  // to see the new section in the drop-down
+  clearPracticeOptionsDropwdown();
+  loadAllPracticesToDropDown();
   dialog.close();
 };
 
@@ -621,6 +625,13 @@ const displayAvailablePracticeFormats = () => {
   return sectionObject;
 };
 
+const clearPracticeOptionsDropwdown = () => {
+  // Drops all of the options from the practice options dropdown.
+  Array.from(document.getElementsByClassName("vocabularysectionoption")).forEach((option) => {
+    option.remove();
+  });
+};
+
 // NOTE: In the future, this won't just be VocabularySection objects.
 // We'll see how this goes.
 const fillPracticeOptionsDropdown = (vocabularySections) => {
@@ -628,6 +639,7 @@ const fillPracticeOptionsDropdown = (vocabularySections) => {
   vocabularySections.forEach((vocabularySection) => {
     // Create a new option that we'll shortly add to the dropdown
     const vocabularySectionOption = document.createElement("option");
+    vocabularySectionOption.className = "vocabularysectionoption";
     // Add a 'value' to the option. NOTE: in the future it might be good to have
     // more attributes that act as categories by which we can divine the capabilities
     // of each of the entries. We'll see.
