@@ -1,7 +1,9 @@
+import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 import {
   UUIDGeneratorBrowser,
   chooseRandomExcept,
+  camelize,
   decimalToColor,
   getObjectFromLocalStorage,
   localStorageKeyExists,
@@ -10,14 +12,21 @@ import {
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
+import {
+  FORMAT_FLASHCARDS,
+  FORMAT_QUIZ,
+  FORMAT_T_OR_F,
+  VocabularyObject,
+  VocabularySection,
+  vocabularySectionFromArray,
+} from "./cards/vocabulary.js";
 import { practiceMap } from "./flashcarddata.js";
-import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F } from "./cards/vocabulary.js";
-
-import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 
 import { isDesktop, isMobile } from "./cards/os.js";
 
 import { Cycle } from "./cards/cycle.js";
+
+const CUSTOM_PRACTICE_STORAGE_KEY = "customPractices";
 
 const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
@@ -64,6 +73,18 @@ export const flashCardStyleSheet = document.getElementById("flashcardstylesheet"
 // Global for storing practice document state
 const practiceState = new Array();
 
+const loadPracticeMapWithCustomEntries = () => {
+  const customPracticesMapped = new Object();
+  const customPractices = getCustomPracticesFromStorage();
+  customPractices.forEach((practice) => {
+    customPracticesMapped[practice.unfriendlyName] = practice;
+  });
+  return {
+    ...practiceMap,
+    ...customPracticesMapped,
+  };
+};
+
 // Warning about cookies
 const cookieWarningSetup = () => {
   const cookieBanner = document.getElementById("cookie-banner");
@@ -102,8 +123,73 @@ const addSoundToggleClickListener = () => {
 };
 
 const handleNewCustomLessonSave = (dialog) => {
-  console.log("lesson saved");
+  // When we press save, we should get all of the necessary data from
+  // the dialog to save a custom practice.
+  const customPracticeNameElement = document.getElementById("newcustomexercisename");
+  const customPracticeName = customPracticeNameElement.value;
+  // If they haven't named it, we should bail
+  if (customPracticeName === "") {
+    alert("Don't forget to name your practice!");
+    return;
+  }
+  const practiceObjects = new Array();
+  const englishInputs = Array.from(document.getElementsByClassName("newcustomexerciseinputenglish"));
+  englishInputs.forEach((input) => {
+    const englishInputValue = input.value;
+    // If we hit an empty entry, skip it. Otherwise...
+    if (englishInputValue !== "") {
+      // Grab the UUID for the english bit,
+      const englishInputUUID = input.getAttribute("uuid");
+      // and try to find a matching latin bit.
+      const latinInputForUUID = document.getElementById(`newcustomexerciseinputlatin-${englishInputUUID}`);
+      const latinInputValue = latinInputForUUID.value;
+      // If there's a matching latin bit, go ahead and push it to the array
+      // we prepared ahead of time. If it's empty, we shouldn't push it, we
+      // should skip to the next entry.
+      if (latinInputValue !== "") {
+        practiceObjects.push(new VocabularyObject(englishInputValue, latinInputValue).asObject);
+      }
+    }
+  });
+  // If we wound up with an empty array, we'll erase. This could be because
+  // we didn't complete the English or Latin sides.
+  if (practiceObjects.length === 0) {
+    alert("You need to add some entries to your custom practice!");
+    return;
+  }
+
+  const serializedCustomPractice = {
+    friendlyName: customPracticeName,
+    unfriendlyName: camelize(customPracticeName),
+    vocabularyObjects: practiceObjects,
+  };
+
+  let practicesToStore;
+  const allCustomPractices = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  if (!allCustomPractices) {
+    practicesToStore = [serializedCustomPractice];
+  } else {
+    allCustomPractices.push(serializedCustomPractice);
+    practicesToStore = allCustomPractices;
+  }
+  putObjectToLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY, practicesToStore);
   dialog.close();
+};
+
+const getCustomPracticesFromStorage = () => {
+  // Retrieve the practices from local storage, loading them as an array
+  // of VocabularySection objects.
+  const practicesLoaded = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  if (!practicesLoaded) {
+    return [];
+  }
+  const sectionObjects = new Array();
+  practicesLoaded.forEach((practiceJSON) => {
+    sectionObjects.push(
+      vocabularySectionFromArray(practiceJSON.friendlyName, practiceJSON.unfriendlyName, practiceJSON.vocabularyObjects)
+    );
+  });
+  return sectionObjects;
 };
 
 const clearLanguageEntryFieldsFromDialog = () => {
@@ -170,6 +256,7 @@ const addLanguageEntryFieldToDialog = () => {
 
   const englishInput = document.createElement("input");
   englishInput.type = "text";
+  englishInput.className = "newcustomexerciseinputenglish";
   englishInput.id = `newcustomexerciseinputenglish-${entryFieldUUID}`;
   englishInput.style.display = "block";
   englishInput.style.margin = "0 auto";
@@ -184,6 +271,7 @@ const addLanguageEntryFieldToDialog = () => {
 
   const latinInput = document.createElement("input");
   latinInput.type = "text";
+  latinInput.className = "newcustomexerciseinputlatin";
   latinInput.id = `newcustomexerciseinputlatin-${entryFieldUUID}`;
   latinInput.style.display = "block";
   latinInput.style.margin = "0 auto";
@@ -360,13 +448,13 @@ const loadStage = () => {
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
     const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
-
+    const fullPracticeMap = loadPracticeMapWithCustomEntries();
     if (practiceFormatOption === FORMAT_FLASHCARDS) {
-      loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+      loadShuffledFlashCards(fullPracticeMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_QUIZ) {
-      loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+      loadQuiz(fullPracticeMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_T_OR_F) {
-      loadTrueOrFalse(practiceMap[selectedPractice].vocabularyObjects);
+      loadTrueOrFalse(fullPracticeMap[selectedPractice].vocabularyObjects);
     }
   } else {
     choosePracticeWarning.hidden = false;
@@ -492,7 +580,8 @@ const displayAvailablePracticeFormats = () => {
   }
   // Load the available practice formats for our selected practice
   const selectedPractice = practiceOptionsDropDown.value;
-  const sectionObject = practiceMap[selectedPractice];
+
+  const sectionObject = loadPracticeMapWithCustomEntries()[selectedPractice];
   // Create a new form in which we'll contain these formats.
   const practiceFormatsRadioForm = document.createElement("form");
   practiceFormatsRadioForm.className = "practiceformatsradioform";
@@ -1128,9 +1217,15 @@ const setPlatformStyle = () => {
   }
 };
 
+const loadAllPracticesToDropDown = () => {
+  const customPractices = getCustomPracticesFromStorage();
+  const toLoad = [...Object.values(practiceMap), ...customPractices];
+  fillPracticeOptionsDropdown(toLoad);
+};
+
 const main = () => {
   setPlatformStyle();
-  fillPracticeOptionsDropdown(Object.values(practiceMap));
+  loadAllPracticesToDropDown();
   setStreakDisplay(streakDisplay);
   // Check cookies for whether or not we've...
   // warned about cookies lol. Display banner if not.
