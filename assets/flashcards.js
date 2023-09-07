@@ -288,9 +288,127 @@ const addLanguageEntryFieldToDialog = () => {
   formTable.appendChild(newFieldRow);
 };
 
-const handleNewCustomLessonCancel = (dialog) => {
-  console.log("canceled uh, editing new lesson");
-  dialog.close();
+const customLessonEntriesFromFileText = (fileText) => {
+  const splitFile = fileText.split("\n");
+  const head = splitFile[0];
+  // NOTE / HACK
+  // Goofy way to detect CSVs. We'll see how this goes.
+  // The logic -- it has to have both english an latin...
+  // ... but only one of them can be first. Right!?
+  if (head.includes(",latin") || head.includes(",english")) {
+    // We're most likely looking at a CSV
+    const csvHeaderArray = head.split(",");
+    const indexEnglish = csvHeaderArray.indexOf("english");
+    const indexLatin = csvHeaderArray.indexOf("latin");
+    // Get everything besides the header
+    const restOfTheCSV = splitFile.slice(1);
+    const entryArray = new Array();
+    restOfTheCSV.forEach((csvLine) => {
+      const csvLineSplit = csvLine.split(",");
+      const lineEnglish = csvLineSplit[indexEnglish];
+      const lineLatin = csvLineSplit[indexLatin];
+      // Skip new / empty lines.
+      if (!lineEnglish || !lineLatin) {
+        return;
+      }
+      entryArray.push({
+        english: lineEnglish,
+        latin: lineLatin,
+      });
+    });
+    return entryArray;
+  } else {
+    // If it's not a CSV, it should only be JSON
+    // Caller needs to catch, not me.
+    const fileDataFromJSON = JSON.parse(fileText);
+    if (!Array.isArray(fileDataFromJSON)) {
+      throw new Error("Invalid file format");
+    }
+    // We iterate twice. If we don't have the right keys,
+    // we should throw.
+    fileDataFromJSON.forEach((entry) => {
+      if (!(entry.hasOwnProperty("english") && entry.hasOwnProperty("latin"))) {
+        throw new Error("Invalid file format: All objects need 'english' and 'latin' keys");
+      }
+    });
+    const entryArray = new Array();
+    fileDataFromJSON.forEach((entry) => {
+      entryArray.push({
+        english: entry.english,
+        latin: entry.latin,
+      });
+    });
+    return entryArray;
+  }
+};
+
+const getLastCustomExerciseDialogRow = () => {
+  // Returns a <tr> element or nothin'
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  return formTable.lastChild;
+};
+
+const addEntriesToCustomExerciseDialog = (entries) => {
+  // entries is an array of objects [... {english: ..., latin:...}, ...]
+  // Nothing to do.
+  if (!entries) {
+    return;
+  }
+  // Get the current last row
+  const lastRow = getLastCustomExerciseDialogRow();
+  const englishInput = lastRow.querySelector('input[name="english"]');
+  const latinInput = lastRow.querySelector('input[name="latin"]');
+  // If english and latin input are both empty, it means this row is usable,
+  // and we can start here
+  let theRestOfTheEntries;
+  if (englishInput.value === "" && latinInput.value === "") {
+    const { english: firstEntryEnglish, latin: firstEntryLatin } = entries[0];
+    englishInput.value = firstEntryEnglish;
+    latinInput.value = firstEntryLatin;
+    // Continuing, we don't need the first entry.
+    theRestOfTheEntries = entries.splice(1);
+  } else {
+    theRestOfTheEntries = entries;
+  }
+  theRestOfTheEntries.forEach((entry) => {
+    // For every entry, add a new row,
+    addLanguageEntryFieldToDialog();
+    // Grab that row and slurp the right input fields,
+    const row = getLastCustomExerciseDialogRow();
+    const rowEnglishInput = row.querySelector('input[name="english"]');
+    const rowLatinInput = row.querySelector('input[name="latin"]');
+
+    // And set the right values.
+    rowEnglishInput.value = entry.english;
+    rowLatinInput.value = entry.latin;
+  });
+};
+
+const fillCustomLessonEntryFormFromDrop = (event) => {
+  // When a file gets dropped over the custom lesson dialog,
+  // we need to read it and fill in the inputs if it's properly
+  // formed. If it's malformed, we should let the user know.
+  // We're not hiding anything... we'll log the error to the
+  // console as well.
+  const eventDataTransfer = event.dataTransfer;
+  const files = eventDataTransfer.files;
+  if (!files) {
+    alert("Hey, I didn't find any files. You can't drop blobs, sorry.");
+    return;
+  }
+  Array.from(files).forEach((file) => {
+    file.text().then((fileText) => {
+      try {
+        const customEntries = customLessonEntriesFromFileText(fileText);
+        addEntriesToCustomExerciseDialog(customEntries);
+      } catch (err) {
+        console.log(`Hey programmer! Here's the file read error: ${err} -- shoot me an email if you need help.`);
+        alert(
+          `Failed to read uploaded file ${file.name}. CSVs need a header of "latin,english"; JSON needs to be an array of objects with 'english' and 'latin' keys.`
+        );
+      }
+    });
+  });
 };
 
 const addNewCustomLessonClickListeners = () => {
@@ -312,12 +430,39 @@ const addNewCustomLessonClickListeners = () => {
   // What happens when we press "Cancel"?
   const newCustomLessonCancelButton = document.getElementById("newcustomexercisedialogbuttoncancel");
   newCustomLessonCancelButton.addEventListener("click", () => {
-    handleNewCustomLessonCancel(customExerciseDialog);
+    customExerciseDialog.close();
   });
   // This button helps us add more entries to our practice
   const newCustomLessonAddEntryButton = document.getElementById("newcustomexerciseaddbutton");
   newCustomLessonAddEntryButton.addEventListener("click", () => {
     addLanguageEntryFieldToDialog();
+  });
+
+  // We need to prevent the browser from doing default trash when we drag
+  // stuff over the window.
+  ["dragenter", "dragleave", "dragover", "drop"].forEach((eventType) => {
+    window.addEventListener(eventType, (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+    });
+  });
+  // Things that happen when we drag something over the dialog
+  customExerciseDialog.addEventListener("dragenter", () => {
+    const body = document.getElementsByTagName("body")[0];
+    body.style.cursor = "copy";
+  });
+  // This makes the cursor... I dunno. It's acting dumb
+  ["dragleave", "dragend"].forEach((eventType) =>
+    customExerciseDialog.addEventListener(eventType, () => {
+      const body = document.getElementsByTagName("body")[0];
+      body.style.cursor = "auto";
+    })
+  );
+  // When we drop, let's send the file over.
+  customExerciseDialog.addEventListener("drop", (event) => {
+    fillCustomLessonEntryFormFromDrop(event);
+    const body = document.getElementsByTagName("body")[0];
+    body.style.cursor = "auto";
   });
 };
 
