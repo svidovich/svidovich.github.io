@@ -138,7 +138,22 @@
   <dialog id="newcustomexercisedialog" style="border-radius: 10px">
     <div id="newcustomexercisetitletext" style="text-align: center">
       Add entries for your custom exercise! In the box on the left, add a new word or small phrase in English. On the
-      right, add it in Yugoslavian. Please add the <strong>latin</strong> form. <br /><br /><br />
+      right, add it in Yugoslavian. Please add the <strong>latin</strong> form.
+      <br />
+      <br />
+      <!--
+        This span allows me to prevent the UI from highlighting these links
+        when the dialog opens, which looks dumb and I don't like it :)
+      -->
+      <span class="ui-helper-hidden-accessible" id="advancedusernotice">
+        Are you an advanced user? You can drag and drop JSON and CSV files onto this dialog.
+        <br />
+        <a href="./cards/customsample.csv" download>Sample CSV Document</a> |
+        <a href="./cards/customsample.json" download>Sample JSON Document</a> |
+        <a id="advancedusernoticehide" style="cursor: pointer">Hide this notice</a>
+        <br /><br />
+      </span>
+      <br />
     </div>
     <table
       id="newcustomexerciseformtable"

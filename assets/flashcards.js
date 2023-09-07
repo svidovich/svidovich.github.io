@@ -210,6 +210,7 @@ const addCustomPracticeNameEntryFieldToDialog = () => {
   const customExerciseDialog = document.getElementById("newcustomexercisedialog");
   const customExerciseDialogTable = document.getElementById("newcustomexerciseformtable");
   const customPracticeNameInput = document.createElement("input");
+  customPracticeNameInput.setAttribute("selected", "selected");
   customPracticeNameInput.type = "text";
   customPracticeNameInput.className = "newcustomexercisename";
   customPracticeNameInput.id = "newcustomexercisename";
@@ -408,6 +409,16 @@ const fillCustomLessonEntryFormFromDrop = (event) => {
         );
       }
     });
+  });
+};
+
+const addNewCustomLessonSampleDataNoticeHideListener = () => {
+  // This lets users hide the "advanced user" notice in the custom lesson dialog
+  // Because sometimes I just want a website to get the fuck out of my face
+  const noticeHide = document.getElementById("advancedusernoticehide");
+  noticeHide.addEventListener("click", () => {
+    const noticeSpan = document.getElementById("advancedusernotice");
+    noticeSpan.hidden = true;
   });
 };
 
@@ -1399,6 +1410,7 @@ const main = () => {
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
+  addNewCustomLessonSampleDataNoticeHideListener();
 };
 
 (() => {
