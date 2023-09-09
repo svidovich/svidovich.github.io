@@ -254,10 +254,31 @@ const addLanguageEntryFieldToDialog = () => {
   newFieldRow.id = `newcustomexercisefieldrow-${entryFieldUUID}`;
   newFieldRow.setAttribute("uuid", entryFieldUUID);
 
+  // Add a <td> that contains a little x that, when clicked, clears the
+  // values in the current row
+  const destroyItTd = document.createElement("td");
+  destroyItTd.className = "newcustomexerciseremoverow";
+  destroyItTd.id = `newcustomexerciseremoverow-${entryFieldUUID}`;
+  destroyItTd.setAttribute("uuid", entryFieldUUID);
+  destroyItTd.style.textAlign = "right";
+
+  // We'll contain the X in a div that we can style separately.
+  const destroyItDiv = document.createElement("div");
+  destroyItDiv.style.fontSize = "small";
+  // destroyItDiv.style.cursor = "pointer";
+  // make it so user can't accidentally highlight the emoji :)
+  destroyItDiv.style.webkitUserSelect = "none";
+  destroyItDiv.style.userSelect = "none";
+  destroyItDiv.textContent = "❌";
+  destroyItDiv.hidden = true;
+  // Put the div inside the td
+  destroyItTd.appendChild(destroyItDiv);
+
   const englishTd = document.createElement("td");
   englishTd.className = "newcustomexercisefieldenglish";
   englishTd.id = `newcustomexercisefieldenglish-${entryFieldUUID}`;
   englishTd.setAttribute("uuid", entryFieldUUID);
+  englishTd.width = "47%";
 
   const englishInput = document.createElement("input");
   englishInput.type = "text";
@@ -273,6 +294,7 @@ const addLanguageEntryFieldToDialog = () => {
   latinTd.className = "newcustomexercisefieldlatin";
   latinTd.id = `newcustomexercisefieldlatin-${entryFieldUUID}`;
   latinTd.setAttribute("uuid", entryFieldUUID);
+  latinTd.width = "47%";
 
   const latinInput = document.createElement("input");
   latinInput.type = "text";
@@ -284,6 +306,33 @@ const addLanguageEntryFieldToDialog = () => {
   latinInput.name = "latin";
   latinTd.appendChild(latinInput);
 
+  // Now that we have our inputs defined, add a listener for our little
+  // div that will empty them!
+  destroyItDiv.addEventListener("click", () => {
+    latinInput.value = "";
+    englishInput.value = "";
+    destroyItDiv.hidden = true;
+    destroyItDiv.style.cursor = "auto";
+  });
+
+  // But it shouldn't always be visible, or click-able.
+  // When our inputs change and become un-empty, it should appear.
+  [englishInput, latinInput].forEach((inputElement) => {
+    inputElement.addEventListener("input", () => {
+      // Case it out...
+      // First, if we see a change and both are empty, disappear the X.
+      if (englishInput.value === "" && latinInput.value === "") {
+        destroyItDiv.style.cursor = "auto";
+        destroyItDiv.hidden = true;
+        // Otherwise, if either one of them is non-empty, make it appear!
+      } else if (englishInput.value !== "" || latinInput !== "") {
+        destroyItDiv.style.cursor = "pointer";
+        destroyItDiv.hidden = false;
+      }
+    });
+  });
+
+  newFieldRow.appendChild(destroyItTd);
   newFieldRow.appendChild(englishTd);
   newFieldRow.appendChild(latinTd);
   formTable.appendChild(newFieldRow);
@@ -365,7 +414,9 @@ const addEntriesToCustomExerciseDialog = (entries) => {
   if (englishInput.value === "" && latinInput.value === "") {
     const { english: firstEntryEnglish, latin: firstEntryLatin } = entries[0];
     englishInput.value = firstEntryEnglish;
+    englishInput.dispatchEvent(new Event("input"));
     latinInput.value = firstEntryLatin;
+    latinInput.dispatchEvent(new Event("input"));
     // Continuing, we don't need the first entry.
     theRestOfTheEntries = entries.splice(1);
   } else {
@@ -381,7 +432,12 @@ const addEntriesToCustomExerciseDialog = (entries) => {
 
     // And set the right values.
     rowEnglishInput.value = entry.english;
+    // Our rows have listeners looking for input... but when we change
+    // the value of the input element programatically, by default, it does
+    // not fire the 'input' event. Let's force-fire it.
+    rowEnglishInput.dispatchEvent(new Event("input"));
     rowLatinInput.value = entry.latin;
+    rowLatinInput.dispatchEvent(new Event("input"));
   });
 };
 
@@ -1410,7 +1466,7 @@ const main = () => {
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
-  addNewCustomLessonSampleDataNoticeHideListener();
+  // addNewCustomLessonSampleDataNoticeHideListener();
 };
 
 (() => {
