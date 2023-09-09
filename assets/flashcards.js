@@ -1,7 +1,9 @@
+import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 import {
   UUIDGeneratorBrowser,
   chooseRandomExcept,
+  camelize,
   decimalToColor,
   getObjectFromLocalStorage,
   localStorageKeyExists,
@@ -10,14 +12,21 @@ import {
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
+import {
+  FORMAT_FLASHCARDS,
+  FORMAT_QUIZ,
+  FORMAT_T_OR_F,
+  VocabularyObject,
+  VocabularySection,
+  vocabularySectionFromArray,
+} from "./cards/vocabulary.js";
 import { practiceMap } from "./flashcarddata.js";
-import { FORMAT_FLASHCARDS, FORMAT_QUIZ, FORMAT_T_OR_F } from "./cards/vocabulary.js";
-
-import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
 
 import { isDesktop, isMobile } from "./cards/os.js";
 
 import { Cycle } from "./cards/cycle.js";
+
+const CUSTOM_PRACTICE_STORAGE_KEY = "customPractices";
 
 const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
@@ -64,6 +73,18 @@ export const flashCardStyleSheet = document.getElementById("flashcardstylesheet"
 // Global for storing practice document state
 const practiceState = new Array();
 
+const loadPracticeMapWithCustomEntries = () => {
+  const customPracticesMapped = new Object();
+  const customPractices = getCustomPracticesFromStorage();
+  customPractices.forEach((practice) => {
+    customPracticesMapped[practice.unfriendlyName] = practice;
+  });
+  return {
+    ...practiceMap,
+    ...customPracticesMapped,
+  };
+};
+
 // Warning about cookies
 const cookieWarningSetup = () => {
   const cookieBanner = document.getElementById("cookie-banner");
@@ -98,6 +119,417 @@ const addSoundToggleClickListener = () => {
   soundToggleSwitch.addEventListener("click", () => {
     toggleSound();
     setSoundToggleSwitchMessage();
+  });
+};
+
+const handleNewCustomLessonSave = (dialog) => {
+  // When we press save, we should get all of the necessary data from
+  // the dialog to save a custom practice.
+  const customPracticeNameElement = document.getElementById("newcustomexercisename");
+  const customPracticeName = customPracticeNameElement.value;
+  // If they haven't named it, we should bail
+  if (customPracticeName === "") {
+    alert("Don't forget to name your practice!");
+    return;
+  }
+  const practiceObjects = new Array();
+  const englishInputs = Array.from(document.getElementsByClassName("newcustomexerciseinputenglish"));
+  englishInputs.forEach((input) => {
+    const englishInputValue = input.value;
+    // If we hit an empty entry, skip it. Otherwise...
+    if (englishInputValue !== "") {
+      // Grab the UUID for the english bit,
+      const englishInputUUID = input.getAttribute("uuid");
+      // and try to find a matching latin bit.
+      const latinInputForUUID = document.getElementById(`newcustomexerciseinputlatin-${englishInputUUID}`);
+      const latinInputValue = latinInputForUUID.value;
+      // If there's a matching latin bit, go ahead and push it to the array
+      // we prepared ahead of time. If it's empty, we shouldn't push it, we
+      // should skip to the next entry.
+      if (latinInputValue !== "") {
+        practiceObjects.push(new VocabularyObject(englishInputValue, latinInputValue).asObject);
+      }
+    }
+  });
+  // If we wound up with an empty array, we'll erase. This could be because
+  // we didn't complete the English or Latin sides.
+  if (practiceObjects.length === 0) {
+    alert("You need to add some entries to your custom practice!");
+    return;
+  }
+
+  const serializedCustomPractice = {
+    friendlyName: customPracticeName,
+    unfriendlyName: camelize(customPracticeName),
+    vocabularyObjects: practiceObjects,
+  };
+
+  let practicesToStore;
+  const allCustomPractices = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  if (!allCustomPractices) {
+    practicesToStore = [serializedCustomPractice];
+  } else {
+    allCustomPractices.push(serializedCustomPractice);
+    practicesToStore = allCustomPractices;
+  }
+  putObjectToLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY, practicesToStore);
+  // This lets us read our own writes so we don't have to refresh
+  // to see the new section in the drop-down
+  clearPracticeOptionsDropwdown();
+  loadAllPracticesToDropDown();
+  dialog.close();
+};
+
+const getCustomPracticesFromStorage = () => {
+  // Retrieve the practices from local storage, loading them as an array
+  // of VocabularySection objects.
+  const practicesLoaded = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  if (!practicesLoaded) {
+    return [];
+  }
+  const sectionObjects = new Array();
+  practicesLoaded.forEach((practiceJSON) => {
+    sectionObjects.push(
+      vocabularySectionFromArray(practiceJSON.friendlyName, practiceJSON.unfriendlyName, practiceJSON.vocabularyObjects)
+    );
+  });
+  return sectionObjects;
+};
+
+const clearLanguageEntryFieldsFromDialog = () => {
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  const rows = document.getElementsByClassName("newcustomexercisefieldrow");
+  Array.from(rows).forEach((row) => {
+    row.remove();
+  });
+};
+
+const addCustomPracticeNameEntryFieldToDialog = () => {
+  // Add an "Exercise Name" dialog after the little title text and
+  // before the table full of crap
+  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
+  const customExerciseDialogTable = document.getElementById("newcustomexerciseformtable");
+  const customPracticeNameInput = document.createElement("input");
+  customPracticeNameInput.setAttribute("selected", "selected");
+  customPracticeNameInput.type = "text";
+  customPracticeNameInput.className = "newcustomexercisename";
+  customPracticeNameInput.id = "newcustomexercisename";
+  customPracticeNameInput.name = "exercisename";
+
+  // The UUID of the practice will be different from the UUID of
+  // any of the individual terms on the practice
+  customPracticeNameInput.setAttribute("uuid", UUIDGeneratorBrowser());
+
+  // Add a lil' label for it too
+  const customPracticeNameInputLabel = document.createElement("label");
+  customPracticeNameInputLabel.for = "exercisename";
+  customPracticeNameInputLabel.textContent = "Exercise Name: ";
+
+  // And finally define the form
+  const customPracticeNameInputForm = document.createElement("form");
+  customPracticeNameInputForm.appendChild(customPracticeNameInputLabel);
+  customPracticeNameInputForm.appendChild(customPracticeNameInput);
+  customPracticeNameInputForm.id = "custompracticenameinputform";
+  customPracticeNameInputForm.style.display = "block";
+  customPracticeNameInputForm.style.textAlign = "center";
+
+  // Now we can insert it above the table.
+  customExerciseDialog.insertBefore(customPracticeNameInputForm, customExerciseDialogTable);
+};
+
+const clearCustomPracticeNameEntryFieldFromDialog = () => {
+  // Dumpsters the trash created by addCustomPracticeNameEntryFieldToDialog
+  const nameInputForm = document.getElementById("custompracticenameinputform");
+  if (nameInputForm) {
+    nameInputForm.remove();
+  }
+};
+
+const addLanguageEntryFieldToDialog = () => {
+  // Adds an input row to the custom exercise dialog
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  const newFieldRow = document.createElement("tr");
+  const entryFieldUUID = UUIDGeneratorBrowser();
+  newFieldRow.className = "newcustomexercisefieldrow";
+  newFieldRow.id = `newcustomexercisefieldrow-${entryFieldUUID}`;
+  newFieldRow.setAttribute("uuid", entryFieldUUID);
+
+  // Add a <td> that contains a little x that, when clicked, clears the
+  // values in the current row
+  const destroyItTd = document.createElement("td");
+  destroyItTd.className = "newcustomexerciseremoverow";
+  destroyItTd.id = `newcustomexerciseremoverow-${entryFieldUUID}`;
+  destroyItTd.setAttribute("uuid", entryFieldUUID);
+  destroyItTd.style.textAlign = "right";
+
+  // We'll contain the X in a div that we can style separately.
+  const destroyItDiv = document.createElement("div");
+  destroyItDiv.style.fontSize = "small";
+  // destroyItDiv.style.cursor = "pointer";
+  // make it so user can't accidentally highlight the emoji :)
+  destroyItDiv.style.webkitUserSelect = "none";
+  destroyItDiv.style.userSelect = "none";
+  destroyItDiv.textContent = "❌";
+  destroyItDiv.hidden = true;
+  // Put the div inside the td
+  destroyItTd.appendChild(destroyItDiv);
+
+  const englishTd = document.createElement("td");
+  englishTd.className = "newcustomexercisefieldenglish";
+  englishTd.id = `newcustomexercisefieldenglish-${entryFieldUUID}`;
+  englishTd.setAttribute("uuid", entryFieldUUID);
+  englishTd.width = "47%";
+
+  const englishInput = document.createElement("input");
+  englishInput.type = "text";
+  englishInput.className = "newcustomexerciseinputenglish";
+  englishInput.id = `newcustomexerciseinputenglish-${entryFieldUUID}`;
+  englishInput.style.display = "block";
+  englishInput.style.margin = "0 auto";
+  englishInput.name = "english";
+  englishInput.setAttribute("uuid", entryFieldUUID);
+  englishTd.appendChild(englishInput);
+
+  const latinTd = document.createElement("td");
+  latinTd.className = "newcustomexercisefieldlatin";
+  latinTd.id = `newcustomexercisefieldlatin-${entryFieldUUID}`;
+  latinTd.setAttribute("uuid", entryFieldUUID);
+  latinTd.width = "47%";
+
+  const latinInput = document.createElement("input");
+  latinInput.type = "text";
+  latinInput.className = "newcustomexerciseinputlatin";
+  latinInput.id = `newcustomexerciseinputlatin-${entryFieldUUID}`;
+  latinInput.style.display = "block";
+  latinInput.style.margin = "0 auto";
+  latinInput.setAttribute("uuid", entryFieldUUID);
+  latinInput.name = "latin";
+  latinTd.appendChild(latinInput);
+
+  // Now that we have our inputs defined, add a listener for our little
+  // div that will empty them!
+  destroyItDiv.addEventListener("click", () => {
+    latinInput.value = "";
+    englishInput.value = "";
+    destroyItDiv.hidden = true;
+    destroyItDiv.style.cursor = "auto";
+  });
+
+  // But it shouldn't always be visible, or click-able.
+  // When our inputs change and become un-empty, it should appear.
+  [englishInput, latinInput].forEach((inputElement) => {
+    inputElement.addEventListener("input", () => {
+      // Case it out...
+      // First, if we see a change and both are empty, disappear the X.
+      if (englishInput.value === "" && latinInput.value === "") {
+        destroyItDiv.style.cursor = "auto";
+        destroyItDiv.hidden = true;
+        // Otherwise, if either one of them is non-empty, make it appear!
+      } else if (englishInput.value !== "" || latinInput !== "") {
+        destroyItDiv.style.cursor = "pointer";
+        destroyItDiv.hidden = false;
+      }
+    });
+  });
+
+  newFieldRow.appendChild(destroyItTd);
+  newFieldRow.appendChild(englishTd);
+  newFieldRow.appendChild(latinTd);
+  formTable.appendChild(newFieldRow);
+};
+
+const customLessonEntriesFromFileText = (fileText) => {
+  const splitFile = fileText.split("\n");
+  const head = splitFile[0];
+  // NOTE / HACK
+  // Goofy way to detect CSVs. We'll see how this goes.
+  // The logic -- it has to have both english an latin...
+  // ... but only one of them can be first. Right!?
+  if (head.includes(",latin") || head.includes(",english")) {
+    // We're most likely looking at a CSV
+    const csvHeaderArray = head.split(",");
+    const indexEnglish = csvHeaderArray.indexOf("english");
+    const indexLatin = csvHeaderArray.indexOf("latin");
+    // Get everything besides the header
+    const restOfTheCSV = splitFile.slice(1);
+    const entryArray = new Array();
+    restOfTheCSV.forEach((csvLine) => {
+      const csvLineSplit = csvLine.split(",");
+      const lineEnglish = csvLineSplit[indexEnglish];
+      const lineLatin = csvLineSplit[indexLatin];
+      // Skip new / empty lines.
+      if (!lineEnglish || !lineLatin) {
+        return;
+      }
+      entryArray.push({
+        english: lineEnglish,
+        latin: lineLatin,
+      });
+    });
+    return entryArray;
+  } else {
+    // If it's not a CSV, it should only be JSON
+    // Caller needs to catch, not me.
+    const fileDataFromJSON = JSON.parse(fileText);
+    if (!Array.isArray(fileDataFromJSON)) {
+      throw new Error("Invalid file format");
+    }
+    // We iterate twice. If we don't have the right keys,
+    // we should throw.
+    fileDataFromJSON.forEach((entry) => {
+      if (!(entry.hasOwnProperty("english") && entry.hasOwnProperty("latin"))) {
+        throw new Error("Invalid file format: All objects need 'english' and 'latin' keys");
+      }
+    });
+    const entryArray = new Array();
+    fileDataFromJSON.forEach((entry) => {
+      entryArray.push({
+        english: entry.english,
+        latin: entry.latin,
+      });
+    });
+    return entryArray;
+  }
+};
+
+const getLastCustomExerciseDialogRow = () => {
+  // Returns a <tr> element or nothin'
+  const formTable = document.getElementById("newcustomexerciseformtable");
+  return formTable.lastChild;
+};
+
+const addEntriesToCustomExerciseDialog = (entries) => {
+  // entries is an array of objects [... {english: ..., latin:...}, ...]
+  // Nothing to do.
+  if (!entries) {
+    return;
+  }
+  // Get the current last row
+  const lastRow = getLastCustomExerciseDialogRow();
+  const englishInput = lastRow.querySelector('input[name="english"]');
+  const latinInput = lastRow.querySelector('input[name="latin"]');
+  // If english and latin input are both empty, it means this row is usable,
+  // and we can start here
+  let theRestOfTheEntries;
+  if (englishInput.value === "" && latinInput.value === "") {
+    const { english: firstEntryEnglish, latin: firstEntryLatin } = entries[0];
+    englishInput.value = firstEntryEnglish;
+    englishInput.dispatchEvent(new Event("input"));
+    latinInput.value = firstEntryLatin;
+    latinInput.dispatchEvent(new Event("input"));
+    // Continuing, we don't need the first entry.
+    theRestOfTheEntries = entries.splice(1);
+  } else {
+    theRestOfTheEntries = entries;
+  }
+  theRestOfTheEntries.forEach((entry) => {
+    // For every entry, add a new row,
+    addLanguageEntryFieldToDialog();
+    // Grab that row and slurp the right input fields,
+    const row = getLastCustomExerciseDialogRow();
+    const rowEnglishInput = row.querySelector('input[name="english"]');
+    const rowLatinInput = row.querySelector('input[name="latin"]');
+
+    // And set the right values.
+    rowEnglishInput.value = entry.english;
+    // Our rows have listeners looking for input... but when we change
+    // the value of the input element programatically, by default, it does
+    // not fire the 'input' event. Let's force-fire it.
+    rowEnglishInput.dispatchEvent(new Event("input"));
+    rowLatinInput.value = entry.latin;
+    rowLatinInput.dispatchEvent(new Event("input"));
+  });
+};
+
+const fillCustomLessonEntryFormFromDrop = (event) => {
+  // When a file gets dropped over the custom lesson dialog,
+  // we need to read it and fill in the inputs if it's properly
+  // formed. If it's malformed, we should let the user know.
+  // We're not hiding anything... we'll log the error to the
+  // console as well.
+  const eventDataTransfer = event.dataTransfer;
+  const files = eventDataTransfer.files;
+  if (!files) {
+    alert("Hey, I didn't find any files. You can't drop blobs, sorry.");
+    return;
+  }
+  Array.from(files).forEach((file) => {
+    file.text().then((fileText) => {
+      try {
+        const customEntries = customLessonEntriesFromFileText(fileText);
+        addEntriesToCustomExerciseDialog(customEntries);
+      } catch (err) {
+        console.log(`Hey programmer! Here's the file read error: ${err} -- shoot me an email if you need help.`);
+        alert(
+          `Failed to read uploaded file ${file.name}. CSVs need a header of "latin,english"; JSON needs to be an array of objects with 'english' and 'latin' keys.`
+        );
+      }
+    });
+  });
+};
+
+const addNewCustomLessonSampleDataNoticeHideListener = () => {
+  // This lets users hide the "advanced user" notice in the custom lesson dialog
+  // Because sometimes I just want a website to get the fuck out of my face
+  const noticeHide = document.getElementById("advancedusernoticehide");
+  noticeHide.addEventListener("click", () => {
+    const noticeSpan = document.getElementById("advancedusernotice");
+    noticeSpan.hidden = true;
+  });
+};
+
+const addNewCustomLessonClickListeners = () => {
+  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
+  const newCustomLessonIcon = document.getElementById("addexerciseicon");
+  newCustomLessonIcon.addEventListener("click", () => {
+    clearCustomPracticeNameEntryFieldFromDialog();
+    addCustomPracticeNameEntryFieldToDialog();
+
+    clearLanguageEntryFieldsFromDialog();
+    addLanguageEntryFieldToDialog();
+    customExerciseDialog.showModal();
+  });
+  // What happens when we press "Save"?
+  const newCustomLessonSaveButton = document.getElementById("newcustomexercisedialogbuttonsave");
+  newCustomLessonSaveButton.addEventListener("click", () => {
+    handleNewCustomLessonSave(customExerciseDialog);
+  });
+  // What happens when we press "Cancel"?
+  const newCustomLessonCancelButton = document.getElementById("newcustomexercisedialogbuttoncancel");
+  newCustomLessonCancelButton.addEventListener("click", () => {
+    customExerciseDialog.close();
+  });
+  // This button helps us add more entries to our practice
+  const newCustomLessonAddEntryButton = document.getElementById("newcustomexerciseaddbutton");
+  newCustomLessonAddEntryButton.addEventListener("click", () => {
+    addLanguageEntryFieldToDialog();
+  });
+
+  // We need to prevent the browser from doing default trash when we drag
+  // stuff over the window.
+  ["dragenter", "dragleave", "dragover", "drop"].forEach((eventType) => {
+    window.addEventListener(eventType, (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+    });
+  });
+  // Things that happen when we drag something over the dialog
+  customExerciseDialog.addEventListener("dragenter", () => {
+    const body = document.getElementsByTagName("body")[0];
+    body.style.cursor = "copy";
+  });
+  // This makes the cursor... I dunno. It's acting dumb
+  ["dragleave", "dragend"].forEach((eventType) =>
+    customExerciseDialog.addEventListener(eventType, () => {
+      const body = document.getElementsByTagName("body")[0];
+      body.style.cursor = "auto";
+    })
+  );
+  // When we drop, let's send the file over.
+  customExerciseDialog.addEventListener("drop", (event) => {
+    fillCustomLessonEntryFormFromDrop(event);
+    const body = document.getElementsByTagName("body")[0];
+    body.style.cursor = "auto";
   });
 };
 
@@ -232,13 +664,13 @@ const loadStage = () => {
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
     const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
-
+    const fullPracticeMap = loadPracticeMapWithCustomEntries();
     if (practiceFormatOption === FORMAT_FLASHCARDS) {
-      loadShuffledFlashCards(practiceMap[selectedPractice].vocabularyObjects);
+      loadShuffledFlashCards(fullPracticeMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_QUIZ) {
-      loadQuiz(practiceMap[selectedPractice].vocabularyObjects);
+      loadQuiz(fullPracticeMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_T_OR_F) {
-      loadTrueOrFalse(practiceMap[selectedPractice].vocabularyObjects);
+      loadTrueOrFalse(fullPracticeMap[selectedPractice].vocabularyObjects);
     }
   } else {
     choosePracticeWarning.hidden = false;
@@ -364,7 +796,8 @@ const displayAvailablePracticeFormats = () => {
   }
   // Load the available practice formats for our selected practice
   const selectedPractice = practiceOptionsDropDown.value;
-  const sectionObject = practiceMap[selectedPractice];
+
+  const sectionObject = loadPracticeMapWithCustomEntries()[selectedPractice];
   // Create a new form in which we'll contain these formats.
   const practiceFormatsRadioForm = document.createElement("form");
   practiceFormatsRadioForm.className = "practiceformatsradioform";
@@ -404,6 +837,13 @@ const displayAvailablePracticeFormats = () => {
   return sectionObject;
 };
 
+const clearPracticeOptionsDropwdown = () => {
+  // Drops all of the options from the practice options dropdown.
+  Array.from(document.getElementsByClassName("vocabularysectionoption")).forEach((option) => {
+    option.remove();
+  });
+};
+
 // NOTE: In the future, this won't just be VocabularySection objects.
 // We'll see how this goes.
 const fillPracticeOptionsDropdown = (vocabularySections) => {
@@ -411,6 +851,7 @@ const fillPracticeOptionsDropdown = (vocabularySections) => {
   vocabularySections.forEach((vocabularySection) => {
     // Create a new option that we'll shortly add to the dropdown
     const vocabularySectionOption = document.createElement("option");
+    vocabularySectionOption.className = "vocabularysectionoption";
     // Add a 'value' to the option. NOTE: in the future it might be good to have
     // more attributes that act as categories by which we can divine the capabilities
     // of each of the entries. We'll see.
@@ -1000,9 +1441,15 @@ const setPlatformStyle = () => {
   }
 };
 
+const loadAllPracticesToDropDown = () => {
+  const customPractices = getCustomPracticesFromStorage();
+  const toLoad = [...Object.values(practiceMap), ...customPractices];
+  fillPracticeOptionsDropdown(toLoad);
+};
+
 const main = () => {
   setPlatformStyle();
-  fillPracticeOptionsDropdown(Object.values(practiceMap));
+  loadAllPracticesToDropDown();
   setStreakDisplay(streakDisplay);
   // Check cookies for whether or not we've...
   // warned about cookies lol. Display banner if not.
@@ -1018,6 +1465,8 @@ const main = () => {
 
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
+  addNewCustomLessonClickListeners();
+  // addNewCustomLessonSampleDataNoticeHideListener();
 };
 
 (() => {

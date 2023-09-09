@@ -10,6 +10,8 @@ export const FORMAT_FLASHCARDS = "flashcards";
 export const FORMAT_QUIZ = "quiz";
 export const FORMAT_T_OR_F = "true or false";
 
+export const CSV_HEADER = "english,latin,cyrillic";
+
 const JUGOSLAV_SINGLE_CHARACTER_MAP = {
   A: "А",
   a: "а",
@@ -128,7 +130,7 @@ export class VocabularySection {
   }
 
   get asCSV() {
-    let textCSV = `english,latin,cyrillic\n`;
+    let textCSV = `${CSV_HEADER}\n`;
     this.vocabularyObjects.forEach((vocabularyObject) => {
       textCSV = textCSV.concat(`${vocabularyObject.english},${vocabularyObject.latin},${vocabularyObject.cyrillic}\n`);
     });

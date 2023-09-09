@@ -54,6 +54,21 @@
         title="Mixed English & Jugoslavian"
       />
     </div>
+    <div id="customexerciseoptions" style="position: absolute; top: 65px; left: 8px; cursor: pointer">
+      <img
+        src="./cards/media/addexercise.png"
+        id="addexerciseicon"
+        alt="Add Custom Exercise"
+        title="Add Custom Exercise"
+      />
+      <img
+        src="./cards/media/editexercise.png"
+        id="editexerciseicon"
+        alt="Edit Custom Exercises"
+        title="Edit Custom Exercises"
+        hidden
+      />
+    </div>
     <div id="scorebar" class="scorebar" score="0" hidden></div>
     <div align="center" class="headers">
       <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
@@ -121,6 +136,47 @@
       <hr />
     </div>
   </body>
+  <dialog id="newcustomexercisedialog" style="border-radius: 10px">
+    <div id="newcustomexercisetitletext" style="text-align: center">
+      Add entries for your custom exercise! In the box on the left, add a new word or small phrase in English. On the
+      right, add it in Yugoslavian. Please add the <strong>latin</strong> form.
+      <br />
+      <br />
+      <!--
+        This span allows me to prevent the UI from highlighting these links
+        when the dialog opens, which looks dumb and I don't like it :)
+      -->
+      <!-- <span class="ui-helper-hidden-accessible" id="advancedusernotice">
+        Are you an advanced user? You can drag and drop JSON and CSV files onto this dialog.
+        <br />
+        <a href="./cards/customsample.csv" download>Sample CSV Document</a> |
+        <a href="./cards/customsample.json" download>Sample JSON Document</a> |
+        <a id="advancedusernoticehide" style="cursor: pointer">Hide this notice</a>
+        <br /><br />
+      </span> -->
+      <br />
+    </div>
+    <table
+      id="newcustomexerciseformtable"
+      style="margin-left: auto; margin-right: auto; align-content: center"
+      width="70%"
+    >
+      <tr>
+        <th></th>
+        <th width="47%"><u>English</u></th>
+        <th width="47%"><u>Latin</u> <u>Yugoslavian</u></th>
+      </tr>
+    </table>
+    <br />
+    <form id="newcustomexerciseaddform" style="text-align: center">
+      <button id="newcustomexerciseaddbutton" type="button">Add Entry</button>
+    </form>
+    <br />
+    <form id="newcustomexercisefinishbuttons">
+      <button id="newcustomexercisedialogbuttonsave" type="button">Save</button>
+      <button id="newcustomexercisedialogbuttoncancel" type="button">Cancel</button>
+    </form>
+  </dialog>
   <script type="module" src="flashcards.js"></script>
   <script type="module" src="flashcarddata.js"></script>
   <script type="module" src="cards/sound.js"></script>
