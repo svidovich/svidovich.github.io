@@ -7,6 +7,8 @@ let parentFrameHeight = globalCanvas.parentElement.clientHeight;
 globalCanvas.width = (95 / 100) * parentFrameWidth;
 globalCanvas.height = (95 / 100) * parentFrameHeight;
 const FONT_SIZE_PX = 10;
+const WORD_BANK_SPACING_CONSTANT = 15;
+const WORD_BANK_SPACING_Y = 75;
 
 let globalCtx = undefined;
 const getCtx = (canvasElement, reset = false) => {
@@ -78,21 +80,32 @@ class AbstractCanvasObject {
 }
 
 class Button extends AbstractCanvasObject {
-  constructor(text, x, y, w, h, color = "red") {
+  constructor(text, x, y, h, color = "red") {
     super();
     this.text = text;
     this.x = x;
     this.y = y;
-    this.w = w;
+    this.w = text.length * FONT_SIZE_PX * 2;
     this.h = h;
     this.color = color;
+
+    this.vertices = [
+      new Coordinate(this.x, this.y),
+      new Coordinate(this.x + this.w, this.y),
+      new Coordinate(this.x, this.y + this.h),
+      new Coordinate(this.x + this.w, this.y + this.h),
+    ];
   }
 
   draw(ctx) {
     const oldStyle = ctx.strokeStyle;
     ctx.strokeStyle = this.color;
     // need to write an adjustment function i think
-    ctx.strokeRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0);
+    // ctx.strokeRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0);
+    ctx.beginPath();
+    ctx.roundRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0, 5);
+    ctx.stroke();
+    ctx.fillText(this.text, this.x / 2 + (this.w * 1.2) / FONT_SIZE_PX, this.y / 2 + (this.h * 3) / FONT_SIZE_PX);
     ctx.strokeStyle = oldStyle;
   }
 
@@ -110,61 +123,86 @@ class Button extends AbstractCanvasObject {
   }
 }
 
-const myCoolButton = new Button("FART", 150, 150, 100, 50);
-const myCoolButton2 = new Button("FART2", 150, 150, 100, 50);
-const myCoolButton3 = new Button("FART3", 155, 155, 100, 50);
-const myCoolButton4 = new Button("FART4", 255, 255, 100, 50);
+// const myCoolButton1 = new Button("Ja", 155, 355, 50);
+// const myCoolButton2 = new Button("Super", myCoolButton1.x + myCoolButton1.w + WORD_BANK_SPACING_CONSTANT, 355, 50);
+// const myCoolButton3 = new Button("Dobro", 155, 435, 50);
+// const myCoolButton4 = new Button("Siromasni", myCoolButton3.x + myCoolButton3.w + WORD_BANK_SPACING_CONSTANT, 435, 50);
+const globalCanvasObjects = new Array();
+const globalCanvasObjectsByLocation = new Object();
 
-const shapes = new Array();
-const shapesByLocation = new Object();
-
-shapes.push(myCoolButton);
-shapes.push(myCoolButton2);
-shapes.push(myCoolButton3);
-shapes.push(myCoolButton4);
-
-const locationMap = new Object();
-
-const addObjectToLocationMap = (obj, mapping) => {
-  // I think I have to map this for all of the corners of an object
-  if (!mapping.hasOwnProperty(obj.x)) {
-    mapping[obj.x] = new Object();
-  }
-  if (!mapping[obj.x].hasOwnProperty(obj.y)) {
-    mapping[obj.x][obj.y] = new Array();
-  }
-  if (!mapping[obj.x].hasOwnProperty(obj.y + obj.h)) {
-    mapping[obj.x][obj.y + obj.h] = new Array();
-  }
-  if (!mapping.hasOwnProperty(obj.x + obj.w)) {
-    mapping[obj.x + obj.w] = new Object();
-  }
-  if (!mapping[obj.x + obj.w].hasOwnProperty(obj.y)) {
-    mapping[obj.x + obj.w][obj.y] = new Array();
-  }
-  if (!mapping[obj.x + obj.w].hasOwnProperty(obj.y + obj.h)) {
-    mapping[obj.x + obj.w][obj.y + obj.h] = new Array();
-  }
-  console.log(locationMap);
-  console.log(obj);
-  mapping[obj.x][obj.y].push(obj);
-  mapping[obj.x][obj.y + obj.h].push(obj);
-  mapping[obj.x + obj.w][obj.y].push(obj);
-  mapping[obj.x + obj.w][obj.y + obj.h].push(obj);
+const addObjectToCanvas = (obj) => {
+  globalCanvasObjects.push(obj);
+  addObjectToLocationMap(obj, globalCanvasObjectsByLocation);
 };
 
-addObjectToLocationMap(myCoolButton, locationMap);
-addObjectToLocationMap(myCoolButton2, locationMap);
-addObjectToLocationMap(myCoolButton3, locationMap);
-addObjectToLocationMap(myCoolButton4, locationMap);
+const addObjectToLocationMap = (obj, mapping) => {
+  for (const vertex of obj.vertices) {
+    if (!mapping.hasOwnProperty(vertex.x)) {
+      mapping[vertex.x] = new Object();
+    }
+    if (!mapping[vertex.x].hasOwnProperty(vertex.y)) {
+      mapping[vertex.x][vertex.y] = new Array();
+    }
+    mapping[vertex.x][vertex.y].push(obj);
+  }
+};
 
-// window.addEventListener("resize", () => {
-//   parentFrameWidth = globalCanvas.parentElement.clientWidth;
-//   parentFrameHeight = globalCanvas.parentElement.clientHeight;
-//   globalCanvas.width = (95 / 100) * parentFrameWidth;
-//   globalCanvas.height = (95 / 100) * parentFrameHeight;
-//   getCtx(globalCanvas, true);
-// });
+const addButtonsFromWordlist = (wordList, startX, startY) => {
+  console.log(`StartY: ${startY}`);
+  let lastButton;
+  for (const [index, element] of wordList.entries()) {
+    if (lastButton === undefined) {
+      console.log(`Detected first button word ${element}`);
+      const firstButton = new Button(element, startX, startY, 50);
+      addObjectToCanvas(firstButton);
+      lastButton = firstButton;
+      continue;
+    }
+    const thisButton = new Button(element, lastButton.x + lastButton.w + WORD_BANK_SPACING_CONSTANT, startY, 50);
+
+    if (thisButton.x + thisButton.w >= globalCanvas.width) {
+      lastButton = undefined;
+      addButtonsFromWordlist(wordList.slice(index), startX, startY + WORD_BANK_SPACING_Y);
+      // There's some goofy behaviour here if we don't return. I think it's something to do
+      // with the loop construct -- we pass the end of the list more than once if we don't
+      return;
+    } else {
+      console.log(`Adding ${element}`);
+      lastButton = thisButton;
+      addObjectToCanvas(thisButton);
+    }
+  }
+};
+
+addButtonsFromWordlist(
+  [
+    "Ja",
+    "se",
+    "vracam",
+    "i",
+    "ne",
+    "biti",
+    "super",
+    "doline",
+    "prababa",
+    "rakija",
+    "rajice",
+    "momak",
+    "slatko",
+    "zora",
+    "hajduci",
+    "junak",
+    "ustanka",
+    "sloboda",
+  ],
+  105,
+  355
+);
+
+// addObjectToCanvas(myCoolButton1);
+// addObjectToCanvas(myCoolButton2);
+// addObjectToCanvas(myCoolButton3);
+// addObjectToCanvas(myCoolButton4);
 
 class PlaneSquare {
   constructor(startX, startY, endX, endY) {
@@ -182,6 +220,8 @@ class Partition {
     this.elements = new Array();
     this.width = (end - start) / count;
     let bucketStart = start;
+    // Create our list of elements by ( as evenly as we can )
+    // dividing the space into count buckets.
     for (let i = 0; i < count; ++i) {
       this.elements.push(bucketStart | 0);
       bucketStart += this.width;
@@ -193,17 +233,24 @@ const planeFromPartitions = (
   x, // Partition
   y // Partition
 ) => {
+  // Create a divided plane from a pair of partitions.
   const plane = new Array();
   if (x.elements.length !== y.elements.length) {
     throw new Error("Partitions must be of equal length, dork");
   }
+  // For every element of the first partition,
   for (let i = 0; i < x.elements.length; i++) {
+    // the plane square's starting x position is going to be this element.
     const xStart = x.elements[i];
-    console.log(`partlen ${x.elements.length}, idx ${i}, ${x.end}`);
+    // The plane square's ending x position is either:
+    // - the next element when we're not at the penultimate element
+    // - the last element when we are
     const xEnd = i === x.elements.length - 1 ? x.end : x.elements[i + 1];
+    // The same logic is repeated to get the y coordinates from the second partition
     for (let j = 0; j < y.elements.length; j++) {
       const yStart = y.elements[j];
       const yEnd = j === y.elements.length - 1 ? y.end : y.elements[j + 1];
+      // When we've got everything, add it to our "plane", which is an array of squares.
       plane.push(new PlaneSquare(xStart, yStart, xEnd, yEnd));
     }
   }
@@ -220,7 +267,7 @@ const searchPlaneForObjectsNearLocation = (plane, mappedObjects, locationX, loca
   // Values don't exist unless there's something there.
   // The algo goes like this:
   // For every square in the plane,
-  const objectsFound = new Array();
+  const objectsFound = new Set();
   plane.forEach((square) => {
     // If that square contains our location, we should continue. Otherwise, who cares?
     if (
@@ -242,14 +289,9 @@ const searchPlaneForObjectsNearLocation = (plane, mappedObjects, locationX, loca
             // If the object's abscissa lies within the y-boundaries of our square,
             // we have found an object in this square.
             if (square.startY < objectsYOrdinate && objectsYOrdinate < square.endY) {
-              console.log("Found");
-              console.log(mappedObjects[objectsXOrdinate][objectsYOrdinate]);
-              console.log("In the square");
-              console.log(square);
-              console.log(`Which was near ${locationX}, ${locationY}`);
               mappedObjects[objectsXOrdinate][objectsYOrdinate].forEach((foundObject) => {
                 if (foundObject.containsCoordinate(new Coordinate(locationX, locationY))) {
-                  objectsFound.push(foundObject);
+                  objectsFound.add(foundObject);
                 }
               });
             }
@@ -263,15 +305,18 @@ const searchPlaneForObjectsNearLocation = (plane, mappedObjects, locationX, loca
 
 let lastObjectsFound = new Array();
 globalCanvas.addEventListener("mousemove", (event) => {
+  // When we move the mouse on the canvas we should detect the
+  // location of the cursor so that we can perform actions on
+  // objects with which the cursor might be colliding at the time
   cursorLocation.x = event.offsetX;
   cursorLocation.y = event.offsetY;
   const objectsAtMouseLocation = searchPlaneForObjectsNearLocation(
     plane,
-    locationMap,
+    globalCanvasObjectsByLocation,
     cursorLocation.x,
     cursorLocation.y
   );
-  if (objectsAtMouseLocation.length !== 0) {
+  if (objectsAtMouseLocation.size !== 0) {
     document.body.style.cursor = "pointer";
     objectsAtMouseLocation.forEach((obj) => {
       obj.color = "green";
@@ -280,7 +325,7 @@ globalCanvas.addEventListener("mousemove", (event) => {
     document.body.style.cursor = "auto";
   }
   lastObjectsFound.forEach((obj) => {
-    if (!objectsAtMouseLocation.includes(obj)) {
+    if (!objectsAtMouseLocation.has(obj)) {
       obj.color = "red";
     }
   });
@@ -295,33 +340,33 @@ const update = () => {
 
   getCtx(globalCanvas).clearRect(0, 0, globalCanvas.width, globalCanvas.height);
 
-  for (const [index, sentence] of Object.entries(CrvenkapaBook.sentences)) {
-    writeTextWithAlignment(getCtx(globalCanvas), sentence.jugoslavian, 5, 2 * FONT_SIZE_PX + 3 * FONT_SIZE_PX * index);
-  }
+  // for (const [index, sentence] of Object.entries(CrvenkapaBook.sentences)) {
+  //   writeTextWithAlignment(getCtx(globalCanvas), sentence.jugoslavian, 5, 2 * FONT_SIZE_PX + 3 * FONT_SIZE_PX * index);
+  // }
   writeTextWithAlignment(
     getCtx(globalCanvas),
     `x: ${cursorLocation.x}, y: ${cursorLocation.y}`,
     5,
     globalCanvas.height - FONT_SIZE_PX * 3
   );
-  shapes.forEach((shape) => {
-    shape.draw(getCtx(globalCanvas));
+  globalCanvasObjects.forEach((obj) => {
+    obj.draw(getCtx(globalCanvas));
   });
 };
+
+window.devicePixelRatio = 2;
+getCtx(globalCanvas).scale(window.devicePixelRatio, window.devicePixelRatio);
 
 (() => {
   let animationFrameRequestToken;
   const main = (hiResTimeStamp) => {
     try {
       animationFrameRequestToken = window.requestAnimationFrame(main);
-
       update();
     } catch (error) {
       console.error(error);
       window.webkitCancelAnimationFrame(animationFrameRequestToken);
     }
   };
-  window.devicePixelRatio = 2;
-  getCtx(globalCanvas).scale(window.devicePixelRatio, window.devicePixelRatio);
   main();
 })();
