@@ -9,6 +9,7 @@ globalCanvas.height = (95 / 100) * parentFrameHeight;
 const FONT_SIZE_PX = 10;
 const WORD_BANK_SPACING_CONSTANT = 15;
 const WORD_BANK_SPACING_Y = 75;
+const BUTTON_DEFAULT_HEIGHT = 40;
 
 let globalCtx = undefined;
 const getCtx = (canvasElement, reset = false) => {
@@ -100,8 +101,7 @@ class Button extends AbstractCanvasObject {
   draw(ctx) {
     const oldStyle = ctx.strokeStyle;
     ctx.strokeStyle = this.color;
-    // need to write an adjustment function i think
-    // ctx.strokeRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0);
+    // Begin path or leak memory intensely for no good reason.
     ctx.beginPath();
     ctx.roundRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0, 5);
     ctx.stroke();
@@ -123,51 +123,69 @@ class Button extends AbstractCanvasObject {
   }
 }
 
-// const myCoolButton1 = new Button("Ja", 155, 355, 50);
-// const myCoolButton2 = new Button("Super", myCoolButton1.x + myCoolButton1.w + WORD_BANK_SPACING_CONSTANT, 355, 50);
-// const myCoolButton3 = new Button("Dobro", 155, 435, 50);
-// const myCoolButton4 = new Button("Siromasni", myCoolButton3.x + myCoolButton3.w + WORD_BANK_SPACING_CONSTANT, 435, 50);
 const globalCanvasObjects = new Array();
 const globalCanvasObjectsByLocation = new Object();
 
 const addObjectToCanvas = (obj) => {
+  // Pushes a given object to the global canvas array, and adds it
+  // to the location map. Objects in the array will have their draw()
+  // method called in a loop.
   globalCanvasObjects.push(obj);
   addObjectToLocationMap(obj, globalCanvasObjectsByLocation);
 };
 
 const addObjectToLocationMap = (obj, mapping) => {
+  /*
+  A location map is an object of the following form:
+
+  {
+    <xCoordinate>: {
+      <yCoordinate>: [Object, ...], ...
+    }, ...
+  }
+
+  We use this in our 'object finding' algorithm that helps us to do
+  somewhat efficient collision detection.
+  This function adds an object that supplies an array of Coordinate
+  objects in a property called 'vertices' to just such a mapping.
+  */
   for (const vertex of obj.vertices) {
+    // If we've never seen this x value before, add it!
     if (!mapping.hasOwnProperty(vertex.x)) {
       mapping[vertex.x] = new Object();
     }
+    // If we've never seen this y value for this given x value before, add it!
     if (!mapping[vertex.x].hasOwnProperty(vertex.y)) {
       mapping[vertex.x][vertex.y] = new Array();
     }
+    // Put the object at [x][y].
     mapping[vertex.x][vertex.y].push(obj);
   }
 };
 
 const addButtonsFromWordlist = (wordList, startX, startY) => {
-  console.log(`StartY: ${startY}`);
-  let lastButton;
-  for (const [index, element] of wordList.entries()) {
-    if (lastButton === undefined) {
-      console.log(`Detected first button word ${element}`);
-      const firstButton = new Button(element, startX, startY, 50);
-      addObjectToCanvas(firstButton);
-      lastButton = firstButton;
-      continue;
-    }
-    const thisButton = new Button(element, lastButton.x + lastButton.w + WORD_BANK_SPACING_CONSTANT, startY, 50);
+  // Given a set of strings and a place to start, add a bunch of
+  // hoverable buttons to the canvas.
 
+  let lastButton; // Store the last button we wrote in this!
+  for (const [index, element] of wordList.entries()) {
+    // If lastButton is undefined, it means we're looking at the first button
+    // in our row. We should place the button at startX. Otherwise, we're going
+    // to place the button based on its last neighbor's right edge.
+    const buttonX = lastButton === undefined ? startX : lastButton.x + lastButton.w + WORD_BANK_SPACING_CONSTANT;
+    const thisButton = new Button(element, buttonX, startY, BUTTON_DEFAULT_HEIGHT);
+
+    // If we detect that this button would go beyond the limit of the canvas,
     if (thisButton.x + thisButton.w >= globalCanvas.width) {
+      // reset 'lastButton',
       lastButton = undefined;
+      // and restart in a new row. The first word of the next row should be our current word.
       addButtonsFromWordlist(wordList.slice(index), startX, startY + WORD_BANK_SPACING_Y);
       // There's some goofy behaviour here if we don't return. I think it's something to do
       // with the loop construct -- we pass the end of the list more than once if we don't
       return;
     } else {
-      console.log(`Adding ${element}`);
+      // Otherwise, everything is normal. We can just add a word.
       lastButton = thisButton;
       addObjectToCanvas(thisButton);
     }
@@ -198,11 +216,6 @@ addButtonsFromWordlist(
   105,
   355
 );
-
-// addObjectToCanvas(myCoolButton1);
-// addObjectToCanvas(myCoolButton2);
-// addObjectToCanvas(myCoolButton3);
-// addObjectToCanvas(myCoolButton4);
 
 class PlaneSquare {
   constructor(startX, startY, endX, endY) {
@@ -333,16 +346,8 @@ globalCanvas.addEventListener("mousemove", (event) => {
 });
 
 const update = () => {
-  // canvas.width = (95 / 100) * parentFrameWidth;
-  // canvas.height = (95 / 100) * parentFrameHeight;
-  // const parentFrameWidth = canvas.parentElement.clientWidth;
-  // const parentFrameHeight = canvas.parentElement.clientHeight;
-
   getCtx(globalCanvas).clearRect(0, 0, globalCanvas.width, globalCanvas.height);
 
-  // for (const [index, sentence] of Object.entries(CrvenkapaBook.sentences)) {
-  //   writeTextWithAlignment(getCtx(globalCanvas), sentence.jugoslavian, 5, 2 * FONT_SIZE_PX + 3 * FONT_SIZE_PX * index);
-  // }
   writeTextWithAlignment(
     getCtx(globalCanvas),
     `x: ${cursorLocation.x}, y: ${cursorLocation.y}`,
