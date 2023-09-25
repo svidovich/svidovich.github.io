@@ -3,6 +3,11 @@
   justify-content: center;
 }
 
+.downloads,
+.customexerciseoptions {
+  display: none;
+}
+
 .truthtable {
   /* border: 1px solid black; */
   width: 70vw;
@@ -119,6 +124,14 @@ h3 {
   font-family: "Arvo", sans-serif;
 }
 
+input[type="radio"] {
+  border: 0px;
+  height: 1.5em;
+  vertical-align: bottom;
+  margin: 10px 0 10px 0;
+  display: block;
+}
+
 .scriptoptions,
 .practiceformatoptions {
   height: 40px;
@@ -128,11 +141,11 @@ h3 {
 }
 
 .scriptoptionslabel {
-  font-size: 40px;
+  font-size: 20px;
 }
 
 .practiceformatoptionslabel {
-  font-size: 40px;
+  font-size: 20px;
   text-transform: capitalize;
 }
 
@@ -162,7 +175,8 @@ h3 {
 }
 
 .practiceoptionsdropdown {
-  font-size: 40px;
+  font-size: 20px;
+  width: 60vw;
 }
 
 .quizoption {
@@ -171,7 +185,7 @@ h3 {
   padding: 8px 16px;
   text-decoration: none;
   text-align: center;
-  font-size: 50px;
+  font-size: 20px;
   font-family: "Arvo", sans-serif;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -190,9 +204,10 @@ h3 {
 
 .flashcardcontainer {
   display: grid;
-  width: 100vw;
+  width: 80vw;
   justify-content: center;
   grid-template-rows: 40vw;
+  /* grid-template-columns: 1fr; */
   gap: 20px 20px;
   align-items: start;
   margin-top: 20px;
@@ -208,7 +223,7 @@ h3 {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 40px;
+  font-size: 20px;
   border-radius: 4px;
   cursor: grab;
   -webkit-touch-callout: none; /* iOS Safari */
