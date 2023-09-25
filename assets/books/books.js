@@ -214,7 +214,7 @@ addButtonsFromWordlist(
     "sloboda",
   ],
   105,
-  355
+  405
 );
 
 class PlaneSquare {
