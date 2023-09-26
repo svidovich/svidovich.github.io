@@ -2,6 +2,20 @@
   text-transform: capitalize;
 }
 
+.paragraphs {
+  font-family: sans-serif;
+  width: 80vw;
+  margin: auto;
+  text-align: center;
+}
+
+.toplinks {
+  display: inline;
+  width: 80vw;
+  margin: auto;
+  text-align: center;
+}
+
 .truthtable {
   /* border: 1px solid black; */
   width: 70vw;
