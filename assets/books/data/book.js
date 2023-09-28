@@ -25,3 +25,11 @@ export class Book {
     });
   }
 }
+
+export const sentenceFromObject = (obj) => {
+  return new Sentence(obj.latin, obj.english);
+};
+
+export const bookFromArray = (sentenceArray) => {
+  return new Book(sentenceArray);
+};

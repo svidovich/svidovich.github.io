@@ -11,12 +11,37 @@ const WORD_BANK_SPACING_CONSTANT = 15;
 const WORD_BANK_SPACING_Y = 75;
 const BUTTON_DEFAULT_HEIGHT = 40;
 
+const screenDivisor = 1;
+
 let globalCtx = undefined;
 const getCtx = (canvasElement, reset = false) => {
   if (globalCtx === undefined || reset === true) {
     globalCtx = canvasElement.getContext("2d");
   }
   return globalCtx;
+};
+
+const gctx = () => {
+  return getCtx(globalCanvas);
+};
+
+const getLines = (ctx, text, maxWidth) => {
+  const words = text.split(" ");
+  const lines = [];
+  let currentLine = words[0];
+
+  for (let i = 1; i < words.length; i++) {
+    const word = words[i];
+    const width = ctx.measureText(currentLine + " " + word).width;
+    if (width < maxWidth) {
+      currentLine += " " + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  lines.push(currentLine);
+  return lines;
 };
 
 const writeTextWithAlignment = (
@@ -33,7 +58,15 @@ const writeTextWithAlignment = (
   const oldAlign = canvasContext.textAlign;
   canvasContext.textAlign = alignment;
   canvasContext.font = `${fontSizePx}px ${font}`;
-  canvasContext.fillText(text, (x / 2) | 0, (y / 2) | 0);
+  let lines;
+  if (maxWidth) {
+    lines = getLines(canvasContext, text, maxWidth - x);
+  } else {
+    lines = [text];
+  }
+  for (let i = 0; i < lines.length; i++) {
+    canvasContext.fillText(lines[i], (x / screenDivisor) | 0, (y + (i * fontSizePx * 1.5) / screenDivisor) | 0);
+  }
   canvasContext.font = oldFont;
   canvasContext.textAlign = oldAlign;
 };
@@ -103,9 +136,19 @@ class Button extends AbstractCanvasObject {
     ctx.strokeStyle = this.color;
     // Begin path or leak memory intensely for no good reason.
     ctx.beginPath();
-    ctx.roundRect((this.x / 2) | 0, (this.y / 2) | 0, (this.w / 2) | 0, (this.h / 2) | 0, 5);
+    ctx.roundRect(
+      (this.x / screenDivisor) | 0,
+      (this.y / screenDivisor) | 0,
+      (this.w / screenDivisor) | 0,
+      (this.h / screenDivisor) | 0,
+      5
+    );
     ctx.stroke();
-    ctx.fillText(this.text, this.x / 2 + (this.w * 1.2) / FONT_SIZE_PX, this.y / 2 + (this.h * 3) / FONT_SIZE_PX);
+    ctx.fillText(
+      this.text,
+      this.x / screenDivisor + (this.w * 1.2) / FONT_SIZE_PX, // may need adjusted
+      this.y / screenDivisor + (this.h * 3) / FONT_SIZE_PX // may need adjusted
+    );
     ctx.strokeStyle = oldStyle;
   }
 
@@ -192,30 +235,32 @@ const addButtonsFromWordlist = (wordList, startX, startY) => {
   }
 };
 
-addButtonsFromWordlist(
-  [
-    "Ja",
-    "se",
-    "vracam",
-    "i",
-    "ne",
-    "biti",
-    "super",
-    "doline",
-    "prababa",
-    "rakija",
-    "rajice",
-    "momak",
-    "slatko",
-    "zora",
-    "hajduci",
-    "junak",
-    "ustanka",
-    "sloboda",
-  ],
-  105,
-  405
-);
+// addButtonsFromWordlist(
+//   [
+//     "Ja",
+//     "se",
+//     "vracam",
+//     "i",
+//     "ne",
+//     "biti",
+//     "super",
+//     "doline",
+//     "prababa",
+//     "rakija",
+//     "rajice",
+//     "momak",
+//     "slatko",
+//     "zora",
+//     "hajduci",
+//     "junak",
+//     "ustanka",
+//     "sloboda",
+//   ],
+//   105,
+//   405
+// );
+
+console.log(CrvenkapaBook);
 
 class PlaneSquare {
   constructor(startX, startY, endX, endY) {
@@ -346,27 +391,95 @@ globalCanvas.addEventListener("mousemove", (event) => {
 });
 
 const update = () => {
-  getCtx(globalCanvas).clearRect(0, 0, globalCanvas.width, globalCanvas.height);
+  gctx().clearRect(0, 0, globalCanvas.width, globalCanvas.height);
+
+  gctx().beginPath();
+  gctx().moveTo(globalCanvas.width / 2, 25);
+  gctx().lineTo(globalCanvas.width / 2, globalCanvas.height - 25);
+  gctx().lineWidth = 2;
+  gctx().stroke();
+
+  const mySentence =
+    "This is a particularly long sentence with a lot of words in it that goes across the center. I can continue to add another sentence, and I am on my way to a paragraph.";
+  const another =
+    "This is a sentence that goes on the other side of the book. The letters won't run off the edge, though!";
+
+  const sentences = Object.values(CrvenkapaBook.sentences);
+  for (let i = 0; i < sentences.length; i++) {
+    writeTextWithAlignment(
+      gctx(),
+      sentences[i].english,
+      25,
+      25 + 75 * i,
+      undefined,
+      16,
+      "courier",
+      globalCanvas.width / 2 - 25
+    );
+    writeTextWithAlignment(
+      gctx(),
+      sentences[i].jugoslavian,
+      globalCanvas.width / 2 + 25,
+      25 + 75 * i,
+      undefined,
+      16,
+      "courier",
+      globalCanvas.width - 25
+    );
+  }
+  // const myLines = getLines(gctx(), mySentence, globalCanvas.width / 2 - 25);
+  // for (let j = 0; j < myLines.length; j++) {
+  //   writeTextWithAlignment(gctx(), myLines[j], 25, 100 + 25 * j, "align", 16, "courier");
+  // }
 
   writeTextWithAlignment(
-    getCtx(globalCanvas),
+    gctx(),
     `x: ${cursorLocation.x}, y: ${cursorLocation.y}`,
     5,
     globalCanvas.height - FONT_SIZE_PX * 3
   );
   globalCanvasObjects.forEach((obj) => {
-    obj.draw(getCtx(globalCanvas));
+    obj.draw(gctx());
   });
 };
 
-window.devicePixelRatio = 2;
-getCtx(globalCanvas).scale(window.devicePixelRatio, window.devicePixelRatio);
+window.devicePixelRatio = screenDivisor;
+gctx().scale(window.devicePixelRatio, window.devicePixelRatio);
+
+// finally query the various pixel ratios
+const devicePixelRatio = window.devicePixelRatio || 1;
+const backingStoreRatio =
+  gctx().webkitBackingStorePixelRatio ||
+  gctx().mozBackingStorePixelRatio ||
+  gctx().msBackingStorePixelRatio ||
+  gctx().oBackingStorePixelRatio ||
+  gctx().backingStorePixelRatio ||
+  1;
+const ratio = devicePixelRatio / backingStoreRatio;
+
+// upscale the canvas if the two ratios don't match
+if (devicePixelRatio !== backingStoreRatio) {
+  const oldWidth = globalCanvas.width;
+  const oldHeight = globalCanvas.height;
+
+  globalCanvas.width = oldWidth * ratio;
+  globalCanvas.height = oldHeight * ratio;
+
+  globalCanvas.style.width = oldWidth + "px";
+  globalCanvas.style.height = oldHeight + "px";
+
+  // now scale the context to counter
+  // the fact that we've manually scaled
+  // our canvas element
+  gctx().scale(ratio, ratio);
+}
 
 (() => {
   let animationFrameRequestToken;
   const main = (hiResTimeStamp) => {
     try {
       animationFrameRequestToken = window.requestAnimationFrame(main);
+
       update();
     } catch (error) {
       console.error(error);
