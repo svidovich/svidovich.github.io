@@ -1,11 +1,11 @@
 import { randomInt } from "../cards/utilities.js";
 import { CrvenkapaBook } from "./data/crvenkapa.js";
 
-const globalCanvas = document.getElementById("workspacecanvas");
-let parentFrameWidth = globalCanvas.parentElement.clientWidth;
-let parentFrameHeight = globalCanvas.parentElement.clientHeight;
-globalCanvas.width = (95 / 100) * parentFrameWidth;
-globalCanvas.height = (95 / 100) * parentFrameHeight;
+// const globalCanvas = document.getElementById("workspacecanvas");
+// let parentFrameWidth = globalCanvas.parentElement.clientWidth;
+// let parentFrameHeight = globalCanvas.parentElement.clientHeight;
+// globalCanvas.width = (95 / 100) * parentFrameWidth;
+// globalCanvas.height = (95 / 100) * parentFrameHeight;
 const FONT_SIZE_PX = 10;
 const WORD_BANK_SPACING_CONSTANT = 15;
 const WORD_BANK_SPACING_Y = 75;
@@ -21,9 +21,9 @@ const getCtx = (canvasElement, reset = false) => {
   return globalCtx;
 };
 
-const gctx = () => {
-  return getCtx(globalCanvas);
-};
+// const gctx = () => {
+//   return getCtx(globalCanvas);
+// };
 
 const getLines = (ctx, text, maxWidth) => {
   const words = text.split(" ");
@@ -315,7 +315,7 @@ const planeFromPartitions = (
   return plane;
 };
 
-const plane = planeFromPartitions(new Partition(0, globalCanvas.width, 4), new Partition(0, globalCanvas.height, 4));
+// const plane = planeFromPartitions(new Partition(0, globalCanvas.width, 4), new Partition(0, globalCanvas.height, 4));
 
 const searchPlaneForObjectsNearLocation = (plane, mappedObjects, locationX, locationY) => {
   // Search the given plane for objects...
@@ -362,6 +362,7 @@ const searchPlaneForObjectsNearLocation = (plane, mappedObjects, locationX, loca
 };
 
 let lastObjectsFound = new Array();
+/*
 globalCanvas.addEventListener("mousemove", (event) => {
   // When we move the mouse on the canvas we should detect the
   // location of the cursor so that we can perform actions on
@@ -389,7 +390,7 @@ globalCanvas.addEventListener("mousemove", (event) => {
   });
   lastObjectsFound = objectsAtMouseLocation;
 });
-
+*/
 const update = () => {
   gctx().clearRect(0, 0, globalCanvas.width, globalCanvas.height);
 
@@ -444,9 +445,10 @@ const update = () => {
 };
 
 window.devicePixelRatio = screenDivisor;
-gctx().scale(window.devicePixelRatio, window.devicePixelRatio);
+// gctx().scale(window.devicePixelRatio, window.devicePixelRatio);
 
 // finally query the various pixel ratios
+/*
 const devicePixelRatio = window.devicePixelRatio || 1;
 const backingStoreRatio =
   gctx().webkitBackingStorePixelRatio ||
@@ -473,18 +475,51 @@ if (devicePixelRatio !== backingStoreRatio) {
   // our canvas element
   gctx().scale(ratio, ratio);
 }
-
+*/
 (() => {
-  let animationFrameRequestToken;
-  const main = (hiResTimeStamp) => {
-    try {
-      animationFrameRequestToken = window.requestAnimationFrame(main);
+  // let animationFrameRequestToken;
+  // const main = (hiResTimeStamp) => {
+  //   try {
+  //     animationFrameRequestToken = window.requestAnimationFrame(main);
 
-      update();
-    } catch (error) {
-      console.error(error);
-      window.webkitCancelAnimationFrame(animationFrameRequestToken);
-    }
+  //     update();
+  //   } catch (error) {
+  //     console.error(error);
+  //     window.webkitCancelAnimationFrame(animationFrameRequestToken);
+  //   }
+  // };
+  const main = () => {
+    const ws = document.getElementById("workspacediv");
+    Object.entries(CrvenkapaBook.sentences).forEach((entry) => {
+      const [idx, sentence] = entry;
+      const lp = document.createElement("p");
+      lp.classList.add("storyparagraphs");
+      const lt = document.createTextNode(sentence.english);
+      lp.appendChild(lt);
+      lp.id = `left-text-${idx}`;
+      ws.appendChild(lp);
+
+      const rp = document.createElement("p");
+      rp.classList.add("storyparagraphs");
+      const rt = document.createTextNode(sentence.jugoslavian);
+      rp.appendChild(rt);
+      rp.id = `right-text-${idx}`;
+      ws.appendChild(rp);
+
+      [lp, rp].forEach((paragraph) => {
+        paragraph.addEventListener("mouseover", () => {
+          lp.style.color = "darkslateblue";
+          rp.style.color = "darkslateblue";
+        });
+        paragraph.addEventListener("mouseleave", () => {
+          lp.style.color = "black";
+          rp.style.color = "black";
+        });
+      });
+    });
+    // leftPage.textContent += sentence.english;
+    // leftPage.textContent += "\n\n";
   };
+
   main();
 })();
