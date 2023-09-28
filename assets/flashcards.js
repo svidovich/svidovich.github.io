@@ -978,9 +978,9 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   }
   const vocabCopy = [...vocabularyObjects];
   const flashCardContainer = document.getElementById("flashcardcontainer");
-  const cardCountPerRow = isMobile() ? 2 : 4;
-  const rowHeight = isMobile() ? "40vw" : "200px";
-  flashCardContainer.style.gridTemplateColumns = `repeat(${cardCountPerRow}, ${rowHeight})`;
+  const cardCountPerRow = isMobile() ? 1 : 4;
+  const gridTemplateColumns = isMobile() ? "80vw" : "repeat(4, 200px)";
+  flashCardContainer.style.gridTemplateColumns = gridTemplateColumns;
 
   const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
 
@@ -1064,7 +1064,11 @@ const handleScoringInteraction = (quizOption, scoreBar) => {
 };
 
 const scoreBarHidden = (scoreBar) => {
-  return scoreBar.hidden === true;
+  if (isMobile()) {
+    return scoreBar.style.visibility !== "visible";
+  } else {
+    return scoreBar.hidden === true;
+  }
 };
 
 const hideScoreBar = (scoreBar) => {
@@ -1072,10 +1076,19 @@ const hideScoreBar = (scoreBar) => {
 };
 
 const toggleScoreBar = (scoreBar) => {
-  if (scoreBar.hidden) {
+  if (isMobile()) {
     scoreBar.hidden = false;
+    if (scoreBar.style.visibility !== "visible") {
+      scoreBar.style.visibility = "visible";
+    } else {
+      scoreBar.style.visibility = "collapse";
+    }
   } else {
-    scoreBar.hidden = true;
+    if (scoreBar.hidden) {
+      scoreBar.hidden = false;
+    } else {
+      scoreBar.hidden = true;
+    }
   }
 };
 

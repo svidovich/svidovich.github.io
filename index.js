@@ -322,7 +322,9 @@ const randomBubbleFactory = () => {
 };
 
 const addNewBubble = () => {
-  bubblesArray.push(randomBubbleFactory());
+  if (!document.hidden) {
+    bubblesArray.push(randomBubbleFactory());
+  }
 };
 
 const garbageCollectBubbles = () => {
@@ -745,32 +747,36 @@ const update = () => {
 };
 
 const jumbleCursor = () => {
-  const cursorStyles = ["crosshair", "auto"];
-  const randomCursorStyle = randomElement(cursorStyles);
-  document.body.style.cursor = randomCursorStyle;
+  if (!document.hidden) {
+    const cursorStyles = ["crosshair", "auto"];
+    const randomCursorStyle = randomElement(cursorStyles);
+    document.body.style.cursor = randomCursorStyle;
+  }
 };
 
 const somethingInterestingHappens = () => {
-  const randomRoll = generateRandomNumber(1, 100);
-  if (randomRoll < 20) {
-    addSchoolOfFish();
-  } else if (randomRoll > 80) {
-    addConstellationOfStars();
-  } else if (randomRoll >= 20 && randomRoll <= 40) {
-    if (allSprites.length === 0) {
-      const linkSprite = new Sprite(-10, generateRandomNumber(15, 700));
-      linkSprite.setSpeed([4, 0]);
-      linkSprite.addSpriteSequence(linkRunningRightSequence);
-      linkSprite.setCurrentState(linkRunningRightSequence);
-      allSprites.push(linkSprite);
-    }
-  } else if (randomRoll > 40 && randomRoll <= 80) {
-    if (allSprites.length === 0) {
-      const goriya = new Sprite(-10, generateRandomNumber(15, 700));
-      goriya.addSpriteSequence(redGoriyaRunningRightSequence);
-      goriya.setCurrentState(redGoriyaRunningRightSequence);
-      goriya.setSpeed([4, 0]);
-      allSprites.push(goriya);
+  if (!document.hidden) {
+    const randomRoll = generateRandomNumber(1, 100);
+    if (randomRoll < 20) {
+      addSchoolOfFish();
+    } else if (randomRoll > 80) {
+      addConstellationOfStars();
+    } else if (randomRoll >= 20 && randomRoll <= 40) {
+      if (allSprites.length === 0) {
+        const linkSprite = new Sprite(-10, generateRandomNumber(15, 700));
+        linkSprite.setSpeed([4, 0]);
+        linkSprite.addSpriteSequence(linkRunningRightSequence);
+        linkSprite.setCurrentState(linkRunningRightSequence);
+        allSprites.push(linkSprite);
+      }
+    } else if (randomRoll > 40 && randomRoll <= 80) {
+      if (allSprites.length === 0) {
+        const goriya = new Sprite(-10, generateRandomNumber(15, 700));
+        goriya.addSpriteSequence(redGoriyaRunningRightSequence);
+        goriya.setCurrentState(redGoriyaRunningRightSequence);
+        goriya.setSpeed([4, 0]);
+        allSprites.push(goriya);
+      }
     }
   }
 };
@@ -798,8 +804,9 @@ const somethingInterestingHappens = () => {
   main = (hiResTimeStamp) => {
     try {
       animationFrameRequestToken = window.requestAnimationFrame(main);
-
-      update();
+      if (!document.hidden) {
+        update();
+      }
     } catch (error) {
       console.error(error);
     }
