@@ -1,17 +1,6 @@
 import { randomInt } from "../cards/utilities.js";
 import { CrvenkapaBook } from "./data/crvenkapa.js";
 
-// [lp, rp].forEach((paragraph) => {
-//   paragraph.addEventListener("mouseover", () => {
-//     lp.style.color = "darkslateblue";
-//     rp.style.color = "darkslateblue";
-//   });
-//   paragraph.addEventListener("mouseleave", () => {
-//     lp.style.color = "black";
-//     rp.style.color = "black";
-//   });
-// });
-
 const preRenderPageFromSentences = (pagesObject) => {
   /*
   What even. OK so...
@@ -120,10 +109,73 @@ const preRenderPageFromSentences = (pagesObject) => {
   return output;
 };
 
+const renderPage = (sentenceArray) => {
+  const ws = document.getElementById("workspacediv");
+  // Clear the workspace before we render
+  while (ws.firstChild) {
+    ws.removeChild(ws.lastChild);
+  }
+  for (const [idx, sentence] of sentenceArray.entries()) {
+    const lp = document.createElement("p");
+    lp.classList.add("storyparagraphs");
+    const lt = document.createTextNode(sentence.english);
+    lp.appendChild(lt);
+    lp.id = `left-text-${idx}`;
+    ws.appendChild(lp);
+
+    const rp = document.createElement("p");
+    rp.classList.add("storyparagraphs");
+    const rt = document.createTextNode(sentence.jugoslavian);
+    rp.appendChild(rt);
+    rp.id = `right-text-${idx}`;
+    ws.appendChild(rp);
+    // Make matched sentences glow when you scroll over one of them!
+    [lp, rp].forEach((paragraph) => {
+      paragraph.addEventListener("mouseover", () => {
+        lp.style.color = "darkslateblue";
+        rp.style.color = "darkslateblue";
+      });
+      paragraph.addEventListener("mouseleave", () => {
+        lp.style.color = "black";
+        rp.style.color = "black";
+      });
+    });
+  }
+};
+
+let globalCurrentPage;
+let globalPages;
+
+const addButtonEventListeners = () => {
+  // The way this page is set up is that the workspace is in an iframe
+  // on the main page, while the buttons for turning the page are on
+  // the main page itself. To get at those elements, we need to summon
+  // up the 'document' object of the main page.
+  const pageButtonNext = window.parent.document.getElementById("pagebuttonnext");
+  const pageButtonPrevious = window.parent.document.getElementById("pagebuttonprevious");
+
+  pageButtonNext.addEventListener("click", () => {
+    const nextIdx = globalCurrentPage + 1;
+    if (globalPages[nextIdx]) {
+      globalCurrentPage = nextIdx;
+      renderPage(globalPages[globalCurrentPage]);
+    }
+  });
+  pageButtonPrevious.addEventListener("click", () => {
+    const nextIdx = globalCurrentPage - 1;
+    if (globalPages[nextIdx]) {
+      globalCurrentPage = nextIdx;
+      renderPage(globalPages[globalCurrentPage]);
+    }
+  });
+};
+
 const main = () => {
   const firstArg = { pages: {}, sentences: CrvenkapaBook.sentences };
-  const allPages = preRenderPageFromSentences(firstArg);
-  console.log(allPages);
+  globalPages = preRenderPageFromSentences(firstArg).pages;
+  globalCurrentPage = 0;
+  renderPage(globalPages[globalCurrentPage]);
+  addButtonEventListeners();
 };
 
 main();
