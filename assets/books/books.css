@@ -23,7 +23,7 @@
 
 .bodydiv {
   display: flex;
-  width: 100%;
+  width: 99%;
   height: 99%;
   justify-content: center;
   align-items: center;

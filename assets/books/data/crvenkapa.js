@@ -32,6 +32,70 @@ export const CrvenkapaBook = bookFromArray(
       latin: "Čuvaj se zlog vuka, i nikome ne govori đe ideš.",
       english: "Watch out for the evil wolf, and tell no-one where you're going.",
     },
+    {
+      latin: "Extra 1",
+      english: "Extra 1",
+    },
+    {
+      latin: "Extra 2",
+      english: "Extra 2",
+    },
+    {
+      latin: "Extra 3",
+      english: "Extra 3",
+    },
+    {
+      latin: "Extra 4",
+      english: "Extra 4",
+    },
+    {
+      latin: "Extra 5",
+      english: "Extra 5",
+    },
+    {
+      latin: "Extra 6",
+      english: "Extra 6",
+    },
+    {
+      latin: "Extra 7",
+      english: "Extra 7",
+    },
+    {
+      latin: "Extra 8",
+      english: "Extra 8",
+    },
+    {
+      latin: "Extra 9",
+      english: "Extra 9",
+    },
+    {
+      latin: "Extra 10",
+      english: "Extra 10",
+    },
+    {
+      latin: "Extra 11",
+      english: "Extra 11",
+    },
+    {
+      latin: "Extra 12",
+      english: "Extra 12",
+    },
+    {
+      latin: "Extra 13",
+      english: "Extra 13",
+    },
+    {
+      latin: "Extra 14",
+      english: "Extra 14",
+    },
+    {
+      latin: "Extra 15",
+      english: "Extra 15",
+    },
+    {
+      latin: "Extra 16",
+      english: "Extra 16",
+    },
   ].map((obj) => {
     return sentenceFromObject(obj);
   })
