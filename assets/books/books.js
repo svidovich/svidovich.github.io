@@ -1,6 +1,19 @@
 import { randomInt } from "../cards/utilities.js";
 import { CrvenkapaBook } from "./data/crvenkapa.js";
 
+const maxFromStringArray = (stringArray) => {
+  let max;
+  for (let i = 0; i < stringArray.length; i++) {
+    const asInt = parseInt(stringArray[i]);
+    if (isNaN(parseInt(max))) {
+      max = asInt;
+    } else if (asInt > max) {
+      max = asInt;
+    }
+  }
+  return max;
+};
+
 const preRenderPageFromSentences = (pagesObject) => {
   /*
   What even. OK so...
@@ -131,13 +144,47 @@ const renderPage = (sentenceArray) => {
     ws.appendChild(rp);
     // Make matched sentences glow when you scroll over one of them!
     [lp, rp].forEach((paragraph) => {
+      // When we mouseover, if the color isn't toggled, flash to
+      // the highlight color.
       paragraph.addEventListener("mouseover", () => {
-        lp.style.color = "darkslateblue";
-        rp.style.color = "darkslateblue";
+        if (!lp.classList.contains("colortoggled")) {
+          lp.style.color = "darkslateblue";
+          rp.style.color = "darkslateblue";
+        }
       });
+      // When we leave, if the color isn't toggled, return to normal
       paragraph.addEventListener("mouseleave", () => {
-        lp.style.color = "black";
-        rp.style.color = "black";
+        if (!lp.classList.contains("colortoggled")) {
+          lp.style.color = "black";
+          rp.style.color = "black";
+        }
+      });
+      // When we click...
+      paragraph.addEventListener("click", () => {
+        // If the color isn't currently toggled, we should
+        // set it to the highlight color, then set it to toggle.
+        if (!lp.classList.contains("colortoggled")) {
+          lp.style.color = "darkslateblue";
+          rp.style.color = "darkslateblue";
+          lp.classList.add("colortoggled");
+          rp.classList.add("colortoggled");
+        } else {
+          // If our color is toggled, and our current color is the
+          // highlight color, we should return to normal, and we should
+          // remove the toggle.
+          if (lp.style.color === "darkslateblue") {
+            lp.style.color = "black";
+            rp.style.color = "black";
+            lp.classList.remove("colortoggled");
+            rp.classList.remove("colortoggled");
+            // Otherwise, toggle the highlight color. Is this state necessary...?
+          } else {
+            lp.style.color = "darkslateblue";
+            rp.style.color = "darkslateblue";
+            lp.classList.add("colortoggled");
+            rp.classList.add("colortoggled");
+          }
+        }
       });
     });
   }
@@ -159,6 +206,7 @@ const addButtonEventListeners = () => {
     if (globalPages[nextIdx]) {
       globalCurrentPage = nextIdx;
       renderPage(globalPages[globalCurrentPage]);
+      setPageInputValueFromGlobal();
     }
   });
   pageButtonPrevious.addEventListener("click", () => {
@@ -166,16 +214,45 @@ const addButtonEventListeners = () => {
     if (globalPages[nextIdx]) {
       globalCurrentPage = nextIdx;
       renderPage(globalPages[globalCurrentPage]);
+      setPageInputValueFromGlobal();
     }
   });
+};
+
+const addPageNumberEventListener = () => {
+  const pageNumberControl = window.parent.document.getElementById("pagenumbercontrol");
+  pageNumberControl.addEventListener("input", () => {
+    const inputValue = parseInt(pageNumberControl.value);
+    if (!isNaN(inputValue)) {
+      const lastPage = maxFromStringArray(Object.keys(globalPages));
+      if (inputValue <= lastPage) {
+        globalCurrentPage = inputValue;
+        renderPage(globalPages[globalCurrentPage]);
+      }
+    }
+  });
+};
+
+const setPageInputValueFromGlobal = () => {
+  const pageNumberControl = window.parent.document.getElementById("pagenumbercontrol");
+  pageNumberControl.setAttribute("value", `${globalCurrentPage}`);
+};
+
+const setPageCountTextFromGlobal = () => {
+  const lastPage = maxFromStringArray(Object.keys(globalPages));
+  const pageCountText = window.parent.document.getElementById("controlpagecounttext");
+  pageCountText.textContent = lastPage;
 };
 
 const main = () => {
   const firstArg = { pages: {}, sentences: CrvenkapaBook.sentences };
   globalPages = preRenderPageFromSentences(firstArg).pages;
+  setPageCountTextFromGlobal();
+
   globalCurrentPage = 0;
   renderPage(globalPages[globalCurrentPage]);
   addButtonEventListeners();
+  addPageNumberEventListener();
 };
 
 main();

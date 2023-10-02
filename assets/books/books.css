@@ -1,3 +1,17 @@
+.pagecontrols {
+  position: absolute;
+  margin: -20px 0 10px 10px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pagebuttoncontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+}
+
 .storyparagraphs {
   font-size: 28px;
   border-bottom: 1px solid lightgray;
