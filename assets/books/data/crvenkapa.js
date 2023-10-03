@@ -1,6 +1,8 @@
 import { sentenceFromObject, bookFromArray } from "./book.js";
 
 export const CrvenkapaBook = bookFromArray(
+  "Crvenkapa",
+  "The story of a very bad girl.",
   [
     {
       latin: "Bila jednom jedna devojčica, ljupka i mila, koja je živela s mamom u kućici pored šume.",

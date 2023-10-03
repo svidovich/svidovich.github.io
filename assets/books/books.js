@@ -1,5 +1,6 @@
 import { randomInt } from "../cards/utilities.js";
 import { CrvenkapaBook } from "./data/crvenkapa.js";
+import { BOOKS } from "./data/index.js";
 
 const maxFromStringArray = (stringArray) => {
   let max;
@@ -35,6 +36,10 @@ const preRenderPageFromSentences = (pagesObject) => {
   */
 
   const ws = document.getElementById("workspacediv");
+  // clear the workspace before we get a-rendering.
+  while (ws.firstChild) {
+    ws.removeChild(ws.lastChild);
+  }
   const wsRect = ws.getBoundingClientRect();
   const pagesAndSentences = {
     pages: pagesObject.pages ? pagesObject.pages : {},
@@ -244,15 +249,52 @@ const setPageCountTextFromGlobal = () => {
   pageCountText.textContent = lastPage;
 };
 
-const main = () => {
-  const firstArg = { pages: {}, sentences: CrvenkapaBook.sentences };
-  globalPages = preRenderPageFromSentences(firstArg).pages;
-  setPageCountTextFromGlobal();
+const fillSideBarWithBooks = () => {
+  const sideBar = window.parent.document.getElementById("bookssidebar");
+  const bookCase = sideBar.contentWindow.document.getElementById("bookcase");
 
-  globalCurrentPage = 0;
-  renderPage(globalPages[globalCurrentPage]);
+  BOOKS.forEach((book) => {
+    const bookLink = document.createElement("div");
+    const bookTitle = document.createTextNode(book.title);
+    bookLink.classList.add("book");
+    bookLink.title = book.description;
+    bookLink.appendChild(bookTitle);
+    bookLink.addEventListener("click", () => {
+      const preRenderArg = { pages: {}, sentences: book.sentences };
+      globalPages = preRenderPageFromSentences(preRenderArg).pages;
+      globalCurrentPage = 0;
+      setPageCountTextFromGlobal();
+      setPageInputValueFromGlobal();
+      renderPage(globalPages[globalCurrentPage]);
+    });
+    bookCase.appendChild(bookLink);
+  });
+};
+
+const renderWelcomeMessage = () => {
+  const ws = document.getElementById("workspacediv");
+  // Clear the workspace before we render
+  while (ws.firstChild) {
+    ws.removeChild(ws.lastChild);
+  }
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("welcometext");
+  const message = document.createTextNode("Choose a book from the sidebar to get started!");
+  messageDiv.appendChild(message);
+  ws.appendChild(messageDiv);
+};
+
+const main = () => {
+  // const firstArg = { pages: {}, sentences: CrvenkapaBook.sentences };
+  // globalPages = preRenderPageFromSentences(firstArg).pages;
+  // setPageCountTextFromGlobal();
+
+  // globalCurrentPage = 0;
+  // renderPage(globalPages[globalCurrentPage]);
   addButtonEventListeners();
   addPageNumberEventListener();
+  fillSideBarWithBooks();
+  renderWelcomeMessage();
 };
 
 main();
