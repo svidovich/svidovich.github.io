@@ -12,7 +12,17 @@
   </head>
   <body>
     <a href="../index.html"><<< Home</a><br />
-    <iframe src="books/sidebar.html" width="15%" height="90%" style="border: none"> </iframe>
-    <iframe class="workspaceframe" src="books/workspace.html" width="80%" height="90%"></iframe>
+    <iframe id="bookssidebar" src="books/sidebar.html" width="15%" height="90%" style="border: none"> </iframe>
+    <iframe class="workspaceframe" src="books/workspace.html" width="80%" height="90%"> </iframe>
+    <div class="pagecontrols" id="pagecontrols">
+      Page Controls
+
+      <div class="pagebuttoncontainer">
+        <button class="pagebutton" id="pagebuttonprevious">&#8592;</button>
+        <input id="pagenumbercontrol" type="text" value="0" size="1" style="margin-left: 4px; margin-right: 2px" /> /
+        <span id="controlpagecounttext" style="margin-left: 2px; margin-right: 4px">?</span>
+        <button class="pagebutton" id="pagebuttonnext">&#8594;</button>
+      </div>
+    </div>
   </body>
 </html>
