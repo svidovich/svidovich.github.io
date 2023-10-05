@@ -1,10 +1,10 @@
 export class Sentence {
-  constructor(jugoslavian, english) {
+  constructor(latin, english) {
     // Save the Jugo sentence variant and its word order
-    this.jugoslavian = jugoslavian;
-    this.jugoslavianOrder = new Object();
-    this.jugoslavian.split(" ").forEach((word, index) => {
-      this.jugoslavianOrder[index] = word;
+    this.latin = latin;
+    this.latinOrder = new Object();
+    this.latin.split(" ").forEach((word, index) => {
+      this.latinOrder[index] = word;
     });
 
     // Save the English sentence variant and its word order
