@@ -1,4 +1,5 @@
 import { randomInt } from "../cards/utilities.js";
+import { isMobile } from "../cards/os.js";
 import { CrvenkapaBook } from "./data/crvenkapa.js";
 import { BOOKS } from "./data/index.js";
 
@@ -254,7 +255,6 @@ const fillSideBarWithBooks = () => {
   const bookCase = sideBar.contentWindow.document.getElementById("bookcase");
 
   BOOKS.forEach((book) => {
-    console.log(book);
     const bookLink = document.createElement("div");
     const bookTitle = document.createTextNode(book.title);
     bookLink.classList.add("book");
@@ -285,11 +285,37 @@ const renderWelcomeMessage = () => {
   ws.appendChild(messageDiv);
 };
 
+const renderGetLostMessage = () => {
+  const ws = document.getElementById("workspacediv");
+  while (ws.firstChild) {
+    ws.removeChild(ws.lastChild);
+  }
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("welcometext");
+  const message = document.createTextNode("Sorry, this is not a mobile app. Get lost.");
+  messageDiv.appendChild(message);
+  messageDiv.appendChild(document.createElement("br"));
+
+  const homeLink = document.createElement("a");
+  homeLink.href = "../../index.html";
+  homeLink.target = "_top";
+  const linkText = document.createTextNode("OK...");
+  homeLink.appendChild(linkText);
+  messageDiv.style.fontSize = "48px";
+
+  messageDiv.appendChild(homeLink);
+  ws.appendChild(messageDiv);
+};
+
 const main = () => {
-  addButtonEventListeners();
-  addPageNumberEventListener();
-  fillSideBarWithBooks();
-  renderWelcomeMessage();
+  if (!isMobile()) {
+    addButtonEventListeners();
+    addPageNumberEventListener();
+    fillSideBarWithBooks();
+    renderWelcomeMessage();
+  } else {
+    renderGetLostMessage();
+  }
 };
 
 main();
