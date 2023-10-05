@@ -59,7 +59,7 @@ const preRenderPageFromSentences = (pagesObject) => {
 
     const rp = document.createElement("p");
     rp.classList.add("storyparagraphs");
-    const rt = document.createTextNode(sentence.jugoslavian);
+    const rt = document.createTextNode(sentence.latin);
     rp.appendChild(rt);
     rp.id = `right-text-${idx}`;
     ws.appendChild(rp);
@@ -143,7 +143,7 @@ const renderPage = (sentenceArray) => {
 
     const rp = document.createElement("p");
     rp.classList.add("storyparagraphs");
-    const rt = document.createTextNode(sentence.jugoslavian);
+    const rt = document.createTextNode(sentence.latin);
     rp.appendChild(rt);
     rp.id = `right-text-${idx}`;
     ws.appendChild(rp);
@@ -254,6 +254,7 @@ const fillSideBarWithBooks = () => {
   const bookCase = sideBar.contentWindow.document.getElementById("bookcase");
 
   BOOKS.forEach((book) => {
+    console.log(book);
     const bookLink = document.createElement("div");
     const bookTitle = document.createTextNode(book.title);
     bookLink.classList.add("book");
@@ -285,12 +286,6 @@ const renderWelcomeMessage = () => {
 };
 
 const main = () => {
-  // const firstArg = { pages: {}, sentences: CrvenkapaBook.sentences };
-  // globalPages = preRenderPageFromSentences(firstArg).pages;
-  // setPageCountTextFromGlobal();
-
-  // globalCurrentPage = 0;
-  // renderPage(globalPages[globalCurrentPage]);
   addButtonEventListeners();
   addPageNumberEventListener();
   fillSideBarWithBooks();
