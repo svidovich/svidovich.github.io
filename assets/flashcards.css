@@ -68,6 +68,13 @@
   padding: 10px 20px;
 }
 
+.customexerciseoptions {
+  position: absolute;
+  top: 75px;
+  right: 8px;
+  cursor: pointer;
+}
+
 .truthtable-button-true:hover {
   background-color: rgb(0, 100, 34);
 }

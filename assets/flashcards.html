@@ -3,10 +3,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta content="utf-8" http-equiv="encoding" />
-    <meta name="description" content="Learn Bosnian, Croatian, and Serbian online, free! ~ from Sam Vidovich" />
-    <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet" />
+    <meta
+      name="description"
+      content="Learn Bosnian, Croatian, and Serbian online, free! ~ from Sam Vidovich"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arvo&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" type="text/css" href="../style.css" />
-    <link rel="stylesheet" type="text/css" id="flashcardstylesheet" href="flashcards.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      id="flashcardstylesheet"
+      href="flashcards.css"
+    />
     <link rel="icon" href="../media/favicon.png" />
     <link rel="manifest" href="./cards/manifest.json" />
     <div></div>
@@ -15,8 +26,15 @@
   <body>
     <div class="toplinks">
       <a href="../index.html"><<< Back to Home</a> |
-      <a href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcards.js">Source Code >>></a> |
-      <a href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcarddata.js">Source Data >>></a>
+      <a
+        href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcards.js"
+        >Source Code >>></a
+      >
+      |
+      <a
+        href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcarddata.js"
+        >Source Data >>></a
+      >
       |
       <a href="credits.html">Credits >>></a>
     </div>
@@ -26,7 +44,11 @@
       Sound
       <span id="soundtogglestatusmessage" style="color: green"> ON </span>
     </div>
-    <div id="downloads" class="downloads" style="position: absolute; top: 5px; right: 5px">
+    <div
+      id="downloads"
+      class="downloads"
+      style="position: absolute; top: 5px; right: 5px"
+    >
       <img
         id="csvdownloadicon"
         src="../media/csvicon.png"
@@ -47,7 +69,10 @@
       />
     </div>
     <!-- beat the CSS into submission -->
-    <div id="langdirchoice" style="position: absolute; top: 50px; right: 5px; cursor: pointer">
+    <div
+      id="langdirchoice"
+      style="position: absolute; top: 50px; right: 5px; cursor: pointer"
+    >
       <img
         id="langdirchoiceimg"
         src="../media/mixengjug.png"
@@ -57,11 +82,7 @@
         title="Mixed English & Jugoslavian"
       />
     </div>
-    <div
-      id="customexerciseoptions"
-      class="customexerciseoptions"
-      style="position: absolute; top: 65px; left: 8px; cursor: pointer"
-    >
+    <div id="customexerciseoptions" class="customexerciseoptions">
       <img
         src="./cards/media/addexercise.png"
         id="addexerciseicon"
@@ -82,13 +103,18 @@
     </div>
     <div id="debugmessage" align="center" hidden></div>
     <div class="paragraphs">
-      I call these Yugoslavian, because they represent a language shared by a lot of different people. If you go to the
-      Balkans, folks will probably know what you're talking about if you use the words here. You can increase your
-      streak by returning every day and taking a quiz. Well? What do you say? Wanna give it a try?
+      I call these Yugoslavian, because they represent a language shared by a
+      lot of different people. If you go to the Balkans, folks will probably
+      know what you're talking about if you use the words here. You can increase
+      your streak by returning every day and taking a quiz. Well? What do you
+      say? Wanna give it a try?
       <br />
-      If you speak one of the many fabulous languages of the Balkans and notice that a word in here isn't what you
-      recognize, please feel free to reach out by
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=samuel.vidovich+flashcardsupport@gmail.com" target="_blank"
+      If you speak one of the many fabulous languages of the Balkans and notice
+      that a word in here isn't what you recognize, please feel free to reach
+      out by
+      <a
+        href="https://mail.google.com/mail/?view=cm&fs=1&to=samuel.vidovich+flashcardsupport@gmail.com"
+        target="_blank"
         >email</a
       >! I'd be happy to include regionalisms, dialectics, and slang.
       <br />
@@ -97,7 +123,11 @@
     </div>
     <br />
     <div align="center">
-      <select class="practiceoptionsdropdown" id="practiceoptionsdropdown" name="practiceoptionsdropdown">
+      <select
+        class="practiceoptionsdropdown"
+        id="practiceoptionsdropdown"
+        name="practiceoptionsdropdown"
+      >
         <option value="" selected disabled hidden>Choose a Practice</option>
       </select>
       <div id="practiceformatscontainer" hidden></div>
@@ -105,12 +135,32 @@
       <div class="scriptoptionstitletext">Text Options</div>
       <br />
       <form class="scriptoptionsform">
-        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptlatin" id="scriptlatin" />
+        <input
+          class="scriptoptions"
+          name="scriptoptions"
+          type="radio"
+          value="scriptlatin"
+          id="scriptlatin"
+        />
         <label class="scriptoptionslabel" for="scriptlatin">Latin</label>
-        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptcyrillic" id="scriptcyrillic" />
+        <input
+          class="scriptoptions"
+          name="scriptoptions"
+          type="radio"
+          value="scriptcyrillic"
+          id="scriptcyrillic"
+        />
         <label class="scriptoptionslabel" for="scriptcyrillic">Cyrillic</label>
-        <input class="scriptoptions" name="scriptoptions" type="radio" value="scriptboth" id="scriptboth" />
-        <label class="scriptoptionslabel" for="scriptboth">Latin + Cyrillic</label>
+        <input
+          class="scriptoptions"
+          name="scriptoptions"
+          type="radio"
+          value="scriptboth"
+          id="scriptboth"
+        />
+        <label class="scriptoptionslabel" for="scriptboth"
+          >Latin + Cyrillic</label
+        >
         <input
           class="scriptoptions"
           name="scriptoptions"
@@ -132,8 +182,9 @@
     <div id="cookie-banner" class="cookie-banner">
       <hr />
       <div class="cookieitem">
-        This page ( specifically ) uses cookies to stash data about your progress! I don't send anything to the cloud.
-        It's just you, this page, and a neat language.
+        This page ( specifically ) uses cookies to stash data about your
+        progress! I don't send anything to the cloud. It's just you, this page,
+        and a neat language.
       </div>
       <br />
       <div class="cookieitem">
@@ -145,8 +196,9 @@
   </body>
   <dialog id="newcustomexercisedialog" style="border-radius: 10px">
     <div id="newcustomexercisetitletext" style="text-align: center">
-      Add entries for your custom exercise! In the box on the left, add a new word or small phrase in English. On the
-      right, add it in Yugoslavian. Please add the <strong>latin</strong> form.
+      Add entries for your custom exercise! In the box on the left, add a new
+      word or small phrase in English. On the right, add it in Yugoslavian.
+      Please add the <strong>latin</strong> form.
       <br />
       <br />
       <!--
@@ -181,7 +233,9 @@
     <br />
     <form id="newcustomexercisefinishbuttons">
       <button id="newcustomexercisedialogbuttonsave" type="button">Save</button>
-      <button id="newcustomexercisedialogbuttoncancel" type="button">Cancel</button>
+      <button id="newcustomexercisedialogbuttoncancel" type="button">
+        Cancel
+      </button>
     </form>
   </dialog>
   <script type="module" src="flashcards.js"></script>
