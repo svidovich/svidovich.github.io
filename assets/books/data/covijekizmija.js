@@ -2,6 +2,8 @@ import { sentenceFromObject, bookFromArray } from "./book.js";
 
 export const CovijekIZmijaBook = bookFromArray(
   "Čovijek i Zmija",
+  "The Man and the Snake",
+  null,
   "A man and a snake learn a hard lesson about pain and reconciliation.",
   [
     {
@@ -33,8 +35,10 @@ export const CovijekIZmijaBook = bookFromArray(
       english: "Once, the man's son took up an axe.",
     },
     {
-      latin: "Te zmiji, koja se bila kao udomaćila i nije se od njega ni bojala,",
-      english: "The snake, who was as if she were domesticated and was of him not afraid,",
+      latin:
+        "Te zmiji, koja se bila kao udomaćila i nije se od njega ni bojala,",
+      english:
+        "The snake, who was as if she were domesticated and was of him not afraid,",
     },
     {
       latin: "pred rupom odsječe rep;",
@@ -46,7 +50,8 @@ export const CovijekIZmijaBook = bookFromArray(
     },
     {
       latin: "pa uteče u svoju rupu i prestane više izlaziti na sunce.",
-      english: "and so she ran into her hole and stopped going out into the sun.",
+      english:
+        "and so she ran into her hole and stopped going out into the sun.",
     },
     {
       latin: "Pošto čovijek sina svoga s najvećom žalosti više kući zakora,",

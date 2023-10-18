@@ -88,7 +88,8 @@ const preRenderPageFromSentences = (pagesObject) => {
         nextPageIndex = 0;
       } else {
         // Otherwise, this will be the page after the last one.
-        nextPageIndex = Math.max(...Object.keys(extantPages).map((e) => parseInt(e))) + 1;
+        nextPageIndex =
+          Math.max(...Object.keys(extantPages).map((e) => parseInt(e))) + 1;
       }
 
       const nextArg = {
@@ -114,7 +115,10 @@ const preRenderPageFromSentences = (pagesObject) => {
     nextPageIndex = 0;
   } else {
     // Otherwise, this will be the page after the last one.
-    nextPageIndex = Math.max(...Object.keys(pagesAndSentences.pages).map((e) => parseInt(e))) + 1;
+    nextPageIndex =
+      Math.max(
+        ...Object.keys(pagesAndSentences.pages).map((e) => parseInt(e))
+      ) + 1;
   }
   const output = {
     pages: pagesAndSentences.pages,
@@ -204,8 +208,10 @@ const addButtonEventListeners = () => {
   // on the main page, while the buttons for turning the page are on
   // the main page itself. To get at those elements, we need to summon
   // up the 'document' object of the main page.
-  const pageButtonNext = window.parent.document.getElementById("pagebuttonnext");
-  const pageButtonPrevious = window.parent.document.getElementById("pagebuttonprevious");
+  const pageButtonNext =
+    window.parent.document.getElementById("pagebuttonnext");
+  const pageButtonPrevious =
+    window.parent.document.getElementById("pagebuttonprevious");
 
   pageButtonNext.addEventListener("click", () => {
     const nextIdx = globalCurrentPage + 1;
@@ -226,7 +232,8 @@ const addButtonEventListeners = () => {
 };
 
 const addPageNumberEventListener = () => {
-  const pageNumberControl = window.parent.document.getElementById("pagenumbercontrol");
+  const pageNumberControl =
+    window.parent.document.getElementById("pagenumbercontrol");
   pageNumberControl.addEventListener("input", () => {
     const inputValue = parseInt(pageNumberControl.value);
     if (!isNaN(inputValue)) {
@@ -240,13 +247,16 @@ const addPageNumberEventListener = () => {
 };
 
 const setPageInputValueFromGlobal = () => {
-  const pageNumberControl = window.parent.document.getElementById("pagenumbercontrol");
+  const pageNumberControl =
+    window.parent.document.getElementById("pagenumbercontrol");
   pageNumberControl.setAttribute("value", `${globalCurrentPage}`);
 };
 
 const setPageCountTextFromGlobal = () => {
   const lastPage = maxFromStringArray(Object.keys(globalPages));
-  const pageCountText = window.parent.document.getElementById("controlpagecounttext");
+  const pageCountText = window.parent.document.getElementById(
+    "controlpagecounttext"
+  );
   pageCountText.textContent = lastPage;
 };
 
@@ -258,7 +268,11 @@ const fillSideBarWithBooks = () => {
     const bookLink = document.createElement("div");
     const bookTitle = document.createTextNode(book.title);
     bookLink.classList.add("book");
-    bookLink.title = book.description;
+    let bookHover = `"${book.titleEnglish}": ${book.description}`;
+    if (book.region) {
+      bookHover += ` From ${book.region}.`;
+    }
+    bookLink.title = bookHover;
     bookLink.appendChild(bookTitle);
     bookLink.addEventListener("click", () => {
       const preRenderArg = { pages: {}, sentences: book.sentences };
@@ -280,7 +294,9 @@ const renderWelcomeMessage = () => {
   }
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("welcometext");
-  const message = document.createTextNode("Choose a book from the sidebar to get started!");
+  const message = document.createTextNode(
+    "Choose a book from the sidebar to get started!"
+  );
   messageDiv.appendChild(message);
   ws.appendChild(messageDiv);
 };
@@ -292,7 +308,9 @@ const renderGetLostMessage = () => {
   }
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("welcometext");
-  const message = document.createTextNode("Sorry, this is not a mobile app. Get lost.");
+  const message = document.createTextNode(
+    "Sorry, this is not a mobile app. Get lost."
+  );
   messageDiv.appendChild(message);
   messageDiv.appendChild(document.createElement("br"));
 
