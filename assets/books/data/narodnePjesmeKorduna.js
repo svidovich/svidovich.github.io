@@ -6,12 +6,15 @@ import { bookFromArray } from "./book.js";
 // We will see how that goes.
 // They're in order of the book, God help me.
 
+export const PARENT_TEXT_PJESME_KORDUNA = "Narodne Pjesme Korduna";
+
 // #1
 export const SaPlanineVjetarBook = bookFromArray(
   "Sa Planine Vjetar Duva",
   "From the Mountains the Wind Blows",
   "Kordun",
   "What does Krajina feel like on the heart?",
+  PARENT_TEXT_PJESME_KORDUNA,
   [
     {
       latin: "Sa planine hladan vjetar duva",
@@ -62,6 +65,7 @@ export const VraniSeKonjiBook = bookFromArray(
   "Black Horses Romped",
   "Kordun",
   "Watch the horses play. See the people of the land!",
+  PARENT_TEXT_PJESME_KORDUNA,
   [
     {
       latin: "Vrani se konji igraju,",
@@ -120,6 +124,7 @@ export const NaGraniciVatraBook = bookFromArray(
   "On the Borders the Forests Burn",
   "Kordun",
   "A day in the life of a border guard! Will the janissaries make it out alive?",
+  PARENT_TEXT_PJESME_KORDUNA,
   [
     {
       latin: "Na granici vatra gori,",

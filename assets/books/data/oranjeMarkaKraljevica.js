@@ -1,10 +1,14 @@
-import { sentenceFromObject, bookFromArray } from "./book.js";
+import { bookFromArray } from "./book.js";
+
+// TODO I fully made this shit up lol
+export const PARENT_TEXT_ANTOLOGIJA = "Srpska Narodna Antologija";
 
 export const OranjeMarkaKraljevicaBook = bookFromArray(
   "Oranje Marka Kraljevića",
   "Plowing Marko Kraljević",
   null,
   "Following the advice of his mother, our hero Marko Kraljević puts down his sword for a plow. How long will it last?",
+  PARENT_TEXT_ANTOLOGIJA,
   [
     {
       latin: "Vino pije Kraljeviću Marko",

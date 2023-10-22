@@ -17,12 +17,13 @@ export class Sentence {
 }
 
 export class Book {
-  constructor(title, titleEnglish, region, description, sentences) {
+  constructor(title, titleEnglish, region, description, parentText, sentences) {
     // sentences: [Sentence]
     this.title = title;
-    this.titleEnglish = titleEnglish
-    this.region = region
+    this.titleEnglish = titleEnglish;
+    this.region = region;
     this.description = description;
+    this.parentText = parentText;
     this.sentences = new Object();
     sentences.forEach((sentence, index) => {
       this.sentences[index] = sentence;
@@ -34,6 +35,20 @@ export const sentenceFromObject = (obj) => {
   return new Sentence(obj.latin, obj.english);
 };
 
-export const bookFromArray = (title, titleEnglish, region, description, sentenceArray) => {
-  return new Book(title, titleEnglish, region, description, sentenceArray);
+export const bookFromArray = (
+  title,
+  titleEnglish,
+  region,
+  description,
+  parentText,
+  sentenceArray
+) => {
+  return new Book(
+    title,
+    titleEnglish,
+    region,
+    description,
+    parentText,
+    sentenceArray
+  );
 };

@@ -1,10 +1,13 @@
 import { sentenceFromObject, bookFromArray } from "./book.js";
 
+export const PARENT_TEXT_CRVENKAPA = "Crvenkapa";
+
 export const CrvenkapaBook = bookFromArray(
   "Crvenkapa",
   "Red Riding Hood",
   null,
   "The story of a girl who learns her lesson about listening to her elders and talking to strangers.",
+  PARENT_TEXT_CRVENKAPA,
   [
     {
       latin:
