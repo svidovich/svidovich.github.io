@@ -8,6 +8,7 @@ export const CrvenkapaBook = bookFromArray(
   null,
   "The story of a girl who learns her lesson about listening to her elders and talking to strangers.",
   PARENT_TEXT_CRVENKAPA,
+  false,
   [
     {
       latin:

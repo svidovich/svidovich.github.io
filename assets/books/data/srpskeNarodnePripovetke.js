@@ -7,6 +7,7 @@ export const CiganinISvabaBook = bookFromArray(
   "The Romani and the German",
   "Bačka",
   "A Romani and a German learn a little bit about hard work.",
+  false,
   PARENT_TEXT_SRPSKE_PRIPOVETKE,
   [
     {
@@ -64,6 +65,7 @@ export const CovijekIZmijaBook = bookFromArray(
   null,
   "A man and a snake learn a hard lesson about pain and reconciliation.",
   PARENT_TEXT_SRPSKE_PRIPOVETKE,
+  false,
   [
     {
       latin: "Za kućom nekavoga čovijeka,",
@@ -169,6 +171,7 @@ export const DobraHvalaBook = bookFromArray(
   "Hercegovina",
   "A poor man and his friend realize they're better off than they'd thought.",
   PARENT_TEXT_SRPSKE_PRIPOVETKE,
+  false,
   [
     {
       latin: "Sastanu se dvojica siromaha,",
