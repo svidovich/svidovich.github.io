@@ -1,8 +1,4 @@
-import {
-  dateAsObject,
-  dateCookieStringFromDate,
-  getYesterday,
-} from "./cards/dateutils.js";
+import { dateCookieStringFromDate } from "./cards/dateutils.js";
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 import {
   UUIDGeneratorBrowser,
@@ -10,9 +6,7 @@ import {
   camelize,
   decimalToColor,
   getObjectFromLocalStorage,
-  localStorageKeyExists,
   putObjectToLocalStorage,
-  putValueToLocalStorage,
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
@@ -21,7 +15,6 @@ import {
   FORMAT_QUIZ,
   FORMAT_T_OR_F,
   VocabularyObject,
-  VocabularySection,
   vocabularySectionFromArray,
 } from "./cards/vocabulary.js";
 import { practiceMap } from "./flashcarddata.js";
@@ -112,7 +105,6 @@ const cookieWarningSetup = () => {
 };
 
 const setSoundToggleSwitchMessage = () => {
-  const soundToggleSwitch = document.getElementById("soundtoggle");
   const soundToggleSwitchMessage = document.getElementById(
     "soundtogglestatusmessage"
   );
@@ -123,9 +115,6 @@ const setSoundToggleSwitchMessage = () => {
 
 const addSoundToggleClickListener = () => {
   const soundToggleSwitch = document.getElementById("soundtoggle");
-  const soundToggleSwitchMessage = document.getElementById(
-    "soundtogglestatusmessage"
-  );
   soundToggleSwitch.addEventListener("click", () => {
     toggleSound();
     setSoundToggleSwitchMessage();
@@ -223,7 +212,6 @@ const getCustomPracticesFromStorage = () => {
 };
 
 const clearLanguageEntryFieldsFromDialog = () => {
-  const formTable = document.getElementById("newcustomexerciseformtable");
   const rows = document.getElementsByClassName("newcustomexercisefieldrow");
   Array.from(rows).forEach((row) => {
     row.remove();
@@ -666,10 +654,8 @@ const handleStreak = () => {
     putObjectToLocalStorage(LAST_VISIT_KEY, today);
     return;
   }
-  const lastVisit = getObjectFromLocalStorage(LAST_VISIT_KEY);
   const lastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY);
-  const yesterdayDate = getYesterday(dateToday);
-  const yesterday = dateCookieStringFromDate(getYesterday(dateToday));
+
   // If they last visited today, we don't need to update their streak.
   if (lastCheck === today) {
     console.log("Welcome back!<3");
@@ -1063,7 +1049,6 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   }
   const vocabCopy = [...vocabularyObjects];
   const flashCardContainer = document.getElementById("flashcardcontainer");
-  const cardCountPerRow = isMobile() ? 1 : 4;
   const gridTemplateColumns = isMobile() ? "80vw" : "repeat(4, 200px)";
   flashCardContainer.style.gridTemplateColumns = gridTemplateColumns;
 
