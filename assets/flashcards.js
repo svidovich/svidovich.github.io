@@ -1,4 +1,8 @@
-import { dateAsObject, dateCookieStringFromDate, getYesterday } from "./cards/dateutils.js";
+import {
+  dateAsObject,
+  dateCookieStringFromDate,
+  getYesterday,
+} from "./cards/dateutils.js";
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 import {
   UUIDGeneratorBrowser,
@@ -68,7 +72,9 @@ const getLanguageChoice = () => {
 
 // Some globally available stuff
 export const streakDisplay = document.getElementById("streakdisplay");
-export const flashCardStyleSheet = document.getElementById("flashcardstylesheet");
+export const flashCardStyleSheet = document.getElementById(
+  "flashcardstylesheet"
+);
 
 // Global for storing practice document state
 const practiceState = new Array();
@@ -107,7 +113,9 @@ const cookieWarningSetup = () => {
 
 const setSoundToggleSwitchMessage = () => {
   const soundToggleSwitch = document.getElementById("soundtoggle");
-  const soundToggleSwitchMessage = document.getElementById("soundtogglestatusmessage");
+  const soundToggleSwitchMessage = document.getElementById(
+    "soundtogglestatusmessage"
+  );
   const shouldPlay = shouldPlaySound();
   soundToggleSwitchMessage.style = shouldPlay ? `color: green;` : `color: red;`;
   soundToggleSwitchMessage.textContent = shouldPlay ? `ON` : `OFF`;
@@ -115,7 +123,9 @@ const setSoundToggleSwitchMessage = () => {
 
 const addSoundToggleClickListener = () => {
   const soundToggleSwitch = document.getElementById("soundtoggle");
-  const soundToggleSwitchMessage = document.getElementById("soundtogglestatusmessage");
+  const soundToggleSwitchMessage = document.getElementById(
+    "soundtogglestatusmessage"
+  );
   soundToggleSwitch.addEventListener("click", () => {
     toggleSound();
     setSoundToggleSwitchMessage();
@@ -125,7 +135,9 @@ const addSoundToggleClickListener = () => {
 const handleNewCustomLessonSave = (dialog) => {
   // When we press save, we should get all of the necessary data from
   // the dialog to save a custom practice.
-  const customPracticeNameElement = document.getElementById("newcustomexercisename");
+  const customPracticeNameElement = document.getElementById(
+    "newcustomexercisename"
+  );
   const customPracticeName = customPracticeNameElement.value;
   // If they haven't named it, we should bail
   if (customPracticeName === "") {
@@ -133,7 +145,9 @@ const handleNewCustomLessonSave = (dialog) => {
     return;
   }
   const practiceObjects = new Array();
-  const englishInputs = Array.from(document.getElementsByClassName("newcustomexerciseinputenglish"));
+  const englishInputs = Array.from(
+    document.getElementsByClassName("newcustomexerciseinputenglish")
+  );
   englishInputs.forEach((input) => {
     const englishInputValue = input.value;
     // If we hit an empty entry, skip it. Otherwise...
@@ -141,13 +155,17 @@ const handleNewCustomLessonSave = (dialog) => {
       // Grab the UUID for the english bit,
       const englishInputUUID = input.getAttribute("uuid");
       // and try to find a matching latin bit.
-      const latinInputForUUID = document.getElementById(`newcustomexerciseinputlatin-${englishInputUUID}`);
+      const latinInputForUUID = document.getElementById(
+        `newcustomexerciseinputlatin-${englishInputUUID}`
+      );
       const latinInputValue = latinInputForUUID.value;
       // If there's a matching latin bit, go ahead and push it to the array
       // we prepared ahead of time. If it's empty, we shouldn't push it, we
       // should skip to the next entry.
       if (latinInputValue !== "") {
-        practiceObjects.push(new VocabularyObject(englishInputValue, latinInputValue).asObject);
+        practiceObjects.push(
+          new VocabularyObject(englishInputValue, latinInputValue).asObject
+        );
       }
     }
   });
@@ -165,7 +183,9 @@ const handleNewCustomLessonSave = (dialog) => {
   };
 
   let practicesToStore;
-  const allCustomPractices = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  const allCustomPractices = getObjectFromLocalStorage(
+    CUSTOM_PRACTICE_STORAGE_KEY
+  );
   if (!allCustomPractices) {
     practicesToStore = [serializedCustomPractice];
   } else {
@@ -183,14 +203,20 @@ const handleNewCustomLessonSave = (dialog) => {
 const getCustomPracticesFromStorage = () => {
   // Retrieve the practices from local storage, loading them as an array
   // of VocabularySection objects.
-  const practicesLoaded = getObjectFromLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY);
+  const practicesLoaded = getObjectFromLocalStorage(
+    CUSTOM_PRACTICE_STORAGE_KEY
+  );
   if (!practicesLoaded) {
     return [];
   }
   const sectionObjects = new Array();
   practicesLoaded.forEach((practiceJSON) => {
     sectionObjects.push(
-      vocabularySectionFromArray(practiceJSON.friendlyName, practiceJSON.unfriendlyName, practiceJSON.vocabularyObjects)
+      vocabularySectionFromArray(
+        practiceJSON.friendlyName,
+        practiceJSON.unfriendlyName,
+        practiceJSON.vocabularyObjects
+      )
     );
   });
   return sectionObjects;
@@ -207,8 +233,12 @@ const clearLanguageEntryFieldsFromDialog = () => {
 const addCustomPracticeNameEntryFieldToDialog = () => {
   // Add an "Exercise Name" dialog after the little title text and
   // before the table full of crap
-  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
-  const customExerciseDialogTable = document.getElementById("newcustomexerciseformtable");
+  const customExerciseDialog = document.getElementById(
+    "newcustomexercisedialog"
+  );
+  const customExerciseDialogTable = document.getElementById(
+    "newcustomexerciseformtable"
+  );
   const customPracticeNameInput = document.createElement("input");
   customPracticeNameInput.setAttribute("selected", "selected");
   customPracticeNameInput.type = "text";
@@ -234,7 +264,10 @@ const addCustomPracticeNameEntryFieldToDialog = () => {
   customPracticeNameInputForm.style.textAlign = "center";
 
   // Now we can insert it above the table.
-  customExerciseDialog.insertBefore(customPracticeNameInputForm, customExerciseDialogTable);
+  customExerciseDialog.insertBefore(
+    customPracticeNameInputForm,
+    customExerciseDialogTable
+  );
 };
 
 const clearCustomPracticeNameEntryFieldFromDialog = () => {
@@ -378,7 +411,9 @@ const customLessonEntriesFromFileText = (fileText) => {
     // we should throw.
     fileDataFromJSON.forEach((entry) => {
       if (!(entry.hasOwnProperty("english") && entry.hasOwnProperty("latin"))) {
-        throw new Error("Invalid file format: All objects need 'english' and 'latin' keys");
+        throw new Error(
+          "Invalid file format: All objects need 'english' and 'latin' keys"
+        );
       }
     });
     const entryArray = new Array();
@@ -459,7 +494,9 @@ const fillCustomLessonEntryFormFromDrop = (event) => {
         const customEntries = customLessonEntriesFromFileText(fileText);
         addEntriesToCustomExerciseDialog(customEntries);
       } catch (err) {
-        console.log(`Hey programmer! Here's the file read error: ${err} -- shoot me an email if you need help.`);
+        console.log(
+          `Hey programmer! Here's the file read error: ${err} -- shoot me an email if you need help.`
+        );
         alert(
           `Failed to read uploaded file ${file.name}. CSVs need a header of "latin,english"; JSON needs to be an array of objects with 'english' and 'latin' keys.`
         );
@@ -479,7 +516,9 @@ const addNewCustomLessonSampleDataNoticeHideListener = () => {
 };
 
 const addNewCustomLessonClickListeners = () => {
-  const customExerciseDialog = document.getElementById("newcustomexercisedialog");
+  const customExerciseDialog = document.getElementById(
+    "newcustomexercisedialog"
+  );
   const newCustomLessonIcon = document.getElementById("addexerciseicon");
   newCustomLessonIcon.addEventListener("click", () => {
     clearCustomPracticeNameEntryFieldFromDialog();
@@ -490,17 +529,23 @@ const addNewCustomLessonClickListeners = () => {
     customExerciseDialog.showModal();
   });
   // What happens when we press "Save"?
-  const newCustomLessonSaveButton = document.getElementById("newcustomexercisedialogbuttonsave");
+  const newCustomLessonSaveButton = document.getElementById(
+    "newcustomexercisedialogbuttonsave"
+  );
   newCustomLessonSaveButton.addEventListener("click", () => {
     handleNewCustomLessonSave(customExerciseDialog);
   });
   // What happens when we press "Cancel"?
-  const newCustomLessonCancelButton = document.getElementById("newcustomexercisedialogbuttoncancel");
+  const newCustomLessonCancelButton = document.getElementById(
+    "newcustomexercisedialogbuttoncancel"
+  );
   newCustomLessonCancelButton.addEventListener("click", () => {
     customExerciseDialog.close();
   });
   // This button helps us add more entries to our practice
-  const newCustomLessonAddEntryButton = document.getElementById("newcustomexerciseaddbutton");
+  const newCustomLessonAddEntryButton = document.getElementById(
+    "newcustomexerciseaddbutton"
+  );
   newCustomLessonAddEntryButton.addEventListener("click", () => {
     addLanguageEntryFieldToDialog();
   });
@@ -550,7 +595,9 @@ const addLoadStageClickListener = () => {
 };
 
 const addPracticeOptionsDropdownChangeListener = () => {
-  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  const practiceOptionsDropDown = document.getElementById(
+    "practiceoptionsdropdown"
+  );
   practiceOptionsDropDown.addEventListener("change", () => {
     const sectionObject = displayAvailablePracticeFormats();
     prepareSectionDownloadOptions(sectionObject);
@@ -579,12 +626,15 @@ const setStreakDisplay = (displayElement) => {
   while (displayElement.firstChild) {
     displayElement.removeChild(displayElement.lastChild);
   }
-  const streakText = document.createTextNode(`Your Streak: ${String(getStreakForDisplay())}`);
+  const streakText = document.createTextNode(
+    `Your Streak: ${String(getStreakForDisplay())}`
+  );
   displayElement.appendChild(streakText);
 };
 
 const streakIsOld = () => {
-  const streakLastCheck = getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY) || null;
+  const streakLastCheck =
+    getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY) || null;
   if (!streakLastCheck) {
     return false;
   }
@@ -592,7 +642,9 @@ const streakIsOld = () => {
   const [year, month, day] = streakLastCheck.split(".");
 
   const lastCheckAsDate = new Date(year, month - 1, day);
-  const hoursSinceLastCheck = Math.abs((lastCheckAsDate - dateToday) / (1000 * 60 * 60));
+  const hoursSinceLastCheck = Math.abs(
+    (lastCheckAsDate - dateToday) / (1000 * 60 * 60)
+  );
 
   if (hoursSinceLastCheck > 48) {
     return true;
@@ -644,7 +696,7 @@ const clearStage = (callerPlaySound) => {
   const scoreBar = document.getElementById("scorebar");
   hideScoreBar(scoreBar);
   const flashCardContainer = document.getElementById("flashcardcontainer");
-  flashCardContainer.attributeStyleMap.clear();
+  flashCardContainer.removeAttribute("style");
 };
 
 const insertPracticeFormatForm = () => {};
@@ -652,8 +704,12 @@ const insertPracticeFormatForm = () => {};
 let warningCount = 0;
 const loadStage = () => {
   // Get the practice options dropdown,
-  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
-  const choosePracticeWarning = document.getElementById("choosePracticeWarning");
+  const practiceOptionsDropDown = document.getElementById(
+    "practiceoptionsdropdown"
+  );
+  const choosePracticeWarning = document.getElementById(
+    "choosePracticeWarning"
+  );
   const selectedPractice = practiceOptionsDropDown.value;
   if (selectedPractice) {
     playSound("maraca", 0.3);
@@ -663,10 +719,14 @@ const loadStage = () => {
     clearStage(false);
     // NOTE: For now, we're only loading flashcards. In the future, there might be
     // other kinds of stuff to load.
-    const practiceFormatOption = document.querySelector('input[name="practiceformatoptions"]:checked').value;
+    const practiceFormatOption = document.querySelector(
+      'input[name="practiceformatoptions"]:checked'
+    ).value;
     const fullPracticeMap = loadPracticeMapWithCustomEntries();
     if (practiceFormatOption === FORMAT_FLASHCARDS) {
-      loadShuffledFlashCards(fullPracticeMap[selectedPractice].vocabularyObjects);
+      loadShuffledFlashCards(
+        fullPracticeMap[selectedPractice].vocabularyObjects
+      );
     } else if (practiceFormatOption === FORMAT_QUIZ) {
       loadQuiz(fullPracticeMap[selectedPractice].vocabularyObjects);
     } else if (practiceFormatOption === FORMAT_T_OR_F) {
@@ -683,7 +743,8 @@ const loadStage = () => {
     } else if (warningCount >= 20 && warningCount < 30) {
       choosePracticeWarning.innerHTML = "<u><strong>PICK IT</strong></u>";
     } else if (warningCount >= 30 && warningCount < 30) {
-      choosePracticeWarning.innerHTML = "<u><strong><em>WHAT ARE YOU DOING</em></strong></u>";
+      choosePracticeWarning.innerHTML =
+        "<u><strong><em>WHAT ARE YOU DOING</em></strong></u>";
     } else if (warningCount >= 40 && warningCount < 50) {
       choosePracticeWarning.innerHTML = "<u><strong><em>STOP</em></strong></u>";
     } else if (warningCount >= 50 && warningCount < 60) {
@@ -779,17 +840,25 @@ const prepareSectionDownloadOptions = (sectionObject) => {
   downloadImagesDiv.appendChild(jsonLink);
 
   // Add the content as CSV to the href in a blobby link.
-  csvLink.href = window.URL.createObjectURL(new Blob([sectionObject.asCSV], { type: "text/csv" }));
+  csvLink.href = window.URL.createObjectURL(
+    new Blob([sectionObject.asCSV], { type: "text/csv" })
+  );
   // This lets us name the file.
   csvLink.download = `${sectionObject.unfriendlyName}.csv`;
   // Here we use application/octet-stream instead of application/json so that we force a download dialog
-  jsonLink.href = window.URL.createObjectURL(new Blob([sectionObject.asJSON], { type: "application/octet-stream" }));
+  jsonLink.href = window.URL.createObjectURL(
+    new Blob([sectionObject.asJSON], { type: "application/octet-stream" })
+  );
   jsonLink.download = `${sectionObject.unfriendlyName}.json`;
 };
 
 const displayAvailablePracticeFormats = () => {
-  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
-  const practiceFormatsContainer = document.getElementById("practiceformatscontainer");
+  const practiceOptionsDropDown = document.getElementById(
+    "practiceoptionsdropdown"
+  );
+  const practiceFormatsContainer = document.getElementById(
+    "practiceformatscontainer"
+  );
   // First, make sure we have a clean state by deleting any extant form
   while (practiceFormatsContainer.firstChild) {
     practiceFormatsContainer.removeChild(practiceFormatsContainer.lastChild);
@@ -839,7 +908,9 @@ const displayAvailablePracticeFormats = () => {
 
 const clearPracticeOptionsDropwdown = () => {
   // Drops all of the options from the practice options dropdown.
-  Array.from(document.getElementsByClassName("vocabularysectionoption")).forEach((option) => {
+  Array.from(
+    document.getElementsByClassName("vocabularysectionoption")
+  ).forEach((option) => {
     option.remove();
   });
 };
@@ -847,7 +918,9 @@ const clearPracticeOptionsDropwdown = () => {
 // NOTE: In the future, this won't just be VocabularySection objects.
 // We'll see how this goes.
 const fillPracticeOptionsDropdown = (vocabularySections) => {
-  const practiceOptionsDropDown = document.getElementById("practiceoptionsdropdown");
+  const practiceOptionsDropDown = document.getElementById(
+    "practiceoptionsdropdown"
+  );
   vocabularySections.forEach((vocabularySection) => {
     // Create a new option that we'll shortly add to the dropdown
     const vocabularySectionOption = document.createElement("option");
@@ -855,9 +928,14 @@ const fillPracticeOptionsDropdown = (vocabularySections) => {
     // Add a 'value' to the option. NOTE: in the future it might be good to have
     // more attributes that act as categories by which we can divine the capabilities
     // of each of the entries. We'll see.
-    vocabularySectionOption.setAttribute("value", vocabularySection.unfriendlyName);
+    vocabularySectionOption.setAttribute(
+      "value",
+      vocabularySection.unfriendlyName
+    );
     // Add the text that will show up in the dropdown,
-    const descriptionNode = document.createTextNode(vocabularySection.friendlyName);
+    const descriptionNode = document.createTextNode(
+      vocabularySection.friendlyName
+    );
     // and add it to the option itself.
     vocabularySectionOption.appendChild(descriptionNode);
     // Finally, pin the option to the dropdown.
@@ -923,7 +1001,9 @@ const addFlashcard = (front, back) => {
         // am not sure how to read styles. Let's look into this later.
         if (textContentItem.length >= 12) {
           const cardFaceMaxFontSize = isMobile() ? 40 : 20;
-          cardFace.style.fontSize = `${cardFaceMaxFontSize - (textContentItem.length - 12)}px`;
+          cardFace.style.fontSize = `${
+            cardFaceMaxFontSize - (textContentItem.length - 12)
+          }px`;
         }
         cardFace.appendChild(textContent);
       });
@@ -953,7 +1033,10 @@ const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
   let script;
   switch (scriptOption) {
     case SCRIPT_MIX:
-      script = randomInt(0, 100) > 50 ? vocabularyObject.cyrillic : vocabularyObject.latin;
+      script =
+        randomInt(0, 100) > 50
+          ? vocabularyObject.cyrillic
+          : vocabularyObject.latin;
       break;
     case SCRIPT_CYRILLIC:
       script = vocabularyObject.cyrillic;
@@ -965,7 +1048,9 @@ const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
       script = `${vocabularyObject.latin}\n${vocabularyObject.cyrillic}`;
       break;
     default:
-      throw new Error(`Invalid script choice: ${scriptOption}. How did you do this?`);
+      throw new Error(
+        `Invalid script choice: ${scriptOption}. How did you do this?`
+      );
   }
   return script;
 };
@@ -982,7 +1067,9 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   const gridTemplateColumns = isMobile() ? "80vw" : "repeat(4, 200px)";
   flashCardContainer.style.gridTemplateColumns = gridTemplateColumns;
 
-  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  const scriptOption = document.querySelector(
+    'input[name="scriptoptions"]:checked'
+  ).value;
 
   shuffleArray(vocabCopy);
   const languageChoice = getLanguageChoice();
@@ -992,7 +1079,10 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
-    const jugoScriptForCard = getJugoScriptForObject(scriptOption, vocabularyObject);
+    const jugoScriptForCard = getJugoScriptForObject(
+      scriptOption,
+      vocabularyObject
+    );
 
     if (languageChoice === CHOICE_ENG_2_JUG) {
       // English is on the front for sure.
@@ -1025,8 +1115,14 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   const topLinkContainer = document.createElement("div");
   topLinkContainer.style.textAlign = "center";
   topLinkContainer.appendChild(topLink);
-  flashCardContainer.parentNode.insertBefore(endnl, flashCardContainer.nextElementSibling);
-  flashCardContainer.parentNode.insertBefore(topLinkContainer, flashCardContainer.nextElementSibling);
+  flashCardContainer.parentNode.insertBefore(
+    endnl,
+    flashCardContainer.nextElementSibling
+  );
+  flashCardContainer.parentNode.insertBefore(
+    topLinkContainer,
+    flashCardContainer.nextElementSibling
+  );
 
   practiceState.push(endnl);
   practiceState.push(topLinkContainer);
@@ -1038,9 +1134,9 @@ const handleScoringInteraction = (quizOption, scoreBar) => {
     // For whatever reason, chrome isn't very happy about using
     // contains on classList, nor includes. Spread it to find out.
 
-    const hasBeenAnswered = Object.values(quizOption.parentNode.attributes).some(
-      (attr) => attr.name === "answeredcorrectly"
-    );
+    const hasBeenAnswered = Object.values(
+      quizOption.parentNode.attributes
+    ).some((attr) => attr.name === "answeredcorrectly");
 
     if ([...quizOption.classList].includes("correctanswer")) {
       quizOption.style.backgroundColor = "green";
@@ -1140,7 +1236,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   const scoreMax = vocabularyObjects.length;
   const trueOrFalseHeader = "True or False:";
   setScoreBarScore(scoreBar, 0, scoreMax);
-  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  const scriptOption = document.querySelector(
+    'input[name="scriptoptions"]:checked'
+  ).value;
   const quizBox = document.getElementById("flashcardcontainer");
   const vocabCopy = [...vocabularyObjects];
   shuffleArray(vocabCopy);
@@ -1170,7 +1268,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
         value: true,
       };
     } else {
-      const falseObject = chooseRandomExcept(vocabularyObjects, [vocabularyObject]);
+      const falseObject = chooseRandomExcept(vocabularyObjects, [
+        vocabularyObject,
+      ]);
       pair = {
         sourceObject: vocabularyObject,
         destinationObject: falseObject,
@@ -1187,8 +1287,12 @@ const loadTrueOrFalse = (vocabularyObjects) => {
       sourceEnglish = randomInt(0, 100) > 50;
     }
 
-    const jugoObject = sourceEnglish ? pair.destinationObject : pair.sourceObject;
-    const englishSide = sourceEnglish ? pair.sourceObject.english : pair.destinationObject.english;
+    const jugoObject = sourceEnglish
+      ? pair.destinationObject
+      : pair.sourceObject;
+    const englishSide = sourceEnglish
+      ? pair.sourceObject.english
+      : pair.destinationObject.english;
 
     let jugoSide;
     if (scriptOption === SCRIPT_BOTH) {
@@ -1199,7 +1303,8 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     } else if (scriptOption === SCRIPT_CYRILLIC) {
       jugoSide = jugoObject.cyrillic;
     } else if (scriptOption === SCRIPT_MIX) {
-      jugoSide = randomInt(0, 100) > 50 ? jugoObject.cyrillic : jugoObject.latin;
+      jugoSide =
+        randomInt(0, 100) > 50 ? jugoObject.cyrillic : jugoObject.latin;
     }
     const questionTable = document.createElement("table");
     questionTable.className = "truthtable";
@@ -1223,7 +1328,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     const questionTableQuestionLeft = document.createElement("td");
     questionTableQuestionLeft.className = "truthtable-question-left";
     // If our source is english, then the left hand side should be in english.
-    questionTableQuestionLeft.textContent = sourceEnglish ? englishSide : jugoSide;
+    questionTableQuestionLeft.textContent = sourceEnglish
+      ? englishSide
+      : jugoSide;
 
     // The center cell should contain some conjunction or whatever that helps
     // create a sentence out of the "true or false" statement.
@@ -1243,7 +1350,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
     // of the leftmost cell.
     const questionTableQuestionRight = document.createElement("td");
     questionTableQuestionRight.className = "truthtable-question-right";
-    questionTableQuestionRight.textContent = sourceEnglish ? jugoSide : englishSide;
+    questionTableQuestionRight.textContent = sourceEnglish
+      ? jugoSide
+      : englishSide;
 
     // Add all three of our cells to the question row,
     questionTableQuestionRow.appendChild(questionTableQuestionLeft);
@@ -1311,7 +1420,9 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
 
-  quizBox.addEventListener("click", (event) => checkQuizComplete(event, "truthtable"));
+  quizBox.addEventListener("click", (event) =>
+    checkQuizComplete(event, "truthtable")
+  );
 };
 
 // Loads a gang of vocabulary objects as a quiz.
@@ -1324,7 +1435,9 @@ const loadQuiz = (vocabularyObjects) => {
   setScoreBarScore(scoreBar, 0, scoreMax);
   const vocabCopy = [...vocabularyObjects];
 
-  const scriptOption = document.querySelector('input[name="scriptoptions"]:checked').value;
+  const scriptOption = document.querySelector(
+    'input[name="scriptoptions"]:checked'
+  ).value;
 
   shuffleArray(vocabCopy);
   const quizBox = document.getElementById("flashcardcontainer");
@@ -1367,7 +1480,9 @@ const loadQuiz = (vocabularyObjects) => {
     }
     const quizQuestionHeader = document.createElement("div");
     quizQuestionHeader.className = "quizquestionheader";
-    const quizQuestionText = document.createTextNode(`${questionNumber}. ${headerScript}`);
+    const quizQuestionText = document.createTextNode(
+      `${questionNumber}. ${headerScript}`
+    );
     quizQuestionHeader.appendChild(quizQuestionText);
     quizBox.appendChild(quizQuestionHeader);
     practiceState.push(quizQuestionHeader);
@@ -1384,9 +1499,21 @@ const loadQuiz = (vocabularyObjects) => {
     // from the incoming list of vocabulary options, without ever choosing
     // the word we're currently looking at, or choosing the same thing twice.
     const optionTwo = chooseRandomExcept(vocabCopy, [vocabularyObject]);
-    const optionThree = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo]);
-    const optionFour = chooseRandomExcept(vocabCopy, [vocabularyObject, optionTwo, optionThree]);
-    const quizOptions = shuffleArray([vocabularyObject, optionTwo, optionThree, optionFour]);
+    const optionThree = chooseRandomExcept(vocabCopy, [
+      vocabularyObject,
+      optionTwo,
+    ]);
+    const optionFour = chooseRandomExcept(vocabCopy, [
+      vocabularyObject,
+      optionTwo,
+      optionThree,
+    ]);
+    const quizOptions = shuffleArray([
+      vocabularyObject,
+      optionTwo,
+      optionThree,
+      optionFour,
+    ]);
 
     quizOptions.forEach((quizOption) => {
       const optionElement = document.createElement("li");
@@ -1435,7 +1562,9 @@ const loadQuiz = (vocabularyObjects) => {
   topLink.appendChild(topLinkText);
   quizBox.appendChild(topLink);
   practiceState.push(topLink);
-  quizBox.addEventListener("click", (event) => checkQuizComplete(event, "quizcontainer"));
+  quizBox.addEventListener("click", (event) =>
+    checkQuizComplete(event, "quizcontainer")
+  );
 };
 
 const showDebugMessage = (message) => {
