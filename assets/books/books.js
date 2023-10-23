@@ -1,7 +1,7 @@
-import { randomInt } from "../cards/utilities.js";
 import { isMobile } from "../cards/os.js";
-import { CrvenkapaBook } from "./data/crvenkapa.js";
 import { BOOKS } from "./data/index.js";
+
+const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 
 const maxFromStringArray = (stringArray) => {
   let max;
@@ -200,6 +200,7 @@ const renderPage = (sentenceArray) => {
   }
 };
 
+let globalCurrentBook;
 let globalCurrentPage;
 let globalPages;
 
@@ -246,6 +247,104 @@ const addPageNumberEventListener = () => {
   });
 };
 
+const downloadIconsInactive = () => {
+  const storyDownloadIconImage =
+    window.parent.document.getElementById("storydownload");
+  // Checks whether the download icons are in an active state
+  // or not by eyeballing their style. They come in pairs like
+  // salt and pepper. We don't change one without the other.
+  return [storyDownloadIconImage].every((icon) => {
+    return icon.style.filter === DOWNLOAD_ICON_DEFAULT_FILTER;
+  });
+};
+
+const toggleDownloadIconStyles = () => {
+  const iconReadyCursor = `pointer`;
+  const storyDownloadIconImage =
+    window.parent.document.getElementById("storydownload");
+  // Download icon active? Make it grayscale and unpointy.
+  // Inactive? Make it colorful and pointy.
+  // NOTE -- we use an array here in case we need more in the future.
+  [storyDownloadIconImage].forEach((icon) => {
+    if (icon.style.filter === DOWNLOAD_ICON_DEFAULT_FILTER) {
+      icon.style.filter = null;
+      icon.style.cursor = iconReadyCursor;
+    } else {
+      icon.style.filter = DOWNLOAD_ICON_DEFAULT_FILTER;
+      icon.style.cursor = null;
+    }
+  });
+};
+
+const prepareBookDownloadOptions = (book) => {
+  const downloadImagesDiv = window.parent.document.getElementById("downloads");
+  const storyDownloadIconImage =
+    window.parent.document.getElementById("storydownload");
+
+  // Remove the grayscale from the download icon image.
+  // Prepare a link for the image that is clickable, that allow
+  // the user to download the story.
+  if (downloadIconsInactive()) {
+    toggleDownloadIconStyles();
+  }
+  const storyLinkId = "storydownloadlink";
+
+  // This is state handling. If we're clicking between lessons,
+  // the download links will already exist. We need to find them
+  // and clear them, then ready up the new links. Otherwise, we
+  // just make fresh links.
+  const latentStoryLink = document.getElementById(storyLinkId);
+  if (latentStoryLink !== null) {
+    // Do some DOM manip
+    // <div><a><img/></a><div> -> <div><img/><a></a></div> -> <div><img/></div>
+    downloadImagesDiv.appendChild(storyDownloadIconImage);
+    downloadImagesDiv.removeChild(latentStoryLink);
+  }
+
+  const storyLink = window.document.createElement("a");
+
+  storyLink.id = storyLinkId;
+  // For a brief moment our image leaves the div.
+  storyLink.appendChild(storyDownloadIconImage);
+
+  // We put our image back into the div as a child of the link here.
+  downloadImagesDiv.appendChild(storyLink);
+
+  // Add the content as text to the href in a blobby link.
+  // Here we use application/octet-stream instead of
+  // application/json so that we force a download dialog
+  let bookTextFormat = "";
+  bookTextFormat += `${book.title} (${book.titleEnglish}): from ${book.parentText}\n\n\n`;
+  if (book.isPoem === true) {
+    // TODO lots more fun stuff to do with formatting, here
+    bookTextFormat += `Serbian version:\n`;
+    Object.values(book.sentences).forEach((sentence) => {
+      bookTextFormat += `${sentence.latin}\n`;
+    });
+    bookTextFormat += "\n\n";
+    bookTextFormat += `English version:\n`;
+    Object.values(book.sentences).forEach((sentence) => {
+      bookTextFormat += `${sentence.english}\n`;
+    });
+  } else {
+    // TODO Need to figure out how I wanna do paragraphs.
+    bookTextFormat += `Serbian version:\n`;
+    Object.values(book.sentences).forEach((sentence) => {
+      bookTextFormat += `${sentence.latin} `;
+    });
+    bookTextFormat += "\n\n\n";
+    bookTextFormat += `English version:\n`;
+    Object.values(book.sentences).forEach((sentence) => {
+      bookTextFormat += `${sentence.english} `;
+    });
+  }
+  storyLink.href = window.URL.createObjectURL(
+    new Blob([bookTextFormat], { type: "application/octet-stream" })
+  );
+  // This lets us name the file.
+  storyLink.download = `${book.titleUnfriendly}.txt`;
+};
+
 const setPageInputValueFromGlobal = () => {
   const pageNumberControl =
     window.parent.document.getElementById("pagenumbercontrol");
@@ -275,6 +374,8 @@ const fillSideBarWithBooks = () => {
     bookLink.title = bookHover;
     bookLink.appendChild(bookTitle);
     bookLink.addEventListener("click", () => {
+      globalCurrentBook = book;
+      prepareBookDownloadOptions(book);
       const preRenderArg = { pages: {}, sentences: book.sentences };
       globalPages = preRenderPageFromSentences(preRenderArg).pages;
       globalCurrentPage = 0;

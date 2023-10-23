@@ -20,6 +20,7 @@ export class Book {
   constructor(
     title,
     titleEnglish,
+    titleUnfriendly,
     region,
     description,
     parentText,
@@ -29,6 +30,7 @@ export class Book {
     // sentences: [Sentence]
     this.title = title;
     this.titleEnglish = titleEnglish;
+    this.titleUnfriendly = titleUnfriendly;
     this.region = region;
     this.description = description;
     this.parentText = parentText;
@@ -47,6 +49,7 @@ export const sentenceFromObject = (obj) => {
 export const bookFromArray = (
   title,
   titleEnglish,
+  titleUnfriendly,
   region,
   description,
   parentText,
@@ -56,6 +59,7 @@ export const bookFromArray = (
   return new Book(
     title,
     titleEnglish,
+    titleUnfriendly,
     region,
     description,
     parentText,

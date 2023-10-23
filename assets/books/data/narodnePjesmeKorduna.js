@@ -12,6 +12,7 @@ export const PARENT_TEXT_PJESME_KORDUNA = "Narodne Pjesme Korduna";
 export const SaPlanineVjetarBook = bookFromArray(
   "Sa Planine Vjetar Duva",
   "From the Mountains the Wind Blows",
+  "sa_planine_vjetar_duva",
   "Kordun",
   "What does Krajina feel like on the heart?",
   PARENT_TEXT_PJESME_KORDUNA,
@@ -64,6 +65,7 @@ export const SaPlanineVjetarBook = bookFromArray(
 export const VraniSeKonjiBook = bookFromArray(
   "Vrani se Konji Igraju",
   "Black Horses Romped",
+  "vrani_se_konji_igraju",
   "Kordun",
   "Watch the horses play. See the people of the land!",
   PARENT_TEXT_PJESME_KORDUNA,
@@ -124,10 +126,11 @@ export const VraniSeKonjiBook = bookFromArray(
 export const NaGraniciVatraBook = bookFromArray(
   "Na Granici Vatra Gori",
   "On the Borders the Forests Burn",
+  "na_granici_vatra_gori",
   "Kordun",
   "A day in the life of a border guard! Will the janissaries make it out alive?",
-  true,
   PARENT_TEXT_PJESME_KORDUNA,
+  true,
   [
     {
       latin: "Na granici vatra gori,",

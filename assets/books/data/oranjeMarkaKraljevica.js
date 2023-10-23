@@ -6,6 +6,7 @@ export const PARENT_TEXT_ANTOLOGIJA = "Srpska Narodna Antologija";
 export const OranjeMarkaKraljevicaBook = bookFromArray(
   "Oranje Marka Kraljevića",
   "Plowing Marko Kraljević",
+  "oranje_marka_kraljevica",
   null,
   "Following the advice of his mother, our hero Marko Kraljević puts down his sword for a plow. How long will it last?",
   PARENT_TEXT_ANTOLOGIJA,
