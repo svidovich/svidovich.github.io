@@ -35,8 +35,10 @@ export const SaPlanineVjetarBook = bookFromArray(
       english: "Neither youth nor love.",
     },
     {
+      // Svetlana Spajić tells me that they say 'tain'
+      // for bread in Vojnič.
       latin: "Dugo dani, a tain mi mali.",
-      english: "Long days and my little secrets.",
+      english: "Long are the days and short is my bread.",
     },
     {
       latin: "Teško onom kog država hrani!",
