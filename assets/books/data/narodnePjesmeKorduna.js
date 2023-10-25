@@ -189,7 +189,7 @@ export const PoBugarskojKrvBook = bookFromArray(
     },
     {
       latin: "Osman Paša đe tuguje!",
-      english: "Pasha Osman is grieving!",
+      english: "Where Pasha Osman is grieving!",
     },
     {
       latin: "Tuže Osman, lije suze,",
