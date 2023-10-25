@@ -320,3 +320,45 @@ export const OstavMomkeMoleBook = bookFromArray(
     },
   ]
 );
+
+// #6
+export const NemaPrevaUTudaBook = bookFromArray(
+  "Nema Prava u Tuđa Vladara",
+  "There are No Rights in Another's King",
+  "nema_prava_u_tudja_vladara",
+  "Kordun",
+  "What rights do you have under another king? In another kingdom? ...What right do you have without a gun or sword?",
+  PARENT_TEXT_PJESME_KORDUNA,
+  true,
+  [
+    {
+      latin: "Oj, nema kruva bez dobre godine,",
+      english: "Oh, there's no bread without good years,",
+    },
+    {
+      latin: "Ni slobode bez krvavih gaća.",
+      english: "Nor freedom without bloody pants.",
+    },
+    {
+      latin: "Nema prava u tuđa vladara,",
+      english: "There are no rights in another's king,",
+    },
+    {
+      latin: "Niti snage bez puna ambara,",
+      // 'armory' for 'ambara' makes sense in context here,
+      // but could elsewhere translate as 'barn'
+      english: "Nor strength without a full armory,",
+    },
+    {
+      latin: "Ni napretka bez dobra domara,",
+      // Today 'domar' translates as janitor, custodian, or
+      // superintendents. Back then, it may have referred to
+      // patriotic leaders of the homeland.
+      english: "Nor progress without good leaders,",
+    },
+    {
+      latin: "Ni sloboda kuda Turčin liara!",
+      english: "Nor freedom where the Turk rules!",
+    },
+  ]
+);
