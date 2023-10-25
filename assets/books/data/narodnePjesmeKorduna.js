@@ -164,3 +164,80 @@ export const NaGraniciVatraBook = bookFromArray(
     },
   ]
 );
+
+// #4
+export const PoBugarskojKrvBook = bookFromArray(
+  "Po Bugarskoj Krv se Lije",
+  "Around Bulgaria Blood Pours",
+  "po_bugarskoj_krv_se_lije",
+  "Kordun",
+  "Pasha Osman is in trouble at Pleven. Will he make it out, or will the Russians get him? This poem carries details of the siege of Pleven in 1877.",
+  PARENT_TEXT_PJESME_KORDUNA,
+  true,
+  [
+    {
+      latin: "Po Bugarskoj krv se lije",
+      english: "Around Bulgaria blood pours",
+    },
+    {
+      latin: "Oko Plevne i Sofije",
+      english: "Around Pleven and Sofija",
+    },
+    {
+      latin: "A iz Plevne glas se čuje",
+      english: "And from Pleven a voice is heard",
+    },
+    {
+      latin: "Osman Paša đe tuguje!",
+      english: "Pasha Osman is grieving!",
+    },
+    {
+      latin: "Tuže Osman, lije suze,",
+      english: "Osman grieves, his tears pour,",
+    },
+    {
+      latin: "Pa u ruke pero uze",
+      english: "So in his hand he takes the pen",
+    },
+    {
+      latin: "Svom Sultanu piše sade:",
+      english: "To his Sultan now he writes:",
+    },
+    {
+      latin: "Slušaj care, moje jade!",
+      english: "Listen king, to my grievances!",
+    },
+    {
+      latin: "Slušaj care, jade moje:",
+      english: "Listen king, to grievances mine:",
+    },
+    {
+      latin: "Oko Plevne Rusi stoje,",
+      english: "Around Pleven Russians stand,",
+    },
+    {
+      latin: "Oko Plevne Rusa mnogo!",
+      english: "Around Pleven Russians many!",
+    },
+    {
+      latin: "A ja, care, iznemog'o!",
+      english: "And I, king, was exhausted!",
+    },
+    {
+      latin: "Od svu'de nam propast grozi,",
+      english: "From everywhere they threaten ruin,",
+    },
+    {
+      latin: "Gledaj, care, sad pomozi!",
+      english: "Look, king, help me now!",
+    },
+    {
+      latin: "Za nas više nema nade,",
+      english: "For us there is no more hope,",
+    },
+    {
+      latin: "Nema nade, Plevna Pade!",
+      english: "No hope, Pleven falls!",
+    },
+  ]
+);
