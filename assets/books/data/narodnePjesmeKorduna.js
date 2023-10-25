@@ -241,3 +241,82 @@ export const PoBugarskojKrvBook = bookFromArray(
     },
   ]
 );
+
+// #5
+export const OstavMomkeMoleBook = bookFromArray(
+  "'Ostav Momke!', Mole Te Đevojke",
+  "'Leave the Boys!', Beg the Girls",
+  "ostav_momke_mole_devojke",
+  "Kordun",
+  "Please don't take our boys to war! We need them for... stuff!",
+  PARENT_TEXT_PJESME_KORDUNA,
+  true,
+  [
+    { latin: "Oj Milice kaptanovice,", english: "Oh dear captain's wife," },
+    {
+      latin: "Đe je tebi Jovo kapitane?",
+      english: "Where is your Captain Jovo?",
+    },
+    {
+      latin: "Al' govori kapitanovica,",
+      english: "But replies the captain's wife,",
+    },
+    {
+      latin: "Ne pitajte, ne vrijedajte rana:",
+      // lit. Don't insult the wound
+      english: "Don't ask, don't add insult to injury:",
+    },
+    {
+      latin: "Ovđe nema Jove kapitana.",
+      english: "Captain Jovo is not here.",
+    },
+    {
+      latin: "Mili bože, što li mi ga nema?",
+      english: "Dear God, why don't I have him?",
+    },
+    {
+      latin: "Ja mu pišem, odgovora nema.",
+      english: "I write to him, there is no reply.",
+    },
+    {
+      latin: "Otiš'o je grada Ogulinu,",
+      english: "He left for the town of Ogulin,",
+    },
+    {
+      latin: "Popisuje momke za soldate.",
+      english: "They enlist boys for soldiers.",
+    },
+    {
+      latin: "O, moj dragi, moje milovanje,",
+      english: "Oh my dear, my beloved,",
+    },
+    {
+      latin: "Kad uzimlješ momke za soldate,",
+      english: "When you take boys for soliders,",
+    },
+    {
+      latin: "Đe je jedan, ne cv'jeli mu majke,",
+      english: "Where there's one, don't bother his mother,",
+    },
+    {
+      latin: "Đe su po dva, ne rastavljaj braće,",
+      english: "Where there're two, don't break up brothers,",
+    },
+    {
+      latin: "Đe su po tri, biraj najbolja,",
+      english: "Where there're three, choose the best,",
+    },
+    {
+      latin: "Đe su čet'ri, ostav' najlepšega!",
+      english: "Where there're four, leave the handsomest!",
+    },
+    {
+      latin: "Ostav momke, mole te đevojke—",
+      english: "Leave the boys, the girls beg you—",
+    },
+    {
+      latin: "i đevojke i starice majke!",
+      english: "the girls and the old mothers!",
+    },
+  ]
+);

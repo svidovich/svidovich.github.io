@@ -315,6 +315,9 @@ const prepareBookDownloadOptions = (book) => {
   // application/json so that we force a download dialog
   let bookTextFormat = "";
   bookTextFormat += `${book.title} (${book.titleEnglish}): from ${book.parentText}\n\n\n`;
+  if (book.description) {
+    bookTextFormat += `Description:\n${book.description}\n\n\n`;
+  }
   if (book.isPoem === true) {
     // TODO lots more fun stuff to do with formatting, here
     bookTextFormat += `Serbian version:\n`;
