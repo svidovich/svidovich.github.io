@@ -366,9 +366,9 @@ const fillSideBarWithBooks = () => {
   const sideBar = window.parent.document.getElementById("bookssidebar");
   const bookCase = sideBar.contentWindow.document.getElementById("bookcase");
 
-  BOOKS.forEach((book) => {
+  for (const [index, book] of BOOKS.entries()) {
     const bookLink = document.createElement("div");
-    const bookTitle = document.createTextNode(book.title);
+    const bookTitle = document.createTextNode(`${index + 1}. ${book.title}`);
     bookLink.classList.add("book");
     let bookHover = `"${book.titleEnglish}": ${book.description}`;
     if (book.region) {
@@ -387,7 +387,7 @@ const fillSideBarWithBooks = () => {
       renderPage(globalPages[globalCurrentPage]);
     });
     bookCase.appendChild(bookLink);
-  });
+  }
 };
 
 const renderWelcomeMessage = () => {

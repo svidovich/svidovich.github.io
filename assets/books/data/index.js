@@ -12,6 +12,7 @@ import {
   PoBugarskojKrvBook,
   OstavMomkeMoleBook,
   NemaPrevaUTudaBook,
+  GranicariCuliBook,
 } from "./narodnePjesmeKorduna.js";
 
 export const BOOKS = [
@@ -19,6 +20,7 @@ export const BOOKS = [
   CiganinISvabaBook,
   CovijekIZmijaBook,
   DobraHvalaBook,
+  GranicariCuliBook,
   NaGraniciVatraBook,
   NemaPrevaUTudaBook,
   OstavMomkeMoleBook,

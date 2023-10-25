@@ -362,3 +362,76 @@ export const NemaPrevaUTudaBook = bookFromArray(
     },
   ]
 );
+
+// 7
+export const GranicariCuliBook = bookFromArray(
+  "Graničari Čuli Kukavica",
+  "The Border Guards Heard an Owl",
+  "granicari_culi_kukavica",
+  "Kordun",
+  "An owl visits the border guards with an ill omen.",
+  PARENT_TEXT_PJESME_KORDUNA,
+  true,
+  [
+    {
+      latin: "'Iljada i osam stotina",
+      english: "One—thousand and eight—hundred",
+    },
+    {
+      latin: "I trideset i jedina godina",
+      english: "And thirty and one",
+    },
+    {
+      latin: "Al' zakuka crna kukavica",
+      english: "But hoots the black owl",
+    },
+    {
+      latin: "Uspred zime kad joj vreme nije",
+      english: "Before winter when it's not her time",
+    },
+    {
+      latin: "Ona kuka i raznosi glase:",
+      english: "She hoots and raises her voice:",
+    },
+    {
+      latin: "Graničari, meć'ta puške na se!",
+      english: "Border guards, arm yourselves!",
+    },
+    {
+      latin: "Puške su vam vjerne ljube vaše,",
+      english: "Your guns are your faithful lovers,",
+    },
+    {
+      latin: "Telećaci škrinje i ormani!",
+      english: "Pack your chests and armoires!",
+    },
+    {
+      latin: "Vi idete do Karlovca grada,",
+      english: "You are going to Karlovac town,",
+    },
+    {
+      latin: "Biće vama puna srce jada!",
+      english: "Your hearts will be full of misery!",
+    },
+    {
+      latin: "Maširajte u 'Taliju ravnu...",
+      english: "March to the center of Italy...",
+    },
+    {
+      latin: "Vaj, prokleta zemljo Italijo,",
+      english: "Alas, the cursed land of Italy,",
+    },
+    {
+      latin: "Mnogu li ćeš rascvijeliti majku,",
+      english: "Many mothers you will make moan and weep,",
+    },
+    {
+      latin: "i sestrice u crno zaviti,",
+      english: "and sisters in black wrap,",
+    },
+    {
+      latin: "Vjeru ljubu u rod otpremiti!",
+      english: "Send true love to your family!",
+    },
+  ]
+);
