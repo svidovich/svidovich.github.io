@@ -6,6 +6,7 @@ import {
   DobraHvalaBook,
 } from "./srpskeNarodnePripovetke.js";
 import {
+  AustrijskaPotonulaBook,
   SaPlanineVjetarBook,
   VraniSeKonjiBook,
   NaGraniciVatraBook,
@@ -17,6 +18,7 @@ import {
 
 export const BOOKS = [
   // CrvenkapaBook
+  AustrijskaPotonulaBook,
   CiganinISvabaBook,
   CovijekIZmijaBook,
   DobraHvalaBook,

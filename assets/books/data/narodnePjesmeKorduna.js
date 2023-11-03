@@ -435,3 +435,48 @@ export const GranicariCuliBook = bookFromArray(
     },
   ]
 );
+
+// 11
+export const AustrijskaPotonulaBook = bookFromArray(
+  "Austrijska Potonula Lađa",
+  "The Austrian 'Sunken Ship'",
+  "austrijska_potonula_lada",
+  "Kordun",
+  "The fall of Austria was greatly celebrated... and its life lamented.",
+  PARENT_TEXT_PJESME_KORDUNA,
+  true,
+  [
+    {
+      latin: "Sa istoka semašce se rađa,",
+      english: "From the east the sunlight is born,",
+    },
+    {
+      latin: "Austrijska potonula lađa.",
+      english: "The Austrian sunken ship.",
+    },
+    {
+      latin: "Sa istoka rujna zora rudi,",
+      english: "From the east the September dawn comes,",
+    },
+    {
+      latin: "Stari guslar o slobodi gudi:",
+      english: "An old guslar sings about freedom:",
+    },
+    {
+      latin: "Austrijo, tamnico prokleta,",
+      english: " Austria, cursed prison,",
+    },
+    {
+      latin: "Ti si mnogo pomorila svijeta.",
+      english: "You have greatly troubled the world.",
+    },
+    {
+      latin: "Austrijo, jezero postala,",
+      english: "Austria, a lake became,",
+    },
+    {
+      latin: "Svuda li si groblja posijala.",
+      english: "Everywhere you sowed graves.",
+    },
+  ]
+);
