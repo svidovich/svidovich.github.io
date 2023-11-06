@@ -20,7 +20,11 @@ const ADJECTIVES_1_JSON = [
   { english: "Important", latin: "Važan" },
 ];
 
-export const ADJECTIVES_1 = vocabularySectionFromArray("Adjectives I", "adjectives1", ADJECTIVES_1_JSON);
+export const ADJECTIVES_1 = vocabularySectionFromArray(
+  "Adjectives I",
+  "adjectives1",
+  ADJECTIVES_1_JSON
+);
 
 const ADJECTIVES_2_JSON = [
   { english: "Few", latin: "Nekolicini" },
@@ -45,7 +49,11 @@ const ADJECTIVES_2_JSON = [
   { english: "Central", latin: "Centralan" },
 ];
 
-export const ADJECTIVES_2 = vocabularySectionFromArray("Adjectives II", "adjectives2", ADJECTIVES_2_JSON);
+export const ADJECTIVES_2 = vocabularySectionFromArray(
+  "Adjectives II",
+  "adjectives2",
+  ADJECTIVES_2_JSON
+);
 
 const ADJECTIVES_3_JSON = [
   { english: "Common", latin: "Uobičajen" },
@@ -69,7 +77,11 @@ const ADJECTIVES_3_JSON = [
   { english: "Additional", latin: "Dodatan" },
 ];
 
-export const ADJECTIVES_3 = vocabularySectionFromArray("Adjectives III", "adjectives3", ADJECTIVES_3_JSON);
+export const ADJECTIVES_3 = vocabularySectionFromArray(
+  "Adjectives III",
+  "adjectives3",
+  ADJECTIVES_3_JSON
+);
 
 const ADJECTIVES_4_JSON = [
   { english: "Available", latin: "Dostupan" },
@@ -94,7 +106,11 @@ const ADJECTIVES_4_JSON = [
   { english: "Interesting", latin: "Zanimljiv" },
 ];
 
-export const ADJECTIVES_4 = vocabularySectionFromArray("Adjectives IV", "adjectives4", ADJECTIVES_4_JSON);
+export const ADJECTIVES_4 = vocabularySectionFromArray(
+  "Adjectives IV",
+  "adjectives4",
+  ADJECTIVES_4_JSON
+);
 
 const ADJECTIVES_5_JSON = [
   { english: "Legal", latin: "Legalan" },
@@ -119,7 +135,132 @@ const ADJECTIVES_5_JSON = [
   { english: "Reliable", latin: "Pouzdan" },
 ];
 
-export const ADJECTIVES_5 = vocabularySectionFromArray("Adjectives V", "adjectives5", ADJECTIVES_5_JSON);
+export const ADJECTIVES_5 = vocabularySectionFromArray(
+  "Adjectives V",
+  "adjectives5",
+  ADJECTIVES_5_JSON
+);
+
+const NOUNS_1_JSON = [
+  { english: "Time", latin: "Vremena" },
+  { english: "Year", latin: "Godina" },
+  { english: "People", latin: "Ljudi" },
+  { english: "Way", latin: "Put" },
+  { english: "Day", latin: "Dan" },
+  { english: "Man", latin: "Čovijek" },
+  { english: "Thing", latin: "Stvar" },
+  { english: "Woman", latin: "Žena" },
+  { english: "Life", latin: "Život" },
+  { english: "Child", latin: "Deca" },
+  { english: "World", latin: "Zemlja" },
+  { english: "School", latin: "Škola" },
+  { english: "State", latin: "Država" },
+  { english: "Family", latin: "Porodica" },
+  { english: "Student", latin: "Đak" },
+  { english: "Group", latin: "Grupa" },
+  { english: "Country", latin: "Zemlja" },
+  { english: "Problem", latin: "Problem" },
+  { english: "Hand", latin: "Ruk" },
+];
+
+const NOUNS_1 = vocabularySectionFromArray("Nouns I", "nouns1", NOUNS_1_JSON);
+
+const NOUNS_2_JSON = [
+  { english: "Part", latin: "Dio" },
+  { english: "Place", latin: "Mjesto" },
+  { english: "Case", latin: "Slučaj" },
+  { english: "Week", latin: "Nedelja" },
+  { english: "Company", latin: "Firman" },
+  { english: "System", latin: "Sistem" },
+  { english: "Program", latin: "Programa" },
+  { english: "Question", latin: "Pitanja" },
+  { english: "Work", latin: "Posla" },
+  { english: "Government", latin: "Vlada" },
+  { english: "Number", latin: "Broj" },
+  { english: "Night", latin: "Noć" },
+  { english: "Point", latin: "Točka" },
+  { english: "Home", latin: "Kuć" },
+  { english: "Water", latin: "Voda" },
+  { english: "Room", latin: "Soba" },
+  { english: "Mother", latin: "Majka" },
+  { english: "Area", latin: "Mjesto" },
+  { english: "Money", latin: "Novac" },
+  { english: "Story", latin: "Priča" },
+];
+const NOUNS_2 = vocabularySectionFromArray("Nouns II", "nouns2", NOUNS_2_JSON);
+
+const NOUNS_3_JSON = [
+  { english: "Fact", latin: "Činjenica" },
+  { english: "Month", latin: "Mjesec" },
+  { english: "Lot (of land)", latin: "Zemljište" },
+  { english: "Right", latin: "Pravo" },
+  { english: "Study", latin: "Studija" },
+  { english: "Book", latin: "Knjiga" },
+  { english: "Eye", latin: "Oko" },
+  { english: "Job", latin: "Posa" },
+  { english: "Word", latin: "Reč" },
+  { english: "Business", latin: "Bisnes" },
+  { english: "Issue (e.g. magazine)", latin: "Izdanje" },
+  { english: "Side", latin: "Strana" },
+  { english: "Kind", latin: "Vrsta" },
+  { english: "Head", latin: "Glava" },
+  { english: "House", latin: "Dom" },
+  { english: "Service", latin: "Služba" },
+  { english: "Friend", latin: "Prijatelja" },
+  { english: "Father", latin: "Otac" },
+  { english: "Power", latin: "Vlast" },
+  { english: "Hour", latin: "Sat" },
+];
+const NOUNS_3 = vocabularySectionFromArray("Nouns III", "nouns3", NOUNS_3_JSON);
+
+const NOUNS_4_JSON = [
+  { english: "Game", latin: "Igra" },
+  { english: "Line", latin: "Linja" },
+  { english: "End", latin: "Kraj" },
+  { english: "Member", latin: "Član" },
+  { english: "Law", latin: "Zakon" },
+  { english: "Car", latin: "Kola" },
+  { english: "City", latin: "Grad" },
+  { english: "Community", latin: "Zajednica" },
+  { english: "Name", latin: "Ime" },
+  { english: "President", latin: "Presjednik" },
+  { english: "Team", latin: "Ekipa" },
+  { english: "Minute", latin: "Minut" },
+  { english: "Idea", latin: "Ideja" },
+  { english: "Kid", latin: "Mladić" },
+  { english: "Body", latin: "Tijelo" },
+  { english: "Information", latin: "Informacija" },
+  { english: "Back", latin: "Leđa" },
+  { english: "Parent", latin: "Rojitelja" },
+  { english: "Face", latin: "Lica" },
+  { english: "Other", latin: "Drugi" },
+];
+const NOUNS_4 = vocabularySectionFromArray("Nouns IV", "nouns4", NOUNS_4_JSON);
+
+const NOUNS_5_JSON = [
+  { english: "Level", latin: "Sprat" },
+  { english: "Office", latin: "Kancelarija" },
+  { english: "Door", latin: "Vrat" },
+  { english: "Health", latin: "Zdravlje" },
+  { english: "Person", latin: "Čovijek" },
+  { english: "Art", latin: "Umetnost" },
+  { english: "War", latin: "Rat" },
+  { english: "History", latin: "Istorija" },
+  { english: "Party", latin: "Zabava" },
+  { english: "Result", latin: "Ishod" },
+  { english: "Change", latin: "Promena" },
+  { english: "Morning", latin: "Jutro" },
+  { english: "Reason", latin: "Razlog" },
+  { english: "Research", latin: "Izučavanje" },
+  { english: "Girl", latin: "Devojka" },
+  { english: "Guy", latin: "Momak" },
+  { english: "Moment", latin: "Trenut" },
+  { english: "Air", latin: "Vazduh" },
+  { english: "Teacher", latin: "Nastavnica" },
+  { english: "Force", latin: "Sila" },
+  { english: "Education", latin: "Obrazovanje" },
+];
+const NOUNS_5 = vocabularySectionFromArray("Nouns V", "nouns5", NOUNS_5_JSON);
 
 const UNIT_4_VOCAB_JSON = [
   { english: "Apple", latin: "Jabuka" },
@@ -585,7 +726,11 @@ const ANIMALS_JSON = [
   { english: "Sheep", latin: "Ovca" },
 ];
 
-export const ANIMALS = vocabularySectionFromArray("Animals", "animals", ANIMALS_JSON);
+export const ANIMALS = vocabularySectionFromArray(
+  "Animals",
+  "animals",
+  ANIMALS_JSON
+);
 
 const COLORS_JSON = [
   { english: "Black", latin: "Crn" },
@@ -604,7 +749,11 @@ const COLORS_JSON = [
   { english: "Yellow", latin: "Žut" },
 ];
 
-export const COLORS = vocabularySectionFromArray("Colors", "colors", COLORS_JSON);
+export const COLORS = vocabularySectionFromArray(
+  "Colors",
+  "colors",
+  COLORS_JSON
+);
 
 const CRAFT_TOOLS_JSON = [
   { english: "Anvil", latin: "Nakovanj" },
@@ -630,7 +779,11 @@ const CRAFT_TOOLS_JSON = [
   { english: "Workshop", latin: "Radionica" },
 ];
 
-export const CRAFT_TOOLS = vocabularySectionFromArray("Craft Tools", "crafttools", CRAFT_TOOLS_JSON);
+export const CRAFT_TOOLS = vocabularySectionFromArray(
+  "Craft Tools",
+  "crafttools",
+  CRAFT_TOOLS_JSON
+);
 
 const FAMILY_JSON = [
   { english: "Ancestor ( female )", latin: "Pređa" },
@@ -663,7 +816,11 @@ const FAMILY_JSON = [
   { english: "Sororal niece", latin: "Sestričina" },
 ];
 
-export const FAMILY = vocabularySectionFromArray("Family", "family", FAMILY_JSON);
+export const FAMILY = vocabularySectionFromArray(
+  "Family",
+  "family",
+  FAMILY_JSON
+);
 
 const INDEFINITE_PRONOUNS_JSON = [
   { english: "Who", latin: "Ko" },
@@ -706,7 +863,11 @@ const JEWELRY_JSON = [
   { english: "Ring", latin: "Prsten" },
 ];
 
-export const JEWELRY = vocabularySectionFromArray("Jewelry", "jewelry", JEWELRY_JSON);
+export const JEWELRY = vocabularySectionFromArray(
+  "Jewelry",
+  "jewelry",
+  JEWELRY_JSON
+);
 
 const NUMBERS_5_to_100_JSON = [
   { english: "Five", latin: "Pet" },
@@ -735,7 +896,11 @@ const NUMBERS_5_to_100_JSON = [
   { english: "One-hundred", latin: "Sto" },
 ];
 
-export const NUMBERS_5_to_100 = vocabularySectionFromArray("Numbers 5 to 100", "numbers5To100", NUMBERS_5_to_100_JSON);
+export const NUMBERS_5_to_100 = vocabularySectionFromArray(
+  "Numbers 5 to 100",
+  "numbers5To100",
+  NUMBERS_5_to_100_JSON
+);
 
 const KAD_SU_BILI_1_JSON = [
   { english: "Berg", latin: "Breg" },
@@ -760,7 +925,11 @@ const KAD_SU_BILI_1_JSON = [
   { english: "Window", latin: "Prozor" },
 ];
 
-const KAD_SU_BILI_1 = vocabularySectionFromArray("Kad Su Bili Dokoni, Ch. 1", "kadSuBiliCh1", KAD_SU_BILI_1_JSON);
+const KAD_SU_BILI_1 = vocabularySectionFromArray(
+  "Kad Su Bili Dokoni, Ch. 1",
+  "kadSuBiliCh1",
+  KAD_SU_BILI_1_JSON
+);
 
 const REGIONALISMS_KORDUN_JSON = [
   { english: "Apron", latin: "Vertun" },
@@ -824,6 +993,11 @@ export const practiceMap = [
   ADJECTIVES_3,
   ADJECTIVES_4,
   ADJECTIVES_5,
+  NOUNS_1,
+  NOUNS_2,
+  NOUNS_3,
+  NOUNS_4,
+  NOUNS_5,
   UNIT_4_VOCAB,
   UNIT_5_VOCAB,
   UNIT_6_VOCAB,
