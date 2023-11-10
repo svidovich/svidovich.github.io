@@ -1,6 +1,4 @@
-const FPS = "fps";
-const TPP = "tpp";
-const verbs = [
+export const VERBS_ALL_JSON = [
   {
     english: "To Be",
     latin: "Biti",
@@ -12,7 +10,7 @@ const verbs = [
     conjugations: { FPS: "Imam", TPP: "Imaju" },
   },
   {
-    english: "To Do",
+    english: "To Do, To Make",
     latin: "Napraviti",
     conjugations: { FPS: "Napravim", TPP: "Naprave" },
   },
@@ -30,11 +28,6 @@ const verbs = [
     english: "To Get",
     latin: "Dobiti",
     conjugations: { FPS: "Dobijam", TPP: "Dobiju" },
-  },
-  {
-    english: "To Make",
-    latin: "Napraviti",
-    conjugations: { FPS: "Napravim", TPP: "Naprave" },
   },
   {
     english: "To Know",
@@ -467,3 +460,10 @@ const verbs = [
     conjugations: { FPS: "Povučem", TPP: "Povuku" },
   },
 ];
+
+export const VERBS_1_JSON = Array.from(VERBS_ALL_JSON.slice(0, 15));
+export const VERBS_2_JSON = Array.from(VERBS_ALL_JSON.slice(16, 30));
+export const VERBS_3_JSON = Array.from(VERBS_ALL_JSON.slice(31, 45));
+export const VERBS_4_JSON = Array.from(VERBS_ALL_JSON.slice(46, 60));
+export const VERBS_5_JSON = Array.from(VERBS_ALL_JSON.slice(61, 75));
+export const VERBS_6_JSON = Array.from(VERBS_ALL_JSON.slice(76, 92));

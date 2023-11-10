@@ -2,14 +2,15 @@ import { dateCookieStringFromDate } from "./cards/dateutils.js";
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 import {
   UUIDGeneratorBrowser,
-  chooseRandomExcept,
   camelize,
+  chooseRandomExcept,
   decimalToColor,
   getObjectFromLocalStorage,
   putObjectToLocalStorage,
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
+
 import {
   FORMAT_FLASHCARDS,
   FORMAT_QUIZ,
