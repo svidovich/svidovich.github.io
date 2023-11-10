@@ -1028,7 +1028,7 @@ export const practiceMap = [
   UNIT_10_VOCAB,
   UNIT_19_VOCAB,
   UNIT_20_VOCAB,
-  KAD_SU_BILI_1,
+  // KAD_SU_BILI_1,
   REGIONALISMS_KORDUN,
 ].reduce((newObject, practiceObject) => {
   newObject[practiceObject.unfriendlyName] = practiceObject;
