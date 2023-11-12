@@ -7,7 +7,24 @@ import {
   VERBS_6_JSON,
 } from "./cards/verbs.js";
 
+import { playSound } from "./cards/sound.js";
+
 import { chooseRandomExcept, shuffleArray } from "./cards/utilities.js";
+
+const CARD_COLUMN_MAX = 4;
+
+const LessonState = Object.freeze({
+  NOT_STARTED: "notstarted",
+  TRANSLATION: "translation",
+  CONJUGATION: "conjugation",
+  WORD_COMPLETE: "wordcomplete",
+  LESSON_COMPLETE: "lessoncomplete",
+});
+
+const Tenses = Object.freeze({
+  FPS: "First-Person Singular",
+  TPP: "Third-Person Plural",
+});
 
 class Verb {
   constructor(verbJSON) {
@@ -28,10 +45,27 @@ class VerbLesson {
     this.cardCount = this.verbs.length;
     this.currentIndex = 0;
     this.maxIndex = this.cardCount - 1;
+    this._state = LessonState.NOT_STARTED;
   }
-
+  set state(s) {
+    if (!Object.values(LessonState).includes(s)) {
+      throw new Error(`${s} is not a valid LessonState`);
+    } else {
+      this._state = s;
+    }
+  }
+  get state() {
+    return this._state;
+  }
   resetIndex() {
     this.currentIndex = 0;
+  }
+  resetState() {
+    this.state = LessonState.NOT_STARTED;
+  }
+  reset() {
+    this.resetIndex();
+    this.resetState();
   }
   shuffleVerbs() {
     this.verbs = shuffleArray(this.verbs);
@@ -83,12 +117,30 @@ const clearStage = () => {
 };
 
 const quizButtonFromText = (text, correct = false) => {
+  // NOTE: MODIFIES STATE
   const button = document.createElement("button");
   const buttonText = document.createTextNode(text);
   button.appendChild(buttonText);
   button.classList.add("lessoncardbutton");
   button.setAttribute("correct", correct);
+  if (correct === false) {
+    button.addEventListener("click", () => {
+      button.style.backgroundColor = "red";
+      playSound("fart");
+    });
+  } else {
+    button.addEventListener("click", () => {
+      button.style.backgroundColor = "green";
+      currentLesson.state = LessonState.CONJUGATION;
+      playSound("block");
+      addCurrentLessonConjugation();
+    });
+  }
   return button;
+};
+
+const addCurrentLessonConjugation = () => {
+  console.log("HELLO. WORLD.");
 };
 
 const addCurrentLessonTranslation = () => {
@@ -134,7 +186,9 @@ const addCurrentLessonTranslation = () => {
     ]);
     // Add our incorrect verb to our list of incorrect answers.
     incorrectAnswers.push(incorrectVerb);
-    quizButtonsTranslation.push(quizButtonFromText(incorrectVerb.english));
+    const incorrectButton = quizButtonFromText(incorrectVerb.english);
+
+    quizButtonsTranslation.push(incorrectButton);
   }
   // For every quiz button,
   shuffleArray(quizButtonsTranslation).forEach((quizButton) => {
@@ -148,7 +202,6 @@ const addCurrentLessonTranslation = () => {
   lessonTable.appendChild(lessonTranslationRow);
 };
 
-const CARD_COLUMN_MAX = 4;
 const renderCurrentLessonCard = () => {
   // Grab the stage,
   const stage = document.getElementById("gamecontainer");
@@ -163,6 +216,7 @@ const renderCurrentLessonCard = () => {
   lessonDiv.appendChild(lessonTable);
   stage.appendChild(lessonDiv);
 
+  currentLesson.state = LessonState.TRANSLATION;
   addCurrentLessonTranslation();
 };
 
@@ -172,7 +226,7 @@ const resetStage = () => {
   // If we have a lesson, reset its index in
   // case usr wants to use it later
   if (currentLesson != undefined) {
-    currentLesson.resetIndex();
+    currentLesson.reset();
   }
   // Grab the value from the dropdown
   // and set the current lesson
