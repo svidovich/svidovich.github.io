@@ -1,0 +1,37 @@
+.gamecontainer {
+  border: 1px solid black;
+  width: 90vw;
+  height: 90vh;
+  margin: 0 auto;
+  margin-top: 5px;
+}
+
+.lessonselector {
+  position: absolute;
+  right: 10px;
+  top: 2px;
+}
+
+.lessoncarddiv {
+  margin: auto;
+}
+
+.lessoncardtable {
+  width: 80%;
+  text-align: center;
+  margin: auto;
+}
+
+.lessoncardbutton {
+  background-color: purple;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-top-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.lessoncardbutton:hover {
+  background-color: darkorchid;
+}
