@@ -9,7 +9,11 @@ import {
 
 import { playSound } from "./cards/sound.js";
 
-import { chooseRandomExcept, shuffleArray } from "./cards/utilities.js";
+import {
+  chooseRandomExcept,
+  randomInt,
+  shuffleArray,
+} from "./cards/utilities.js";
 
 const CARD_COLUMN_MAX = 4;
 
@@ -21,7 +25,12 @@ const LessonState = Object.freeze({
   LESSON_COMPLETE: "lessoncomplete",
 });
 
-const Tenses = Object.freeze({
+const TensesUgly = Object.freeze({
+  FPS: "FPS",
+  TPP: "TPP",
+});
+
+const TensesPretty = Object.freeze({
   FPS: "First-Person Singular",
   TPP: "Third-Person Plural",
 });
@@ -31,6 +40,7 @@ class Verb {
     this.english = verbJSON.english;
     this.latin = verbJSON.latin;
     this.conjugations = verbJSON.conjugations;
+    this.irregularities = verbJSON.irregularities || null;
   }
 }
 
@@ -71,6 +81,39 @@ class VerbLesson {
     this.verbs = shuffleArray(this.verbs);
   }
 }
+
+const endings = {
+  FPS: ["ajem", "am", "ejem", "em", "ijam", "ijem", "im", "ujem", "ujim", "um"],
+  TPP: ["aju", "eju", "e", "uju", "iju", "oju"],
+};
+
+const chopEngInfinitive = (text) => {
+  return text.replaceAll("To ", "");
+};
+
+const createIncorrectVerbEndings = (verb, tense) => {
+  let stemNoPriorLetter;
+
+  const infinitive = verb.latin;
+  // TODO I don't think we need to give a shit
+  // about irregular verbs rn. We can add more
+  // functionality here as a feature later.
+  // if (infinitive.endsWith("ti")) {
+  //   // Get everything but the last three characters
+  // }
+  stemNoPriorLetter = infinitive.slice(0, -3);
+  const fakes = [];
+  for (const ending of shuffleArray(endings[tense])) {
+    const fakeCandidate = `${stemNoPriorLetter}${ending}`;
+    if (fakeCandidate !== verb.conjugations[tense]) {
+      fakes.push(fakeCandidate);
+    }
+    if (fakes.length === 3) {
+      break;
+    }
+  }
+  return fakes;
+};
 
 const LESSONS = [
   new VerbLesson("Verbs I", "verbs1", VERBS_1_JSON),
@@ -116,7 +159,7 @@ const clearStage = () => {
   }
 };
 
-const quizButtonFromText = (text, correct = false) => {
+const translationQuizButtonFromText = (text, correct = false) => {
   // NOTE: MODIFIES STATE
   const button = document.createElement("button");
   const buttonText = document.createTextNode(text);
@@ -139,8 +182,108 @@ const quizButtonFromText = (text, correct = false) => {
   return button;
 };
 
+const conjugationQuizOptionsFromVerb = (verb, tense) => {
+  return [verb.conjugations[tense], ...createIncorrectVerbEndings(verb, tense)];
+};
+
+const conjugationQuizButtonFromText = (text, correct = false) => {
+  // NOTE will need more work when we get more tenses.
+  const button = document.createElement("button");
+  const buttonText = document.createTextNode(text);
+  button.appendChild(buttonText);
+  button.classList.add("lessoncardbutton");
+  button.setAttribute("correct", correct);
+  if (correct === false) {
+    button.addEventListener("click", () => {
+      button.style.backgroundColor = "red";
+      playSound("fart");
+    });
+  } else {
+    button.addEventListener("click", () => {
+      button.style.backgroundColor = "green";
+      currentLesson.state = LessonState.WORD_COMPLETE;
+      playSound("block");
+      addNextWordButton();
+    });
+  }
+  return button;
+};
+
+const addNextWordButton = () => {
+  // TODO detect when I'm at the last index and say
+  // lesson complete instead of next word
+  const lessonTable = document.getElementById("lessoncardtable");
+  const titleRow = document.createElement("tr");
+  const titleCell = document.createElement("td");
+  titleCell.colSpan = CARD_COLUMN_MAX;
+  const nextButton = document.createElement("button");
+  nextButton.classList.add("lessoncardbutton");
+  nextButton.addEventListener("click", () => {
+    currentLesson.currentIndex += 1;
+    currentLesson.state = LessonState.NOT_STARTED;
+    resetStage();
+    renderCurrentLessonCard();
+  });
+  const buttonContent = document.createTextNode("Next Word!");
+  nextButton.appendChild(buttonContent);
+  titleCell.appendChild(nextButton);
+  titleRow.appendChild(titleCell);
+  lessonTable.appendChild(titleRow);
+};
+
+const getVerbForm = (verb, tense) => {
+  if (tense === TensesUgly.TPP) {
+    if (verb.irregularities && verb.irregularities.plural) {
+      return verb.irregularities.plural;
+    } else {
+      return verb.english;
+    }
+  } else {
+    if (verb.irregularities && verb.irregularities.singular) {
+      return verb.irregularities.singular;
+    } else {
+      return verb.english;
+    }
+  }
+};
+
 const addCurrentLessonConjugation = () => {
-  console.log("HELLO. WORLD.");
+  // This will need refactored with more tense support
+  const lessonTable = document.getElementById("lessoncardtable");
+  const currentVerb = currentLesson.verbs[currentLesson.currentIndex];
+  const tense = randomInt(0, 100) > 50 ? TensesUgly.FPS : TensesUgly.TPP;
+  const pronoun = tense === TensesUgly.FPS ? "I" : "They";
+  let verbForm = getVerbForm(currentVerb, tense);
+  verbForm = chopEngInfinitive(verbForm);
+
+  const quizOptions = conjugationQuizOptionsFromVerb(currentVerb, tense);
+  const lessonTitleRow = document.createElement("tr");
+  const lessonTitleCell = document.createElement("td");
+  lessonTitleCell.colSpan = CARD_COLUMN_MAX;
+  const titleContent = document.createTextNode(
+    `Conjugate ${currentVerb.latin} so that it translates to "${pronoun} ${verbForm}."`
+  );
+  lessonTitleCell.appendChild(titleContent);
+  lessonTitleRow.appendChild(lessonTitleCell);
+  lessonTable.appendChild(lessonTitleRow);
+  const correctOption = quizOptions[0];
+  const correctButton = conjugationQuizButtonFromText(correctOption, true);
+  const incorrectOptions = quizOptions.slice(1);
+  const incorrectButtons = [];
+  for (const opt of incorrectOptions) {
+    incorrectButtons.push(conjugationQuizButtonFromText(opt, false));
+  }
+  const allOptions = [correctButton, ...incorrectButtons];
+  shuffleArray(allOptions);
+
+  const lessonConjugationRow = document.createElement("tr");
+
+  for (let i = 0; i < 4; i++) {
+    const lessonConjugationCell = document.createElement("td");
+    lessonConjugationCell.appendChild(allOptions[i]);
+    lessonConjugationRow.appendChild(lessonConjugationCell);
+  }
+  lessonTable.appendChild(lessonConjugationRow);
 };
 
 const addCurrentLessonTranslation = () => {
@@ -174,7 +317,7 @@ const addCurrentLessonTranslation = () => {
   // Make an array to host incorrect answers
   const incorrectAnswers = [];
   const quizButtonsTranslation = [
-    quizButtonFromText(correctAnswer.english, true),
+    translationQuizButtonFromText(correctAnswer.english, true),
   ];
 
   for (let i = 0; i < 3; i++) {
@@ -186,7 +329,9 @@ const addCurrentLessonTranslation = () => {
     ]);
     // Add our incorrect verb to our list of incorrect answers.
     incorrectAnswers.push(incorrectVerb);
-    const incorrectButton = quizButtonFromText(incorrectVerb.english);
+    const incorrectButton = translationQuizButtonFromText(
+      incorrectVerb.english
+    );
 
     quizButtonsTranslation.push(incorrectButton);
   }
@@ -220,12 +365,13 @@ const renderCurrentLessonCard = () => {
   addCurrentLessonTranslation();
 };
 
-const resetStage = () => {
+const resetStage = (reset = false) => {
   // Dump all of the elements from the stage
   clearStage();
   // If we have a lesson, reset its index in
-  // case usr wants to use it later
-  if (currentLesson != undefined) {
+  // case usr wants to use it later if usr
+  // instructs us to
+  if (currentLesson !== undefined && reset === true) {
     currentLesson.reset();
   }
   // Grab the value from the dropdown
@@ -238,6 +384,9 @@ const prepActivateButton = () => {
   activateButton.addEventListener("click", () => {
     resetStage();
     renderCurrentLessonCard();
+    for (let i = 1; i < 5; i++) {
+      createIncorrectVerbEndings(currentLesson.verbs[i], TensesUgly.FPS);
+    }
   });
 };
 

@@ -3,6 +3,7 @@ export const VERBS_ALL_JSON = [
     english: "To Be",
     latin: "Biti",
     conjugations: { FPS: "Sam", TPP: "Su" },
+    irregularities: { singular: "Am", plural: "Are" },
   },
   {
     english: "To Have",
