@@ -1,3 +1,4 @@
+import { isDesktop, isMobile } from "./cards/os.js";
 import {
   VERBS_1_JSON,
   VERBS_2_JSON,
@@ -21,7 +22,7 @@ import {
   shuffleArray,
 } from "./cards/utilities.js";
 
-const CARD_COLUMN_MAX = 4;
+const CARD_COLUMN_MAX = isMobile() ? 2 : 4;
 const STARS_KEY = "conugationCompletions";
 
 const LessonState = Object.freeze({
@@ -60,8 +61,6 @@ const setCompletions = (value) => {
 
 const updateCuteStars = () => {
   const cuteStars = document.getElementById("completions");
-  console.log(cuteStars);
-  console.log(completions);
   cuteStars.textContent = completions;
 };
 
@@ -311,7 +310,7 @@ const addCurrentLessonConjugation = () => {
   const lessonTitleCell = document.createElement("td");
   lessonTitleCell.colSpan = CARD_COLUMN_MAX;
   const titleContent = document.createTextNode(
-    `Conjugate ${currentVerb.latin} so that it translates to "${pronoun} ${verbForm}."`
+    `Conjugate ${currentVerb.latin} so that it translates to "${pronoun} ${verbForm}".`
   );
   lessonTitleCell.appendChild(titleContent);
   lessonTitleRow.appendChild(lessonTitleCell);
@@ -326,14 +325,23 @@ const addCurrentLessonConjugation = () => {
   const allOptions = [correctButton, ...incorrectButtons];
   shuffleArray(allOptions);
 
-  const lessonConjugationRow = document.createElement("tr");
-
-  for (let i = 0; i < 4; i++) {
-    const lessonConjugationCell = document.createElement("td");
-    lessonConjugationCell.appendChild(allOptions[i]);
-    lessonConjugationRow.appendChild(lessonConjugationCell);
+  const conjugationRows = [];
+  for (let i = 0; i < CARD_COLUMN_MAX; i++) {
+    conjugationRows.push(document.createElement("tr"));
   }
-  lessonTable.appendChild(lessonConjugationRow);
+
+  let currentRow = 0;
+  for (let i = 0; i < allOptions.length; i++) {
+    if (conjugationRows[currentRow].childElementCount === CARD_COLUMN_MAX) {
+      currentRow += 1;
+    }
+    const optionData = document.createElement("td");
+    optionData.appendChild(allOptions[i]);
+    conjugationRows[currentRow].appendChild(optionData);
+  }
+  conjugationRows.forEach((row) => {
+    lessonTable.appendChild(row);
+  });
 };
 
 const addCurrentLessonTranslation = () => {
@@ -385,16 +393,26 @@ const addCurrentLessonTranslation = () => {
 
     quizButtonsTranslation.push(incorrectButton);
   }
+  const translationRows = [];
+  for (let i = 0; i < CARD_COLUMN_MAX; i++) {
+    translationRows.push(document.createElement("tr"));
+  }
   // For every quiz button,
+  let currentRow = 0;
   shuffleArray(quizButtonsTranslation).forEach((quizButton) => {
-    // let's add a new td to contain it.
+    // let's add a new td to contain it to the correct row.
     const buttonCell = document.createElement("td");
     // let's add the button to the td.
     buttonCell.appendChild(quizButton);
     // let's add the TD to this row.
-    lessonTranslationRow.appendChild(buttonCell);
+    if (translationRows[currentRow].childElementCount === CARD_COLUMN_MAX) {
+      currentRow += 1;
+    }
+    translationRows[currentRow].appendChild(buttonCell);
   });
-  lessonTable.appendChild(lessonTranslationRow);
+  translationRows.forEach((row) => {
+    lessonTable.appendChild(row);
+  });
 };
 
 const renderCurrentLessonCard = () => {
@@ -458,7 +476,17 @@ const showWelcome = () => {
   stage.appendChild(welcomeDiv);
 };
 
+const setPlatformStyle = () => {
+  const stylesheet = document.getElementById("conjugationstylesheet");
+  if (isMobile()) {
+    stylesheet.href = "conjugationmobile.css";
+  } else if (isDesktop()) {
+    stylesheet.href = "conjugation.css";
+  }
+};
+
 (() => {
+  setPlatformStyle();
   getCompletions();
   updateCuteStars();
   prepDropdown();

@@ -19,12 +19,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="../style.css" />
-    <link rel="stylesheet" type="text/css" href="conjugation.css" />
     <link
       rel="stylesheet"
       type="text/css"
-      id="flashcardstylesheet"
-      href="flashcards.css"
+      href="conjugation.css"
+      id="conjugationstylesheet"
     />
     <link rel="icon" href="../media/favicon.png" />
     <link rel="manifest" href="./cards/manifest.json" />
@@ -32,8 +31,11 @@
   </head>
   <body>
     <a href="../index.html"><<< Home</a> |
-    <img src="../media/cute-star.png" style="width: 1em; height: 1em" /> x
-    <span id="completions">Mystery!</span>
+    <span title="Lesson Completions">
+      <img src="../media/cute-star.png" style="width: 1em; height: 1em" />
+      x
+      <span id="completions">Mystery!</span>
+    </span>
     <div class="gamecontainer" id="gamecontainer"></div>
     <div class="lessonselector" id="lessonselector">
       <label for="lessondropdown">Choose a Lesson:</label>

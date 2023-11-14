@@ -16,10 +16,18 @@ const DESKTOP_PLATFORMS = [PLATFORMS.LINUX, PLATFORMS.WINDOWS, PLATFORMS.MACOS];
 // https://stackoverflow.com/questions/38241480/detect-macos-ios-windows-android-and-linux-os-with-js
 export const getOS = () => {
   const userAgent = window.navigator.userAgent;
-  const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
+  const platform =
+    window.navigator?.userAgentData?.platform || window.navigator.platform;
   const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"];
   const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
-  const iosPlatforms = ["iPhone", "iPad", "iPod"];
+  const iosPlatforms = [
+    "iPad Simulator",
+    "iPhone Simulator",
+    "iPod Simulator",
+    "iPad",
+    "iPhone",
+    "iPod",
+  ];
 
   if (macosPlatforms.indexOf(platform) !== -1) {
     return PLATFORMS.MACOS;

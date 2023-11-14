@@ -2,18 +2,22 @@ body {
   font-family: sans-serif;
 }
 
+td {
+  font-size: large;
+}
+
 .gamecontainer {
   /* border: 1px solid black; */
-  width: 90vw;
-  height: 90vh;
+  width: 85vw;
+  height: 85vh;
   margin: 0 auto;
   margin-top: 5px;
 }
 
 .lessonselector {
   position: absolute;
-  right: 10px;
-  top: 2px;
+  left: 10px;
+  top: 30px;
 }
 
 .lessoncarddiv {
@@ -23,11 +27,12 @@ body {
 }
 
 .lessoncardtable {
-  width: 80%;
+  width: 98%;
   text-align: center;
   margin: auto;
   border-collapse: separate;
   border-spacing: 2em;
+  table-layout: fixed;
 }
 
 .lessoncardbutton {
