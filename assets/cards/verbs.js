@@ -238,7 +238,7 @@ export const VERBS_ALL_JSON = [
   {
     english: "To Pay",
     latin: "Platiti",
-    conjugations: { FPS: "Plaćam", TPP: "Oni Plaćaju" },
+    conjugations: { FPS: "Plaćam", TPP: "Plaćaju" },
   },
   {
     english: "To Meet",

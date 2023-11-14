@@ -10,12 +10,19 @@ import {
 import { playSound } from "./cards/sound.js";
 
 import {
+  getObjectFromLocalStorage,
+  localStorageKeyExists,
+  putValueToLocalStorage,
+} from "./cards/utilities.js";
+
+import {
   chooseRandomExcept,
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
 
 const CARD_COLUMN_MAX = 4;
+const STARS_KEY = "conugationCompletions";
 
 const LessonState = Object.freeze({
   NOT_STARTED: "notstarted",
@@ -34,6 +41,29 @@ const TensesPretty = Object.freeze({
   FPS: "First-Person Singular",
   TPP: "Third-Person Plural",
 });
+
+let completions;
+const getCompletions = () => {
+  if (localStorageKeyExists(STARS_KEY)) {
+    completions = parseInt(getObjectFromLocalStorage(STARS_KEY));
+  } else {
+    completions = 0;
+    putValueToLocalStorage(STARS_KEY, completions);
+  }
+  return completions;
+};
+
+const setCompletions = (value) => {
+  completions = value;
+  putValueToLocalStorage(STARS_KEY, value);
+};
+
+const updateCuteStars = () => {
+  const cuteStars = document.getElementById("completions");
+  console.log(cuteStars);
+  console.log(completions);
+  cuteStars.textContent = completions;
+};
 
 class Verb {
   constructor(verbJSON) {
@@ -234,11 +264,13 @@ const addNextWordButton = () => {
     const congratsCell = document.createElement("td");
     congratsCell.colSpan = CARD_COLUMN_MAX;
     const congrats = document.createTextNode("Yay, lesson complete!");
+    setCompletions(completions + 1);
+    updateCuteStars();
     congratsCell.appendChild(congrats);
     congratsRow.appendChild(congratsCell);
     lessonTable.appendChild(congratsRow);
     nextButton.addEventListener("click", () => {
-      clearStage();
+      showWelcome();
     });
     const buttonContent = document.createTextNode("Clear Stage!");
     nextButton.appendChild(buttonContent);
@@ -406,9 +438,31 @@ const prepActivateButton = () => {
   });
 };
 
-const main = () => {};
+const prepClearButton = () => {
+  const clearButton = document.getElementById("stageclear");
+  clearButton.addEventListener("click", () => {
+    showWelcome();
+  });
+};
+
+const showWelcome = () => {
+  resetStage(true);
+  const stage = document.getElementById("gamecontainer");
+  const welcomeDiv = document.createElement("div");
+  welcomeDiv.classList.add("lessoncarddiv");
+  welcomeDiv.style.textAlign = "center";
+  const welcome = document.createElement("h3");
+  const msg = document.createTextNode("Hey! Pick a lesson to get started.");
+  welcome.appendChild(msg);
+  welcomeDiv.appendChild(welcome);
+  stage.appendChild(welcomeDiv);
+};
 
 (() => {
+  getCompletions();
+  updateCuteStars();
   prepDropdown();
   prepActivateButton();
+  prepClearButton();
+  showWelcome();
 })();
