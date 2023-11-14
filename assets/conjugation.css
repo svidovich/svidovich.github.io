@@ -1,5 +1,5 @@
 .gamecontainer {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   width: 90vw;
   height: 90vh;
   margin: 0 auto;
@@ -14,12 +14,16 @@
 
 .lessoncarddiv {
   margin: auto;
+  position: relative;
+  top: 15%;
 }
 
 .lessoncardtable {
   width: 80%;
   text-align: center;
   margin: auto;
+  border-collapse: separate;
+  border-spacing: 2em;
 }
 
 .lessoncardbutton {

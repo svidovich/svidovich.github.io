@@ -15,12 +15,35 @@ export const putValueToLocalStorage = (key, value) => {
   localStorage.setItem(key, value);
 };
 
+export const arraysEqual = (arr1, arr2, orderMatters = true) => {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  let arr1_, arr2_;
+  if (orderMatters) {
+    arr1_ = arr1;
+    arr2_ = arr2;
+  } else {
+    arr1_ = [...arr1].sort();
+    arr2_ = [...arr2].sort();
+  }
+  for (let i = 0; i < arr1_.length; i++) {
+    if (arr1_[i] != arr2_[i]) {
+      return false;
+    }
+  }
+  return true;
+};
+
 // Et cetera
 
 // Given an array and some objects known to be in it,
 // choose a random item from the iterable that isn't
 // among the objects we specified.
 export const chooseRandomExcept = (arr, exceptions) => {
+  if (arraysEqual(arr, exceptions, false)) {
+    throw new Error("Array is equal to exceptions. Can't select anything.");
+  }
   const exceptionIndices = new Array();
   exceptions.map((exception) => {
     exceptionIndices.push(arr.indexOf(exception));
@@ -51,7 +74,10 @@ export const decimalToColor = (number) => {
 // Stolen UUID generator.
 export const UUIDGeneratorBrowser = () =>
   ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
   );
 
 export const randomInt = (min, max) => {
@@ -73,7 +99,10 @@ export const shuffleArray = (array) => {
     currentIndex--;
 
     // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
   }
 
   return array;

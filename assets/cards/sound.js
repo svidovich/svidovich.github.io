@@ -9,7 +9,9 @@ export const SOUNDS = {
   maraca: "../../media/maraca.mp3",
   whoosh: "../../media/whoosh.mp3",
   whoosh2: "../../media/whoosh2.mp3",
+  soda: "../../media/soda.mp3",
   tap: "../../media/tap.mp3",
+  uncork: "../../media/uncork.mp3",
 };
 
 const loadAudio = (path) => {

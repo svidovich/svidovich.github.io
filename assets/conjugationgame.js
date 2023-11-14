@@ -116,12 +116,12 @@ const createIncorrectVerbEndings = (verb, tense) => {
 };
 
 const LESSONS = [
-  new VerbLesson("Verbs I", "verbs1", VERBS_1_JSON),
-  new VerbLesson("Verbs II", "verbs2", VERBS_2_JSON),
-  new VerbLesson("Verbs III", "verbs3", VERBS_3_JSON),
-  new VerbLesson("Verbs IV", "verbs4", VERBS_4_JSON),
-  new VerbLesson("Verbs V", "verbs5", VERBS_5_JSON),
-  new VerbLesson("Verbs VI", "verbs6", VERBS_6_JSON),
+  new VerbLesson("Verbs I", "verbs1", shuffleArray(VERBS_1_JSON)),
+  new VerbLesson("Verbs II", "verbs2", shuffleArray(VERBS_2_JSON)),
+  new VerbLesson("Verbs III", "verbs3", shuffleArray(VERBS_3_JSON)),
+  new VerbLesson("Verbs IV", "verbs4", shuffleArray(VERBS_4_JSON)),
+  new VerbLesson("Verbs V", "verbs5", shuffleArray(VERBS_5_JSON)),
+  new VerbLesson("Verbs VI", "verbs6", shuffleArray(VERBS_6_JSON)),
 ];
 
 const LESSONS_MAP = {};
@@ -175,7 +175,7 @@ const translationQuizButtonFromText = (text, correct = false) => {
     button.addEventListener("click", () => {
       button.style.backgroundColor = "green";
       currentLesson.state = LessonState.CONJUGATION;
-      playSound("block");
+      playSound("block", 0.1);
       addCurrentLessonConjugation();
     });
   }
@@ -202,7 +202,7 @@ const conjugationQuizButtonFromText = (text, correct = false) => {
     button.addEventListener("click", () => {
       button.style.backgroundColor = "green";
       currentLesson.state = LessonState.WORD_COMPLETE;
-      playSound("block");
+      playSound("block", 0.1);
       addNextWordButton();
     });
   }
@@ -216,17 +216,35 @@ const addNextWordButton = () => {
   const titleRow = document.createElement("tr");
   const titleCell = document.createElement("td");
   titleCell.colSpan = CARD_COLUMN_MAX;
+
   const nextButton = document.createElement("button");
   nextButton.classList.add("lessoncardbutton");
-  nextButton.addEventListener("click", () => {
-    currentLesson.currentIndex += 1;
-    currentLesson.state = LessonState.NOT_STARTED;
-    resetStage();
-    renderCurrentLessonCard();
-  });
-  const buttonContent = document.createTextNode("Next Word!");
-  nextButton.appendChild(buttonContent);
-  titleCell.appendChild(nextButton);
+  if (currentLesson.currentIndex !== currentLesson.maxIndex) {
+    nextButton.addEventListener("click", () => {
+      currentLesson.currentIndex += 1;
+      currentLesson.state = LessonState.NOT_STARTED;
+      clearStage();
+      renderCurrentLessonCard();
+    });
+    const buttonContent = document.createTextNode("Next Word!");
+    nextButton.appendChild(buttonContent);
+    titleCell.appendChild(nextButton);
+  } else {
+    const congratsRow = document.createElement("tr");
+    const congratsCell = document.createElement("td");
+    congratsCell.colSpan = CARD_COLUMN_MAX;
+    const congrats = document.createTextNode("Yay, lesson complete!");
+    congratsCell.appendChild(congrats);
+    congratsRow.appendChild(congratsCell);
+    lessonTable.appendChild(congratsRow);
+    nextButton.addEventListener("click", () => {
+      clearStage();
+    });
+    const buttonContent = document.createTextNode("Clear Stage!");
+    nextButton.appendChild(buttonContent);
+    titleCell.appendChild(nextButton);
+    playSound("soda", 0.5);
+  }
   titleRow.appendChild(titleCell);
   lessonTable.appendChild(titleRow);
 };
@@ -353,7 +371,7 @@ const renderCurrentLessonCard = () => {
   // Create a div for our lesson to live in.
   const lessonDiv = document.createElement("div");
   lessonDiv.classList.add("lessoncarddiv");
-  lessonDiv.style.border = "1px solid black";
+  // lessonDiv.style.border = "1px solid black";
   // Create a table to contain the lesson.
   const lessonTable = document.createElement("table");
   lessonTable.id = "lessoncardtable";
@@ -365,13 +383,13 @@ const renderCurrentLessonCard = () => {
   addCurrentLessonTranslation();
 };
 
-const resetStage = (reset = false) => {
+const resetStage = (resetLesson = false) => {
   // Dump all of the elements from the stage
   clearStage();
   // If we have a lesson, reset its index in
   // case usr wants to use it later if usr
   // instructs us to
-  if (currentLesson !== undefined && reset === true) {
+  if (currentLesson !== undefined && resetLesson === true) {
     currentLesson.reset();
   }
   // Grab the value from the dropdown
@@ -382,11 +400,9 @@ const resetStage = (reset = false) => {
 const prepActivateButton = () => {
   const activateButton = document.getElementById("lessonactivate");
   activateButton.addEventListener("click", () => {
-    resetStage();
+    resetStage(true);
     renderCurrentLessonCard();
-    for (let i = 1; i < 5; i++) {
-      createIncorrectVerbEndings(currentLesson.verbs[i], TensesUgly.FPS);
-    }
+    playSound("maraca", 0.3);
   });
 };
 
