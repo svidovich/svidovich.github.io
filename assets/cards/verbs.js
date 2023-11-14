@@ -3,6 +3,7 @@ export const VERBS_ALL_JSON = [
     english: "To Be",
     latin: "Biti",
     conjugations: { FPS: "Sam", TPP: "Su" },
+    irregularities: { singular: "Am", plural: "Are" },
   },
   {
     english: "To Have",
@@ -52,12 +53,12 @@ export const VERBS_ALL_JSON = [
   {
     english: "To Come",
     latin: "Doći",
-    conjugations: { FPS: "Dolazim", TPP: "Dolaze" },
+    conjugations: { FPS: "Dođem", TPP: "Dolaze" },
   },
   {
     english: "To Want",
     latin: "Želiti",
-    conjugations: { FPS: "Želim", TPP: "Dolaze" },
+    conjugations: { FPS: "Želim", TPP: "Žele" },
   },
   {
     english: "To Look",

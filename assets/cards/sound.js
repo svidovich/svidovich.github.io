@@ -3,12 +3,15 @@ import { localStorageKeyExists, putValueToLocalStorage } from "./utilities.js";
 const SOUND_EFFECT_KEY = "soundOn";
 
 export const SOUNDS = {
+  block: "../../media/block.mp3",
   pageFlip: "../../media/page_turn.mp3",
   fart: "../../media/fart_1.mp3",
   maraca: "../../media/maraca.mp3",
   whoosh: "../../media/whoosh.mp3",
   whoosh2: "../../media/whoosh2.mp3",
+  soda: "../../media/soda.mp3",
   tap: "../../media/tap.mp3",
+  uncork: "../../media/uncork.mp3",
 };
 
 const loadAudio = (path) => {

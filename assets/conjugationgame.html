@@ -1,0 +1,47 @@
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <meta property="og:image" content="https://vidovi.ch/media/cute-star.png" />
+    <meta
+      property="og:description"
+      name="description"
+      content="Practice conjugating slavic verbs! ~ from Sam Vidovich"
+    />
+    <meta
+      property="og:title"
+      name="title"
+      content="Bosnian, Croatian and Serbian Conjugation Practice"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arvo&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="stylesheet" type="text/css" href="conjugation.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      id="flashcardstylesheet"
+      href="flashcards.css"
+    />
+    <link rel="icon" href="../media/favicon.png" />
+    <link rel="manifest" href="./cards/manifest.json" />
+    <title>Verb Conjugation! By Sam Vidovich</title>
+  </head>
+  <body>
+    <a href="../index.html"><<< Home</a>
+    <div class="gamecontainer" id="gamecontainer"></div>
+    <div class="lessonselector" id="lessonselector">
+      <label for="lessondropdown">Choose a Lesson:</label>
+      <select name="lessondropdown" id="lessondropdown"></select>
+      <button class="lessonactivate" id="lessonactivate">Go!</button>
+    </div>
+  </body>
+  <script type="module" src="cards/utilities.js"></script>
+  <script type="module" src="cards/os.js"></script>
+  <script type="module" src="cards/dateutils.js"></script>
+  <script type="module" src="cards/verbs.js"></script>
+  <script type="module" src="conjugationgame.js"></script>
+</html>
