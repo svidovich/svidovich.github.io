@@ -462,9 +462,12 @@ export const VERBS_ALL_JSON = [
   },
 ];
 
-export const VERBS_1_JSON = Array.from(VERBS_ALL_JSON.slice(0, 15));
-export const VERBS_2_JSON = Array.from(VERBS_ALL_JSON.slice(16, 30));
-export const VERBS_3_JSON = Array.from(VERBS_ALL_JSON.slice(31, 45));
-export const VERBS_4_JSON = Array.from(VERBS_ALL_JSON.slice(46, 60));
-export const VERBS_5_JSON = Array.from(VERBS_ALL_JSON.slice(61, 75));
-export const VERBS_6_JSON = Array.from(VERBS_ALL_JSON.slice(76, 92));
+export const VERBS_1_JSON = Array.from(VERBS_ALL_JSON.slice(0, 10));
+export const VERBS_2_JSON = Array.from(VERBS_ALL_JSON.slice(11, 20));
+export const VERBS_3_JSON = Array.from(VERBS_ALL_JSON.slice(21, 30));
+export const VERBS_4_JSON = Array.from(VERBS_ALL_JSON.slice(31, 40));
+export const VERBS_5_JSON = Array.from(VERBS_ALL_JSON.slice(41, 50));
+export const VERBS_6_JSON = Array.from(VERBS_ALL_JSON.slice(51, 60));
+export const VERBS_7_JSON = Array.from(VERBS_ALL_JSON.slice(61, 70));
+export const VERBS_8_JSON = Array.from(VERBS_ALL_JSON.slice(71, 80));
+export const VERBS_9_JSON = Array.from(VERBS_ALL_JSON.slice(81, 92));
