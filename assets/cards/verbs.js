@@ -22,8 +22,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Go",
-    latin: "Ideti",
-    conjugations: { FPS: "Idem", TPP: "Ide" },
+    latin: "Ići",
+    conjugations: { FPS: "Idem", TPP: "Idu" },
   },
   {
     english: "To Get",
