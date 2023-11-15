@@ -423,7 +423,7 @@ export const VERBS_ALL_JSON = [
   {
     english: "To Suggest",
     latin: "Predložiti",
-    conjugations: { FPS: "Predložim", TPP: "Predlože" },
+    conjugations: { FPS: "Predložim", TPP: "Predlažu" },
   },
   {
     english: "To Raise",
