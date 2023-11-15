@@ -8,7 +8,7 @@ import {
   VERBS_6_JSON,
 } from "./cards/verbs.js";
 
-import { playSound } from "./cards/sound.js";
+import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
 
 import {
   getObjectFromLocalStorage,
@@ -254,6 +254,7 @@ const addNextWordButton = () => {
       currentLesson.state = LessonState.NOT_STARTED;
       clearStage();
       renderCurrentLessonCard();
+      updateLessonProgressFromCurrentLesson();
     });
     const buttonContent = document.createTextNode("Next Word!");
     nextButton.appendChild(buttonContent);
@@ -269,6 +270,7 @@ const addNextWordButton = () => {
     congratsRow.appendChild(congratsCell);
     lessonTable.appendChild(congratsRow);
     nextButton.addEventListener("click", () => {
+      nullifyLessonProgress();
       showWelcome();
     });
     const buttonContent = document.createTextNode("Clear Stage!");
@@ -441,6 +443,7 @@ const resetStage = (resetLesson = false) => {
   // instructs us to
   if (currentLesson !== undefined && resetLesson === true) {
     currentLesson.reset();
+    nullifyLessonProgress();
   }
   // Grab the value from the dropdown
   // and set the current lesson
@@ -453,6 +456,7 @@ const prepActivateButton = () => {
     resetStage(true);
     renderCurrentLessonCard();
     playSound("maraca", 0.3);
+    updateLessonProgressFromCurrentLesson();
   });
 };
 
@@ -485,10 +489,39 @@ const setPlatformStyle = () => {
   }
 };
 
+const setSoundToggleSwitchMessage = () => {
+  const soundToggleSwitchMessage = document.getElementById(
+    "soundtogglestatusmessage"
+  );
+  const shouldPlay = shouldPlaySound();
+  soundToggleSwitchMessage.style = shouldPlay ? `color: green;` : `color: red;`;
+  soundToggleSwitchMessage.textContent = shouldPlay ? `ON` : `OFF`;
+};
+
+const addSoundToggleClickListener = () => {
+  const soundToggleSwitch = document.getElementById("soundtoggle");
+  soundToggleSwitch.addEventListener("click", () => {
+    toggleSound();
+    setSoundToggleSwitchMessage();
+  });
+};
+
+const updateLessonProgressFromCurrentLesson = () => {
+  const progress = document.getElementById("lessonprogress");
+  progress.textContent = `${currentLesson.currentIndex + 1} / ${
+    currentLesson.maxIndex + 1
+  }`;
+};
+const nullifyLessonProgress = () => {
+  const progress = document.getElementById("lessonprogress");
+  progress.textContent = "? / ?";
+};
+
 (() => {
   setPlatformStyle();
   getCompletions();
   updateCuteStars();
+  addSoundToggleClickListener();
   prepDropdown();
   prepActivateButton();
   prepClearButton();

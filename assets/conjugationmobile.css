@@ -20,6 +20,12 @@ td {
   top: 30px;
 }
 
+.soundtogglestatusmessage {
+  position: absolute;
+  left: 10px;
+  top: 58px;
+}
+
 .lessoncarddiv {
   margin: auto;
   position: relative;

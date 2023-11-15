@@ -2,6 +2,12 @@ body {
   font-family: sans-serif;
 }
 
+.soundtogglestatusmessage {
+  position: absolute;
+  right: 10px;
+  top: 38px;
+}
+
 .gamecontainer {
   /* border: 1px solid black; */
   width: 90vw;

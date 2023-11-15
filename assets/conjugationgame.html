@@ -36,12 +36,22 @@
       x
       <span id="completions">Mystery!</span>
     </span>
+    |
+    <span id="lessonprogress">? / ?</span>
     <div class="gamecontainer" id="gamecontainer"></div>
     <div class="lessonselector" id="lessonselector">
       <label for="lessondropdown">Choose a Lesson:</label>
       <select name="lessondropdown" id="lessondropdown"></select>
       <button class="lessonactivate" id="lessonactivate">Go!</button>
       <button class="stageclear" id="stageclear">Clear</button>
+    </div>
+    <div
+      class="soundtogglestatusmessage"
+      id="soundtoggle"
+      style="cursor: pointer; width: fit-content"
+    >
+      Sound
+      <span id="soundtogglestatusmessage" style="color: green"> ON </span>
     </div>
   </body>
   <script type="module" src="cards/utilities.js"></script>
