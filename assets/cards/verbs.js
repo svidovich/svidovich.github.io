@@ -463,11 +463,11 @@ export const VERBS_ALL_JSON = [
 ];
 
 export const VERBS_1_JSON = Array.from(VERBS_ALL_JSON.slice(0, 10));
-export const VERBS_2_JSON = Array.from(VERBS_ALL_JSON.slice(11, 20));
-export const VERBS_3_JSON = Array.from(VERBS_ALL_JSON.slice(21, 30));
-export const VERBS_4_JSON = Array.from(VERBS_ALL_JSON.slice(31, 40));
-export const VERBS_5_JSON = Array.from(VERBS_ALL_JSON.slice(41, 50));
-export const VERBS_6_JSON = Array.from(VERBS_ALL_JSON.slice(51, 60));
-export const VERBS_7_JSON = Array.from(VERBS_ALL_JSON.slice(61, 70));
-export const VERBS_8_JSON = Array.from(VERBS_ALL_JSON.slice(71, 80));
-export const VERBS_9_JSON = Array.from(VERBS_ALL_JSON.slice(81, 92));
+export const VERBS_2_JSON = Array.from(VERBS_ALL_JSON.slice(11, 21));
+export const VERBS_3_JSON = Array.from(VERBS_ALL_JSON.slice(21, 31));
+export const VERBS_4_JSON = Array.from(VERBS_ALL_JSON.slice(31, 41));
+export const VERBS_5_JSON = Array.from(VERBS_ALL_JSON.slice(41, 51));
+export const VERBS_6_JSON = Array.from(VERBS_ALL_JSON.slice(51, 61));
+export const VERBS_7_JSON = Array.from(VERBS_ALL_JSON.slice(61, 71));
+export const VERBS_8_JSON = Array.from(VERBS_ALL_JSON.slice(71, 81));
+export const VERBS_9_JSON = Array.from(VERBS_ALL_JSON.slice(82, 92));
