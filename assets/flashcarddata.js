@@ -8,7 +8,6 @@ import {
   VERBS_6_JSON,
   VERBS_7_JSON,
   VERBS_8_JSON,
-  VERBS_9_JSON,
 } from "./cards/verbs.js";
 
 const ADJECTIVES_1_JSON = [
@@ -285,7 +284,6 @@ const VERBS_8 = vocabularySectionFromArray(
   "verbs8",
   VERBS_8_JSON
 );
-const VERBS_9 = vocabularySectionFromArray("Verbs IX", "verbs9", VERBS_9_JSON);
 
 const UNIT_4_VOCAB_JSON = [
   { english: "Apple", latin: "Jabuka" },
@@ -1031,7 +1029,6 @@ export const practiceMap = [
   VERBS_6,
   VERBS_7,
   VERBS_8,
-  VERBS_9,
   UNIT_4_VOCAB,
   UNIT_5_VOCAB,
   UNIT_6_VOCAB,

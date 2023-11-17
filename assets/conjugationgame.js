@@ -8,7 +8,6 @@ import {
   VERBS_6_JSON,
   VERBS_7_JSON,
   VERBS_8_JSON,
-  VERBS_9_JSON,
 } from "./cards/verbs.js";
 
 import { playSound, shouldPlaySound, toggleSound } from "./cards/sound.js";
@@ -156,7 +155,6 @@ const LESSONS = [
   new VerbLesson("Verbs VI", "verbs6", shuffleArray(VERBS_6_JSON)),
   new VerbLesson("Verbs VII", "verbs7", shuffleArray(VERBS_7_JSON)),
   new VerbLesson("Verbs VIII", "verbs8", shuffleArray(VERBS_8_JSON)),
-  new VerbLesson("Verbs IX", "verbs9", shuffleArray(VERBS_9_JSON)),
 ];
 
 const LESSONS_MAP = {};
