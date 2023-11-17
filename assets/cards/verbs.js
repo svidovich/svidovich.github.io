@@ -317,7 +317,7 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Love",
-    latin: "Voliti",
+    latin: "Voleti",
     conjugations: { FPS: "Volim", TPP: "Vole" },
   },
   {
