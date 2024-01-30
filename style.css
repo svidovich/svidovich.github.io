@@ -2,8 +2,16 @@
   transition: all 0.2s ease-in-out;
 }
 
+.extra-hover {
+  transition: all 0.2s ease-in-out;
+}
+
 .hoverable-image:hover {
   transform: scale(1.1);
+}
+
+.extra-hover:hover {
+  transform: scale(1.5);
 }
 
 .headers {
