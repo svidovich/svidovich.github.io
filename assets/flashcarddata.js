@@ -13,20 +13,20 @@ import {
 const ADJECTIVES_1_JSON = [
   { english: "Good", latin: "Dobar" },
   { english: "New", latin: "Nov" },
-  { english: "First", latin: "Prv" },
+  { english: "First", latin: "Prvi" },
   { english: "Last", latin: "Poslednji" },
   { english: "Long", latin: "Dug" },
   { english: "Own", latin: "Svoj" },
-  { english: "Other", latin: "Drug" },
-  { english: "Old", latin: "Star" },
+  { english: "Other", latin: "Drugi" },
+  { english: "Old", latin: "Stari" },
   { english: "Right", latin: "Desni" },
-  { english: "Big", latin: "Velik" },
+  { english: "Big", latin: "Veliki" },
   { english: "High", latin: "Visok" },
   { english: "Different", latin: "Razni" },
   { english: "Small", latin: "Mali" },
   { english: "Next", latin: "Sljedeći" },
   { english: "Early", latin: "Rano" },
-  { english: "Young", latin: "Mladi" },
+  { english: "Young", latin: "Mlad" },
   { english: "Important", latin: "Važan" },
 ];
 
@@ -954,6 +954,33 @@ const KAD_SU_BILI_1 = vocabularySectionFromArray(
   KAD_SU_BILI_1_JSON
 );
 
+const BODY_PARTS_JSON = [
+  { english: "Hair", latin: "Kosa" },
+  { english: "Ears", latin: "Uši" },
+  { english: "Mouth", latin: "Usta" },
+  { english: "Throat", latin: "Grlo" },
+  { english: "Forehead", latin: "Čelo" },
+  { english: "Brain", latin: "Mozak" },
+  { english: "Eyes", latin: "Oči" },
+  { english: "Nose", latin: "Nos" },
+  { english: "Chest", latin: "Grudi" },
+  { english: "Stomach", latin: "Trbuh" },
+  { english: "Head", latin: "Glava" },
+  { english: "Shoulder", latin: "Rame" },
+  { english: "Neck", latin: "Vrat" },
+  { english: "Wrist", latin: "Šaka" },
+  { english: "Finger", latin: "Prst" },
+  { english: "Leg", latin: "Noga" },
+  { english: "Knee", latin: "Koleno" },
+  { english: "Foot", latin: "Stopalo" },
+];
+
+const BODY_PARTS = vocabularySectionFromArray(
+  "Body Parts",
+  "bodyParts",
+  BODY_PARTS_JSON
+);
+
 const REGIONALISMS_KORDUN_JSON = [
   { english: "Apron", latin: "Vertun" },
   { english: "Bewitch", latin: "Ocoprati" },
@@ -1009,6 +1036,7 @@ export const practiceMap = [
   CRAFT_TOOLS,
   FAMILY,
   JEWELRY,
+  BODY_PARTS,
   INDEFINITE_PRONOUNS,
   NUMBERS_5_to_100,
   ADJECTIVES_1,
