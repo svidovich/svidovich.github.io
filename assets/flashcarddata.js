@@ -756,26 +756,55 @@ export const ANIMALS = vocabularySectionFromArray(
 );
 
 const COLORS_JSON = [
-  { english: "Black", latin: "Crn" },
-  { english: "Blue", latin: "Plav" },
+  { english: "Black", latin: "Crno" },
+  { english: "Blue", latin: "Plavo" },
   { english: "Brown", latin: "Smeđ" },
   { english: "Color", latin: "Boja" },
-  { english: "Gold", latin: "Zlat" },
-  { english: "Green", latin: "Zelen" },
-  { english: "Grey", latin: "Siv" },
+  { english: "Gold", latin: "Zlato" },
+  { english: "Green", latin: "Zeleno" },
+  { english: "Grey", latin: "Sivo" },
   { english: "Orange", latin: "Narančast" },
-  { english: "Pink", latin: "Ruž" },
+  { english: "Pink", latin: "Ružo" },
   { english: "Purple", latin: "Ljubičast" },
-  { english: "Red", latin: "Crven" },
+  { english: "Red", latin: "Crveno" },
   { english: "Silver", latin: "Srebro" },
   { english: "White", latin: "Beo" },
-  { english: "Yellow", latin: "Žut" },
+  { english: "Yellow", latin: "Žuto" },
 ];
 
 export const COLORS = vocabularySectionFromArray(
   "Colors",
   "colors",
   COLORS_JSON
+);
+
+const CLOTHES_JSON = [
+  { english: "Outfit", latin: "Komplet" },
+  { english: "Raincoat", latin: "Kabanica" },
+  { english: "Scarf", latin: "Šal" },
+  { english: "Sweater", latin: "Džemper" },
+  { english: "Jeans", latin: "Farmerke" },
+  { english: "Gloves", latin: "Rukavice" },
+  { english: "Cap", latin: "Kapa" },
+  { english: "Jacket", latin: "Jakna" },
+  { english: "T-Shirt", latin: "Majica" },
+  { english: "Skirt", latin: "Suknja" },
+  { english: "Shoes", latin: "Cipele" },
+  { english: "Clothing", latin: "Odeća" },
+  { english: "Stripes", latin: "Pruge" },
+  { english: "Footwear", latin: "Obuća" },
+  { english: "Sneakers", latin: "Patke" },
+  { english: "Suit Jacket", latin: "Sako" },
+  { english: "Formal Shirt", latin: "Košulja" },
+  { english: "To Wear", latin: "Nositi" },
+  { english: "Socks", latin: "Čarape" },
+  { english: "Boots", latin: "Čizme" },
+];
+
+export const CLOTHES = vocabularySectionFromArray(
+  "Clothes",
+  "clothes",
+  CLOTHES_JSON
 );
 
 const CRAFT_TOOLS_JSON = [
@@ -1033,6 +1062,7 @@ export const practiceMap = [
   // _DEBUG_SECTION,
   ANIMALS,
   COLORS,
+  CLOTHES,
   CRAFT_TOOLS,
   FAMILY,
   JEWELRY,
