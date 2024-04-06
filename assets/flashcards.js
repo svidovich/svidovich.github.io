@@ -106,6 +106,9 @@ const cookieWarningSetup = () => {
 };
 
 const setSoundToggleSwitchMessage = () => {
+  // We have a toggle switch that allows us to turn sound
+  // on and off. This function sets its message based on
+  // the current state.
   const soundToggleSwitchMessage = document.getElementById(
     "soundtogglestatusmessage"
   );
@@ -220,6 +223,7 @@ const clearLanguageEntryFieldsFromDialog = () => {
 };
 
 const addCustomPracticeNameEntryFieldToDialog = () => {
+  // This function adds content to the "custom exercise" dialog.
   // Add an "Exercise Name" dialog after the little title text and
   // before the table full of crap
   const customExerciseDialog = document.getElementById(
@@ -361,6 +365,8 @@ const addLanguageEntryFieldToDialog = () => {
 };
 
 const customLessonEntriesFromFileText = (fileText) => {
+  // Given text from a file, return an array of entries
+  // that are compatible with our custom exercise dialog.
   const splitFile = fileText.split("\n");
   const head = splitFile[0];
   // NOTE / HACK
@@ -505,6 +511,8 @@ const addNewCustomLessonSampleDataNoticeHideListener = () => {
 };
 
 const addNewCustomLessonClickListeners = () => {
+  // Adds the click listeners necessary to actually power
+  // our custom exercise feature.
   const customExerciseDialog = document.getElementById(
     "newcustomexercisedialog"
   );
@@ -584,16 +592,26 @@ const addLoadStageClickListener = () => {
 };
 
 const addPracticeOptionsDropdownChangeListener = () => {
+  // Listeners for what happens when we click the 'practice options'
+  // dropdown and change it to a desired option, e.g. 'Clothes'
   const practiceOptionsDropDown = document.getElementById(
     "practiceoptionsdropdown"
   );
   practiceOptionsDropDown.addEventListener("change", () => {
+    // We should display the practice formats that are available for
+    // the given selection, e.g. Flashcards, Quiz...
     const sectionObject = displayAvailablePracticeFormats();
+    // We should also change the download options so that if a user
+    // tries to download this section, they wind up with the correct
+    // data for the section.
     prepareSectionDownloadOptions(sectionObject);
   });
 };
 
 const addLangChoiceClickListener = () => {
+  // We have a 'language choice' button which determines whether we
+  // are going from english to jugoslavian, jugoslavian to english,
+  // or a mix of both in our exercise. This listener cycles the options.
   const langChoiceImg = document.getElementById("langdirchoiceimg");
   langChoiceImg.addEventListener("click", () => {
     langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
@@ -606,10 +624,14 @@ const getStreakForDisplay = () => {
 };
 
 const setStreakDisplay = (displayElement) => {
+  // Given the streak element, we should set it
+  // based on the current streak value from local
+  // storage. If the streak is more than a day old,
+  // we should reset the user's streak to 0, because
+  // they are not a user, they are a luser.
   const today = dateCookieStringFromDate(new Date());
   putObjectToLocalStorage(LAST_VISIT_KEY, today);
   if (streakIsOld()) {
-    console.log("Streak is old: Sending user back to 0 streak");
     putObjectToLocalStorage(STREAK_COUNT_KEY, 0);
   }
   while (displayElement.firstChild) {
@@ -622,6 +644,7 @@ const setStreakDisplay = (displayElement) => {
 };
 
 const streakIsOld = () => {
+  // Determine whether the user's streak is more than a day old.
   const streakLastCheck =
     getObjectFromLocalStorage(STREAK_LAST_CHECK_KEY) || null;
   if (!streakLastCheck) {
@@ -642,6 +665,7 @@ const streakIsOld = () => {
 };
 
 const handleStreak = () => {
+  // Save the user's streak to local storage.
   const dateToday = new Date();
   const today = dateCookieStringFromDate(dateToday);
   const streakCount = getObjectFromLocalStorage(STREAK_COUNT_KEY);
@@ -686,10 +710,11 @@ const clearStage = (callerPlaySound) => {
   flashCardContainer.removeAttribute("style");
 };
 
-const insertPracticeFormatForm = () => {};
-
 let warningCount = 0;
 const loadStage = () => {
+  // Load the working stage with flashcards, a quiz, etc. based on
+  // the user's current selections. If they don't select anything,
+  // yell at them.
   // Get the practice options dropdown,
   const practiceOptionsDropDown = document.getElementById(
     "practiceoptionsdropdown"
@@ -704,8 +729,6 @@ const loadStage = () => {
     choosePracticeWarning.hidden = true;
     // Make sure we have a clean slate to work with.
     clearStage(false);
-    // NOTE: For now, we're only loading flashcards. In the future, there might be
-    // other kinds of stuff to load.
     const practiceFormatOption = document.querySelector(
       'input[name="practiceformatoptions"]:checked'
     ).value;
@@ -720,6 +743,8 @@ const loadStage = () => {
       loadTrueOrFalse(fullPracticeMap[selectedPractice].vocabularyObjects);
     }
   } else {
+    // Fun section. If they keep clicking even without a selection,
+    // we want to yell at them, and eventually give up :)
     choosePracticeWarning.hidden = false;
     let shouldIncreaseSizeOnWarning = true;
     if (warningCount > 0) {
@@ -747,6 +772,7 @@ const loadStage = () => {
       choosePracticeWarning.style.fontSize = 16 + warningCount;
     }
     warningCount += 1;
+    // If they go over 100, commence farting.
     if (warningCount >= 100) {
       // I tried to have a volume > 1 but...
       playSound("fart", 1);
@@ -755,17 +781,18 @@ const loadStage = () => {
 };
 
 const downloadIconsInactive = () => {
-  const csvDownloadIconImage = document.getElementById("csvdownloadicon");
-  const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
   // Checks whether the download icons are in an active state
   // or not by eyeballing their style. They come in pairs like
   // salt and pepper. We don't change one without the other.
+  const csvDownloadIconImage = document.getElementById("csvdownloadicon");
+  const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
   return [csvDownloadIconImage, jsonDownloadIconImage].every((icon) => {
     return icon.style.filter === DOWNLOAD_ICON_DEFAULT_FILTER;
   });
 };
 
 const toggleDownloadIconStyles = () => {
+  // Style the download icons to the opposite of whatever they are right now.
   const iconReadyCursor = `pointer`;
   const csvDownloadIconImage = document.getElementById("csvdownloadicon");
   const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
@@ -783,6 +810,11 @@ const toggleDownloadIconStyles = () => {
 };
 
 const prepareSectionDownloadOptions = (sectionObject) => {
+  // Based on the current selection, we should prep the download options.
+  // This involves slyly replacing the download buttons with ones that
+  // reflect the current selection.
+  // The download links themselves are special blob links. That doesn't
+  // scale, but this is a flashcard app. If it gets too big I'm fucking up.
   const downloadImagesDiv = document.getElementById("downloads");
   const csvDownloadIconImage = document.getElementById("csvdownloadicon");
   const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
@@ -840,6 +872,8 @@ const prepareSectionDownloadOptions = (sectionObject) => {
 };
 
 const displayAvailablePracticeFormats = () => {
+  // Given the currently selected section, display the practice
+  // formats that are available for it.
   const practiceOptionsDropDown = document.getElementById(
     "practiceoptionsdropdown"
   );
@@ -905,6 +939,8 @@ const clearPracticeOptionsDropwdown = () => {
 // NOTE: In the future, this won't just be VocabularySection objects.
 // We'll see how this goes.
 const fillPracticeOptionsDropdown = (vocabularySections) => {
+  // Given all of our vocabularySections, fill the practice options
+  // dropdown where user selects what they'd like to study.
   const practiceOptionsDropDown = document.getElementById(
     "practiceoptionsdropdown"
   );
@@ -930,9 +966,9 @@ const fillPracticeOptionsDropdown = (vocabularySections) => {
   });
 };
 
-// Adds a new flashcard. Front and Back are the words that appear
-// on the front and back of the card, respectively.
 const addFlashcard = (front, back) => {
+  // Adds a new flashcard. Front and Back are the words that appear
+  // on the front and back of the card, respectively.
   const flashCardContainer = document.getElementById("flashcardcontainer");
 
   // I don't know _why_ I feel the need to make these unique, but something
@@ -1017,6 +1053,11 @@ const addFlashcard = (front, back) => {
 };
 
 const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
+  // Given a vocabulary object, return the jugoslavian variant for it.
+  // This exists because we have two alphabets to deal with. If they
+  // ask for a mix of cyrillic and latin, we should flip a coin to
+  // decide which we'll return. Otherwise, just give them what they
+  // asked for.
   let script;
   switch (scriptOption) {
     case SCRIPT_MIX:
@@ -1042,8 +1083,8 @@ const getJugoScriptForObject = (scriptOption, vocabularyObject) => {
   return script;
 };
 
-// Loads an array of vocabularyObjects as flashcards onto the document
 const loadShuffledFlashCards = (vocabularyObjects) => {
+  // Loads an array of vocabularyObjects as flashcards onto the document
   const scoreBar = document.getElementById("scorebar");
   if (scoreBarHidden(scoreBar) === false) {
     toggleScoreBar(scoreBar);
@@ -1115,6 +1156,11 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
 };
 
 const handleScoringInteraction = (quizOption, scoreBar) => {
+  // When a user interacts with a scoreable exercise ( e.g. a quiz
+  // multiple choice option is clicked ) we should determine whether
+  // they answered correctly, and then score them. We should also make
+  // it so that, supposing they answered incorrectly, they can't get
+  // the points back. Sorry chumpus.
   // Only colorize list items.
   if (quizOption.tagName.toLowerCase() === "li") {
     // For whatever reason, chrome isn't very happy about using
@@ -1146,6 +1192,7 @@ const handleScoringInteraction = (quizOption, scoreBar) => {
 };
 
 const scoreBarHidden = (scoreBar) => {
+  // Determine whether the score bar is hidden or not.
   if (isMobile()) {
     return scoreBar.style.visibility !== "visible";
   } else {
@@ -1154,10 +1201,12 @@ const scoreBarHidden = (scoreBar) => {
 };
 
 const hideScoreBar = (scoreBar) => {
+  // Hide the score bar.
   scoreBar.hidden = true;
 };
 
 const toggleScoreBar = (scoreBar) => {
+  // Set the score bar's visibility to whatever it isn't.
   if (isMobile()) {
     scoreBar.hidden = false;
     if (scoreBar.style.visibility !== "visible") {
@@ -1175,6 +1224,11 @@ const toggleScoreBar = (scoreBar) => {
 };
 
 const setScoreBarScore = (scoreBar, score, maxScore) => {
+  // Set the appearance of the scorebar. It looks like this:
+  // score / maxScore
+  // That is, the score argument will set how many questions
+  // user has correctly answered, and maxScore will set how many
+  // points are possible in the given exercise.
   if (scoreBar.firstChild) {
     scoreBar.removeChild(scoreBar.firstChild);
   }
@@ -1186,14 +1240,17 @@ const setScoreBarScore = (scoreBar, score, maxScore) => {
 };
 
 const getScoreBarScore = (scoreBar) => {
+  // Get the score from the score bar. See setScoreBarScore.
   return Number(scoreBar.getAttribute("score"));
 };
 
 const getScoreBarMax = (scoreBar) => {
+  // Get the maximum score from the scorebar. See setScoreBarScore.
   return Number(scoreBar.getAttribute("maxscore"));
 };
 
 const incrementScoreBarScore = (scoreBar, amount) => {
+  // Add amount to the scorebar's score. See setScoreBarScore.
   const currentScore = getScoreBarScore(scoreBar);
   const scoreMax = getScoreBarMax(scoreBar);
   setScoreBarScore(scoreBar, currentScore + amount, scoreMax);
@@ -1215,6 +1272,7 @@ const checkQuizComplete = (event, className) => {
 };
 
 const loadTrueOrFalse = (vocabularyObjects) => {
+  // Given the current selection, load a scored "True or False" exercise.
   const scoreBar = document.getElementById("scorebar");
   if (scoreBarHidden(scoreBar) === true) {
     toggleScoreBar(scoreBar);
@@ -1411,8 +1469,8 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   );
 };
 
-// Loads a gang of vocabulary objects as a quiz.
 const loadQuiz = (vocabularyObjects) => {
+  // Loads a gang of vocabulary objects as a scored quiz.
   const scoreBar = document.getElementById("scorebar");
   if (scoreBarHidden(scoreBar) === true) {
     toggleScoreBar(scoreBar);

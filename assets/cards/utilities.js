@@ -116,3 +116,9 @@ export const camelize = (str) => {
     return index === 0 ? match.toLowerCase() : match.toUpperCase();
   });
 };
+
+// Stolen sleep.
+// https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+export const sleep = (time) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};

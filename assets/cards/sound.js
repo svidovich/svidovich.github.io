@@ -1,4 +1,8 @@
-import { localStorageKeyExists, putValueToLocalStorage } from "./utilities.js";
+import {
+  sleep,
+  localStorageKeyExists,
+  putValueToLocalStorage,
+} from "./utilities.js";
 
 const SOUND_EFFECT_KEY = "soundOn";
 
@@ -36,7 +40,7 @@ export const toggleSound = () => {
   }
 };
 
-export const playSound = (soundName, volume) => {
+export const playSound = (soundName, volume, delay) => {
   // We lazily load sounds by only fetching them when
   // they're needed instead of loading all of our sound
   // effects with the page. We mutate the SOUNDS object
@@ -44,6 +48,9 @@ export const playSound = (soundName, volume) => {
   if (shouldPlaySound()) {
     try {
       const soundEntry = SOUNDS[soundName];
+      if (delay !== undefined) {
+        sleep(delay);
+      }
       if (typeof soundEntry === "string") {
         const sound = loadAudio(soundEntry);
         SOUNDS[soundName] = sound;
