@@ -12,8 +12,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Say",
-    latin: "Kazivati",
-    conjugations: { FPS: "Kazujem", TPP: "Kazuju" },
+    latin: "Kazati",
+    conjugations: { FPS: "Kažem", TPP: "Kažu" },
   },
   {
     english: "To Go",
@@ -37,53 +37,53 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To See",
-    latin: "Vidjeti",
+    latin: "Videti",
     conjugations: { FPS: "Vidim", TPP: "Vide" },
   },
   {
     english: "To Come",
-    latin: "Nailaziti",
-    conjugations: { FPS: "Nailazim", TPP: "Nailaze" },
+    latin: "Doći",
+    conjugations: { FPS: "Dođem", TPP: "Dođu" },
   },
   {
     english: "To Use",
-    latin: "Upotrebiti",
-    conjugations: { FPS: "Upotrebim", TPP: "Upotrebe" },
+    latin: "Iskoristiti",
+    conjugations: { FPS: "Iskoristim", TPP: "Iskoriste" },
   },
   {
     english: "To Find",
-    latin: "Pronalaziti",
-    conjugations: { FPS: "Pronalazim", TPP: "Pronalaze" },
+    latin: "Naći",
+    conjugations: { FPS: "Nađem", TPP: "Nađu" },
   },
   {
     english: "To Give",
-    latin: "Poklanjati",
-    conjugations: { FPS: "Poklanjam", TPP: "Poklanjaju" },
+    latin: "Dati",
+    conjugations: { FPS: "Dajem", TPP: "Daju" },
   },
   {
     english: "To Work",
-    latin: "Šljakati",
-    conjugations: { FPS: "Šljakam", TPP: "Šljakaju" },
+    latin: "Raditi",
+    conjugations: { FPS: "Radim", TPP: "Rade" },
   },
   {
     english: "To Call",
-    latin: "Sluti",
-    conjugations: { FPS: "Slovem", TPP: "Slovu" },
+    latin: "Zvati",
+    conjugations: { FPS: "Zovem", TPP: "Zovu" },
   },
   {
     english: "To Try",
-    latin: "Prokušati",
-    conjugations: { FPS: "Prokušam", TPP: "Prokušaju" },
+    latin: "Pokušavati",
+    conjugations: { FPS: "Pokušavam", TPP: "Pokušavaju" },
   },
   {
     english: "To Ask",
-    latin: "Pituvati",
-    conjugations: { FPS: "Pitujem", TPP: "Pituju" },
+    latin: "Pitati",
+    conjugations: { FPS: "Pitam", TPP: "Pitaju" },
   },
   {
     english: "To Feel",
-    latin: "Ćuteti",
-    conjugations: { FPS: "Ćutim", TPP: "Ćute" },
+    latin: "Osjećati se",
+    conjugations: { FPS: "Osjećam se", TPP: "Osjećaju se" },
   },
   {
     english: "To Become",
@@ -92,13 +92,13 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Leave",
-    latin: "Tornjati",
-    conjugations: { FPS: "Tornjam", TPP: "Tornjaju" },
+    latin: "Otići",
+    conjugations: { FPS: "Odem", TPP: "Odu" },
   },
   {
     english: "To Put",
-    latin: "Metati",
-    conjugations: { FPS: "Mećem", TPP: "Meću" },
+    latin: "Staviti",
+    conjugations: { FPS: "Stavim", TPP: "Stave" },
   },
   {
     english: "To Mean",
@@ -117,11 +117,11 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Begin",
-    latin: "Otpočeti",
-    conjugations: { FPS: "Otpočnem", TPP: "Otpočnu" },
+    latin: "Početi",
+    conjugations: { FPS: "Počinjem", TPP: "Počinju" },
   },
   {
-    english: "To Seem",
+    english: "To Look",
     latin: "Izgledati",
     conjugations: { FPS: "Izgledam", TPP: "Izgledaju" },
   },
@@ -137,8 +137,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Turn",
-    latin: "Obrtati",
-    conjugations: { FPS: "Obrćem", TPP: "Obrću" },
+    latin: "Skrenuti",
+    conjugations: { FPS: "Skrenem", TPP: "Skrenu" },
   },
   {
     english: "To Show",
@@ -152,8 +152,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Play",
-    latin: "Budaliti",
-    conjugations: { FPS: "Budalim", TPP: "Budale" },
+    latin: "Igrati",
+    conjugations: { FPS: "Igram", TPP: "Igraju" },
   },
   {
     english: "To Run",
@@ -162,13 +162,13 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Move",
-    latin: "Gibati",
-    conjugations: { FPS: "Gibljem", TPP: "Giblju" },
+    latin: "Kretati",
+    conjugations: { FPS: "Krećem", TPP: "Kreću" },
   },
   {
     english: "To Like",
-    latin: "Sviđati",
-    conjugations: { FPS: "Sviđam", TPP: "Sviđaju" },
+    latin: "Sviđati se",
+    conjugations: { FPS: "Sviđam se", TPP: "Sviđaju se" },
   },
   {
     english: "To Live",
@@ -177,8 +177,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Believe",
-    latin: "Poverovati",
-    conjugations: { FPS: "Poverujem", TPP: "Poveruju" },
+    latin: "Verovati",
+    conjugations: { FPS: "Verujem", TPP: "Veruju" },
   },
   {
     english: "To Bring",
@@ -187,13 +187,13 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Happen",
-    latin: "Zbivati",
-    conjugations: { FPS: "Zbivam", TPP: "Zbivaju" },
+    latin: "Desiti se",
+    conjugations: { FPS: "Desim", TPP: "Dese se" },
   },
   {
     english: "To Write",
-    latin: "Napisati",
-    conjugations: { FPS: "Napišem", TPP: "Napišu" },
+    latin: "Pisati",
+    conjugations: { FPS: "Pišem", TPP: "Pišu" },
   },
   {
     english: "To Sit",
@@ -207,28 +207,28 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Pay",
-    latin: "Isplaćivati",
-    conjugations: { FPS: "Isplaćujem", TPP: "Isplaćuju" },
+    latin: "Plaćati",
+    conjugations: { FPS: "Plaćem", TPP: "Plaću" },
   },
   {
     english: "To Meet",
-    latin: "Susresti",
-    conjugations: { FPS: "Susretnem", TPP: "Susretnu" },
+    latin: "Upoznati",
+    conjugations: { FPS: "Upoznam", TPP: "Upoznaju" },
   },
   {
     english: "To Include",
-    latin: "Uvrstiti",
-    conjugations: { FPS: "Uvrstim", TPP: "Uvrste" },
+    latin: "Uključiti",
+    conjugations: { FPS: "Uključim", TPP: "Uključe" },
   },
   {
     english: "To Continue",
-    latin: "Nastavljati",
-    conjugations: { FPS: "Nastavljam", TPP: "Nastavljaju" },
+    latin: "Nastaviti",
+    conjugations: { FPS: "Nastavim", TPP: "Nastave" },
   },
   {
     english: "To Set",
-    latin: "Zapadati",
-    conjugations: { FPS: "Zapadam", TPP: "Zapadaju" },
+    latin: "Postaviti",
+    conjugations: { FPS: "Postavim", TPP: "Postave" },
   },
   {
     english: "To Learn",
@@ -237,8 +237,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Change",
-    latin: "Promenjivati",
-    conjugations: { FPS: "Promenjujem", TPP: "Promenjuju" },
+    latin: "Promeniti",
+    conjugations: { FPS: "Promenim", TPP: "Promene" },
   },
   {
     english: "To Lead",
@@ -247,13 +247,13 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Understand",
-    latin: "Kapirati",
-    conjugations: { FPS: "Kapiram", TPP: "Kapiraju" },
+    latin: "Razumeti",
+    conjugations: { FPS: "Razumem", TPP: "Razumeju" },
   },
   {
     english: "To Watch",
-    latin: "Zrijeti",
-    conjugations: { FPS: "Zrijem/Zrim", TPP: "Zriju/Zre" },
+    latin: "Gledati",
+    conjugations: { FPS: "Gledam", TPP: "Gledaju" },
   },
   {
     english: "To Follow",
@@ -262,13 +262,13 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Stop",
-    latin: "Obustavljati",
-    conjugations: { FPS: "Obustavljam", TPP: "Obustavljaju" },
+    latin: "Stati",
+    conjugations: { FPS: "Stanem", TPP: "Stanu" },
   },
   {
     english: "To Create",
-    latin: "Kreirati",
-    conjugations: { FPS: "Kreiram", TPP: "Kreiraju" },
+    latin: "Stvoriti",
+    conjugations: { FPS: "Stvorim", TPP: "Stvore" },
   },
   {
     english: "To Speak",
@@ -277,8 +277,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Read",
-    latin: "Pročitavati",
-    conjugations: { FPS: "Pročitavam", TPP: "Pročitavaju" },
+    latin: "Čitati",
+    conjugations: { FPS: "Čitam", TPP: "Čitaju" },
   },
   {
     english: "To Add",
@@ -292,18 +292,18 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Grow",
-    latin: "Uzgojiti",
-    conjugations: { FPS: "Uzgojim", TPP: "Uzgoje" },
+    latin: "Gajiti",
+    conjugations: { FPS: "Gajim", TPP: "Gaje" },
   },
   {
     english: "To Open",
-    latin: "Otvarati",
-    conjugations: { FPS: "Otvaram", TPP: "Otvaraju" },
+    latin: "Otvoriti",
+    conjugations: { FPS: "Otvorim", TPP: "Otvore" },
   },
   {
     english: "To Walk",
-    latin: "Koračati",
-    conjugations: { FPS: "Koračam", TPP: "Koračaju" },
+    latin: "Hodati",
+    conjugations: { FPS: "Hodam", TPP: "Hodaju" },
   },
   {
     english: "To Offer",
@@ -312,8 +312,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Remember",
-    latin: "Prisećati",
-    conjugations: { FPS: "Prisećam", TPP: "Prisećaju" },
+    latin: "Sjećati",
+    conjugations: { FPS: "Sjećam", TPP: "Sjećaju" },
   },
   {
     english: "To Love",
@@ -332,23 +332,23 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Buy",
-    latin: "Pazariti",
-    conjugations: { FPS: "Pazarim", TPP: "Pazare" },
+    latin: "Kupiti",
+    conjugations: { FPS: "Kupim", TPP: "Kupe" },
   },
   {
     english: "To Serve",
-    latin: "Poslužiti",
-    conjugations: { FPS: "Poslužim", TPP: "Posluže" },
+    latin: "Služiti",
+    conjugations: { FPS: "Služim", TPP: "Služe" },
   },
   {
     english: "To Die",
-    latin: "Lipcati",
-    conjugations: { FPS: "Lipčem", TPP: "Lipču" },
+    latin: "Umreti",
+    conjugations: { FPS: "Umrem", TPP: "Umru" },
   },
   {
     english: "To Send",
-    latin: "Upućivati",
-    conjugations: { FPS: "Upućujem", TPP: "Upućuju" },
+    latin: "Slati",
+    conjugations: { FPS: "Šaljem", TPP: "Šalju" },
   },
   {
     english: "To Expect",
@@ -382,8 +382,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Raise",
-    latin: "Povisiti",
-    conjugations: { FPS: "Povisim", TPP: "Povise" },
+    latin: "Podizati",
+    conjugations: { FPS: "Podižem", TPP: "Podižu" },
   },
   {
     english: "To Pass",
@@ -402,8 +402,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Report",
-    latin: "Izvestiti",
-    conjugations: { FPS: "Izvestim", TPP: "Izveste" },
+    latin: "Izveštiti",
+    conjugations: { FPS: "Izveštim", TPP: "Izvešte" },
   },
   {
     english: "To Decide",
@@ -412,8 +412,8 @@ export const VERBS_ALL_JSON = [
   },
   {
     english: "To Pull",
-    latin: "Trgnuti",
-    conjugations: { FPS: "Trgnem", TPP: "Trgnu" },
+    latin: "Povući",
+    conjugations: { FPS: "Povučem", TPP: "Povuku" },
   },
 ];
 
