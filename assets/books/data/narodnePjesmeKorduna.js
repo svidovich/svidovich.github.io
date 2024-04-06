@@ -127,7 +127,7 @@ export const VraniSeKonjiBook = bookFromArray(
 // #3
 export const NaGraniciVatraBook = bookFromArray(
   "Na Granici Vatra Gori",
-  "On the Borders the Forests Burn",
+  "On the Borders the Fire Rises",
   "na_granici_vatra_gori",
   "Kordun",
   "A day in the life of a border guard! Will the janissaries make it out alive?",
@@ -136,7 +136,7 @@ export const NaGraniciVatraBook = bookFromArray(
   [
     {
       latin: "Na granici vatra gori,",
-      english: "On the borders the forests burn,",
+      english: "On the borders the fire rises,",
     },
     {
       latin: "A prangije glas se ori:",
