@@ -898,6 +898,12 @@ const INDEFINITE_PRONOUNS_JSON = [
   { english: "To somewhere", latin: "Nekuda" },
   { english: "To nowhere", latin: "Nikuda" },
   { english: "To anywhere", latin: "Ikuda" },
+  { english: "Any kind of", latin: "Ikakvo" },
+  { english: "No kind of", latin: "Nikakvo" },
+  { english: "Some kind of", latin: "Nekakvo" },
+  { english: "Someone's", latin: "Nečiji" },
+  { english: "Anyone's", latin: "Ičiji" },
+  { english: "No-one's", latin: "Ničiji" },
 ];
 
 export const INDEFINITE_PRONOUNS = vocabularySectionFromArray(
