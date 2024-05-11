@@ -1016,6 +1016,36 @@ const BODY_PARTS = vocabularySectionFromArray(
   BODY_PARTS_JSON
 );
 
+const APPEARANCES_JSON = [
+  { english: "Person", latin: "Osoba" },
+  { english: "Hair", latin: "Kosa" },
+  { english: "Nice", latin: "Simpatičan" },
+  { english: "Man, Person", latin: "Čovijek" },
+  { english: "Eyes", latin: "Oči" },
+  { english: "Built Large", latin: "Krupan" },
+  { english: "Man", latin: "Muškarac" },
+  { english: "Height", latin: "Rast" },
+  { english: "Full-Figured", latin: "Puniji" },
+  { english: "Lad", latin: "Mladić" },
+  { english: "Beard", latin: "Brada" },
+  { english: "Witty", latin: "Duhovit" },
+  { english: "Moustache", latin: "Brkovi" },
+  { english: "Small", latin: "Sitan" },
+  { english: "Handsome", latin: "Zgodan" },
+  { english: "Thin", latin: "Mršav" },
+  { english: "Clever", latin: "Pametan" },
+  { english: "Smile", latin: "Osmeh" },
+  { english: "Blonde", latin: "Plav" },
+  { english: "Brown Hair", latin: "Smeđ" },
+  { english: "Gray Hair", latin: "Sed" },
+];
+
+const APPEARANCES = vocabularySectionFromArray(
+  "Appearances",
+  "appearances",
+  APPEARANCES_JSON
+);
+
 const REGIONALISMS_KORDUN_JSON = [
   { english: "Apron", latin: "Vertun" },
   { english: "Bewitch", latin: "Ocoprati" },
@@ -1067,6 +1097,7 @@ const _DEBUG_SECTION = vocabularySectionFromArray("Debug", "debug", [
 export const practiceMap = [
   // _DEBUG_SECTION,
   ANIMALS,
+  APPEARANCES,
   COLORS,
   CLOTHES,
   CRAFT_TOOLS,
