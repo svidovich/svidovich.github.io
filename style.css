@@ -14,6 +14,14 @@
   transform: scale(1.25);
 }
 
+.super-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.super-hover:hover {
+  transform: scale(3);
+}
+
 .headers {
   font-family: "Arvo", sans-serif;
 }
