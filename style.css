@@ -123,3 +123,18 @@ td {
 pre {
   font-size: 18px;
 }
+
+.reftable table,
+th,
+td {
+  border: 2px solid black;
+  border-left: none;
+  border-right: 1px dotted grey;
+  border-top: none;
+}
+
+.reftable th {
+  font-family: "Arvo", sans-serif;
+  font-weight: bold;
+  font-size: large;
+}
