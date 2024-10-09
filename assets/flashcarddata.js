@@ -61,6 +61,258 @@ const TRAVEL = "travel";
 const VERB_INF = "verb_infinitive";
 const WEATHER = "weather";
 
+const CATEGORIES_MAP = {
+  ADJECTIVE: {
+    identifier: ADJECTIVE,
+    displayName: "Adjective",
+    description: "Part of speech used for describing something.",
+  },
+  ADVERB: {
+    identifier: ADVERB,
+    displayName: "Adverb",
+    description:
+      "A word that... it uh... modifies... other... words. And stuff.",
+  },
+  AGES: {
+    identifier: AGES,
+    displayName: "Ages",
+    description: "A word to do with the age of some noun.",
+  },
+  BATHROOM: {
+    identifier: BATHROOM,
+    displayName: "Bathroom",
+    description: "A word related to the bathroom. No toilet humour.",
+  },
+  BODY: {
+    identifier: BODY,
+    displayName: "Body",
+    description: "A word related to the human body.",
+  },
+  BUSINESS: {
+    identifier: BUSINESS,
+    displayName: "Business",
+    description: "A word related to work and the business world.",
+  },
+  CITY: {
+    identifier: CITY,
+    displayName: "City",
+    description: "A word related to city life and city living.",
+  },
+  COLOR: {
+    identifier: COLOR,
+    displayName: "Color",
+    description:
+      "A word related to colors. You know, like the rainbow. And purple and stuff.",
+  },
+  CLOTHING: {
+    identifier: CLOTHING,
+    displayName: "Clothing",
+    description: "A word related to the clothing that we wear.",
+  },
+  COMPUTERS: {
+    identifier: COMPUTERS,
+    displayName: "Computers",
+    description: "A word related to computers and programming.",
+  },
+  CONJUNCTION: {
+    identifier: CONJUNCTION,
+    displayName: "Conjunction",
+    description: "A word that hooks up words, phrases, and clauses.",
+  },
+  CRAFTING: {
+    identifier: CRAFTING,
+    displayName: "Crafting",
+    description: "A word related to making stuff.",
+  },
+  CULTURE: {
+    identifier: CULTURE,
+    displayName: "Culture",
+    description: "A word related to how a people sees the world.",
+  },
+  DEMONSTRATIVE_PRONOUN: {
+    identifier: DEMONSTRATIVE_PRONOUN,
+    displayName: "Demonstrative Pronoun",
+    description: "It's a _what_? I don't know lmao",
+  },
+  DESCRIPTIONS_EVENTS: {
+    identifier: DESCRIPTIONS_EVENTS,
+    displayName: "Descriptions: Events",
+    description: "A word involved with things that happen in everyday life.",
+  },
+  DESCRIPTIONS_ITEMS: {
+    identifier: DESCRIPTIONS_ITEMS,
+    displayName: "Descriptions: Items",
+    description: "A word involved with the stuff we see around us every day.",
+  },
+  DESCRIPTIONS_ORGANIZATIONS: {
+    identifier: DESCRIPTIONS_ORGANIZATIONS,
+    displayName: "Descriptions: Organizations",
+    description:
+      "A word involved with the groups that power the society around us.",
+  },
+  DESCRIPTIONS_PEOPLE: {
+    identifier: DESCRIPTIONS_PEOPLE,
+    displayName: "Descriptions: People",
+    description: "A word involved with the folks that we interact with.",
+  },
+  DESCRIPTIONS_PLACES: {
+    identifier: DESCRIPTIONS_PLACES,
+    displayName: "Descriptions: Places",
+    description: "Oh, the places you'll go!",
+  },
+  DIRECTIONS: {
+    identifier: DIRECTIONS,
+    displayName: "Directions",
+    description: "A word that helps you get 'from A to B'.",
+  },
+  EDUCATION: {
+    identifier: EDUCATION,
+    displayName: "Education",
+    description: "A word related to school and learning.",
+  },
+  FAMILY_RELATIVES: {
+    identifier: FAMILY_RELATIVES,
+    displayName: "Family & Relatives",
+    description: "A word related to the people who are often closest to us.",
+  },
+  FOOD: {
+    identifier: FOOD,
+    displayName: "Food",
+    description: "A word related to food, eating, and cooking.",
+  },
+  FUN: {
+    identifier: FUN,
+    displayName: "Fun",
+    description: "A word to do with something fun!",
+  },
+  KITCHEN: {
+    identifier: KITCHEN,
+    displayName: "Kitchen",
+    description: "A word related to the kitchen and what goes on there.",
+  },
+  HOME: {
+    identifier: HOME,
+    displayName: "Home",
+    description:
+      "A word related to the house and home, and the things found there.",
+  },
+  N_IDEA: {
+    identifier: N_IDEA,
+    displayName: "Noun: Idea",
+    description: "A noun that's an idea.",
+  },
+  N_PERSON: {
+    identifier: N_PERSON,
+    displayName: "Noun: Person",
+    description: "A noun that's a person.",
+  },
+  N_PLACE: {
+    identifier: N_PLACE,
+    displayName: "Noun: Place",
+    description: "A noun that's a place.",
+  },
+  N_THING: {
+    identifier: N_THING,
+    displayName: "Noun: Thing",
+    description: "A noun that's a thing. Very specific.",
+  },
+  MUSIC: {
+    identifier: MUSIC,
+    displayName: "Music",
+    description: "A word that's related to music and songs.",
+  },
+  NATURE: {
+    identifier: NATURE,
+    displayName: "Nature",
+    description: "A word that's related to nature and the outdoors.",
+  },
+  NUMBERS_COUNTING: {
+    identifier: NUMBERS_COUNTING,
+    displayName: "Numbers & Counting",
+    description: "A word that's related to numbers and how to count.",
+  },
+  ORDINAL: {
+    identifier: ORDINAL,
+    displayName: "Ordinal",
+    description:
+      "A word related to numbering the order in which things come or happen.",
+  },
+  PEOPLE: {
+    identifier: PEOPLE,
+    displayName: "People",
+    description: "A word related to the people in our lives.",
+  },
+  PHRASES_EVERYDAY: {
+    identifier: PHRASES_EVERYDAY,
+    displayName: "Phrases: Everyday",
+    description: "A phrase you might overhear any time.",
+  },
+  PHRASES_CULTURAL: {
+    identifier: PHRASES_CULTURAL,
+    displayName: "Phrases: Cultural",
+    description:
+      "Phrases I thought were important to Serbs and the way they speak to one-another.",
+  },
+  PHRASES_RESTAURANT: {
+    identifier: PHRASES_RESTAURANT,
+    displayName: "Phrases: Restaurant",
+    description: "Phrases you might overhear at the dining table.",
+  },
+  PHRASES_SHOPPING: {
+    identifier: PHRASES_SHOPPING,
+    displayName: "Phrases: Shopping",
+    description: "Phrases you might hear while you're out shopping.",
+  },
+  PRONOUN: {
+    identifier: PRONOUN,
+    displayName: "Pronoun",
+    description:
+      "Like a noun, but without the hangups of remembering someone's name.",
+  },
+  RELIGION: {
+    identifier: RELIGION,
+    displayName: "Religion",
+    description: "A word related to faith, religion, and spirituality.",
+  },
+  SIZES: {
+    identifier: SIZES,
+    displayName: "Sizes",
+    description: "A word related to how big something is.",
+  },
+  SLANG: {
+    identifier: SLANG,
+    displayName: "Slang",
+    description:
+      "This word is identified as slang. That means it's probably from a particular region. You might not recognize it.",
+  },
+  STUFF: {
+    identifier: STUFF,
+    displayName: "Stuff",
+    description: "I dunno, a thing. It's stuff.",
+  },
+  TIME: {
+    identifier: TIME,
+    displayName: "Time",
+    description: "A word to do with the passage of time and how we label it.",
+  },
+  TRAVEL: {
+    identifier: TRAVEL,
+    displayName: "Travel",
+    description: "A word to do with our penchant for 'walking the earth'.",
+  },
+  VERB_INF: {
+    identifier: VERB_INF,
+    displayName: "Verb Infinitive",
+    description: "The infinitive form of a verb. Conjugate me!",
+  },
+  WEATHER: {
+    identifier: WEATHER,
+    displayName: "Weather",
+    description:
+      "A word to do with whatever the sky is up to today, and what clothes you're wearing outdoors.",
+  },
+};
+
 const ADJECTIVES_1_JSON = [
   { english: "Good", latin: "Dobar", categories: [ADJECTIVE] },
   { english: "New", latin: "Nov", categories: [ADJECTIVE] },
