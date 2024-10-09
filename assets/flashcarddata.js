@@ -226,6 +226,12 @@ const CATEGORIES_MAP = {
     displayName: "Nature",
     description: "A word that's related to nature and the outdoors.",
   },
+  NOUN: {
+    identifier: NOUN,
+    displayName: "Noun",
+    description:
+      "A person, place, thing, or idea. (Or maybe even something in-between!)",
+  },
   NUMBERS_COUNTING: {
     identifier: NUMBERS_COUNTING,
     displayName: "Numbers & Counting",
@@ -315,7 +321,17 @@ const CATEGORIES_MAP = {
 
 const ADJECTIVES_1_JSON = [
   { english: "Good", latin: "Dobar", categories: [ADJECTIVE] },
-  { english: "New", latin: "Nov", categories: [ADJECTIVE] },
+  {
+    english: "New",
+    latin: "Nov",
+    categories: [
+      ADJECTIVE,
+      DESCRIPTIONS_ITEMS,
+      DESCRIPTIONS_PEOPLE,
+      DESCRIPTIONS_PLACES,
+      DESCRIPTIONS_ORGANIZATIONS,
+    ],
+  },
   {
     english: "First",
     latin: "Prvi",
@@ -328,11 +344,15 @@ const ADJECTIVES_1_JSON = [
   {
     english: "Old",
     latin: "Stari",
-    categories: [ADJECTIVE, AGES, DESCRIPTIONS_PEOPLE],
+    categories: [ADJECTIVE, AGES, DESCRIPTIONS_PEOPLE, DESCRIPTIONS_PLACES],
   },
   { english: "Right", latin: "Desni", categories: [ADJECTIVE, DIRECTIONS] },
   { english: "Big", latin: "Veliki", categories: [ADJECTIVE, SIZES] },
-  { english: "High", latin: "Visok", categories: [ADJECTIVE] },
+  {
+    english: "High",
+    latin: "Visok",
+    categories: [ADJECTIVE, DESCRIPTIONS_PLACES],
+  },
   { english: "Different", latin: "Razni", categories: [ADJECTIVE] },
   { english: "Small", latin: "Mali", categories: [ADJECTIVE, SIZES] },
   { english: "Next", latin: "Sljedeći", categories: [ADJECTIVE] },
@@ -362,7 +382,16 @@ const ADJECTIVES_2_JSON = [
     latin: "Državni",
     categories: [ADJECTIVE, DESCRIPTIONS_PLACES, DESCRIPTIONS_ORGANIZATIONS],
   },
-  { english: "Bad", latin: "Loš", categories: [ADJECTIVE] },
+  {
+    english: "Bad",
+    latin: "Loš",
+    categories: [
+      ADJECTIVE,
+      DESCRIPTIONS_EVENTS,
+      DESCRIPTIONS_ITEMS,
+      DESCRIPTIONS_PEOPLE,
+    ],
+  },
   {
     english: "Able",
     latin: "Sposoban",
@@ -417,7 +446,11 @@ export const ADJECTIVES_2 = vocabularySectionFromArray(
 );
 
 const ADJECTIVES_3_JSON = [
-  { english: "Common", latin: "Uobičajen", categories: [ADJECTIVE] },
+  {
+    english: "Common",
+    latin: "Uobičajen",
+    categories: [ADJECTIVE, DESCRIPTIONS_EVENTS, DESCRIPTIONS_ITEMS],
+  },
   {
     english: "Poor",
     latin: "Jadan",
@@ -438,7 +471,7 @@ const ADJECTIVES_3_JSON = [
     latin: "Ozbiljan",
     categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE, DESCRIPTIONS_EVENTS],
   },
-  { english: "Ready", latin: "Spreman", categories: [ADJECTIVE] },
+  { english: "Ready", latin: "Spreman", categories: [ADJECTIVE, FOOD] },
   {
     english: "Environmental",
     latin: "Ekološki",
@@ -468,17 +501,25 @@ const ADJECTIVES_3_JSON = [
   {
     english: "Successful",
     latin: "Uspješan",
-    categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE],
+    categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE, DESCRIPTIONS_EVENTS, BUSINESS],
   },
   { english: "Sufficient", latin: "Dovoljan", categories: [ADJECTIVE] },
   { english: "Electrical", latin: "Električni", categories: [ADJECTIVE] },
-  { english: "Expensive", latin: "Skupi", categories: [ADJECTIVE] },
+  {
+    english: "Expensive",
+    latin: "Skupi",
+    categories: [ADJECTIVE, DESCRIPTIONS_ITEMS],
+  },
   {
     english: "Academic",
     latin: "Akademski",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS],
+    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, EDUCATION],
   },
-  { english: "Aware", latin: "Svjestan", categories: [ADJECTIVE] },
+  {
+    english: "Aware",
+    latin: "Svjestan",
+    categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE],
+  },
   { english: "Additional", latin: "Dodatan", categories: [ADJECTIVE] },
 ];
 
@@ -489,7 +530,11 @@ export const ADJECTIVES_3 = vocabularySectionFromArray(
 );
 
 const ADJECTIVES_4_JSON = [
-  { english: "Available", latin: "Dostupan", categories: [ADJECTIVE] },
+  {
+    english: "Available",
+    latin: "Dostupan",
+    categories: [ADJECTIVE, DESCRIPTIONS_PLACES, DESCRIPTIONS_PEOPLE],
+  },
   {
     english: "Comfortable",
     latin: "Udoban",
@@ -498,23 +543,33 @@ const ADJECTIVES_4_JSON = [
   {
     english: "Traditional",
     latin: "Tradicionalno",
-    categories: [ADJECTIVE, DESCRIPTIONS_ITEMS, DESCRIPTIONS_EVENTS],
+    categories: [ADJECTIVE, DESCRIPTIONS_ITEMS, DESCRIPTIONS_EVENTS, CULTURE],
   },
   {
     english: "Cultural",
     latin: "Kulturan",
-    categories: [ADJECTIVE, DESCRIPTIONS_EVENTS, DESCRIPTIONS_ORGANIZATIONS],
+    categories: [
+      ADJECTIVE,
+      DESCRIPTIONS_EVENTS,
+      DESCRIPTIONS_ORGANIZATIONS,
+      CULTURE,
+    ],
   },
   { english: "Primary", latin: "Primaran", categories: [ADJECTIVE] },
   {
     english: "Professional",
     latin: "Profesionalni",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, DESCRIPTIONS_PEOPLE],
+    categories: [
+      ADJECTIVE,
+      DESCRIPTIONS_ORGANIZATIONS,
+      DESCRIPTIONS_PEOPLE,
+      BUSINESS,
+    ],
   },
   {
     english: "International",
     latin: "Međunarodni",
-    categories: [ADJECTIVE, TRAVEL],
+    categories: [ADJECTIVE, TRAVEL, BUSINESS],
   },
   {
     english: "Useful",
@@ -529,6 +584,7 @@ const ADJECTIVES_4_JSON = [
       DESCRIPTIONS_ORGANIZATIONS,
       DESCRIPTIONS_EVENTS,
       TIME,
+      EDUCATION,
     ],
   },
   {
@@ -544,7 +600,7 @@ const ADJECTIVES_4_JSON = [
   {
     english: "Psychological",
     latin: "Psihološki",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS],
+    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, BODY],
   },
   {
     english: "Reasonable",
@@ -552,15 +608,27 @@ const ADJECTIVES_4_JSON = [
     categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE],
   },
   { english: "Accurate", latin: "Točno", categories: [ADJECTIVE] },
-  { english: "Difficult", latin: "Teško", categories: [ADJECTIVE] },
+  {
+    english: "Difficult",
+    latin: "Teško",
+    categories: [ADJECTIVE, DESCRIPTIONS_EVENTS],
+  },
   {
     english: "Administrative",
     latin: "Upravni",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS],
+    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, BUSINESS],
   },
-  { english: "Critical", latin: "Kritičan", categories: [ADJECTIVE] },
+  {
+    english: "Critical",
+    latin: "Kritičan",
+    categories: [ADJECTIVE, EDUCATION],
+  },
   { english: "Unable", latin: "Nesposoban", categories: [ADJECTIVE] },
-  { english: "Efficient", latin: "Efikasan", categories: [ADJECTIVE] },
+  {
+    english: "Efficient",
+    latin: "Efikasan",
+    categories: [ADJECTIVE, BUSINESS],
+  },
   {
     english: "Interesting",
     latin: "Zanimljiv",
@@ -583,7 +651,7 @@ const ADJECTIVES_5_JSON = [
   {
     english: "Legal",
     latin: "Legalan",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS],
+    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, BUSINESS],
   },
   {
     english: "Responsible",
@@ -593,9 +661,13 @@ const ADJECTIVES_5_JSON = [
   {
     english: "Residential",
     latin: "Stambeni",
-    categories: [ADJECTIVE, DESCRIPTIONS_PLACES],
+    categories: [ADJECTIVE, DESCRIPTIONS_PLACES, CITY, HOME],
   },
-  { english: "Widespread", latin: "Rasprostranjena", categories: [ADJECTIVE] },
+  {
+    english: "Widespread",
+    latin: "Rasprostranjena",
+    categories: [ADJECTIVE, DESCRIPTIONS_EVENTS],
+  },
   {
     english: "Spiritual",
     latin: "Duhovan",
@@ -605,12 +677,13 @@ const ADJECTIVES_5_JSON = [
       DESCRIPTIONS_ORGANIZATIONS,
       DESCRIPTIONS_EVENTS,
       DESCRIPTIONS_ITEMS,
+      RELIGION,
     ],
   },
   {
     english: "Cute",
     latin: "Sladak",
-    categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE],
+    categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE, DESCRIPTIONS_ITEMS],
   },
   {
     english: "Civil",
@@ -636,9 +709,18 @@ const ADJECTIVES_5_JSON = [
   {
     english: "Technical",
     latin: "Tehnički",
-    categories: [ADJECTIVE, DESCRIPTIONS_ORGANIZATIONS, DESCRIPTIONS_PEOPLE],
+    categories: [
+      ADJECTIVE,
+      DESCRIPTIONS_ORGANIZATIONS,
+      DESCRIPTIONS_PEOPLE,
+      COMPUTERS,
+    ],
   },
-  { english: "Typical", latin: "Tipičan", categories: [ADJECTIVE] },
+  {
+    english: "Typical",
+    latin: "Tipičan",
+    categories: [ADJECTIVE, DESCRIPTIONS_EVENTS, DESCRIPTIONS_ITEMS],
+  },
   {
     english: "Competitive",
     latin: "Natjecateljski",
@@ -647,6 +729,7 @@ const ADJECTIVES_5_JSON = [
       DESCRIPTIONS_PEOPLE,
       DESCRIPTIONS_ORGANIZATIONS,
       DESCRIPTIONS_EVENTS,
+      BUSINESS,
     ],
   },
   { english: "Appropriate", latin: "Prikladan", categories: [ADJECTIVE] },
@@ -656,7 +739,7 @@ const ADJECTIVES_5_JSON = [
     categories: [ADJECTIVE, DESCRIPTIONS_PLACES],
   },
   { english: "Essential", latin: "Suštinski", categories: [ADJECTIVE] },
-  { english: "Physical", latin: "Fizički", categories: [ADJECTIVE] },
+  { english: "Physical", latin: "Fizički", categories: [ADJECTIVE, BODY] },
   {
     english: "Remarkable",
     latin: "Izvanredan",
@@ -688,15 +771,31 @@ const NOUNS_1_JSON = [
   { english: "Day", latin: "Dan", categories: [NOUN, TIME, N_THING] },
   { english: "Man", latin: "Čovijek", categories: [NOUN, N_PERSON, PEOPLE] },
   { english: "Thing", latin: "Stvar", categories: [NOUN, N_THING] },
-  { english: "Woman", latin: "Žena", categories: [NOUN, PEOPLE] },
-  { english: "Life", latin: "Život", categories: [NOUN, N_IDEA, N_THING] },
+  { english: "Woman", latin: "Žena", categories: [NOUN, N_PERSON, PEOPLE] },
+  {
+    english: "Life",
+    latin: "Život",
+    categories: [NOUN, N_IDEA, N_THING, NATURE],
+  },
   { english: "Child", latin: "Deca", categories: [NOUN, N_PERSON, PEOPLE] },
-  { english: "World", latin: "Zemlja", categories: [NOUN, N_PLACE, N_THING] },
+  {
+    english: "World",
+    latin: "Svijet",
+    categories: [NOUN, N_PLACE, N_THING, NATURE],
+  },
   { english: "School", latin: "Škola", categories: [NOUN, N_PLACE] },
   { english: "State", latin: "Država", categories: [NOUN, N_IDEA] },
   { english: "Family", latin: "Porodica", categories: [NOUN, PEOPLE, N_THING] },
-  { english: "Student", latin: "Đak", categories: [NOUN, PEOPLE, N_PERSON] },
-  { english: "Group", latin: "Grupa", categories: [NOUN, PEOPLE, N_THING] },
+  {
+    english: "Student",
+    latin: "Đak",
+    categories: [NOUN, PEOPLE, N_PERSON, EDUCATION],
+  },
+  {
+    english: "Group",
+    latin: "Grupa",
+    categories: [NOUN, PEOPLE, N_THING, FRIENDS],
+  },
   { english: "Country", latin: "Zemlja", categories: [NOUN, N_PLACE, N_IDEA] },
   { english: "Problem", latin: "Problem", categories: [NOUN, N_THING] },
   { english: "Hand", latin: "Ruk", categories: [NOUN, N_THING, BODY] },
