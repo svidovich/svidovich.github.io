@@ -29,17 +29,9 @@ const NAME_COLOR_CHANGE_QUANTITY = 5;
 localStorage.setItem("workExperienceDescriptionState", "empty");
 localStorage.setItem("programmingExperienceDescriptionState", "empty");
 
-let workExperienceDescriptionDiv = document.getElementById("work-experience-description");
-
-const SetDescription = (descriptionElement, stateString, Description) => {
-  if (localStorage.getItem(stateString) === "empty" || localStorage.getItem(stateString) !== Description.id) {
-    localStorage.setItem(stateString, Description.id);
-    descriptionElement.innerHTML = Description.data;
-  } else {
-    localStorage.setItem(stateString, "empty");
-    descriptionElement.innerHTML = "";
-  }
-};
+let workExperienceDescriptionDiv = document.getElementById(
+  "work-experience-description"
+);
 
 const GetHTMLFromURI = async (uri) => {
   return new Promise((resolve, reject) => {
@@ -51,35 +43,50 @@ const GetHTMLFromURI = async (uri) => {
 
 let fsDescription = new Object();
 fsDescription.id = "finite-state-description";
-GetHTMLFromURI("./assets/elements/finite_state_description.html").then((data) => {
-  fsDescription.data = data;
-});
-
-let finiteStateHoverable = document.getElementById("fs-hoverable");
-
-finiteStateHoverable.addEventListener(
-  "click",
-  SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", fsDescription)
+GetHTMLFromURI("./assets/elements/finite_state_description.html").then(
+  (data) => {
+    fsDescription.data = data;
+  }
 );
 
-let reachDescription = new Object();
-reachDescription.id = "reach-security-description";
-GetHTMLFromURI("./assets/elements/reach_security_description.html").then((data) => {
-  reachDescription.data = data;
+const finiteStateHoverable = document.getElementById("fs-hoverable");
+const finiteStateDescription = document.getElementById(
+  "fs-work-experience-description"
+);
+const reachHoverable = document.getElementById("reach-hoverable");
+const reachDescription = document.getElementById(
+  "reach-work-experience-description"
+);
+
+const toggleElementVisibility = (element) => {
+  if (element.style.display !== "none") {
+    element.style.display = "none";
+  } else {
+    element.style.display = "block";
+  }
+};
+
+finiteStateHoverable.addEventListener("click", (event) => {
+  if (reachDescription.style.display !== "none") {
+    reachDescription.style.display = "none";
+  }
+  toggleElementVisibility(finiteStateDescription);
 });
 
-let reachHoverable = document.getElementById("reach-hoverable");
-
-reachHoverable.addEventListener(
-  "click",
-  SetDescription.bind(this, workExperienceDescriptionDiv, "workExperienceDescriptionState", reachDescription)
-);
+reachHoverable.addEventListener("click", (event) => {
+  if (finiteStateDescription.style.display !== "none") {
+    finiteStateDescription.style.display = "none";
+  }
+  toggleElementVisibility(reachDescription);
+});
 
 // From here down we're doing cool canvas stuff
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const generateRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min));
+  return Math.floor(
+    Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min)
+  );
 };
 
 const randomElement = (array) => {
@@ -114,9 +121,24 @@ const maybeFlipAnaglyph = () => {
 };
 
 const advanceNameFontState = () => {
-  nameFontState.r = (nameFontState.r + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
-  nameFontState.g = (nameFontState.g + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
-  nameFontState.b = (nameFontState.b + NAME_COLOR_CHANGE_QUANTITY * coinFlipSign() * generateRandomNumber(1, 4)) % 255;
+  nameFontState.r =
+    (nameFontState.r +
+      NAME_COLOR_CHANGE_QUANTITY *
+        coinFlipSign() *
+        generateRandomNumber(1, 4)) %
+    255;
+  nameFontState.g =
+    (nameFontState.g +
+      NAME_COLOR_CHANGE_QUANTITY *
+        coinFlipSign() *
+        generateRandomNumber(1, 4)) %
+    255;
+  nameFontState.b =
+    (nameFontState.b +
+      NAME_COLOR_CHANGE_QUANTITY *
+        coinFlipSign() *
+        generateRandomNumber(1, 4)) %
+    255;
 };
 
 const randomizeNameFontState = () => {
@@ -155,14 +177,26 @@ const drawName = () => {
   let oldFillStyle = headerCanvasContext.fillStyle;
   headerCanvasContext.font = "25px Courier";
   headerCanvasContext.fillStyle = `rgb(${nameFontState.r}, ${nameFontState.g}, ${nameFontState.b})`;
-  headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3, headerCanvasHeight / 2);
+  headerCanvasContext.fillText(
+    "Samuel Vidovich",
+    headerCanvasWidth / 3,
+    headerCanvasHeight / 2
+  );
   if (anaglyphNameActive) {
     let xOffset = generateRandomNumber(2, 4);
     let yOffset = generateRandomNumber(2, 4);
     headerCanvasContext.fillStyle = `rgb(255, 0, 0)`;
-    headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3 - xOffset, headerCanvasHeight / 2 - yOffset);
+    headerCanvasContext.fillText(
+      "Samuel Vidovich",
+      headerCanvasWidth / 3 - xOffset,
+      headerCanvasHeight / 2 - yOffset
+    );
     headerCanvasContext.fillStyle = `rgb(0, 255, 255)`;
-    headerCanvasContext.fillText("Samuel Vidovich", headerCanvasWidth / 3 + xOffset, headerCanvasHeight / 2 + yOffset);
+    headerCanvasContext.fillText(
+      "Samuel Vidovich",
+      headerCanvasWidth / 3 + xOffset,
+      headerCanvasHeight / 2 + yOffset
+    );
   }
   headerCanvasContext.font = oldFont;
   headerCanvasContext.fillStyle = oldFillStyle;
@@ -304,10 +338,10 @@ class Sprite {
 const randomBubbleFactory = () => {
   const randomBubbleRadius = generateRandomNumber(6, 14);
   const randomBubbleSpeed = generateRandomNumber(3, 6);
-  const randomBubbleColor = `rgb(${generateRandomNumber(1, 255)}, ${generateRandomNumber(
+  const randomBubbleColor = `rgb(${generateRandomNumber(
     1,
     255
-  )}, ${generateRandomNumber(1, 255)})`;
+  )}, ${generateRandomNumber(1, 255)}, ${generateRandomNumber(1, 255)})`;
   let assembledBubble = new Bubble(
     -randomBubbleRadius / 2, // Start me off screen!
     generateRandomNumber(0, headerCanvasHeight),
@@ -366,11 +400,23 @@ const drawBubble = (bubble) => {
       let yOffset = generateRandomNumber(2, 4);
       headerCanvasContext.beginPath();
       headerCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
-      headerCanvasContext.arc(bubble.x - xOffset, bubble.y - yOffset, bubble.r, 0, 2 * Math.PI);
+      headerCanvasContext.arc(
+        bubble.x - xOffset,
+        bubble.y - yOffset,
+        bubble.r,
+        0,
+        2 * Math.PI
+      );
       headerCanvasContext.stroke();
       headerCanvasContext.beginPath();
       headerCanvasContext.strokeStyle = `rgb(0, 255, 255)`;
-      headerCanvasContext.arc(bubble.x + xOffset, bubble.y + yOffset, bubble.r, 0, 2 * Math.PI);
+      headerCanvasContext.arc(
+        bubble.x + xOffset,
+        bubble.y + yOffset,
+        bubble.r,
+        0,
+        2 * Math.PI
+      );
       headerCanvasContext.stroke();
     }
   } else {
@@ -379,9 +425,19 @@ const drawBubble = (bubble) => {
       let xOffset = generateRandomNumber(2, 4);
       let yOffset = generateRandomNumber(2, 4);
       headerCanvasContext.strokeStyle = `rgb(255, 0, 0)`;
-      headerCanvasContext.strokeRect(bubble.x - xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+      headerCanvasContext.strokeRect(
+        bubble.x - xOffset,
+        bubble.y + yOffset,
+        bubble.r,
+        bubble.r
+      );
       headerCanvasContext.strokeStyle = `rgb(0, 255, 255)`;
-      headerCanvasContext.strokeRect(bubble.x + xOffset, bubble.y + yOffset, bubble.r, bubble.r);
+      headerCanvasContext.strokeRect(
+        bubble.x + xOffset,
+        bubble.y + yOffset,
+        bubble.r,
+        bubble.r
+      );
     }
   }
   headerCanvasContext.lineWidth = oldWidth;
@@ -394,14 +450,21 @@ const drawBubbles = () => {
   });
 };
 
-const garbageCollectEntityArray = (entityArray, canvasBoundaries, maxEntityAge) => {
+const garbageCollectEntityArray = (
+  entityArray,
+  canvasBoundaries,
+  maxEntityAge
+) => {
   // I guess we're assuming that all entities are moving left-to-right.
   const toBeDestroyed = new Array();
   const { canvasHeight, canvasWidth } = canvasBoundaries;
   entityArray.forEach((entity) => {
     if (entity.x - entity.sizeX - 1 > canvasWidth) {
       toBeDestroyed.push(entity);
-    } else if (Date.now() - entity.createdAt > (maxEntityAge || ENTITY_DEFAULT_MAX_AGE_MS)) {
+    } else if (
+      Date.now() - entity.createdAt >
+      (maxEntityAge || ENTITY_DEFAULT_MAX_AGE_MS)
+    ) {
       toBeDestroyed.push(entity);
     }
   });
@@ -446,11 +509,21 @@ const moveEntities = (entityArray, direction) => {
 
 const drawEntityImage = (canvasContext, entity, imageSizeX, imageSizeY) => {
   // The entity's image MUST be loaded before calling this function
-  canvasContext.drawImage(entity.image, entity.x, entity.y, imageSizeX, imageSizeY);
+  canvasContext.drawImage(
+    entity.image,
+    entity.x,
+    entity.y,
+    imageSizeX,
+    imageSizeY
+  );
   if (DEBUG_ENTITY_POSITIONS) {
     const oldFont = canvasContext.font;
     canvasContext.font = "18px Courier";
-    canvasContext.fillText(`(${entity.x}, ${entity.y})`, entity.x - 10, entity.y - 10);
+    canvasContext.fillText(
+      `(${entity.x}, ${entity.y})`,
+      entity.x - 10,
+      entity.y - 10
+    );
     canvasContext.font = oldFont;
   }
 };
@@ -475,9 +548,19 @@ const fishArray = new Array();
 const starsArray = new Array();
 const fishFactory = () => {
   const { fishes } = interestingEntities;
-  const fishStartingY = generateRandomNumber(fishes.sizeY, backingCanvasHeight - fishes.sizeY);
+  const fishStartingY = generateRandomNumber(
+    fishes.sizeY,
+    backingCanvasHeight - fishes.sizeY
+  );
   const fishSpeed = generateRandomNumber(3, 8);
-  return new Entity(-fishes.sizeX, fishStartingY, fishSpeed, fishes.sizeX, fishes.sizeY, fishes.image);
+  return new Entity(
+    -fishes.sizeX,
+    fishStartingY,
+    fishSpeed,
+    fishes.sizeX,
+    fishes.sizeY,
+    fishes.image
+  );
 };
 
 const starFactory = () => {
