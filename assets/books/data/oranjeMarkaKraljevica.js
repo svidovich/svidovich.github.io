@@ -50,11 +50,11 @@ export const OranjeMarkaKraljevicaBook = bookFromArray(
     },
     {
       latin: "već ti uzmi ralo i volove,",
-      english: "already you take up the plow and oxen,",
+      english: "so take up the plow and oxen,",
     },
     {
       latin: "pak ti ori brda i doline,",
-      english: "well you'll plow the hills and dales,",
+      english: "and you'll plow the hills and dales,",
     },
     {
       latin: "te ti hrane i mene i sebe.'",
