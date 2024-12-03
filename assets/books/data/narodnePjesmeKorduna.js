@@ -136,7 +136,7 @@ export const NaGraniciVatraBook = bookFromArray(
   [
     {
       latin: "Na granici vatra gori,",
-      english: "On the borders the fire rises,",
+      english: "On the borders the fire burns,",
     },
     {
       latin: "A prangije glas se ori:",
@@ -152,7 +152,7 @@ export const NaGraniciVatraBook = bookFromArray(
     },
     {
       latin: "Po granica vatra sjeva,",
-      english: "By the border the fire burns,",
+      english: "By the border the fire shimmers,",
     },
     {
       latin: "Junačka se krv proljeva!",
