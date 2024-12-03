@@ -33,22 +33,6 @@ let workExperienceDescriptionDiv = document.getElementById(
   "work-experience-description"
 );
 
-const GetHTMLFromURI = async (uri) => {
-  return new Promise((resolve, reject) => {
-    fetch(uri).then((response) => {
-      return resolve(response.text());
-    });
-  });
-};
-
-let fsDescription = new Object();
-fsDescription.id = "finite-state-description";
-GetHTMLFromURI("./assets/elements/finite_state_description.html").then(
-  (data) => {
-    fsDescription.data = data;
-  }
-);
-
 const finiteStateHoverable = document.getElementById("fs-hoverable");
 const finiteStateDescription = document.getElementById(
   "fs-work-experience-description"
