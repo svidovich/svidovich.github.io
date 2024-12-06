@@ -346,7 +346,9 @@ const addCurrentLessonConjugation = () => {
     conjugationRows[currentRow].appendChild(optionData);
   }
   conjugationRows.forEach((row) => {
-    lessonTable.appendChild(row);
+    if (row.childNodes.length > 0) {
+      lessonTable.appendChild(row);
+    }
   });
 };
 
@@ -417,7 +419,9 @@ const addCurrentLessonTranslation = () => {
     translationRows[currentRow].appendChild(buttonCell);
   });
   translationRows.forEach((row) => {
-    lessonTable.appendChild(row);
+    if (row.childNodes.length > 0) {
+      lessonTable.appendChild(row);
+    }
   });
 };
 
