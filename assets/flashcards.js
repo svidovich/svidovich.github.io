@@ -44,17 +44,17 @@ const LANG_CHOICE_CYCLE = new Cycle([
   {
     imgSrc: "../media/mixengjug.png",
     languageChoice: CHOICE_MIXED,
-    choiceTitle: "Mixed English & Jugoslavian",
+    choiceTitle: "Mixed English & BCMS",
   },
   {
     imgSrc: "../media/eng2jug.png",
     languageChoice: CHOICE_ENG_2_JUG,
-    choiceTitle: "English to Jugoslavian",
+    choiceTitle: "English to BCMS",
   },
   {
     imgSrc: "../media/jug2eng.png",
     languageChoice: CHOICE_JUG_2_ENG,
-    choiceTitle: "Jugoslavian to English",
+    choiceTitle: "BCMS to English",
   },
 ]);
 
