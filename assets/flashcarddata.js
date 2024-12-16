@@ -2525,7 +2525,7 @@ const JEWELRY_JSON = [
   },
   {
     english: "Jewelry",
-    latin: "Nakita",
+    latin: "Nakit",
     categories: [CLOTHING, STUFF, NOUN, N_THING],
   },
   {
