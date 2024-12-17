@@ -37,6 +37,7 @@ const FOOD = "food";
 const FUN = "fun";
 const KITCHEN = "kitchen";
 const HOME = "home";
+const JOBS = "jobs";
 const N_IDEA = "n_idea";
 const N_PERSON = "n_person";
 const N_PLACE = "n_place";
@@ -2551,6 +2552,24 @@ export const JEWELRY = vocabularySectionFromArray(
   JEWELRY_JSON
 );
 
+const TRAVEL_THINGS = vocabularySectionFromArray([
+  { english: "Crew", latin: "Posada", categories: [N_THING, TRAVEL, PEOPLE] },
+  { english: "Stanica", latin: "Station", categories: [N_THING, TRAVEL] },
+  { english: "Platform", latin: "Peron", categories: [N_THING, TRAVEL] },
+  { english: "Runway", latin: "Pista", categories: [N_THING, TRAVEL] },
+  { english: "Driver", latin: "Vozač", categories: [N_PERSON, TRAVEL, JOBS] },
+  { english: "Passenger", latin: "Suvozač", categories: [N_PERSON, TRAVEL] },
+  { english: "Airport", latin: "Aerodrom", categories: [N_PLACE, TRAVEL] },
+  { english: "Pilot", latin: "Pilot", categories: [N_PERSON, TRAVEL, JOBS] },
+  { english: "Luggage", latin: "Prtljag", categories: [N_THING, TRAVEL] },
+  { english: "Port", latin: "Luka", categories: [N_PLACE, BUSINESS, TRAVEL] },
+  {
+    english: "Headquarters",
+    latin: "Sedište",
+    categories: [N_PLACE, BUSINESS, TRAVEL],
+  },
+]);
+
 const NUMBERS_5_to_100_JSON = [
   { english: "Five", latin: "Pet", categories: [NUMBERS_COUNTING] },
   { english: "Six", latin: "Šest", categories: [NUMBERS_COUNTING] },
@@ -2907,6 +2926,7 @@ export const practiceMap = [
   JEWELRY,
   BODY_PARTS,
   INDEFINITE_PRONOUNS,
+  TRAVEL_THINGS,
   NUMBERS_5_to_100,
   ADJECTIVES_1,
   ADJECTIVES_2,
