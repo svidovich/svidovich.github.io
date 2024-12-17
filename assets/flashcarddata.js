@@ -2552,7 +2552,7 @@ export const JEWELRY = vocabularySectionFromArray(
   JEWELRY_JSON
 );
 
-const TRAVEL_THINGS = vocabularySectionFromArray([
+const TRAVEL_THINGS = vocabularySectionFromArray("Travel", "travel", [
   { english: "Crew", latin: "Posada", categories: [N_THING, TRAVEL, PEOPLE] },
   { english: "Stanica", latin: "Station", categories: [N_THING, TRAVEL] },
   { english: "Platform", latin: "Peron", categories: [N_THING, TRAVEL] },
