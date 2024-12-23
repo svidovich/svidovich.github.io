@@ -6,11 +6,8 @@ const footerDiv = document.getElementById("footer");
 
 const sampleCount = SAMPLES.length;
 
-const firstHalf = SAMPLES.slice(0, Math.floor(sampleCount / 2));
-const secondHalf = SAMPLES.slice(
-  Math.floor(sampleCount / 2 + 1),
-  sampleCount - 1
-);
+const firstHalf = SAMPLES.slice(0, Math.floor(sampleCount / 2) + 1);
+const secondHalf = SAMPLES.slice(Math.floor(sampleCount / 2) + 1, sampleCount);
 
 const clearStage = () => {
   // Destroy everything on the stage.
