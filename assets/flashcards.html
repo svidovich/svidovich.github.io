@@ -47,9 +47,40 @@
     </div>
     <br />
     <div id="streakdisplay" style="width: fit-content"></div>
-    <div id="soundtoggle" style="cursor: pointer; width: fit-content">
+    <div
+      id="soundtoggle"
+      style="cursor: pointer; width: fit-content"
+      title="This app uses sound. If you don't like that, you can click or tap here to turn it off."
+    >
       Sound
       <span id="soundtogglestatusmessage" style="color: green"> ON </span>
+    </div>
+    <div>
+      <span
+        id="introtogglebutton"
+        style="cursor: pointer; color: green"
+        title="Show or hide the introductory paragraph. It's... rather long."
+        onclick="
+        // You can't make me not inline this script. Inconsistent? Yes. Bad practice? Also yes.
+        // Curse you, future self, you deserve it!
+        // Grab the intro paragraph
+        const introParagraph = document.getElementById('flashcardintroparagraph')
+        // And its current display style
+        const introStyleVis = introParagraph.style.display
+        // Compute what its display style should be after we click,
+        const newVis = introStyleVis === 'none' ? null : 'none'
+        // and set it.
+        introParagraph.style.display = newVis
+        // Now, grab the button that's hosting this little script,
+        const thisSpan = document.getElementById('introtogglebutton')
+        // And compute what colour it should be,
+        const thisSpansNewColor = newVis === 'none' ? 'red' : 'green'
+        // And set that colour.
+        thisSpan.style.color = thisSpansNewColor
+      "
+      >
+        Toggle Intro
+      </span>
     </div>
     <div
       id="downloads"
@@ -109,7 +140,7 @@
       <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
     </div>
     <div id="debugmessage" align="center" hidden></div>
-    <div class="paragraphs">
+    <div id="flashcardintroparagraph" class="paragraphs">
       'BCMS' is the initialism that refers to the language continuum that is
       Bosnian, Croatian, Montenegrin and Serbian, in alphabetical order. Here
       you can find fun flashcards to help you learn! You can increase your
@@ -123,7 +154,10 @@
         href="https://mail.google.com/mail/?view=cm&fs=1&to=samuel.vidovich+flashcardsupport@gmail.com"
         target="_blank"
         >email</a
-      >! I'd be happy to include regionalisms, dialectics, and slang.
+      >! I'd be happy to include regionalisms, dialectics, and slang. Having
+      trouble reading? Try
+      <a href="./pronounce.html" target="_blank">learning to pronounce words</a>
+      first!
       <br />
       🇭🇷🇷🇸🇲🇪🇲🇰🇧🇦
       <br />
