@@ -13,19 +13,22 @@ const secondHalf = SAMPLES.slice(
 );
 
 const clearStage = () => {
+  // Destroy everything on the stage.
   while (stageDiv.firstChild) {
     stageDiv.removeChild(stageDiv.lastChild);
   }
 };
 
 const addPlaySound = (element, soundKey) => {
+  // Add a "pronounceSound" onclick to some element
+  // based on the key that was passed
   element.addEventListener("click", (event_) => {
     pronounceSound(soundKey);
   });
 };
 
-// Add some data to the center of the stage.
 const stageLetterDatum = (letterDatum) => {
+  // Add some data to the center of the stage.
   // Dump what's there
   clearStage();
   // Add a new div to contain anything,
@@ -40,24 +43,31 @@ const stageLetterDatum = (letterDatum) => {
 
   // Get the text for the first example in both languages. Add that as a div.
   const datumSampleTextBCMS = letterDatum.examples[0].bcms;
+  // Get the key we need to play the sound for this sample
   const soundKey = datumSampleTextBCMS.toLowerCase();
+  // Get the first example. Later we'll need to be able to handle multiple samples.
   const datumSampleTextEnglish = letterDatum.examples[0].english;
   const datumCurrentBodyText = `${datumSampleTextBCMS} (${datumSampleTextEnglish})`;
-  const datumBody = document.createElement("div");
 
+  // Add a cute little click-able speaker
   const speakerImgBody = document.createElement("img");
   speakerImgBody.src = "../media/speaker.png";
-  speakerImgBody.style.cursor = "click";
+  speakerImgBody.style.cursor = "pointer";
   addPlaySound(speakerImgBody, soundKey);
 
   const nl = document.createElement("br");
 
+  // Add a body div to contain all of our actual content
+  const datumBody = document.createElement("div");
+  // Add the body text,
   datumBody.textContent = datumCurrentBodyText;
+  // A newline,
   datumBody.appendChild(nl);
+  // And the cute speaker button,
   datumBody.appendChild(speakerImgBody);
-
+  // And then dump the body onto the div,
   datumDivContainer.appendChild(datumBody);
-
+  // And then dump the div onto the stage.
   stageDiv.appendChild(datumDivContainer);
 };
 
@@ -65,6 +75,7 @@ const stageLetterDatum = (letterDatum) => {
 const mkLetterBox = (letterDatum) => {
   // Making them spans makes them inline by default, which we would like
   const letterBox = document.createElement("span");
+  // Add the latin version to the box. Maybe later we can support the cyrillic.
   letterBox.textContent = letterDatum.latin;
   letterBox.className = "letterbox";
   letterBox.addEventListener("click", (event_) => {
