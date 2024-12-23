@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  /* flex-direction: column;
+  display: flex; */
+}
+
+.lettercarrier {
+  text-align: center;
+}
+
+.letterbox {
+  border: 1px solid black;
+  border-radius: 3px;
+  box-sizing: border-box;
+  padding: 10px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+.letterbox:hover {
+  background-color: black;
+  color: white;
+}

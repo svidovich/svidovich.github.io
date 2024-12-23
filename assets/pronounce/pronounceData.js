@@ -1,4 +1,4 @@
-const SAMPLES = [
+export const SAMPLES = [
   {
     cyrillic: "А",
     latin: "A",
@@ -237,3 +237,38 @@ const SAMPLES = [
     ],
   },
 ];
+
+export const soundsData = {};
+
+SAMPLES.forEach((sample) => {
+  sample.examples.forEach((example) => {
+    const soundKey = example.bcms.toLowerCase();
+    const soundFilePath = `./pronounce/soundFiles/words/${soundKey}.mp3`;
+    soundsData[soundKey] = soundFilePath;
+  });
+});
+
+const loadAudio = (path) => {
+  const audio = new Audio(path);
+  return audio;
+};
+
+export const pronounceSound = (soundName, volume, delay) => {
+  try {
+    const soundEntry = soundsData[soundName];
+    if (delay !== undefined) {
+      sleep(delay);
+    }
+    if (typeof soundEntry === "string") {
+      const sound = loadAudio(soundEntry);
+      soundsData[soundName] = sound;
+      sound.volume = volume || 1;
+      sound.play();
+    } else {
+      soundEntry.volume = volume || 1;
+      soundEntry.play();
+    }
+  } catch (error) {
+    console.log(`Failed to play ${soundName}: ${error}`);
+  }
+};
