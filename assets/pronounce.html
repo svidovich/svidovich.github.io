@@ -34,6 +34,41 @@
   <body>
     <div style="width: 100%">
       <div
+        style="
+          position: absolute;
+          top: 50%;
+          margin-top: -50px;
+          left: 0px;
+          border: 1px solid black;
+          border-radius: 3px;
+        "
+      >
+        <a href="../index.html" style="display: block">
+          <img src="../media/home-icon-small.png" width="32" height="32" />
+        </a>
+      </div>
+
+      <div
+        style="
+          position: absolute;
+          top: 50%;
+          margin-top: -50px;
+          right: 0px;
+          border: 1px solid black;
+          border-radius: 3px;
+          cursor: pointer;
+        "
+        onclick="
+          const tutorialDialog = document.getElementById('pronouncetutorial');
+          const tutorialCloseButton = document.getElementById('pronounceclosedialogbutton');
+          tutorialDialog.showModal();
+          tutorialCloseButton.focus();
+        "
+      >
+        <img src="../media/questionmark.png" width="32" height="32" />
+      </div>
+
+      <div
         id="header"
         class="lettercarrier"
         style="
@@ -86,6 +121,29 @@
         "
       ></div>
     </div>
+    <dialog id="pronouncetutorial">
+      This page helps you learn to pronounce words in BCMS, and how to read,
+      too. The letters can be tricky! Click or tap a letter to open its
+      examples. Click or tap the speaker to hear the example read aloud. You can
+      cycle through the available examples for each letter by clicking or
+      tapping the <span style="color: green">⋙</span> button.
+      <a
+        href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/pronounce.js"
+        >See the Source Code</a
+      >
+      <br /><br />
+      <center>
+        <button
+          id="pronounceclosedialogbutton"
+          onclick="
+            const thisDialog = document.getElementById('pronouncetutorial');
+            thisDialog.close()
+          "
+        >
+          OK Chief!
+        </button>
+      </center>
+    </dialog>
   </body>
   <script type="module" src="pronounce.js"></script>
   <script type="module" src="pronounce/pronounceData.js"></script>
