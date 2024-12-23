@@ -27,7 +27,11 @@ const addPlaySound = (element, soundKey) => {
   });
 };
 
-const stageLetterDatum = (letterDatum) => {
+const getNextIndex = (examples, currentIndex) => {
+  return currentIndex + 1 >= examples.length ? 0 : currentIndex + 1;
+};
+
+const stageLetterDatum = (letterDatum, index) => {
   // Add some data to the center of the stage.
   // Dump what's there
   clearStage();
@@ -41,12 +45,15 @@ const stageLetterDatum = (letterDatum) => {
   datumHeader.textContent = `${letterDatum.latin} / ${letterDatum.cyrillic}`;
   datumDivContainer.appendChild(datumHeader);
 
+  // If we supplied an index, use it. If not, oh well! Use 0.
+  const usableIndex = index ? index : 0;
+
   // Get the text for the first example in both languages. Add that as a div.
-  const datumSampleTextBCMS = letterDatum.examples[0].bcms;
+  const datumSampleTextBCMS = letterDatum.examples[usableIndex].bcms;
   // Get the key we need to play the sound for this sample
   const soundKey = datumSampleTextBCMS.toLowerCase();
   // Get the first example. Later we'll need to be able to handle multiple samples.
-  const datumSampleTextEnglish = letterDatum.examples[0].english;
+  const datumSampleTextEnglish = letterDatum.examples[usableIndex].english;
   const datumCurrentBodyText = `${datumSampleTextBCMS} (${datumSampleTextEnglish})`;
 
   // Add a cute little click-able speaker
@@ -55,18 +62,47 @@ const stageLetterDatum = (letterDatum) => {
   speakerImgBody.style.cursor = "pointer";
   addPlaySound(speakerImgBody, soundKey);
 
-  const nl = document.createElement("br");
+  // These are for sample navigation...
+  const rightArrow = document.createElement("span");
+  rightArrow.textContent = "⋙";
+  rightArrow.className = "naviarrow";
+
+  console.log(letterDatum.examples.length);
+  if (letterDatum.examples.length <= 1) {
+    // If we don't have more than one sample, grey out my cute little
+    // navigation button, and make it yell at them.
+    rightArrow.style.color = "grey";
+    rightArrow.style.cursor = "not-allowed";
+    rightArrow.title = "No other examples available!";
+  } else {
+    // Otherwise, make it green and a pointy, and then add a listener to
+    // cycle to the next sample.
+    rightArrow.style.color = "green";
+    rightArrow.style.cursor = "pointer";
+    rightArrow.title = "Click for another example.";
+    rightArrow.addEventListener("click", (event_) => {
+      stageLetterDatum(
+        letterDatum,
+        getNextIndex(letterDatum.examples, usableIndex)
+      );
+    });
+  }
 
   // Add a body div to contain all of our actual content
   const datumBody = document.createElement("div");
   // Add the body text,
   datumBody.textContent = datumCurrentBodyText;
   // A newline,
-  datumBody.appendChild(nl);
+  datumBody.appendChild(document.createElement("br"));
   // And the cute speaker button,
   datumBody.appendChild(speakerImgBody);
   // And then dump the body onto the div,
   datumDivContainer.appendChild(datumBody);
+  // Add a newline so the play button isn't crowded,
+  datumDivContainer.appendChild(document.createElement("br"));
+  datumDivContainer.appendChild(document.createElement("br"));
+  // And dump the navigation arrow,
+  datumDivContainer.appendChild(rightArrow);
   // And then dump the div onto the stage.
   stageDiv.appendChild(datumDivContainer);
 };
@@ -78,6 +114,7 @@ const mkLetterBox = (letterDatum) => {
   // Add the latin version to the box. Maybe later we can support the cyrillic.
   letterBox.textContent = letterDatum.latin;
   letterBox.className = "letterbox";
+
   letterBox.addEventListener("click", (event_) => {
     stageLetterDatum(letterDatum);
   });

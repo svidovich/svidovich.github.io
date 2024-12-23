@@ -23,6 +23,15 @@
   cursor: pointer;
 }
 
+.naviarrow {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .letterbox:hover {
   background-color: black;
   color: white;
