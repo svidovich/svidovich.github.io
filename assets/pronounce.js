@@ -64,7 +64,6 @@ const stageLetterDatum = (letterDatum, index) => {
   rightArrow.textContent = "⋙";
   rightArrow.className = "naviarrow";
 
-  console.log(letterDatum.examples.length);
   if (letterDatum.examples.length <= 1) {
     // If we don't have more than one sample, grey out my cute little
     // navigation button, and make it yell at them.
