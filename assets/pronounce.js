@@ -75,6 +75,9 @@ const stageLetterDatum = (letterDatum, index) => {
     // cycle to the next sample.
     rightArrow.style.color = "green";
     rightArrow.style.cursor = "pointer";
+    rightArrow.style.fontSize = "1.33em";
+    rightArrow.style.border = "2px dotted green";
+    rightArrow.style.borderRadius = "5px";
     rightArrow.title = "Click for another example.";
     rightArrow.addEventListener("click", (event_) => {
       stageLetterDatum(
@@ -96,7 +99,7 @@ const stageLetterDatum = (letterDatum, index) => {
   datumDivContainer.appendChild(datumBody);
   // Add a newline so the play button isn't crowded,
   datumDivContainer.appendChild(document.createElement("br"));
-  datumDivContainer.appendChild(document.createElement("br"));
+  // datumDivContainer.appendChild(document.createElement("br"));
   // And dump the navigation arrow,
   datumDivContainer.appendChild(rightArrow);
   // And then dump the div onto the stage.
