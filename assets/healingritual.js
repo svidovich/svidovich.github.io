@@ -24,6 +24,7 @@ const HISTORICAL_REGION = "Historical Region";
 const VILLAGE = "Village";
 
 // Effect types
+const BROAD_DISCOMFORT = "Broad Discomfort";
 const DISEASE = "Disease";
 const DEATH = "Death";
 
@@ -31,13 +32,18 @@ const DEATH = "Death";
 const EFFECT_CURSE = "Curse";
 const HAS_THE_BUGS = "Has the bugs";
 const PLAGUE = "Plague";
+const BAD_BLOOD = "Bad Blood";
+const GOOFY_PENIS = "Goofy Penis";
 
 // Body Parts
 const HEAD = "Head";
+const BLOOD = "Blood";
+const PENIS = "Penis";
 
 // Cause types
 const ANIMAL = "Animal";
 const CAUSE_RITUAL = "Ritual";
+const CAUSE_UNKNOWN = "Unknown";
 
 // Specific causes
 const BUGS = "Bugs";
@@ -47,9 +53,11 @@ const DOORWAY_RITUAL = "Doorway ritual";
 // Solutions
 const MURDER = "Murder";
 const SOLUTION_RITUAL = "Ritual";
+const SOLUTION_MEDICINE = "Medicine";
 
 // Specific Solutions
 const POTION = "Potion";
+const INCANTATION = "Incantation";
 
 // Ingredients
 const INGREDIENT_KNIFE = "Knife";
@@ -57,11 +65,33 @@ const INGREDIENT_HOLY_WATER = "Holy Water";
 
 // Citations
 const ARNDAUDOV_SEVERNA_DOBRUDZA = "M. Arnaudov, Severna Dobrudža";
+const FR_D_ALL_ASTA_NARODNA_MEDICINA =
+  "Fr. D' All Asta, Narodna Medicina (Hrvatsko Primorje)";
+const DJORDJEVIC_NARODNA_MEDICINA = "V. Djordjević, Narodna Medicina u Srba";
 const KRAUSS_SUDSLAVISCHE_PESTSAGEN = "Krauss, Sudslavische Pestsagen";
 const MIJATOVIC_NARODNA_MEDICINA_SRBA =
   "S.M. Mijatović, Narodna Medicina Srba u Seljaka u Levču i Temniču";
+const T_DRAGICEVIC_NARODNE_PRAZNOVJERICE =
+  "Dragičević, T., Narodne Praznovjerice (Žepče)";
 
 const ENTRIES_STORIES = [
+  {
+    storySubject: DEATH,
+    location: null,
+    locationType: null,
+    story:
+      "The Fates came to a certain house and agreed that the child should \
+      die 'so soon as the oak ember on the fire burns out.' When they had \
+      gone, the father of the child, who had overheard, took the still-live \
+      coal from the fire and carefully preserved it. His son grew up, but \
+      turned out a disappointment to his parents. His father experimented \
+      with the charred coal, to see whether it would have any effect on him, \
+      and put it back into the fire. His son, who happened to be left there \
+      alone for a moment, pushed it well into the fire, when it burned away, \
+      and so he died.",
+    page: 21,
+    cited: T_DRAGICEVIC_NARODNE_PRAZNOVJERICE,
+  },
   {
     storySubject: DISEASE,
     location: BULGARIA,
@@ -87,13 +117,13 @@ const ENTRIES_DESCRIPTIONS = [
     entityType: DISEASE,
     entityDescription:
       "Crna kosa--zarudjena uša,\n\
-        Mutno čelo, tisno i lakomo,\n\
-        Mačije oči, razbludna pogleda,\n\
-        Oštar nosić pun zmijanja jeda,\n\
-        Široka joj prozdrita usta.\n\
-        Žuto lice, nenavidno suho.\n\
-        Od lienosti podavite ruke,\n\
-        Zajarila sivokastne stjuke...",
+      Mutno čelo, tisno i lakomo,\n\
+      Mačije oči, razbludna pogleda,\n\
+      Oštar nosić pun zmijanja jeda,\n\
+      Široka joj prozdrita usta.\n\
+      Žuto lice, nenavidno suho.\n\
+      Od lienosti podavite ruke,\n\
+      Zajarila sivokastne stjuke...",
     page: 63,
     cited: KRAUSS_SUDSLAVISCHE_PESTSAGEN,
     location: ANY_LOCATION,
@@ -102,6 +132,42 @@ const ENTRIES_DESCRIPTIONS = [
 ];
 
 const ENTRIES_REMEDIES = [
+  {
+    effectType: BROAD_DISCOMFORT,
+    effectDetail: GOOFY_PENIS,
+    effectBodyPart: PENIS,
+    solutionType: SOLUTION_RITUAL,
+    solutionDetail: INCANTATION,
+    location: CROATIA,
+    locationType: COUNTRY,
+    page: 25,
+    cited: FR_D_ALL_ASTA_NARODNA_MEDICINA,
+    prose:
+      "The following incantation is given: 'In the name of the Father, \
+     Son, and Holy Spirit, Amen. I conjure you, Matrun ( the affliction \
+     of the targeted penis )! Why do you torment the body of the servant \
+     of God? And bellow like a bull, leap like a stag, bark like a dog, \
+     trumpet like a lion, swim like a fish, creep like a snake, torturing \
+     the whole body of God's servant <name>. I conjure you, Matrun, to go \
+     back to your own place and not to molest the body of God's servant <name>'.",
+  },
+  {
+    effectType: DISEASE,
+    effectDetail: BAD_BLOOD,
+    effectBodyPart: BLOOD,
+    solutionType: SOLUTION_MEDICINE,
+    solutionDetail: POTION,
+    causeType: CAUSE_UNKNOWN,
+    causeDetail: CAUSE_UNKNOWN,
+    location: SERBIA,
+    locationType: COUNTRY,
+    page: 23,
+    cited: DJORDJEVIC_NARODNA_MEDICINA,
+    prose:
+      "Both male and female wormwood should be mixed when taken as \
+      a tonic for the blood for married people, because their blood \
+      is also mixed.",
+  },
   {
     effectType: DISEASE,
     effectDetail: HAS_THE_BUGS,
@@ -116,14 +182,14 @@ const ENTRIES_REMEDIES = [
     cited: MIJATOVIC_NARODNA_MEDICINA_SRBA,
     prose:
       "For insect in the head, they take nine larvae of cockroach \
-        found in the corners of the house, mix them with fat, and put \
-        them on the child's head. The insects begin to creep over the \
-        back of the head and are driven off with a comb, to the \
-        following formula: 'Naprat Napratinov Napratko insects on NN's \
-        head to suck his blood, eat his brains, take his life. But his \
-        blood is not for drinking, nor his brains for food, nor his \
-        life to be taken away. Therefore they cannot remain here but \
-        let them go.'",
+      found in the corners of the house, mix them with fat, and put \
+      them on the child's head. The insects begin to creep over the \
+      back of the head and are driven off with a comb, to the \
+      following formula: 'Naprat Napratinov Napratko insects on NN's \
+      head to suck his blood, eat his brains, take his life. But his \
+      blood is not for drinking, nor his brains for food, nor his \
+      life to be taken away. Therefore they cannot remain here but \
+      let them go.'",
   },
   {
     effectType: DISEASE,
