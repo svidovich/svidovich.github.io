@@ -1,3 +1,4 @@
+import { isMobile } from "./cards/os.js";
 const headerDiv = document.getElementById("header");
 const stageDiv = document.getElementById("stage");
 const footerDiv = document.getElementById("footer");
@@ -43,6 +44,45 @@ const playFreq = (freq, playlen) => {
   return oscillator;
 };
 
+const startFreq = (freq) => {
+  if (globalOscillator) {
+    globalOscillator.stop();
+  }
+  const context = new AudioContext();
+  const oscillator = context.createOscillator();
+  globalOscillator = oscillator;
+  oscillator.type = "sine";
+  oscillator.frequency.value = freq;
+  oscillator.connect(context.destination);
+  oscillator.start();
+  return oscillator;
+};
+
+const setPlatformDependentPlayListener = (element, frequency) => {
+  // Different client behaviour if we're on mobile: we want to play
+  // the note until we let go.
+  if (isMobile()) {
+    let oscillator;
+    element.addEventListener("pointerdown", (event_) => {
+      oscillator = startFreq(frequency);
+    });
+    element.addEventListener("pointerup", (event_) => {
+      oscillator.stop();
+    });
+    // element.addEventListener("ontouchstart", (event_) => {
+    //   oscillator = startFreq(frequency);
+    // });
+    // element.addEventListener("ontouchend", (event_) => {
+    //   oscillator.stop();
+    // });
+  } else {
+    const duration = 1500;
+    element.addEventListener("click", (event_) => {
+      playFreq(frequency, duration);
+    });
+  }
+};
+
 const clearStage = () => {
   // Destroy everything on the stage.
   while (stageDiv.firstChild) {
@@ -63,6 +103,10 @@ const stageLetterDatum = (noteWithFreq) => {
   datumHeader.textContent = noteWithFreq.name;
   datumDivContainer.appendChild(datumHeader);
 
+  datumDivContainer.className = "notenamecontainer";
+  datumDivContainer.style.touchAction = "none";
+  datumDivContainer.style.userSelect = "none";
+
   // Add an arrow to control playback
   const rightArrow = document.createElement("span");
   const playButtonChar = "▶";
@@ -75,13 +119,12 @@ const stageLetterDatum = (noteWithFreq) => {
   rightArrow.style.fontSize = "1.33em";
   rightArrow.style.border = "2px dotted green";
   rightArrow.style.borderRadius = "5px";
+  rightArrow.style.touchAction = "none";
+  rightArrow.style.userSelect = "none";
   rightArrow.title = "Click for another example.";
   rightArrow.id = "clickablesamplenavigator";
 
-  rightArrow.addEventListener("click", (event_) => {
-    const playlen = 1500;
-    playFreq(noteWithFreq.frequency, playlen);
-  });
+  setPlatformDependentPlayListener(rightArrow, noteWithFreq.frequency);
 
   // Add a body div to contain all of our actual content
   const datumBody = document.createElement("div");
