@@ -1,3 +1,39 @@
+.dollcaption {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.dollcaption > a {
+  color: goldenrod;
+}
+
+.dollfigure {
+  -moz-transform: scale(0.75);
+  -webkit-transform: scale(0.75);
+  transform: scale(0.75);
+  transition: all 0.2s ease-in-out;
+}
+
+.dollfigure:hover {
+  -moz-transform: scale(1);
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
+.dolltable {
+  display: table;
+  margin: auto;
+}
+
+.dolltable > div {
+  display: table-row;
+}
+
+.dolltable > div > figure {
+  display: table-cell;
+  border-spacing: 0px;
+}
+
 .hoverable-image {
   transition: all 0.2s ease-in-out;
 }

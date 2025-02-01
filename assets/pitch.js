@@ -69,12 +69,6 @@ const setPlatformDependentPlayListener = (element, frequency) => {
     element.addEventListener("pointerup", (event_) => {
       oscillator.stop();
     });
-    // element.addEventListener("ontouchstart", (event_) => {
-    //   oscillator = startFreq(frequency);
-    // });
-    // element.addEventListener("ontouchend", (event_) => {
-    //   oscillator.stop();
-    // });
   } else {
     const duration = 1500;
     element.addEventListener("click", (event_) => {
