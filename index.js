@@ -848,6 +848,65 @@ const somethingInterestingHappens = () => {
   }
 };
 
+const COMMIT_HISTORY_ENDPOINT_URI =
+  "https://api.github.com/repos/svidovich/svidovich.github.io/commits";
+
+const COMMIT_LINK_PREFIX =
+  "https://github.com/svidovich/svidovich.github.io/commit";
+const fillLatestCommits = async (count) => {
+  const changelogTable = document.getElementById("changelog");
+  const commitHistoryResponse = await fetch(COMMIT_HISTORY_ENDPOINT_URI);
+
+  if (!commitHistoryResponse.ok) {
+    throw new Error(
+      `Github 'sploded with a uhhh ${commitHistoryResponse.status}. Not much we can do to build changelog. Sad ;(`
+    );
+  }
+  const commitHistory = await commitHistoryResponse.json();
+
+  const latest = commitHistory.slice(0, count);
+  latest.forEach((commit) => {
+    // Create a row to put into the table
+    const thisCommitRow = document.createElement("tr");
+
+    // It contains first the time of the commit,
+    const thisCommitTimeTd = document.createElement("td");
+    const thisCommitTimeText = document.createTextNode(
+      commit.commit.committer.date
+    );
+    thisCommitTimeTd.style.width = "33%";
+    thisCommitTimeTd.appendChild(thisCommitTimeText);
+    thisCommitTimeTd.className = "changelogData";
+
+    // Then the commit message!
+    const thisCommitMessageTd = document.createElement("td");
+    const thisCommitMessageText = document.createTextNode(
+      commit.commit.message
+    );
+    thisCommitMessageTd.style.width = "50%";
+    thisCommitMessageTd.className = "changelogData";
+    thisCommitMessageTd.appendChild(thisCommitMessageText);
+
+    // Then a link to the commit!
+    const thisCommitShaTd = document.createElement("td");
+    const thisCommitShaAnchor = document.createElement("a");
+    const thisCommitShaText = document.createTextNode("link");
+    thisCommitShaAnchor.href = `${COMMIT_LINK_PREFIX}/${commit.sha}`;
+    thisCommitShaAnchor.appendChild(thisCommitShaText);
+    thisCommitShaTd.appendChild(thisCommitShaAnchor);
+    thisCommitShaTd.style.width = "12%";
+    thisCommitShaTd.className = "changelogData";
+
+    // Add the table datas to the row,
+    thisCommitRow.appendChild(thisCommitTimeTd);
+    thisCommitRow.appendChild(thisCommitMessageTd);
+    thisCommitRow.appendChild(thisCommitShaTd);
+
+    // Then add the row to the table.
+    changelogTable.appendChild(thisCommitRow);
+  });
+};
+
 (() => {
   let animationFrameRequestToken;
 
@@ -867,6 +926,14 @@ const somethingInterestingHappens = () => {
   window.setInterval(somethingInterestingHappens, 60000);
 
   window.setInterval(jumbleCursor, 120000);
+
+  try {
+    fillLatestCommits(5).then(
+      console.log("Hey programmer! I'm filling out the update log.")
+    );
+  } catch (err) {
+    console.log(`Filling out the commit table didn't go well: ${err}`);
+  }
 
   main = (hiResTimeStamp) => {
     try {
