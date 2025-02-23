@@ -880,12 +880,15 @@ const fillLatestCommits = async (count) => {
 
     // Then the commit message!
     const thisCommitMessageTd = document.createElement("td");
+    // Wrap it in <pre> to retain whitrspace.
+    const thisCommitMessagePre = document.createElement("pre");
     const thisCommitMessageText = document.createTextNode(
       commit.commit.message
     );
     thisCommitMessageTd.style.width = "50%";
     thisCommitMessageTd.className = "changelogData";
-    thisCommitMessageTd.appendChild(thisCommitMessageText);
+    thisCommitMessagePre.appendChild(thisCommitMessageText);
+    thisCommitMessageTd.appendChild(thisCommitMessagePre);
 
     // Then a link to the commit!
     const thisCommitShaTd = document.createElement("td");
