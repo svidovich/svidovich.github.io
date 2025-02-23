@@ -1,4 +1,7 @@
-import { vocabularySectionFromArray } from "./cards/vocabulary.js";
+import {
+  vocabularySectionFromArray,
+  VocabularySection,
+} from "./cards/vocabulary.js";
 import {
   VERBS_1_JSON,
   VERBS_2_JSON,
@@ -63,256 +66,256 @@ const VERB_INF = "verb_infinitive";
 const WEATHER = "weather";
 
 const CATEGORIES_MAP = {
-  ADJECTIVE: {
+  [ADJECTIVE]: {
     identifier: ADJECTIVE,
     displayName: "Adjective",
     description: "Part of speech used for describing something.",
   },
-  ADVERB: {
+  [ADVERB]: {
     identifier: ADVERB,
     displayName: "Adverb",
     description:
       "A word that... it uh... modifies... other... words. And stuff.",
   },
-  AGES: {
+  [AGES]: {
     identifier: AGES,
     displayName: "Ages",
     description: "A word to do with the age of some noun.",
   },
-  BATHROOM: {
+  [BATHROOM]: {
     identifier: BATHROOM,
     displayName: "Bathroom",
     description: "A word related to the bathroom. No toilet humour.",
   },
-  BODY: {
+  [BODY]: {
     identifier: BODY,
     displayName: "Body",
     description: "A word related to the human body.",
   },
-  BUSINESS: {
+  [BUSINESS]: {
     identifier: BUSINESS,
     displayName: "Business",
     description: "A word related to work and the business world.",
   },
-  CITY: {
+  [CITY]: {
     identifier: CITY,
     displayName: "City",
     description: "A word related to city life and city living.",
   },
-  COLOR: {
+  [COLOR]: {
     identifier: COLOR,
     displayName: "Color",
     description:
       "A word related to colors. You know, like the rainbow. And purple and stuff.",
   },
-  CLOTHING: {
+  [CLOTHING]: {
     identifier: CLOTHING,
     displayName: "Clothing",
     description: "A word related to the clothing that we wear.",
   },
-  COMPUTERS: {
+  [COMPUTERS]: {
     identifier: COMPUTERS,
     displayName: "Computers",
     description: "A word related to computers and programming.",
   },
-  CONJUNCTION: {
+  [CONJUNCTION]: {
     identifier: CONJUNCTION,
     displayName: "Conjunction",
     description: "A word that hooks up words, phrases, and clauses.",
   },
-  CRAFTING: {
+  [CRAFTING]: {
     identifier: CRAFTING,
     displayName: "Crafting",
     description: "A word related to making stuff.",
   },
-  CULTURE: {
+  [CULTURE]: {
     identifier: CULTURE,
     displayName: "Culture",
     description: "A word related to how a people sees the world.",
   },
-  DEMONSTRATIVE_PRONOUN: {
+  [DEMONSTRATIVE_PRONOUN]: {
     identifier: DEMONSTRATIVE_PRONOUN,
     displayName: "Demonstrative Pronoun",
     description: "It's a _what_? I don't know lmao",
   },
-  DESCRIPTIONS_EVENTS: {
+  [DESCRIPTIONS_EVENTS]: {
     identifier: DESCRIPTIONS_EVENTS,
     displayName: "Descriptions: Events",
     description: "A word involved with things that happen in everyday life.",
   },
-  DESCRIPTIONS_ITEMS: {
+  [DESCRIPTIONS_ITEMS]: {
     identifier: DESCRIPTIONS_ITEMS,
     displayName: "Descriptions: Items",
     description: "A word involved with the stuff we see around us every day.",
   },
-  DESCRIPTIONS_ORGANIZATIONS: {
+  [DESCRIPTIONS_ORGANIZATIONS]: {
     identifier: DESCRIPTIONS_ORGANIZATIONS,
     displayName: "Descriptions: Organizations",
     description:
       "A word involved with the groups that power the society around us.",
   },
-  DESCRIPTIONS_PEOPLE: {
+  [DESCRIPTIONS_PEOPLE]: {
     identifier: DESCRIPTIONS_PEOPLE,
     displayName: "Descriptions: People",
     description: "A word involved with the folks that we interact with.",
   },
-  DESCRIPTIONS_PLACES: {
+  [DESCRIPTIONS_PLACES]: {
     identifier: DESCRIPTIONS_PLACES,
     displayName: "Descriptions: Places",
     description: "Oh, the places you'll go!",
   },
-  DIRECTIONS: {
+  [DIRECTIONS]: {
     identifier: DIRECTIONS,
     displayName: "Directions",
     description: "A word that helps you get 'from A to B'.",
   },
-  EDUCATION: {
+  [EDUCATION]: {
     identifier: EDUCATION,
     displayName: "Education",
     description: "A word related to school and learning.",
   },
-  FAMILY_RELATIVES: {
+  [FAMILY_RELATIVES]: {
     identifier: FAMILY_RELATIVES,
     displayName: "Family & Relatives",
     description: "A word related to the people who are often closest to us.",
   },
-  FOOD: {
+  [FOOD]: {
     identifier: FOOD,
     displayName: "Food",
     description: "A word related to food, eating, and cooking.",
   },
-  FUN: {
+  [FUN]: {
     identifier: FUN,
     displayName: "Fun",
     description: "A word to do with something fun!",
   },
-  KITCHEN: {
+  [KITCHEN]: {
     identifier: KITCHEN,
     displayName: "Kitchen",
     description: "A word related to the kitchen and what goes on there.",
   },
-  HOME: {
+  [HOME]: {
     identifier: HOME,
     displayName: "Home",
     description:
       "A word related to the house and home, and the things found there.",
   },
-  N_IDEA: {
+  [N_IDEA]: {
     identifier: N_IDEA,
     displayName: "Noun: Idea",
     description: "A noun that's an idea.",
   },
-  N_PERSON: {
+  [N_PERSON]: {
     identifier: N_PERSON,
     displayName: "Noun: Person",
     description: "A noun that's a person.",
   },
-  N_PLACE: {
+  [N_PLACE]: {
     identifier: N_PLACE,
     displayName: "Noun: Place",
     description: "A noun that's a place.",
   },
-  N_THING: {
+  [N_THING]: {
     identifier: N_THING,
     displayName: "Noun: Thing",
     description: "A noun that's a thing. Very specific.",
   },
-  MUSIC: {
+  [MUSIC]: {
     identifier: MUSIC,
     displayName: "Music",
     description: "A word that's related to music and songs.",
   },
-  NATURE: {
+  [NATURE]: {
     identifier: NATURE,
     displayName: "Nature",
     description: "A word that's related to nature and the outdoors.",
   },
-  NOUN: {
+  [NOUN]: {
     identifier: NOUN,
     displayName: "Noun",
     description:
       "A person, place, thing, or idea. (Or maybe even something in-between!)",
   },
-  NUMBERS_COUNTING: {
+  [NUMBERS_COUNTING]: {
     identifier: NUMBERS_COUNTING,
     displayName: "Numbers & Counting",
     description: "A word that's related to numbers and how to count.",
   },
-  ORDINAL: {
+  [ORDINAL]: {
     identifier: ORDINAL,
     displayName: "Ordinal",
     description:
       "A word related to numbering the order in which things come or happen.",
   },
-  PEOPLE: {
+  [PEOPLE]: {
     identifier: PEOPLE,
     displayName: "People",
     description: "A word related to the people in our lives.",
   },
-  PHRASES_EVERYDAY: {
+  [PHRASES_EVERYDAY]: {
     identifier: PHRASES_EVERYDAY,
     displayName: "Phrases: Everyday",
     description: "A phrase you might overhear any time.",
   },
-  PHRASES_CULTURAL: {
+  [PHRASES_CULTURAL]: {
     identifier: PHRASES_CULTURAL,
     displayName: "Phrases: Cultural",
     description:
       "Phrases I thought were important to Serbs and the way they speak to one-another.",
   },
-  PHRASES_RESTAURANT: {
+  [PHRASES_RESTAURANT]: {
     identifier: PHRASES_RESTAURANT,
     displayName: "Phrases: Restaurant",
     description: "Phrases you might overhear at the dining table.",
   },
-  PHRASES_SHOPPING: {
+  [PHRASES_SHOPPING]: {
     identifier: PHRASES_SHOPPING,
     displayName: "Phrases: Shopping",
     description: "Phrases you might hear while you're out shopping.",
   },
-  PRONOUN: {
+  [PRONOUN]: {
     identifier: PRONOUN,
     displayName: "Pronoun",
     description:
       "Like a noun, but without the hangups of remembering someone's name.",
   },
-  RELIGION: {
+  [RELIGION]: {
     identifier: RELIGION,
     displayName: "Religion",
     description: "A word related to faith, religion, and spirituality.",
   },
-  SIZES: {
+  [SIZES]: {
     identifier: SIZES,
     displayName: "Sizes",
     description: "A word related to how big something is.",
   },
-  SLANG: {
+  [SLANG]: {
     identifier: SLANG,
     displayName: "Slang",
     description:
       "This word is identified as slang. That means it's probably from a particular region. You might not recognize it.",
   },
-  STUFF: {
+  [STUFF]: {
     identifier: STUFF,
     displayName: "Stuff",
     description: "I dunno, a thing. It's stuff.",
   },
-  TIME: {
+  [TIME]: {
     identifier: TIME,
     displayName: "Time",
     description: "A word to do with the passage of time and how we label it.",
   },
-  TRAVEL: {
+  [TRAVEL]: {
     identifier: TRAVEL,
     displayName: "Travel",
     description: "A word to do with our penchant for 'walking the earth'.",
   },
-  VERB_INF: {
+  [VERB_INF]: {
     identifier: VERB_INF,
     displayName: "Verb Infinitive",
     description: "The infinitive form of a verb. Conjugate me!",
   },
-  WEATHER: {
+  [WEATHER]: {
     identifier: WEATHER,
     displayName: "Weather",
     description:
@@ -2911,11 +2914,7 @@ const _DEBUG_SECTION = vocabularySectionFromArray("Debug", "debug", [
   { english: "3", latin: "3", categories: [] },
 ]);
 
-// Generates a mapping like
-// {
-//   <object.unfriendlyName>: object,...
-// }
-export const practiceMap = [
+const allPractices = [
   // _DEBUG_SECTION,
   ANIMALS,
   APPEARANCES,
@@ -2957,7 +2956,48 @@ export const practiceMap = [
   UNIT_20_VOCAB,
   // KAD_SU_BILI_1,
   REGIONALISMS_KORDUN,
-].reduce((newObject, practiceObject) => {
+];
+const byCategoryMapped = new Object();
+// Create a map of category identifiers to category details
+// with a list of vocabulary objects under their `words` key
+allPractices.forEach((practice) => {
+  practice.vocabularyObjects.forEach((vObject) => {
+    vObject.categories.forEach((category) => {
+      // If we've already encountered this category, just add this particular
+      // word to it.
+      if (byCategoryMapped[category]) {
+        byCategoryMapped[category].words.push(vObject);
+      } else {
+        // Otherwise, populate it along with this as its first word.
+        byCategoryMapped[category] = {
+          ...CATEGORIES_MAP[category],
+          words: [vObject],
+        };
+      }
+    });
+  });
+});
+// Create a practice map, and make sure it's in sorted order. This is a lot of compute.
+const practiceMapUnsorted = {};
+Object.values(byCategoryMapped).forEach((categoryWithWords) => {
+  practiceMapUnsorted[categoryWithWords.identifier] = new VocabularySection(
+    categoryWithWords.displayName,
+    categoryWithWords.identifier,
+    categoryWithWords.words
+  );
+});
+
+// export const practiceMap = Object.keys(practiceMapUnsorted)
+//   .sort()
+//   .reduce((obj, key) => {
+//     obj[key] = practiceMapUnsorted[key];
+//     return obj;
+//   }, {});
+// Generates a mapping like
+// {
+//   <object.unfriendlyName>: object,...
+// }
+export const practiceMap = allPractices.reduce((newObject, practiceObject) => {
   newObject[practiceObject.unfriendlyName] = practiceObject;
   return newObject;
 }, {});
