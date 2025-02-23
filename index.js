@@ -896,6 +896,7 @@ const fillLatestCommits = async (count) => {
     const thisCommitShaText = document.createTextNode("link");
     thisCommitShaAnchor.href = `${COMMIT_LINK_PREFIX}/${commit.sha}`;
     thisCommitShaAnchor.appendChild(thisCommitShaText);
+    thisCommitShaAnchor.target = "_blank";
     thisCommitShaTd.appendChild(thisCommitShaAnchor);
     thisCommitShaTd.style.width = "12%";
     thisCommitShaTd.className = "changelogData";
