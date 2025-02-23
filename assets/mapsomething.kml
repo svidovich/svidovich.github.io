@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Placemark>
+    <name>Snurch</name>
+    <description>Snake me to snurch</description>
+    <Point>
+      <coordinates>43.75608855992589,19.38986869884812,0</coordinates>
+    </Point>
+  </Placemark>
+</kml>
