@@ -90,10 +90,11 @@ export const latinToJugoslavCyrillic = (inputString) => {
 };
 
 export class VocabularyObject {
-  constructor(english, latin) {
+  constructor(english, latin, categories) {
     this.english = english;
     this.latin = latin;
     this.cyrillic = latinToJugoslavCyrillic(latin);
+    this.categories = categories === undefined ? [] : categories;
   }
 
   get asObject() {
@@ -101,6 +102,7 @@ export class VocabularyObject {
       english: this.english,
       latin: this.latin,
       cyrillic: this.cyrillic,
+      categories: this.categories,
     };
   }
 }
@@ -132,19 +134,26 @@ export class VocabularySection {
   get asCSV() {
     let textCSV = `${CSV_HEADER}\n`;
     this.vocabularyObjects.forEach((vocabularyObject) => {
-      textCSV = textCSV.concat(`${vocabularyObject.english},${vocabularyObject.latin},${vocabularyObject.cyrillic}\n`);
+      textCSV = textCSV.concat(
+        `${vocabularyObject.english},${vocabularyObject.latin},${vocabularyObject.cyrillic}\n`
+      );
     });
     return textCSV;
   }
 }
 
 // obj shoulld be of the form {english: <str>, latin: <str>}
+// and may optionally have an array of string categories
 export const vocabularyObjectFromObject = (obj) => {
-  return new VocabularyObject(obj.english, obj.latin);
+  return new VocabularyObject(obj.english, obj.latin, obj.categories);
 };
 
 // An array of objects of the form accepted by vocabularyObjectFromObject
-export const vocabularySectionFromArray = (friendlyName, unfriendlyName, arr) => {
+export const vocabularySectionFromArray = (
+  friendlyName,
+  unfriendlyName,
+  arr
+) => {
   const vocabularyObjects = [];
   arr.forEach((obj) => {
     vocabularyObjects.push(vocabularyObjectFromObject(obj));
