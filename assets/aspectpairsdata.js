@@ -125,18 +125,18 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "brijati se",
+    imperfect: "brijati",
     impf_conjugation_hint: "brijem,briju",
-    perfect: "obrijati se",
+    perfect: "obrijati",
     pf_conjugation_hint: "obrijem,obriju",
     english_infinitive_pf: "to shave",
     reflexive: ReflexiveOptions.OPTIONAL,
     categories: ["SELF_MAINTENANCE", "PHYSICAL_ACTIONS", "INTENTIONAL_ACTIONS"],
   },
   {
-    imperfect: "brinuti se",
+    imperfect: "brinuti",
     impf_conjugation_hint: "brinem,brinu",
-    perfect: "zabrinuti se",
+    perfect: "zabrinuti",
     pf_conjugation_hint: "zabrinem,zabrinu",
     english_infinitive_pf: "to worry",
     reflexive: ReflexiveOptions.TRUE,
@@ -160,10 +160,10 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "buditi se",
-    impf_conjugation_hint: "budim se, bude se",
-    perfect: "probuditi se",
-    pf_conjugation_hint: "probudim se,probude se",
+    imperfect: "buditi",
+    impf_conjugation_hint: "budim,bude",
+    perfect: "probuditi",
+    pf_conjugation_hint: "probudim,probude",
     english_infinitive_pf: "to wake",
     reflexive: ReflexiveOptions.OPTIONAL,
     categories: [
@@ -287,9 +287,9 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "dešavati se",
+    imperfect: "dešavati",
     impf_conjugation_hint: "dešavam,dešavaju",
-    perfect: "desiti se",
+    perfect: "desiti",
     pf_conjugation_hint: "desim,dese",
     english_infinitive_pf: "to happen",
     reflexive: ReflexiveOptions.TRUE,
@@ -336,9 +336,9 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "događati se",
+    imperfect: "događati",
     impf_conjugation_hint: "događam,događaju",
-    perfect: "dogoditi se",
+    perfect: "dogoditi",
     pf_conjugation_hint: "dogodim,dogode",
     english_infinitive_pf: "to happen",
     reflexive: ReflexiveOptions.FALSE,
@@ -349,9 +349,9 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "dogovarati se",
+    imperfect: "dogovarati",
     impf_conjugation_hint: "dogovaram,dogovaraju",
-    perfect: "dogovoriti se",
+    perfect: "dogovoriti",
     pf_conjugation_hint: "dogovorim,dogovore",
     english_infinitive_pf: "to agree",
     reflexive: ReflexiveOptions.FALSE,
@@ -384,9 +384,9 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "dopadati se",
+    imperfect: "dopadati",
     impf_conjugation_hint: "dopadam,dopadaju",
-    perfect: "dopasti se",
+    perfect: "dopasti",
     pf_conjugation_hint: "dopadnem,dopadnu",
     english_infinitive_pf: "to please",
     reflexive: ReflexiveOptions.FALSE,
@@ -410,9 +410,9 @@ export const aspectPairData = [
     ],
   },
   {
-    imperfect: "doseljavati se",
+    imperfect: "doseljavati",
     impf_conjugation_hint: "doseljavam,doseljavaju",
-    perfect: "doseliti se",
+    perfect: "doseliti",
     pf_conjugation_hint: "doselim,dosele",
     english_infinitive_pf: "to migrate",
     reflexive: ReflexiveOptions.FALSE,
@@ -441,10 +441,10 @@ export const aspectPairData = [
     categories: ["COGNITIVE_PROCESSES", "EXPERIENCIAL_INTERACTION"],
   },
   {
-    imperfect: "farbati se",
-    impf_conjugation_hint: "farbam se,farbaju se",
-    perfect: "ofarbati se",
-    pf_conjugation_hint: "ofarbam se,ofarbaju se",
+    imperfect: "farbati",
+    impf_conjugation_hint: "farbam,farbaju",
+    perfect: "ofarbati",
+    pf_conjugation_hint: "ofarbam,ofarbaju",
     english_infinitive_pf: "to paint",
     reflexive: ReflexiveOptions.OPTIONAL,
     categories: [
@@ -588,9 +588,9 @@ export const aspectPairData = [
     categories: ["MOVEMENT_AND_TRAVEL", "STATE_AND_EXISTENCE"],
   },
   {
-    imperfect: "iskrcavati se",
+    imperfect: "iskrcavati",
     impf_conjugation_hint: "iskrcavam,iskrcavaju",
-    perfect: "iskrcati se",
+    perfect: "iskrcati",
     pf_conjugation_hint: "iskrcam,iskrcaju",
     english_infinitive_pf: "to disembark",
     reflexive: ReflexiveOptions.TRUE,
@@ -1266,3 +1266,5 @@ aspectPairData.forEach((pairEntry) => {
     }
   });
 });
+
+export default aspectPairData;
