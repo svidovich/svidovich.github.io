@@ -41,7 +41,7 @@ const templateTop = `
     <input placeholder="Search for an aspect pair ..." type="search" id="aspect-lookup-box">
   </div>
   <br/>
-  <table id="aspect-pairs-table" style="text-align: center">
+  <table id="aspect-pairs-table" style="text-align: center; width: 100%">
     <tr id="aspect-pairs-header-row">
       <th>
        English
