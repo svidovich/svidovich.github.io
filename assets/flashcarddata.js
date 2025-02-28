@@ -189,6 +189,11 @@ const CATEGORIES_MAP = {
     displayName: "Fun",
     description: "A word to do with something fun!",
   },
+  [FRIENDS]: {
+    identifier: FRIENDS,
+    displayName: "Friends",
+    description: "A word to do with friendship!",
+  },
   [KITCHEN]: {
     identifier: KITCHEN,
     displayName: "Kitchen",
@@ -199,6 +204,11 @@ const CATEGORIES_MAP = {
     displayName: "Home",
     description:
       "A word related to the house and home, and the things found there.",
+  },
+  [JOBS]: {
+    identifier: JOBS,
+    displayName: "Jobs",
+    description: "A word related to work and jobs.",
   },
   [N_IDEA]: {
     identifier: N_IDEA,
@@ -2987,17 +2997,17 @@ Object.values(byCategoryMapped).forEach((categoryWithWords) => {
   );
 });
 
-// export const practiceMap = Object.keys(practiceMapUnsorted)
-//   .sort()
-//   .reduce((obj, key) => {
-//     obj[key] = practiceMapUnsorted[key];
-//     return obj;
-//   }, {});
+export const practiceMap = Object.keys(practiceMapUnsorted)
+  .sort()
+  .reduce((obj, key) => {
+    obj[key] = practiceMapUnsorted[key];
+    return obj;
+  }, {});
 // Generates a mapping like
 // {
 //   <object.unfriendlyName>: object,...
 // }
-export const practiceMap = allPractices.reduce((newObject, practiceObject) => {
-  newObject[practiceObject.unfriendlyName] = practiceObject;
-  return newObject;
-}, {});
+// export const practiceMap = allPractices.reduce((newObject, practiceObject) => {
+//   newObject[practiceObject.unfriendlyName] = practiceObject;
+//   return newObject;
+// }, {});
