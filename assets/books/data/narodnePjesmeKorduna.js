@@ -24,7 +24,7 @@ export const SaPlanineVjetarBook = bookFromArray(
     },
     {
       latin: "Tu graničar Austriju čuva;",
-      english: "The border guard of Austria watches;",
+      english: "There border guard watches Austria;",
     },
     {
       latin: "Oj Krajino, sam te bog ubio!",
@@ -32,7 +32,7 @@ export const SaPlanineVjetarBook = bookFromArray(
     },
     {
       latin: "Nit mladova, nit se naljubio.",
-      english: "Neither youth nor love.",
+      english: "Neither youths nor love.",
     },
     {
       // Svetlana Spajić tells me that they say 'tain'
