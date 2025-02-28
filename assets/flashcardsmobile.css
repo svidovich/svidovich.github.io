@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Arvo";
+  src: url("./media/arvo/Arvo-Regular.ttf") format("embedded-opentype"),
+    url("./media/arvo/Arvo-Regular.ttf") format("woff2"),
+    url("./media/arvo/Arvo-Regular.ttf") format("woff"),
+    url("./media/arvo/Arvo-Regular.ttf") format("truetype"),
+    url("./media/arvo/Arvo-Regular.ttf") format("svg");
+}
+
 .cookie-banner {
   display: grid;
   justify-content: center;

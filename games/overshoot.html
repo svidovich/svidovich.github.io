@@ -1,36 +1,45 @@
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta content="utf-8" http-equiv="encoding">
-        <meta name="description" content="Overshoot: A catapult kind of game."/>
-        <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet">
-        <link rel='stylesheet' type='text/css' href='../style.css'/>
-        <link rel="icon" href="../media/favicon.png">
-        <title>
-            Overshoot, the Catapult Game
-        </title>
-    </head>
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <meta name="description" content="Overshoot: A catapult kind of game." />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="icon" href="../media/favicon.png" />
+    <title>Overshoot, the Catapult Game</title>
+  </head>
 
-    <body>
-        <div align="left">
-            <a href="index.html"><<< Home</a> | <a href="https://github.com/svidovich/svidovich.github.io/blob/master/games/overshoot/overshoot.js">Source >>></a>
-        </div>
-        <center>
-            <canvas style="border: 1px solid black;" id="mainCanvas" height="600" width="1400">Failed to render.</canvas>
-            <br/>
-            <kbd>↑</kbd> & <kbd>↓</kbd>: Adjust Angle<br/>
-            Left <kbd>Shift</kbd>: Fine-tuned angle adjustment<br/>
-            <kbd>Space</kbd>: Hold to power up & release to fire!
+  <body>
+    <div align="left">
+      <a href="index.html"><<< Home</a> |
+      <a
+        href="https://github.com/svidovich/svidovich.github.io/blob/master/games/overshoot/overshoot.js"
+        >Source >>></a
+      >
+    </div>
+    <center>
+      <canvas
+        style="border: 1px solid black"
+        id="mainCanvas"
+        height="600"
+        width="1400"
+        >Failed to render.</canvas
+      >
+      <br />
+      <kbd>↑</kbd> & <kbd>↓</kbd>: Adjust Angle<br />
+      Left <kbd>Shift</kbd>: Fine-tuned angle adjustment<br />
+      <kbd>Space</kbd>: Hold to power up & release to fire!
 
-            <br/>
-            <br/><br/>
-            <div id="cookie-banner" class="cookie-banner">
-                This page ( specifically ) uses cookies to stash game data, so that you can come back and your catapult
-                upgrades won't be gone!<br/>
-                <button id="close">OK Chief!</button> | <button id="noway">Get me outta here!</button>
-            </div>
-        </center>
-        <script type="module" src="overshoot/overshoot.js"></script>
-        <script type="module" src="common.js"></script>
-    </body>
+      <br />
+      <br /><br />
+      <div id="cookie-banner" class="cookie-banner">
+        This page ( specifically ) uses cookies to stash game data, so that you
+        can come back and your catapult upgrades won't be gone!<br />
+        <button id="close">OK Chief!</button> |
+        <button id="noway">Get me outta here!</button>
+      </div>
+    </center>
+    <script type="module" src="overshoot/overshoot.js"></script>
+    <script type="module" src="common.js"></script>
+  </body>
 </html>

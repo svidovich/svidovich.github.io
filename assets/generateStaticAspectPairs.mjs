@@ -7,7 +7,8 @@
 import aspectPairData from "./aspectpairsdata.mjs";
 
 const templateTop = `
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
   <head>
     <link rel="stylesheet" type="text/css" href="books/books.css" />
     <title>Aspect Pairs Lookup: BCMS ... by Sam Vidovich</title>
@@ -21,10 +22,6 @@ const templateTop = `
       property="og:title"
       name="title"
       content="BCMS Aspect Pairs Lookup Table"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Arvo&display=swap"
-      rel="stylesheet"
     />
     <link rel="icon" href="../media/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../style.css" />
