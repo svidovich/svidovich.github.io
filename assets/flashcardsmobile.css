@@ -149,11 +149,13 @@ hr {
 
 h3 {
   font-family: "Arvo", sans-serif;
+  font-display: swap;
   width: 80vw;
 }
 
 .paragraphs {
   font-family: "Arvo", sans-serif;
+  font-display: swap;
   width: 80vw;
 }
 
@@ -220,6 +222,7 @@ input[type="radio"] {
   text-align: center;
   font-size: 30px;
   font-family: "Arvo", sans-serif;
+  font-display: swap;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */

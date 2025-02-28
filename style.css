@@ -61,6 +61,7 @@
 
 .headers {
   font-family: "Arvo", sans-serif;
+  font-display: swap;
 }
 
 h1,
@@ -71,6 +72,7 @@ h5,
 h6,
 figcaption {
   font-family: "Arvo", sans-serif;
+  font-display: swap;
 }
 
 a {
@@ -104,6 +106,7 @@ a {
 .descriptions {
   border-radius: 5px;
   font-family: "Arvo", sans-serif;
+  font-display: swap;
 }
 
 a:hover {
@@ -173,6 +176,7 @@ td {
 
 .reftable th {
   font-family: "Arvo", sans-serif;
+  font-display: swap;
   font-weight: bold;
   font-size: large;
 }
