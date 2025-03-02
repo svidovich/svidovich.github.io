@@ -14,6 +14,36 @@ const impfConjLookup = {};
 const pfLookup = {};
 const pfConjLookup = {};
 
+const checkboxShouldEnglish = document.getElementById("searchenabled_english");
+const checkboxShouldImpf = document.getElementById("searchenabled_impf");
+const checkboxShouldImpfConj = document.getElementById("searchenabled_impf_cg");
+const checkboxShouldPf = document.getElementById("searchenabled_perfect");
+const checkboxShouldPfConj = document.getElementById(
+  "searchenabled_perfect_cg"
+);
+
+const checkboxWithLookup = [
+  [checkboxShouldEnglish, englishLookup],
+  [checkboxShouldImpf, impfLookup],
+  [checkboxShouldImpfConj, impfConjLookup],
+  [checkboxShouldPf, pfLookup],
+  [checkboxShouldPfConj, pfConjLookup],
+];
+
+// Based on the checkboxes in the document, determine which lookup
+// tables we should use during our search.
+const whichLookupTablesToUse = () => {
+  const lookupsToUse = [];
+  checkboxWithLookup.forEach((entry) => {
+    const [checkbox, table] = entry;
+    if (checkbox.checked === true) {
+      lookupsToUse.push(table);
+    }
+  });
+
+  return lookupsToUse;
+};
+
 // For ez iteration :)
 const allLookupTables = [
   englishLookup,
@@ -156,8 +186,11 @@ searchBox.addEventListener("input", (event_) => {
   const searchValue = searchBox.value;
   // If we don't have empty string, we have something to look for.
   if (searchBox.value !== "") {
-    // Look in all of the tables for the term,
-    const searchResults = searchManyLookupTables(allLookupTables, searchValue);
+    // Look in all of the enabled lookup tables for the term,
+    const searchResults = searchManyLookupTables(
+      whichLookupTablesToUse(),
+      searchValue
+    );
     // and form up a set so we can deduplicate results.
     const resultElements = new Set();
     // Put every matching <tr> into the set,

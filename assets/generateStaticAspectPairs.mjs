@@ -37,6 +37,23 @@ const templateTop = `
   <div>
     <input placeholder="Search for an aspect pair ..." type="search" id="aspect-lookup-box">
   </div>
+  <div>
+    Fields to include for search: 
+    <input type="checkbox" id="searchenabled_english" name="searchenabled_english" checked>
+    <label for="searchenabled_english">English</label>
+
+    <input type="checkbox" id="searchenabled_impf" name="searchenabled_impf" checked>
+    <label for="searchenabled_impf">Imperfect</label>
+
+    <input type="checkbox" id="searchenabled_impf_cg" name="searchenabled_impf_cg" checked>
+    <label for="searchenabled_impf_cg">Imperfect Conjugation</label>
+    
+    <input type="checkbox" id="searchenabled_perfect" name="searchenabled_perfect" checked>
+    <label for="searchenabled_perfect">Perfect</label>
+
+    <input type="checkbox" id="searchenabled_perfect_cg" name="searchenabled_perfect_cg" checked>
+    <label for="searchenabled_perfect_cg">Perfect Conjugation</label>
+  </div>
   <br/>
   <table id="aspect-pairs-table" style="text-align: center; width: 100%">
     <tr id="aspect-pairs-header-row">
