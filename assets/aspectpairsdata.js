@@ -1259,10 +1259,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
-      " COGNITIVE_PROCESSES",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1275,11 +1275,11 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " STATE_AND_EXISTENCE",
-      " TRANSFORMATION_AND_CHANGE",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "STATE_AND_EXISTENCE",
+      "TRANSFORMATION_AND_CHANGE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1292,10 +1292,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " DECISION_AND_CHOICE",
-      " INTENTIONAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
+      "DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1308,9 +1308,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " STATE_AND_EXISTENCE",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
+      "STATE_AND_EXISTENCE",
     ],
   },
   {
@@ -1323,9 +1323,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " STATE_AND_EXISTENCE",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
+      "STATE_AND_EXISTENCE",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1338,10 +1338,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ENVIRONMENTAL_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " MANIPULATION_AND_CONTROL",
-      " STATE_AND_EXISTENCE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "MANIPULATION_AND_CONTROL",
+      "STATE_AND_EXISTENCE",
     ],
   },
   {
@@ -1354,10 +1354,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "DECISION_AND_CHOICE",
-      " EMOTIONAL_RESPONSE",
-      " REACTIVE_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
+      "REACTIVE_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1380,10 +1380,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " DECISION_AND_CHOICE",
-      " MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "DECISION_AND_CHOICE",
+      "MANIPULATION_AND_CONTROL",
     ],
   },
   {
@@ -1396,9 +1396,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MOVEMENT_AND_TRAVEL",
-      " MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1411,8 +1411,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " PHYSICAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "PHYSICAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1425,10 +1425,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " MANIPULATION_AND_CONTROL",
-      " MOVEMENT_AND_TRAVEL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "MANIPULATION_AND_CONTROL",
+      "MOVEMENT_AND_TRAVEL",
     ],
   },
   {
@@ -1441,9 +1441,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ARTICULATION_AND_EXPRESSION",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1456,9 +1456,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1471,9 +1471,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " STATE_AND_EXISTENCE",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
+      "STATE_AND_EXISTENCE",
     ],
   },
   {
@@ -1486,9 +1486,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PERCEPTUAL_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1501,9 +1501,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1516,10 +1516,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " MANIPULATION_AND_CONTROL",
-      " DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "MANIPULATION_AND_CONTROL",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -1532,8 +1532,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "STATE_AND_EXISTENCE",
-      " DECISION_AND_CHOICE",
-      " EMOTIONAL_RESPONSE",
+      "DECISION_AND_CHOICE",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -1546,10 +1546,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " TRANSFORMATION_AND_CHANGE",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "TRANSFORMATION_AND_CHANGE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1562,9 +1562,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " CREATION_AND_CONSTRUCTION",
-      " DECISION_AND_CHOICE",
+      "MANIPULATION_AND_CONTROL",
+      "CREATION_AND_CONSTRUCTION",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -1577,10 +1577,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " REACTIVE_ACTIONS",
-      " DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "REACTIVE_ACTIONS",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -1593,9 +1593,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " PHYSICAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1608,9 +1608,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " MANIPULATION_AND_CONTROL",
-      " DECISION_AND_CHOICE",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "MANIPULATION_AND_CONTROL",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -1623,9 +1623,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
+      "REACTIVE_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1638,9 +1638,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " TRANSFORMATION_AND_CHANGE",
-      " REACTIVE_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "TRANSFORMATION_AND_CHANGE",
+      "REACTIVE_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1653,8 +1653,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " PERCEPTUAL_PROCESSES",
-      " EMOTIONAL_RESPONSE",
+      "PERCEPTUAL_PROCESSES",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -1667,8 +1667,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1681,9 +1681,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " CONSUMPTION_AND_INGESTION",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "CONSUMPTION_AND_INGESTION",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1696,9 +1696,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ENVIRONMENTAL_MAINTENANCE",
-      " SELF_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1711,8 +1711,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1725,9 +1725,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ARTICULATION_AND_EXPRESSION",
-      " CREATION_AND_CONSTRUCTION",
-      " COGNITIVE_PROCESSES",
-      " INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "COGNITIVE_PROCESSES",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1740,9 +1740,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1755,9 +1755,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CONSUMPTION_AND_INGESTION",
-      " SELF_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
-      " PHYSICAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
     ],
   },
   {
@@ -1770,8 +1770,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1784,10 +1784,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " DECISION_AND_CHOICE",
-      " INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " SOCIAL_AND_RELATIONAL",
+      "DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1800,9 +1800,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " REACTIVE_ACTIONS",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "REACTIVE_ACTIONS",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
     ],
   },
   {
@@ -1815,9 +1815,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SELF_MAINTENANCE",
+      "PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SELF_MAINTENANCE",
     ],
   },
   {
@@ -1830,8 +1830,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1844,9 +1844,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " EMOTIONAL_RESPONSE",
+      "INTENTIONAL_ACTIONS",
+      "REACTIVE_ACTIONS",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -1859,9 +1859,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " DECISION_AND_CHOICE",
-      " CREATION_AND_CONSTRUCTION",
-      " SOCIAL_AND_RELATIONAL",
+      "DECISION_AND_CHOICE",
+      "CREATION_AND_CONSTRUCTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -1874,9 +1874,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -1889,9 +1889,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1904,9 +1904,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -1919,10 +1919,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -1935,8 +1935,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
-      " COGNITIVE_PROCESSES",
+      "ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
     ],
   },
   {
@@ -1949,9 +1949,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1964,10 +1964,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " COGNITIVE_PROCESSES",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
+      "COGNITIVE_PROCESSES",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -1980,9 +1980,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " PHYSICAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -1995,9 +1995,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2010,9 +2010,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2025,9 +2025,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " COGNITIVE_PROCESSES",
-      " ARTICULATION_AND_EXPRESSION",
-      " SOCIAL_AND_RELATIONAL",
+      "COGNITIVE_PROCESSES",
+      "ARTICULATION_AND_EXPRESSION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2040,10 +2040,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " SELF_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "SELF_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
     ],
   },
   {
@@ -2056,9 +2056,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2071,9 +2071,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "STATE_AND_EXISTENCE",
-      " TRANSFORMATION_AND_CHANGE",
-      " COGNITIVE_PROCESSES",
-      " EXPERIENCIAL_INTERACTION",
+      "TRANSFORMATION_AND_CHANGE",
+      "COGNITIVE_PROCESSES",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2086,9 +2086,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
+      "PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -2101,9 +2101,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2116,9 +2116,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " CREATION_AND_CONSTRUCTION",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2131,10 +2131,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " REACTIVE_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " STATE_AND_EXISTENCE",
+      "EMOTIONAL_RESPONSE",
+      "REACTIVE_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "STATE_AND_EXISTENCE",
     ],
   },
   {
@@ -2147,9 +2147,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -2162,8 +2162,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2176,9 +2176,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2191,9 +2191,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2206,9 +2206,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
-      " PHYSICAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2221,9 +2221,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
-      " DECISION_AND_CHOICE",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -2236,9 +2236,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " TRANSFORMATION_AND_CHANGE",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "TRANSFORMATION_AND_CHANGE",
     ],
   },
   {
@@ -2251,9 +2251,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2266,8 +2266,8 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2280,9 +2280,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " PHYSICAL_ACTIONS",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "PHYSICAL_ACTIONS",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2295,9 +2295,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " ARTICULATION_AND_EXPRESSION",
-      " SOCIAL_AND_RELATIONAL",
+      "COGNITIVE_PROCESSES",
+      "ARTICULATION_AND_EXPRESSION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2310,9 +2310,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -2325,9 +2325,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2340,9 +2340,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2355,9 +2355,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2370,10 +2370,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " MANIPULATION_AND_CONTROL",
-      " MOVEMENT_AND_TRAVEL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "MANIPULATION_AND_CONTROL",
+      "MOVEMENT_AND_TRAVEL",
     ],
   },
   {
@@ -2386,9 +2386,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2401,9 +2401,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -2416,9 +2416,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2431,10 +2431,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " SELF_MAINTENANCE",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
+      "SELF_MAINTENANCE",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2447,9 +2447,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " ARTICULATION_AND_EXPRESSION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -2462,9 +2462,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -2477,9 +2477,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2492,9 +2492,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " PERCEPTUAL_PROCESSES",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "PERCEPTUAL_PROCESSES",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2507,9 +2507,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -2522,9 +2522,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " PHYSICAL_ACTIONS",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2537,9 +2537,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2552,9 +2552,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " CONSUMPTION_AND_INGESTION",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "CONSUMPTION_AND_INGESTION",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2567,9 +2567,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2582,9 +2582,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -2597,9 +2597,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2612,9 +2612,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " SOCIAL_AND_RELATIONAL",
-      " CREATION_AND_CONSTRUCTION",
+      "SELF_MAINTENANCE",
+      "SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -2627,10 +2627,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "REACTIVE_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -2643,9 +2643,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " DECISION_AND_CHOICE",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -2658,9 +2658,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " PERCEPTUAL_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
+      "PERCEPTUAL_PROCESSES",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2673,10 +2673,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2689,9 +2689,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " SELF_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SELF_MAINTENANCE",
+      "PHYSICAL_ACTIONS",
     ],
   },
   {
@@ -2704,10 +2704,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "REACTIVE_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2720,9 +2720,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " REACTIVE_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " PHYSICAL_ACTIONS",
+      "REACTIVE_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
     ],
   },
   {
@@ -2735,9 +2735,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " PERCEPTUAL_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
+      "PERCEPTUAL_PROCESSES",
+      "EMOTIONAL_RESPONSE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2750,9 +2750,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2765,9 +2765,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "SELF_MAINTENANCE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2780,9 +2780,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " SOCIAL_AND_RELATIONAL",
-      " TRANSFORMATION_AND_CHANGE",
-      " EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "TRANSFORMATION_AND_CHANGE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2795,9 +2795,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " PERCEPTUAL_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
+      "PERCEPTUAL_PROCESSES",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2810,9 +2810,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2825,9 +2825,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2840,9 +2840,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -2855,9 +2855,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " DECISION_AND_CHOICE",
-      " COGNITIVE_PROCESSES",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "DECISION_AND_CHOICE",
+      "COGNITIVE_PROCESSES",
     ],
   },
   {
@@ -2870,9 +2870,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " INTENTIONAL_ACTIONS",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2885,9 +2885,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " ARTICULATION_AND_EXPRESSION",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -2900,9 +2900,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " PERCEPTUAL_PROCESSES",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "PERCEPTUAL_PROCESSES",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -2915,9 +2915,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " TRANSFER_AND_EXCHANGE",
-      " PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "TRANSFER_AND_EXCHANGE",
+      "PHYSICAL_ACTIONS",
     ],
   },
   {
@@ -2930,9 +2930,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " INTENTIONAL_ACTIONS",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "MANIPULATION_AND_CONTROL",
     ],
   },
   {
@@ -2945,9 +2945,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " REACTIVE_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
+      "REACTIVE_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -2960,9 +2960,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
     ],
   },
   {
@@ -2975,9 +2975,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -2990,9 +2990,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
+      "REACTIVE_ACTIONS",
+      "MOVEMENT_AND_TRAVEL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3005,9 +3005,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SELF_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3020,10 +3020,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " DECISION_AND_CHOICE",
-      " SELF_MAINTENANCE",
-      " SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
+      "DECISION_AND_CHOICE",
+      "SELF_MAINTENANCE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3036,9 +3036,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3051,10 +3051,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " MOVEMENT_AND_TRAVEL",
-      " PERCEPTUAL_PROCESSES",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "MOVEMENT_AND_TRAVEL",
+      "PERCEPTUAL_PROCESSES",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3067,9 +3067,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " PHYSICAL_ACTIONS",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
+      "PHYSICAL_ACTIONS",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3082,10 +3082,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
-      " SOCIAL_AND_RELATIONAL",
+      "PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3098,9 +3098,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3113,9 +3113,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " REACTIVE_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
+      "REACTIVE_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3128,9 +3128,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
-      " INTENTIONAL_ACTIONS",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3143,9 +3143,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3158,9 +3158,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3173,9 +3173,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3188,9 +3188,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3203,9 +3203,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3218,9 +3218,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ENVIRONMENTAL_MAINTENANCE",
-      " SELF_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "SELF_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3233,9 +3233,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " REACTIVE_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
+      "REACTIVE_ACTIONS",
     ],
   },
   {
@@ -3248,9 +3248,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " SOCIAL_AND_RELATIONAL",
-      " REACTIVE_ACTIONS",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "REACTIVE_ACTIONS",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3263,9 +3263,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3278,9 +3278,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "STATE_AND_EXISTENCE",
-      " SELF_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
+      "SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -3293,9 +3293,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3308,9 +3308,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SELF_MAINTENANCE",
+      "PHYSICAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SELF_MAINTENANCE",
     ],
   },
   {
@@ -3323,9 +3323,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -3338,10 +3338,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " COGNITIVE_PROCESSES",
-      " DECISION_AND_CHOICE",
-      " SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
+      "COGNITIVE_PROCESSES",
+      "DECISION_AND_CHOICE",
+      "SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -3354,9 +3354,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3369,9 +3369,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " REACTIVE_ACTIONS",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "REACTIVE_ACTIONS",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3384,9 +3384,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3399,9 +3399,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3414,9 +3414,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " TRANSFORMATION_AND_CHANGE",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "TRANSFORMATION_AND_CHANGE",
     ],
   },
   {
@@ -3429,9 +3429,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3444,10 +3444,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " MOVEMENT_AND_TRAVEL",
-      " MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "MOVEMENT_AND_TRAVEL",
+      "MANIPULATION_AND_CONTROL",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3460,9 +3460,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " EXPERIENCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3475,9 +3475,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
-      " COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " INTENTIONAL_ACTIONS",
+      "EXPERIENCIAL_INTERACTION",
+      "COMMUNICATION_AND_SOCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3490,10 +3490,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFORMATION_AND_CHANGE",
-      " CREATION_AND_CONSTRUCTION",
-      " INTENTIONAL_ACTIONS",
-      " STATE_AND_EXISTENCE",
-      " SOCIAL_AND_RELATIONAL",
+      "CREATION_AND_CONSTRUCTION",
+      "INTENTIONAL_ACTIONS",
+      "STATE_AND_EXISTENCE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3506,9 +3506,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ENVIRONMENTAL_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " INTENTIONAL_ACTIONS",
+      "PHYSICAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3521,10 +3521,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " EMOTIONAL_RESPONSE",
-      " REACTIVE_ACTIONS",
-      " STATE_AND_EXISTENCE",
+      "SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
+      "REACTIVE_ACTIONS",
+      "STATE_AND_EXISTENCE",
     ],
   },
   {
@@ -3537,9 +3537,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3552,9 +3552,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " PHYSICAL_ACTIONS",
-      " TRANSFORMATION_AND_CHANGE",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "TRANSFORMATION_AND_CHANGE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3567,9 +3567,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " EXPERIENCIAL_INTERACTION",
-      " REACTIVE_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "EXPERIENCIAL_INTERACTION",
+      "REACTIVE_ACTIONS",
     ],
   },
   {
@@ -3582,9 +3582,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CREATION_AND_CONSTRUCTION",
-      " ENVIRONMENTAL_MAINTENANCE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "ENVIRONMENTAL_MAINTENANCE",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3597,10 +3597,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "TRANSFER_AND_EXCHANGE",
+      "SOCIAL_AND_RELATIONAL",
+      "PHYSICAL_ACTIONS",
     ],
   },
   {
@@ -3613,9 +3613,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " SOCIAL_AND_RELATIONAL",
+      "EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3628,9 +3628,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PERCEPTUAL_PROCESSES",
-      " COGNITIVE_PROCESSES",
-      " EXPERIENCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
+      "COGNITIVE_PROCESSES",
+      "EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
     ],
   },
   {
@@ -3643,9 +3643,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3658,9 +3658,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "TRANSFER_AND_EXCHANGE",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3673,9 +3673,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "PHYSICAL_ACTIONS",
-      " MANIPULATION_AND_CONTROL",
-      " MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "MOVEMENT_AND_TRAVEL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3688,9 +3688,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "SELF_MAINTENANCE",
     ],
   },
   {
@@ -3703,9 +3703,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " EMOTIONAL_RESPONSE",
-      " STATE_AND_EXISTENCE",
-      " REACTIVE_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "STATE_AND_EXISTENCE",
+      "REACTIVE_ACTIONS",
     ],
   },
   {
@@ -3718,9 +3718,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " ARTICULATION_AND_EXPRESSION",
-      " EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3733,9 +3733,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "DECISION_AND_CHOICE",
-      " MANIPULATION_AND_CONTROL",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
+      "MANIPULATION_AND_CONTROL",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
     ],
   },
   {
@@ -3748,9 +3748,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "ENVIRONMENTAL_MAINTENANCE",
-      " PHYSICAL_ACTIONS",
-      " INTENTIONAL_ACTIONS",
-      " SELF_MAINTENANCE",
+      "PHYSICAL_ACTIONS",
+      "INTENTIONAL_ACTIONS",
+      "SELF_MAINTENANCE",
     ],
   },
   {
@@ -3763,9 +3763,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
-      " STATE_AND_EXISTENCE",
-      " EXPERIENCIAL_INTERACTION",
+      "SOCIAL_AND_RELATIONAL",
+      "STATE_AND_EXISTENCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3778,10 +3778,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " REACTIVE_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "REACTIVE_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -3794,10 +3794,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COGNITIVE_PROCESSES",
-      " ARTICULATION_AND_EXPRESSION",
-      " EXPERIENCIAL_INTERACTION",
-      " EMOTIONAL_RESPONSE",
-      " SOCIAL_AND_RELATIONAL",
+      "ARTICULATION_AND_EXPRESSION",
+      "EXPERIENCIAL_INTERACTION",
+      "EMOTIONAL_RESPONSE",
+      "SOCIAL_AND_RELATIONAL",
     ],
   },
   {
@@ -3810,10 +3810,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "SOCIAL_AND_RELATIONAL",
-      " MANIPULATION_AND_CONTROL",
-      " TRANSFER_AND_EXCHANGE",
-      " INTENTIONAL_ACTIONS",
-      " CREATION_AND_CONSTRUCTION",
+      "MANIPULATION_AND_CONTROL",
+      "TRANSFER_AND_EXCHANGE",
+      "INTENTIONAL_ACTIONS",
+      "CREATION_AND_CONSTRUCTION",
     ],
   },
   {
@@ -3826,9 +3826,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "TRANSFER_AND_EXCHANGE",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " SELF_MAINTENANCE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "SELF_MAINTENANCE",
     ],
   },
   {
@@ -3841,10 +3841,10 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MANIPULATION_AND_CONTROL",
-      " INTENTIONAL_ACTIONS",
-      " SOCIAL_AND_RELATIONAL",
-      " REACTIVE_ACTIONS",
-      " DECISION_AND_CHOICE",
+      "INTENTIONAL_ACTIONS",
+      "SOCIAL_AND_RELATIONAL",
+      "REACTIVE_ACTIONS",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -3857,9 +3857,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "COMMUNICATION_AND_SOCIAL_INTERACTION",
-      " SOCIAL_AND_RELATIONAL",
-      " INTENTIONAL_ACTIONS",
-      " ARTICULATION_AND_EXPRESSION",
+      "SOCIAL_AND_RELATIONAL",
+      "INTENTIONAL_ACTIONS",
+      "ARTICULATION_AND_EXPRESSION",
     ],
   },
   {
@@ -3872,9 +3872,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "EMOTIONAL_RESPONSE",
-      " COGNITIVE_PROCESSES",
-      " SOCIAL_AND_RELATIONAL",
-      " DECISION_AND_CHOICE",
+      "COGNITIVE_PROCESSES",
+      "SOCIAL_AND_RELATIONAL",
+      "DECISION_AND_CHOICE",
     ],
   },
   {
@@ -3887,9 +3887,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "MOVEMENT_AND_TRAVEL",
-      " INTENTIONAL_ACTIONS",
-      " EMOTIONAL_RESPONSE",
-      " EXPERIENCIAL_INTERACTION",
+      "INTENTIONAL_ACTIONS",
+      "EMOTIONAL_RESPONSE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
   {
@@ -3902,9 +3902,9 @@ export const aspectPairData = [
     notes: "",
     categories: [
       "CONSUMPTION_AND_INGESTION",
-      " PHYSICAL_ACTIONS",
-      " SELF_MAINTENANCE",
-      " EXPERIENCIAL_INTERACTION",
+      "PHYSICAL_ACTIONS",
+      "SELF_MAINTENANCE",
+      "EXPERIENCIAL_INTERACTION",
     ],
   },
 ];
