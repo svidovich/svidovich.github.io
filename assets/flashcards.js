@@ -113,7 +113,7 @@ const setSoundToggleSwitchMessage = () => {
     "soundtogglestatusmessage"
   );
   const shouldPlay = shouldPlaySound();
-  soundToggleSwitchMessage.style = shouldPlay ? `color: green;` : `color: red;`;
+  soundToggleSwitchMessage.style = shouldPlay ? `color: lime;` : `color: red;`;
   soundToggleSwitchMessage.textContent = shouldPlay ? `ON` : `OFF`;
 };
 

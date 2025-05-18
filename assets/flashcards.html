@@ -20,64 +20,98 @@
       id="flashcardstylesheet"
       href="flashcards.css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      id="navbars-stylesheet-desktop"
+      href="navbars.css"
+    />
     <link rel="icon" href="../media/favicon.png" />
     <link rel="manifest" href="./cards/manifest.json" />
     <div></div>
     <title>Learn BCMS, by Samuel Vidovich</title>
   </head>
   <body>
-    <div class="toplinks">
-      <a href="../index.html"><<< Back to Home</a> |
-      <a
-        href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcards.js"
-        >Source Code >>></a
-      >
-      |
-      <a
-        href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcarddata.js"
-        >Source Data >>></a
-      >
-      |
-      <a href="credits.html">Credits >>></a>
+    <!-- W3Schools-style navbar. -->
+    <div class="navbar">
+      <div class="subnav" id="file-subnav">
+        <button class="subnavbtn">File</button>
+        <div class="subnav-content" id="file-subnav-content">
+          <button id="import-exercise">Import Exercise</button>
+          <hr />
+          <button id="download-json">Export to JSON</button>
+          <button id="download-csv">Export to CSV</button>
+        </div>
+      </div>
+      <div class="subnav" id="edit-subnav">
+        <button class="subnavbtn">Edit</button>
+        <div class="subnav-content" id="edit-subnav-content">
+          <button id="translation-direction">
+            Translation Direction: Mixed English & BCMS
+          </button>
+          <button id="soundtoggle">
+            Sound <span id="soundtogglestatusmessage">ON</span>
+          </button>
+        </div>
+      </div>
+      <div class="subnav" id="view-subnav">
+        <button class="subnavbtn">View</button>
+        <div class="subnav-content" id="view-subnav-content">
+          <button
+            id="introtogglebutton"
+            title="Show or hide the introductory paragraph. It's... rather long."
+            onclick="
+            // You can't make me not inline this script. Inconsistent? Yes. Bad practice? Also yes.
+            // Curse you, future self, you deserve it!
+            // Grab the intro paragraph
+            const introParagraph = document.getElementById('flashcardintroparagraph')
+            // And its current display style
+            const introStyleVis = introParagraph.style.display
+            // Compute what its display style should be after we click,
+            const newVis = introStyleVis === 'none' ? null : 'none'
+            // and set it.
+            introParagraph.style.display = newVis
+            // Now, grab the button that's hosting this little script,
+            const thisSpan = document.getElementById('introtogglebutton')
+            // And compute what colour it should be,
+            const thisSpansNewText = newVis === 'none' ? 'Show Introduction' : 'Hide Introduction'
+            // And set that colour.
+            thisSpan.textContent = thisSpansNewText
+          "
+          >
+            Hide Introduction
+          </button>
+        </div>
+      </div>
+      <div class="subnav" id="links-subnav">
+        <button class="subnavbtn">Links</button>
+        <div class="subnav-content" id="links-subnav-content">
+          <a href="../index.html">Website Home</a>
+          <a
+            href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcards.js"
+            target="_blank"
+            >Source Code</a
+          >
+          <a
+            href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcarddata.js"
+            target="_blank"
+            >Source Data</a
+          >
+        </div>
+      </div>
+      <div class="subnav" id="about-subnav">
+        <button class="subnavbtn">About</button>
+        <div class="subnav-content" id="about-subnav-content">
+          <a href="credits.html" target="_blank">Credits</a>
+        </div>
+      </div>
     </div>
+    <!-- End of the navbar code. -->
+
     <br />
     <div id="streakdisplay" style="width: fit-content"></div>
-    <div
-      id="soundtoggle"
-      style="cursor: pointer; width: fit-content"
-      title="This app uses sound. If you don't like that, you can click or tap here to turn it off."
-    >
-      Sound
-      <span id="soundtogglestatusmessage" style="color: green"> ON </span>
-    </div>
-    <div>
-      <span
-        id="introtogglebutton"
-        style="cursor: pointer; color: green"
-        title="Show or hide the introductory paragraph. It's... rather long."
-        onclick="
-        // You can't make me not inline this script. Inconsistent? Yes. Bad practice? Also yes.
-        // Curse you, future self, you deserve it!
-        // Grab the intro paragraph
-        const introParagraph = document.getElementById('flashcardintroparagraph')
-        // And its current display style
-        const introStyleVis = introParagraph.style.display
-        // Compute what its display style should be after we click,
-        const newVis = introStyleVis === 'none' ? null : 'none'
-        // and set it.
-        introParagraph.style.display = newVis
-        // Now, grab the button that's hosting this little script,
-        const thisSpan = document.getElementById('introtogglebutton')
-        // And compute what colour it should be,
-        const thisSpansNewColor = newVis === 'none' ? 'red' : 'green'
-        // And set that colour.
-        thisSpan.style.color = thisSpansNewColor
-      "
-      >
-        Toggle Intro
-      </span>
-    </div>
-    <div
+    <!-- TODO replace the functionality of these. -->
+    <!-- <div
       id="downloads"
       class="downloads"
       style="position: absolute; top: 5px; right: 5px"
@@ -102,6 +136,7 @@
       />
     </div>
     <!-- beat the CSS into submission -->
+    <!--
     <div
       id="langdirchoice"
       style="position: absolute; top: 50px; right: 5px; cursor: pointer"
@@ -130,6 +165,7 @@
         hidden
       />
     </div>
+    -->
     <div id="scorebar" class="scorebar" score="0" hidden></div>
     <div align="center" class="headers">
       <h3>Hey! Want to do some flashcards? Maybe a quiz?</h3>
