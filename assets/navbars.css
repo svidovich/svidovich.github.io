@@ -91,3 +91,61 @@
 .subnav:hover .subnav-content {
   display: block;
 }
+
+/* Mobile stoof */
+
+/* Hide hamburger on large screens */
+.hamburger {
+  display: none;
+  background-color: #318888;
+  color: white;
+  font-size: 24px;
+  border: none;
+  padding: 14px 16px;
+  width: 100%;
+  text-align: left;
+}
+
+/* Responsive rules for small screens
+The max-width should match the number in the setupMobileSubnavs function
+inside of flashcards.js
+*/
+@media screen and (max-width: 600px) {
+  .navbar {
+    display: none;
+    width: 100%;
+    float: none;
+  }
+
+  .navbar.responsive {
+    display: block;
+  }
+
+  .subnav {
+    float: none;
+    width: 100%;
+  }
+
+  .subnav .subnavbtn {
+    width: 100%;
+    text-align: left;
+  }
+
+  .subnav-content {
+    position: static;
+    width: 100%;
+  }
+
+  /* Turn off hover behavior for mobile */
+  .subnav:hover .subnav-content {
+    display: none;
+  }
+
+  /* Show subnav content when .open is present */
+  .subnav.open .subnav-content {
+    display: block;
+  }
+  .hamburger {
+    display: block;
+  }
+}

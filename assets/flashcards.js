@@ -1645,6 +1645,36 @@ const loadAllPracticesToDropDown = () => {
   fillPracticeOptionsDropdown(toLoad);
 };
 
+const setupMobileSubnavs = () => {
+  // Navigation setup for mobile. This number should match the mobile max-width in
+  // navbars.css, or you'll get goofy behaviour.
+  if (window.innerWidth > 600) return; // Only on small screens
+
+  document.querySelectorAll(".subnav").forEach((subnav) => {
+    const button = subnav.querySelector(".subnavbtn");
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      // Close all subnavs first
+      document
+        .querySelectorAll(".subnav")
+        .forEach((el) => el.classList.remove("open"));
+
+      // Toggle the one that was tapped
+      subnav.classList.toggle("open");
+    });
+  });
+
+  document.addEventListener("click", () => {
+    document
+      .querySelectorAll(".subnav.open")
+      .forEach((el) => el.classList.remove("open"));
+  });
+};
+
+document.addEventListener("DOMContentLoaded", setupMobileSubnavs);
+
 const main = () => {
   setPlatformStyle();
   loadAllPracticesToDropDown();
@@ -1665,6 +1695,7 @@ const main = () => {
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
   addToggleStreakDisplayClickListener();
+  setupMobileSubnavs();
 };
 
 (() => {
