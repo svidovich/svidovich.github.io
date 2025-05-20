@@ -33,6 +33,15 @@
   </head>
   <body>
     <!-- W3Schools-style navbar. -->
+    <button
+      class="hamburger"
+      onclick="
+        const navbar = document.querySelector('.navbar');
+        navbar.classList.toggle('responsive');
+    "
+    >
+      ☰ Menu
+    </button>
     <div class="navbar">
       <div class="subnav" id="file-subnav">
         <button class="subnavbtn">File</button>
@@ -92,8 +101,6 @@
             introParagraph.style.display = newVis
             // Now, grab the button that's hosting this little script,
             const thisSpan = document.getElementById('introtogglebutton')
-            // And set that colour.
-            thisSpan.textContent = thisSpansNewText
           "
           >
             Toggle Introduction
