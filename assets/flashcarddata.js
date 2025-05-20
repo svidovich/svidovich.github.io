@@ -1,3 +1,17 @@
+/*
+ * flashcarddata.js — Serbian vocabulary dataset
+ * SPDX-License-Identifier: CC0-1.0
+ *
+ * To the extent possible under law, the author(s) have dedicated this file to the public domain
+ * under the Creative Commons Zero 1.0 Universal license.
+ *
+ * You can copy, modify, distribute and perform the work, even for commercial purposes, all
+ * without asking permission.
+ *
+ * No warranty is provided. Use it however you like.
+ * https://creativecommons.org/publicdomain/zero/1.0/
+ */
+
 import {
   vocabularySectionFromArray,
   VocabularySection,
