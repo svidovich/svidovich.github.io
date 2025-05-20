@@ -26,7 +26,6 @@ import { Cycle } from "./cards/cycle.js";
 
 const CUSTOM_PRACTICE_STORAGE_KEY = "customPractices";
 
-const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
@@ -516,7 +515,7 @@ const addNewCustomLessonClickListeners = () => {
   const customExerciseDialog = document.getElementById(
     "newcustomexercisedialog"
   );
-  const newCustomLessonIcon = document.getElementById("addexerciseicon");
+  const newCustomLessonIcon = document.getElementById("add-exercise");
   newCustomLessonIcon.addEventListener("click", () => {
     clearCustomPracticeNameEntryFieldFromDialog();
     addCustomPracticeNameEntryFieldToDialog();
@@ -1649,7 +1648,7 @@ const main = () => {
 
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
-  // addNewCustomLessonClickListeners();
+  addNewCustomLessonClickListeners();
   // addNewCustomLessonSampleDataNoticeHideListener();
 };
 
