@@ -84,6 +84,21 @@ const loadPracticeMapWithCustomEntries = () => {
   };
 };
 
+const toggleStreakDisplay = () => {
+  if (streakDisplay.hidden === true) {
+    streakDisplay.hidden = false;
+  } else {
+    streakDisplay.hidden = true;
+  }
+};
+
+const addToggleStreakDisplayClickListener = () => {
+  const streakDisplayToggle = document.getElementById("togglestreakdisplay");
+  streakDisplayToggle.addEventListener("click", () => {
+    toggleStreakDisplay();
+  });
+};
+
 // Warning about cookies
 const cookieWarningSetup = () => {
   const cookieBanner = document.getElementById("cookie-banner");
@@ -1649,7 +1664,7 @@ const main = () => {
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
-  // addNewCustomLessonSampleDataNoticeHideListener();
+  addToggleStreakDisplayClickListener();
 };
 
 (() => {

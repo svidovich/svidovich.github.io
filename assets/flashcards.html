@@ -66,6 +66,7 @@
             Translation Direction:
             <span id="langdirchoicespan">Mixed English & BCMS</span>
           </button>
+          <hr />
           <button id="soundtoggle">
             Sound <span id="soundtogglestatusmessage">ON</span>
           </button>
@@ -74,6 +75,7 @@
       <div class="subnav" id="view-subnav">
         <button class="subnavbtn">View</button>
         <div class="subnav-content" id="view-subnav-content">
+          <button id="togglestreakdisplay">Toggle Streak Display</button>
           <button
             id="introtogglebutton"
             title="Show or hide the introductory paragraph. It's... rather long."
@@ -90,13 +92,11 @@
             introParagraph.style.display = newVis
             // Now, grab the button that's hosting this little script,
             const thisSpan = document.getElementById('introtogglebutton')
-            // And compute what colour it should be,
-            const thisSpansNewText = newVis === 'none' ? 'Show Introduction' : 'Hide Introduction'
             // And set that colour.
             thisSpan.textContent = thisSpansNewText
           "
           >
-            Hide Introduction
+            Toggle Introduction
           </button>
         </div>
       </div>
@@ -104,6 +104,7 @@
         <button class="subnavbtn">Links</button>
         <div class="subnav-content" id="links-subnav-content">
           <a href="../index.html">Website Home</a>
+          <hr />
           <a
             href="https://github.com/svidovich/svidovich.github.io/blob/master/assets/flashcards.js"
             target="_blank"
