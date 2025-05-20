@@ -59,7 +59,7 @@ const LANG_CHOICE_CYCLE = new Cycle([
 ]);
 
 const getLanguageChoice = () => {
-  return LANG_CHOICE_CYCLE.current.value.languageChoice;
+  return LANG_CHOICE_CYCLE.peek().languageChoice;
 };
 
 // TODO this file could use some OOP.
@@ -612,10 +612,13 @@ const addLangChoiceClickListener = () => {
   // We have a 'language choice' button which determines whether we
   // are going from english to jugoslavian, jugoslavian to english,
   // or a mix of both in our exercise. This listener cycles the options.
-  const langChoiceImg = document.getElementById("langdirchoiceimg");
-  langChoiceImg.addEventListener("click", () => {
-    langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
-    langChoiceImg.title = LANG_CHOICE_CYCLE.current.value.choiceTitle;
+  const langChoiceButtoooooon = document.getElementById(
+    "translation-direction"
+  );
+  const langChoiceSpan = document.getElementById("langdirchoicespan");
+  langChoiceButtoooooon.addEventListener("click", () => {
+    LANG_CHOICE_CYCLE.next();
+    langChoiceSpan.textContent = LANG_CHOICE_CYCLE.peek().choiceTitle;
   });
 };
 
@@ -1645,7 +1648,7 @@ const main = () => {
   addLoadStageClickListener();
 
   addPracticeOptionsDropdownChangeListener();
-  // addLangChoiceClickListener();
+  addLangChoiceClickListener();
   // addNewCustomLessonClickListeners();
   // addNewCustomLessonSampleDataNoticeHideListener();
 };
