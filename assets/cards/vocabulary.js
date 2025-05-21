@@ -97,6 +97,10 @@ export class VocabularyObject {
     this.categories = categories === undefined ? [] : categories;
   }
 
+  get hashKey() {
+    return `${this.english}|${this.latin}`;
+  }
+
   get asObject() {
     return {
       english: this.english,

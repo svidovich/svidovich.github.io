@@ -2982,6 +2982,8 @@ const allPractices = [
   REGIONALISMS_KORDUN,
 ];
 const byCategoryMapped = new Object();
+// Sets, so we can ensure we don't push duplicates.
+const categoryDeduplicationSets = new Object();
 // Create a map of category identifiers to category details
 // with a list of vocabulary objects under their `words` key
 allPractices.forEach((practice) => {
@@ -2989,10 +2991,16 @@ allPractices.forEach((practice) => {
     vObject.categories.forEach((category) => {
       // If we've already encountered this category, just add this particular
       // word to it.
+      const objectHashKey = vObject.hashKey;
       if (byCategoryMapped[category]) {
-        byCategoryMapped[category].words.push(vObject);
+        if (!categoryDeduplicationSets[category].has(objectHashKey)) {
+          categoryDeduplicationSets[category].add(objectHashKey);
+          byCategoryMapped[category].words.push(vObject);
+        }
       } else {
         // Otherwise, populate it along with this as its first word.
+        categoryDeduplicationSets[category] = new Set();
+        categoryDeduplicationSets[category].add(objectHashKey);
         byCategoryMapped[category] = {
           ...CATEGORIES_MAP[category],
           words: [vObject],
