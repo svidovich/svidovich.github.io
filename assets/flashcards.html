@@ -108,6 +108,55 @@
           </button>
         </div>
       </div>
+      <div class="subnav" id="text-options-subnav">
+        <button class="subnavbtn">Text Options</button>
+        <div class="subnav-content" id="text-options-subnav-content">
+          <div style="display: flex; justify-content: center; flex-wrap: wrap">
+            <form class="scriptoptionsform" style="padding-top: 20px">
+              <input
+                class="scriptoptions"
+                name="scriptoptions"
+                type="radio"
+                value="scriptlatin"
+                id="scriptlatin"
+              />
+              <label class="scriptoptionslabel" for="scriptlatin">Latin</label>
+              <br />
+              <input
+                class="scriptoptions"
+                name="scriptoptions"
+                type="radio"
+                value="scriptcyrillic"
+                id="scriptcyrillic"
+              />
+              <label class="scriptoptionslabel" for="scriptcyrillic"
+                >Cyrillic</label
+              >
+              <br />
+              <input
+                class="scriptoptions"
+                name="scriptoptions"
+                type="radio"
+                value="scriptboth"
+                id="scriptboth"
+              />
+              <label class="scriptoptionslabel" for="scriptboth"
+                >Latin + Cyrillic</label
+              >
+              <br />
+              <input
+                class="scriptoptions"
+                name="scriptoptions"
+                type="radio"
+                value="scriptmix"
+                id="scriptmix"
+                checked="true"
+              />
+              <label class="scriptoptionslabel" for="scriptmix">Mix</label>
+            </form>
+          </div>
+        </div>
+      </div>
       <div class="subnav" id="links-subnav">
         <button class="subnavbtn">Links</button>
         <div class="subnav-content" id="links-subnav-content">
@@ -174,45 +223,8 @@
       </select>
       <div id="practiceformatscontainer" hidden></div>
       <div class="practiceformatoption" id="practiceformatoption" hidden></div>
-      <div class="scriptoptionstitletext">Text Options</div>
       <br />
-      <form class="scriptoptionsform">
-        <input
-          class="scriptoptions"
-          name="scriptoptions"
-          type="radio"
-          value="scriptlatin"
-          id="scriptlatin"
-        />
-        <label class="scriptoptionslabel" for="scriptlatin">Latin</label>
-        <input
-          class="scriptoptions"
-          name="scriptoptions"
-          type="radio"
-          value="scriptcyrillic"
-          id="scriptcyrillic"
-        />
-        <label class="scriptoptionslabel" for="scriptcyrillic">Cyrillic</label>
-        <input
-          class="scriptoptions"
-          name="scriptoptions"
-          type="radio"
-          value="scriptboth"
-          id="scriptboth"
-        />
-        <label class="scriptoptionslabel" for="scriptboth"
-          >Latin + Cyrillic</label
-        >
-        <input
-          class="scriptoptions"
-          name="scriptoptions"
-          type="radio"
-          value="scriptmix"
-          id="scriptmix"
-          checked="true"
-        />
-        <label class="scriptoptionslabel" for="scriptmix">Mix</label>
-      </form>
+
       <div id="choosePracticeWarning" hidden>I said choose a practice.</div>
       <br /><br />
       <div id="loadstagebutton" class="actionButtons">Do it!</div>

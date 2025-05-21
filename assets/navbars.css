@@ -67,6 +67,12 @@
   padding: 10px 20px;
 }
 
+.scriptoptionslabel {
+  color: white;
+  font-size: 16px;
+  font-family: inherit;
+}
+
 /* Add a grey background color on hover */
 .subnav-content a:hover {
   background-color: #eee;
