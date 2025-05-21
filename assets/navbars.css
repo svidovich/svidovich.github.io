@@ -1,0 +1,157 @@
+/* The navigation menu */
+.navbar {
+  overflow: hidden;
+  background-color: #318888;
+}
+
+/* Navigation links */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The subnavigation menu */
+.subnav {
+  float: left;
+  overflow: hidden;
+}
+
+/* Subnav button */
+.subnav .subnavbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+/* Add a red background color to navigation links on hover */
+.navbar a:hover,
+.subnav:hover .subnavbtn {
+  background-color: #9ed9d9;
+}
+
+/* Style the subnav content - positioned absolute */
+.subnav-content {
+  display: none;
+  position: absolute;
+  left: 0;
+  background-color: #1f5454;
+  width: 20%;
+  z-index: 1;
+}
+
+/* Style the subnav links */
+.subnav-content a {
+  float: left;
+  color: white;
+  text-decoration: none;
+  width: 100%;
+}
+
+.subnav-content button {
+  background-color: #1f5454;
+  float: left;
+  color: white;
+  text-decoration: none;
+  width: 100%;
+  font-family: inherit;
+  border: none;
+  padding: 10px 20px;
+}
+
+.scriptoptionslabel {
+  color: white;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+/* Add a grey background color on hover */
+.subnav-content a:hover {
+  background-color: #eee;
+  color: black;
+  border: none;
+  text-decoration: none;
+  width: 100%;
+}
+.subnav-content button:hover {
+  background-color: #eee;
+  color: black;
+  border: none;
+  text-decoration: none;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  padding: 10px 20px;
+}
+
+/* When you move the mouse over the subnav container, open the subnav content */
+.subnav:hover .subnav-content {
+  display: block;
+}
+
+/* Mobile stoof */
+
+/* Hide hamburger on large screens */
+.hamburger {
+  display: none;
+  background-color: #318888;
+  color: white;
+  font-size: 24px;
+  border: none;
+  padding: 14px 16px;
+  width: 100%;
+  text-align: left;
+}
+
+/* Responsive rules for small screens
+The max-width should match the number in the setupMobileSubnavs function
+inside of flashcards.js
+*/
+@media screen and (max-width: 600px) {
+  .navbar {
+    display: none;
+    width: 100%;
+    float: none;
+  }
+
+  .navbar.responsive {
+    display: block;
+  }
+
+  .subnav {
+    float: none;
+    width: 100%;
+  }
+
+  .subnav .subnavbtn {
+    width: 100%;
+    text-align: left;
+  }
+
+  .subnav-content {
+    position: static;
+    width: 100%;
+  }
+
+  /* Turn off hover behavior for mobile */
+  .subnav:hover .subnav-content {
+    display: none;
+  }
+
+  /* Show subnav content when .open is present */
+  .subnav.open .subnav-content {
+    display: block;
+  }
+  .hamburger {
+    display: block;
+  }
+}

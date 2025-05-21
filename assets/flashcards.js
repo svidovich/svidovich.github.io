@@ -26,7 +26,6 @@ import { Cycle } from "./cards/cycle.js";
 
 const CUSTOM_PRACTICE_STORAGE_KEY = "customPractices";
 
-const DOWNLOAD_ICON_DEFAULT_FILTER = `grayscale(100%)`;
 const LAST_VISIT_KEY = "lastVisit";
 const STREAK_COUNT_KEY = "streak";
 const STREAK_LAST_CHECK_KEY = "streakLastCheck";
@@ -59,7 +58,7 @@ const LANG_CHOICE_CYCLE = new Cycle([
 ]);
 
 const getLanguageChoice = () => {
-  return LANG_CHOICE_CYCLE.current.value.languageChoice;
+  return LANG_CHOICE_CYCLE.peek().languageChoice;
 };
 
 // TODO this file could use some OOP.
@@ -83,6 +82,21 @@ const loadPracticeMapWithCustomEntries = () => {
     ...practiceMap,
     ...customPracticesMapped,
   };
+};
+
+const toggleStreakDisplay = () => {
+  if (streakDisplay.hidden === true) {
+    streakDisplay.hidden = false;
+  } else {
+    streakDisplay.hidden = true;
+  }
+};
+
+const addToggleStreakDisplayClickListener = () => {
+  const streakDisplayToggle = document.getElementById("togglestreakdisplay");
+  streakDisplayToggle.addEventListener("click", () => {
+    toggleStreakDisplay();
+  });
 };
 
 // Warning about cookies
@@ -113,7 +127,7 @@ const setSoundToggleSwitchMessage = () => {
     "soundtogglestatusmessage"
   );
   const shouldPlay = shouldPlaySound();
-  soundToggleSwitchMessage.style = shouldPlay ? `color: green;` : `color: red;`;
+  soundToggleSwitchMessage.style = shouldPlay ? `color: lime;` : `color: red;`;
   soundToggleSwitchMessage.textContent = shouldPlay ? `ON` : `OFF`;
 };
 
@@ -516,7 +530,7 @@ const addNewCustomLessonClickListeners = () => {
   const customExerciseDialog = document.getElementById(
     "newcustomexercisedialog"
   );
-  const newCustomLessonIcon = document.getElementById("addexerciseicon");
+  const newCustomLessonIcon = document.getElementById("add-exercise");
   newCustomLessonIcon.addEventListener("click", () => {
     clearCustomPracticeNameEntryFieldFromDialog();
     addCustomPracticeNameEntryFieldToDialog();
@@ -612,10 +626,13 @@ const addLangChoiceClickListener = () => {
   // We have a 'language choice' button which determines whether we
   // are going from english to jugoslavian, jugoslavian to english,
   // or a mix of both in our exercise. This listener cycles the options.
-  const langChoiceImg = document.getElementById("langdirchoiceimg");
-  langChoiceImg.addEventListener("click", () => {
-    langChoiceImg.src = LANG_CHOICE_CYCLE.next.value.imgSrc;
-    langChoiceImg.title = LANG_CHOICE_CYCLE.current.value.choiceTitle;
+  const langChoiceButtoooooon = document.getElementById(
+    "translation-direction"
+  );
+  const langChoiceSpan = document.getElementById("langdirchoicespan");
+  langChoiceButtoooooon.addEventListener("click", () => {
+    LANG_CHOICE_CYCLE.next();
+    langChoiceSpan.textContent = LANG_CHOICE_CYCLE.peek().choiceTitle;
   });
 };
 
@@ -784,91 +801,86 @@ const downloadIconsInactive = () => {
   // Checks whether the download icons are in an active state
   // or not by eyeballing their style. They come in pairs like
   // salt and pepper. We don't change one without the other.
-  const csvDownloadIconImage = document.getElementById("csvdownloadicon");
-  const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
-  return [csvDownloadIconImage, jsonDownloadIconImage].every((icon) => {
-    return icon.style.filter === DOWNLOAD_ICON_DEFAULT_FILTER;
+  const csvDownloadButton = document.getElementById("download-csv");
+  const jsonDownloadButton = document.getElementById("download-json");
+  return [csvDownloadButton, jsonDownloadButton].every((button) => {
+    return button.style.color === "grey";
   });
 };
 
 const toggleDownloadIconStyles = () => {
   // Style the download icons to the opposite of whatever they are right now.
   const iconReadyCursor = `pointer`;
-  const csvDownloadIconImage = document.getElementById("csvdownloadicon");
-  const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
-  // Download icons active? Make them grayscale and unpointy.
+  const csvDownloadButton = document.getElementById("download-csv");
+  const jsonDownloadButton = document.getElementById("download-json");
+  // Download buttons active? Make them grayscale and unpointy.
   // Inactive? Make them colorful and pointy.
-  [csvDownloadIconImage, jsonDownloadIconImage].forEach((icon) => {
-    if (icon.style.filter === DOWNLOAD_ICON_DEFAULT_FILTER) {
-      icon.style.filter = null;
-      icon.style.cursor = iconReadyCursor;
+  [csvDownloadButton, jsonDownloadButton].forEach((button) => {
+    if (button.style.color === "grey") {
+      button.style.color = "white";
+      button.style.cursor = iconReadyCursor;
     } else {
-      icon.style.filter = DOWNLOAD_ICON_DEFAULT_FILTER;
-      icon.style.cursor = null;
+      button.style.color = "grey";
+      button.style.cursor = null;
     }
   });
 };
 
+const objectUrlState = [];
+
 const prepareSectionDownloadOptions = (sectionObject) => {
   // Based on the current selection, we should prep the download options.
-  // This involves slyly replacing the download buttons with ones that
-  // reflect the current selection.
   // The download links themselves are special blob links. That doesn't
   // scale, but this is a flashcard app. If it gets too big I'm fucking up.
-  const downloadImagesDiv = document.getElementById("downloads");
-  const csvDownloadIconImage = document.getElementById("csvdownloadicon");
-  const jsonDownloadIconImage = document.getElementById("jsondownloadicon");
-  // Remove the grayscale from the download icon images.
-  // Prepare links for the images that are clickable that allow
+  // Replace the buttons entirely to dump any old event listeners.
+  let csvDownloadButton = document.getElementById("download-csv");
+  const newCSVButton = csvDownloadButton.cloneNode(true);
+  csvDownloadButton.replaceWith(newCSVButton);
+  csvDownloadButton = newCSVButton;
+
+  let jsonDownloadButton = document.getElementById("download-json");
+  const newJSONButton = jsonDownloadButton.cloneNode(true);
+  jsonDownloadButton.replaceWith(newJSONButton);
+  jsonDownloadButton = newJSONButton;
+
+  // Invalidate any existing Object URLS.
+  objectUrlState.forEach((objectUrl) => {
+    window.URL.revokeObjectURL(objectUrl);
+  });
+
+  // Remove the grayscale from the download buttons.
+  // Prepare links for the buttons that are clickable, and allow
   // the user to download the lesson in CSV and JSON formats.
   if (downloadIconsInactive()) {
     toggleDownloadIconStyles();
   }
 
-  const csvLinkId = "csvdownloadlink";
-  const jsonLinkId = "jsondownloadlink";
-
-  // This is state handling. If we're clicking between lessons,
-  // the download links will already exist. We need to find them
-  // and clear them, then ready up the new links. Otherwise, we
-  // just make fresh links.
-  const latentCsvLink = document.getElementById(csvLinkId);
-  if (latentCsvLink !== null) {
-    // Do some DOM manip
-    // <div><a><img/></a><div> -> <div><img/><a></a></div> -> <div><img/></div>
-    downloadImagesDiv.appendChild(csvDownloadIconImage);
-    downloadImagesDiv.removeChild(latentCsvLink);
-  }
-  const latentJSONLink = document.getElementById(jsonLinkId);
-  if (latentJSONLink !== null) {
-    downloadImagesDiv.appendChild(jsonDownloadIconImage);
-    downloadImagesDiv.removeChild(latentJSONLink);
-  }
-
-  const csvLink = window.document.createElement("a");
-  const jsonLink = window.document.createElement("a");
-
-  csvLink.id = csvLinkId;
-  jsonLink.id = jsonLinkId;
-  // For a brief moment our image leaves the div.
-  csvLink.appendChild(csvDownloadIconImage);
-  jsonLink.appendChild(jsonDownloadIconImage);
-
-  // We put our image back into the div as a child of the link here.
-  downloadImagesDiv.appendChild(csvLink);
-  downloadImagesDiv.appendChild(jsonLink);
-
   // Add the content as CSV to the href in a blobby link.
-  csvLink.href = window.URL.createObjectURL(
+  let csvLink = document.createElement("a");
+  const csvBlobUrl = window.URL.createObjectURL(
     new Blob([sectionObject.asCSV], { type: "text/csv" })
   );
+  objectUrlState.push(csvBlobUrl);
+  csvLink.href = csvBlobUrl;
   // This lets us name the file.
   csvLink.download = `${sectionObject.unfriendlyName}.csv`;
-  // Here we use application/octet-stream instead of application/json so that we force a download dialog
-  jsonLink.href = window.URL.createObjectURL(
+  csvDownloadButton.addEventListener("click", () => {
+    csvLink.click();
+  });
+  csvDownloadButton.removeAttribute("disabled");
+  // Here we use application/octet-stream instead of application/json so that we
+  // force a download dialog
+  let jsonLink = document.createElement("a");
+  const jsonBlobUrl = window.URL.createObjectURL(
     new Blob([sectionObject.asJSON], { type: "application/octet-stream" })
   );
+  objectUrlState.push(jsonBlobUrl);
+  jsonLink.href = jsonBlobUrl;
   jsonLink.download = `${sectionObject.unfriendlyName}.json`;
+  jsonDownloadButton.addEventListener("click", () => {
+    jsonLink.click();
+  });
+  jsonDownloadButton.removeAttribute("disabled");
 };
 
 const displayAvailablePracticeFormats = () => {
@@ -1633,6 +1645,36 @@ const loadAllPracticesToDropDown = () => {
   fillPracticeOptionsDropdown(toLoad);
 };
 
+const setupMobileSubnavs = () => {
+  // Navigation setup for mobile. This number should match the mobile max-width in
+  // navbars.css, or you'll get goofy behaviour.
+  if (window.innerWidth > 600) return; // Only on small screens
+
+  document.querySelectorAll(".subnav").forEach((subnav) => {
+    const button = subnav.querySelector(".subnavbtn");
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      // Close all subnavs first
+      document
+        .querySelectorAll(".subnav")
+        .forEach((el) => el.classList.remove("open"));
+
+      // Toggle the one that was tapped
+      subnav.classList.toggle("open");
+    });
+  });
+
+  document.addEventListener("click", () => {
+    document
+      .querySelectorAll(".subnav.open")
+      .forEach((el) => el.classList.remove("open"));
+  });
+};
+
+document.addEventListener("DOMContentLoaded", setupMobileSubnavs);
+
 const main = () => {
   setPlatformStyle();
   loadAllPracticesToDropDown();
@@ -1652,7 +1694,8 @@ const main = () => {
   addPracticeOptionsDropdownChangeListener();
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
-  // addNewCustomLessonSampleDataNoticeHideListener();
+  addToggleStreakDisplayClickListener();
+  setupMobileSubnavs();
 };
 
 (() => {

@@ -1,46 +1,60 @@
 class Node {
-  constructor(value, next) {
+  constructor(value, next = null) {
     this.value = value;
     this.next = next;
   }
 }
 
 export class Cycle {
-  // NOTE: This cycle is a piece of garbage. It is read-only after construction
-  // right now because I didn't want to deal with any complex logic. Use at your
-  // own risk, or improve it.
-  constructor(nodes) {
-    for (const [index, node] of nodes.entries()) {
-      const inserted = this.insert(node);
-      if (index === nodes.length - 1) {
-        inserted.next = this.head;
-      }
+  #head = null;
+  #current = null;
+
+  constructor(values = []) {
+    if (!Array.isArray(values) || values.length === 0) {
+      throw new Error("Cycle must be initialized with at least one value.");
     }
-    this.current = this.head;
+
+    let prevNode = null;
+    for (const value of values) {
+      const newNode = new Node(value);
+      if (!this.#head) {
+        this.#head = newNode;
+      } else {
+        prevNode.next = newNode;
+      }
+      prevNode = newNode;
+    }
+
+    // Close the cycle
+    prevNode.next = this.#head;
+    this.#current = this.#head;
   }
 
-  insert(newNode) {
-    if (this.head === undefined) {
-      this.head = new Node(newNode, undefined);
-      return;
-    }
-    let currentNode = this.head;
-    while (true) {
-      if (currentNode.next === undefined) {
-        const insertedNode = new Node(newNode, undefined);
-        currentNode.next = insertedNode;
-        return insertedNode;
-      } else {
-        currentNode = currentNode.next;
-      }
-    }
+  next() {
+    const value = this.#current.value;
+    this.#current = this.#current.next;
+    return value;
   }
-  get next() {
-    // NOTE This implicitly modifies the cycle's
-    // state. This should probably be a method
-    // instead of a property to make that more
-    // obvious to consumers of its API
-    this.current = this.current.next;
-    return this.current;
+
+  peek() {
+    return this.#current.value;
+  }
+
+  reset() {
+    this.#current = this.#head;
+  }
+
+  toArray(limit = 1000) {
+    const result = [];
+    let node = this.#head;
+    let count = 0;
+
+    do {
+      result.push(node.value);
+      node = node.next;
+      count++;
+    } while (node !== this.#head && count < limit);
+
+    return result;
   }
 }
