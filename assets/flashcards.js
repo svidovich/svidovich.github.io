@@ -1665,12 +1665,6 @@ const setupMobileSubnavs = () => {
       subnav.classList.toggle("open");
     });
   });
-
-  document.addEventListener("click", () => {
-    document
-      .querySelectorAll(".subnav.open")
-      .forEach((el) => el.classList.remove("open"));
-  });
 };
 
 document.addEventListener("DOMContentLoaded", setupMobileSubnavs);
