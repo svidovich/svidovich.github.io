@@ -880,8 +880,7 @@ const fillLatestCommits = async (count) => {
 
     // Then the commit message!
     const thisCommitMessageTd = document.createElement("td");
-    // Wrap it in <pre> to retain whitrspace.
-    const thisCommitMessagePre = document.createElement("pre");
+    const thisCommitMessagePre = document.createElement("p");
     const thisCommitMessageText = document.createTextNode(
       commit.commit.message
     );
