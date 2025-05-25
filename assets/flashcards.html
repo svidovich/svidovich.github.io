@@ -72,6 +72,10 @@
       <div class="subnav" id="edit-subnav">
         <button class="subnavbtn">Edit</button>
         <div class="subnav-content" id="edit-subnav-content">
+          <button id="vocabulary-categorization-options">
+            Practice lists: <span id="vc-options-span">By Category</span>
+          </button>
+          <hr />
           <button id="translation-direction">
             Translation Direction:
             <span id="langdirchoicespan">Mixed English & BCMS</span>
@@ -219,7 +223,9 @@
         id="practiceoptionsdropdown"
         name="practiceoptionsdropdown"
       >
-        <option value="" selected disabled hidden>Choose a Practice</option>
+        <option id="practiceoptionsdefault" value="" selected disabled hidden>
+          Choose a Practice
+        </option>
       </select>
       <div id="practiceformatscontainer" hidden></div>
       <div class="practiceformatoption" id="practiceformatoption" hidden></div>
@@ -256,18 +262,6 @@
       the <strong>latin</strong> form.
       <br />
       <br />
-      <!--
-        This span allows me to prevent the UI from highlighting these links
-        when the dialog opens, which looks dumb and I don't like it :)
-      -->
-      <!-- <span class="ui-helper-hidden-accessible" id="advancedusernotice">
-        Are you an advanced user? You can drag and drop JSON and CSV files onto this dialog.
-        <br />
-        <a href="./cards/customsample.csv" download>Sample CSV Document</a> |
-        <a href="./cards/customsample.json" download>Sample JSON Document</a> |
-        <a id="advancedusernoticehide" style="cursor: pointer">Hide this notice</a>
-        <br /><br />
-      </span> -->
       <br />
     </div>
     <table

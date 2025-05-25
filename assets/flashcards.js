@@ -18,7 +18,7 @@ import {
   VocabularyObject,
   vocabularySectionFromArray,
 } from "./cards/vocabulary.js";
-import { practiceMap } from "./flashcarddata.js";
+import { practiceMap, practiceMapOriginal } from "./flashcarddata.js";
 
 import { isDesktop, isMobile } from "./cards/os.js";
 
@@ -61,6 +61,21 @@ const getLanguageChoice = () => {
   return LANG_CHOICE_CYCLE.peek().languageChoice;
 };
 
+const VOCAB_CATEGORIZATION_OPTIONS = new Cycle([
+  {
+    choiceTitle: "By Category",
+    choiceValue: practiceMap,
+  },
+  {
+    choiceTitle: "Sam's Original Order",
+    choiceValue: practiceMapOriginal,
+  },
+]);
+
+const getVocabCategorizationOptions = () => {
+  return VOCAB_CATEGORIZATION_OPTIONS.peek();
+};
+
 // TODO this file could use some OOP.
 
 // Some globally available stuff
@@ -79,7 +94,7 @@ const loadPracticeMapWithCustomEntries = () => {
     customPracticesMapped[practice.unfriendlyName] = practice;
   });
   return {
-    ...practiceMap,
+    ...getVocabCategorizationOptions().choiceValue,
     ...customPracticesMapped,
   };
 };
@@ -202,7 +217,7 @@ const handleNewCustomLessonSave = (dialog) => {
   putObjectToLocalStorage(CUSTOM_PRACTICE_STORAGE_KEY, practicesToStore);
   // This lets us read our own writes so we don't have to refresh
   // to see the new section in the drop-down
-  clearPracticeOptionsDropwdown();
+  clearPracticeOptionsDropdown();
   loadAllPracticesToDropDown();
   dialog.close();
 };
@@ -636,6 +651,30 @@ const addLangChoiceClickListener = () => {
   });
 };
 
+const addVocabCategorizationChoiceClickListener = () => {
+  // We can choose what goes in the language choice dropdown by cycling the uh,
+  // text. It goes like this ...
+  // Get the button in the navbar that represents the choice
+  const categorizationButton = document.getElementById(
+    "vocabulary-categorization-options"
+  );
+  const categorizationSpan = document.getElementById("vc-options-span");
+  // We need to change things when we click it
+  categorizationButton.addEventListener("click", () => {
+    // Now on page load, the cycle related to this thing is seeded to
+    // 'By Category'. So we'll advance the cycle,
+    VOCAB_CATEGORIZATION_OPTIONS.next();
+    // get the text value, and
+    const nextCategorizationValue = VOCAB_CATEGORIZATION_OPTIONS.peek();
+    // load it into the cute span.
+    categorizationSpan.textContent = nextCategorizationValue.choiceTitle;
+    // Now -- reloading the drop down is done through functions that look at the
+    // cycle. We should call to clear the dropdown and then refill it.
+    clearPracticeOptionsDropdown();
+    loadAllPracticesToDropDown();
+  });
+};
+
 const getStreakForDisplay = () => {
   return getObjectFromLocalStorage(STREAK_COUNT_KEY) || 0;
 };
@@ -939,7 +978,7 @@ const displayAvailablePracticeFormats = () => {
   return sectionObject;
 };
 
-const clearPracticeOptionsDropwdown = () => {
+const clearPracticeOptionsDropdown = () => {
   // Drops all of the options from the practice options dropdown.
   Array.from(
     document.getElementsByClassName("vocabularysectionoption")
@@ -1641,7 +1680,10 @@ const setPlatformStyle = () => {
 
 const loadAllPracticesToDropDown = () => {
   const customPractices = getCustomPracticesFromStorage();
-  const toLoad = [...Object.values(practiceMap), ...customPractices];
+  const toLoad = [
+    ...Object.values(getVocabCategorizationOptions().choiceValue),
+    ...customPractices,
+  ];
   fillPracticeOptionsDropdown(toLoad);
 };
 
@@ -1686,6 +1728,7 @@ const main = () => {
   addLoadStageClickListener();
 
   addPracticeOptionsDropdownChangeListener();
+  addVocabCategorizationChoiceClickListener();
   addLangChoiceClickListener();
   addNewCustomLessonClickListeners();
   addToggleStreakDisplayClickListener();

@@ -3029,7 +3029,10 @@ export const practiceMap = Object.keys(practiceMapUnsorted)
 // {
 //   <object.unfriendlyName>: object,...
 // }
-// export const practiceMap = allPractices.reduce((newObject, practiceObject) => {
-//   newObject[practiceObject.unfriendlyName] = practiceObject;
-//   return newObject;
-// }, {});
+export const practiceMapOriginal = allPractices.reduce(
+  (newObject, practiceObject) => {
+    newObject[practiceObject.unfriendlyName] = practiceObject;
+    return newObject;
+  },
+  {}
+);
