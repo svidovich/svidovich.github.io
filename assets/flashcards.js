@@ -6,7 +6,9 @@ import {
   chooseRandomExcept,
   decimalToColor,
   getObjectFromLocalStorage,
+  localStorageKeyExists,
   putObjectToLocalStorage,
+  putValueToLocalStorage,
   randomInt,
   shuffleArray,
 } from "./cards/utilities.js";
@@ -99,18 +101,54 @@ const loadPracticeMapWithCustomEntries = () => {
   };
 };
 
+const COOKIE_SHOW_STREAK = "show-streak";
+
 const toggleStreakDisplay = () => {
   if (streakDisplay.hidden === true) {
+    putValueToLocalStorage(COOKIE_SHOW_STREAK, true);
     streakDisplay.hidden = false;
   } else {
+    putValueToLocalStorage(COOKIE_SHOW_STREAK, false);
     streakDisplay.hidden = true;
   }
 };
 
 const addToggleStreakDisplayClickListener = () => {
   const streakDisplayToggle = document.getElementById("togglestreakdisplay");
+  // On first load, decide ( based on cookies ) if we should show the streak
+  if (
+    localStorageKeyExists(COOKIE_SHOW_STREAK) &&
+    getObjectFromLocalStorage(COOKIE_SHOW_STREAK) === false
+  ) {
+    streakDisplay.hidden = true;
+  }
   streakDisplayToggle.addEventListener("click", () => {
     toggleStreakDisplay();
+  });
+};
+
+const COOKIE_SHOW_INTRO = "show-intro";
+
+const addToggleIntroClickListener = () => {
+  const introToggleButton = document.getElementById("introtogglebutton");
+  const introParagraph = document.getElementById("flashcardintroparagraph");
+  // On first load, decide ( based on cookies ) if we should show the intro
+  if (
+    localStorageKeyExists(COOKIE_SHOW_INTRO) &&
+    getObjectFromLocalStorage(COOKIE_SHOW_INTRO) === false
+  ) {
+    introParagraph.hidden = true;
+  }
+  introToggleButton.addEventListener("click", () => {
+    // Grab the intro paragraph
+    // If it's invisible, make it visible. Otherwise, make it invisible.
+    if (introParagraph.hidden === true) {
+      putValueToLocalStorage(COOKIE_SHOW_INTRO, true);
+      introParagraph.hidden = false;
+    } else {
+      putValueToLocalStorage(COOKIE_SHOW_INTRO, false);
+      introParagraph.hidden = true;
+    }
   });
 };
 
@@ -1730,8 +1768,12 @@ const main = () => {
   addPracticeOptionsDropdownChangeListener();
   addVocabCategorizationChoiceClickListener();
   addLangChoiceClickListener();
+
   addNewCustomLessonClickListeners();
+
   addToggleStreakDisplayClickListener();
+  addToggleIntroClickListener();
+
   setupMobileSubnavs();
 };
 
