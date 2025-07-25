@@ -75,7 +75,7 @@ export const VraniSeKonjiBook = bookFromArray(
   [
     {
       latin: "Vrani se konji igraju,",
-      english: "Black horses romped,",
+      english: "Black horses romp,",
     },
     {
       latin: "Pod sobom zemlju kopaju,",
@@ -95,15 +95,15 @@ export const VraniSeKonjiBook = bookFromArray(
     },
     {
       latin: "Valjda se svadbi nadaju!",
-      english: "They probably hope for weddings!",
+      english: "Surely they hope for weddings!",
     },
     {
       latin: "Poljanom momci vježbaju,",
-      english: "In the field the dudes train,",
+      english: "In the field the young men train,",
     },
     {
       latin: "Oni se ratu nadaju.",
-      english: "They hope for war.",
+      english: "They yearn for war.",
     },
     {
       latin: "Kroz selo mobe pjevaju,",
@@ -115,7 +115,7 @@ export const VraniSeKonjiBook = bookFromArray(
     },
     {
       latin: "Stare se babe svađaju,",
-      english: "Old babas argue amongst themselves,",
+      english: "Old women argue amongst themselves,",
     },
     {
       latin: "One se smrti nadaju!",

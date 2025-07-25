@@ -16,6 +16,18 @@ const maxFromStringArray = (stringArray) => {
   return max;
 };
 
+/*
+Turn the input array into an object mapped by the index of the item in the array.
+*/
+const beMapArray = (array) => {
+  let output = new Object();
+  for (const [index, item] of array.entries()) {
+    output[index] = item;
+  }
+
+  return output;
+};
+
 const preRenderPageFromSentences = (pagesObject) => {
   /*
   What even. OK so...
@@ -35,7 +47,6 @@ const preRenderPageFromSentences = (pagesObject) => {
   But, we'll pre-compute the pages based on the browser window.
   So.
   */
-
   const ws = document.getElementById("workspacediv");
   // clear the workspace before we get a-rendering.
   while (ws.firstChild) {
@@ -78,6 +89,7 @@ const preRenderPageFromSentences = (pagesObject) => {
       const thispage = Object.values(pagesAndSentences.sentences).slice(0, idx);
       // ... remainder will contain all of the sentences that didn't.
       const remainder = Object.values(pagesAndSentences.sentences).slice(idx);
+      console.log(thispage);
       // Get all of the pages we already have,
       const extantPages = pagesAndSentences.pages;
 
@@ -91,7 +103,10 @@ const preRenderPageFromSentences = (pagesObject) => {
         nextPageIndex =
           Math.max(...Object.keys(extantPages).map((e) => parseInt(e))) + 1;
       }
-
+      console.log("pages:");
+      console.log(extantPages);
+      console.log("remainder:");
+      console.log(remainder);
       const nextArg = {
         pages: extantPages,
         sentences: remainder,
