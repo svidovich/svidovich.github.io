@@ -1,0 +1,115 @@
+<html>
+  <body>
+    <div
+      class="arcana-class-selection-container"
+      style="margin: 0 auto; width: 90%; display: flex; justify-content: center"
+    >
+      <form
+        id="arcana-class-selection-form"
+        class="arcana-class-selection-form"
+        style="padding-top: 20px"
+      >
+        <input
+          class="arcana-class-selection-option"
+          name="arcana-class-selection"
+          type="radio"
+          value="MAJOR"
+          id="arcana-class-selection-major"
+          checked
+        />
+        <label class="major-arcana-label" for="major-arcana"
+          >Major Arcana</label
+        >
+        <input
+          class="arcana-class-selection-option"
+          name="arcana-class-selection"
+          type="radio"
+          value="MINOR"
+          id="arcana-class-selection-minor"
+        />
+        <label class="minor-arcana-label" for="minor-arcana"
+          >Minor Arcana</label
+        >
+        <input
+          class="arcana-class-selection-option"
+          name="arcana-class-selection"
+          type="radio"
+          value="BOTH"
+          id="arcana-class-selection-both"
+        />
+        <label class="both-label" for="both">Both</label>
+      </form>
+    </div>
+    <div id="suit-selection-container" style="display: none">
+      <!--
+        Debug style for this div. It's not visible unless we select minor arcana.
+      -->
+      <!-- style="margin: 0 auto; width: 90%; display: flex; justify-content: center" -->
+      <form>
+        <input
+          class="suit-selection"
+          type="radio"
+          name="selection-suit"
+          value="ALL"
+          id="selection-suit-all"
+          checked
+        />
+        <label class="suit-selection-label" for="selection-suit-all">All</label>
+        <input
+          class="suit-selection"
+          type="radio"
+          name="selection-suit"
+          value="CUPS"
+          id="selection-suit-cups"
+        />
+        <label class="suit-selection-label" for="selection-suit-cups"
+          >Cups</label
+        >
+        <input
+          class="suit-selection"
+          type="radio"
+          name="selection-suit"
+          value="WANDS"
+          id="selection-suit-wands"
+        />
+        <label class="suit-selection-label" for="selection-suit-wands"
+          >Wands</label
+        >
+        <input
+          class="suit-selection"
+          type="radio"
+          name="selection-suit"
+          value="SWORDS"
+          id="selection-suit-swords"
+        />
+        <label class="suit-selection-label" for="selection-suit-swords"
+          >Swords</label
+        >
+        <input
+          class="suit-selection"
+          type="radio"
+          name="selection-suit"
+          value="PENTACLES"
+          id="selection-suit-pentacles"
+        />
+        <label class="suit-selection-label" for="selection-suit-pentacles"
+          >Pentacles</label
+        >
+      </form>
+    </div>
+    <div
+      class="exercise-launcher-container"
+      id="exercise-launcher-container"
+      style="display: flex; margin: 0 auto; justify-content: center; width: 90%"
+    >
+      <button id="exercise-launcher-button">Do it!</button>
+    </div>
+    <div
+      class="exercise-container"
+      id="exercise-container"
+      style="display: flex; margin: 0 auto; justify-content: center; width: 90%"
+    ></div>
+  </body>
+  <script type="module" src="riderwaitedata.js"></script>
+  <script type="module" src="riderwaite.js"></script>
+</html>
