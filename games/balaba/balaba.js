@@ -1,4 +1,4 @@
-import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt } from "../common.js";
+import { distance, drawCircle, drawRandomColoredCircle, drawRectangle, drawCanvasFrame, randomInt, lineCircleIntersection } from "../common.js";
 import { gamePlayStages } from "./stages.js";
 const SHOW_HITBOXES = false;
 const MAXIMUM_HEALTH = 100;
@@ -279,6 +279,9 @@ class Projectile {
   constructor(x, y, speed, direction, power) {
     this.x = x;
     this.y = y;
+    // Track previous position for swept collision detection
+    this.previousX = x;
+    this.previousY = y;
     this.direction = direction;
     this.speed = speed;
     this.power = power || 1;
@@ -297,6 +300,11 @@ class Projectile {
       if (this.y >= canvasHeight || this.y <= 0) {
         this.queueDeletion = true;
       }
+
+      // Store previous position before updating for swept collision detection
+      this.previousX = this.x;
+      this.previousY = this.y;
+
       if (this.direction === "up") {
         this.y -= this.speed;
       } else if (this.direction === "down") {
@@ -589,12 +597,17 @@ const drawPowerup = (canvasContext, powerUp) => {
 
 const computeCollisions = (projectiles, entities) => {
   entities.forEach((entity) => {
-    // There's a problem here -- we don't account for the size of the projectiles.
-    // The problem essentially becomes "Is this circle contained in this other one?"
-    // And can be solved, but it's 1:30 AM, so I'm not doing that rn. Other measures
-    // have been taken to mask this issue until I fix it.
+    const hitBox = entity.hitBoxDetails;
     projectiles.forEach((projectile) => {
-      if (distance(projectile, entity.hitBoxDetails) <= entity.hitBoxDetails.size) {
+      // Swept collision detection: check if the projectile's path from previous
+      // position to current position intersects with the entity's circular hitbox.
+      // This fixes the "bullet tunneling" problem where fast projectiles skip over enemies.
+      const lineStart = { x: projectile.previousX, y: projectile.previousY };
+      const lineEnd = { x: projectile.x, y: projectile.y };
+      const circleCenter = { x: hitBox.x, y: hitBox.y };
+      const circleRadius = hitBox.size;
+
+      if (lineCircleIntersection(lineStart, lineEnd, circleCenter, circleRadius)) {
         projectile.queueDeletion = true;
         entity.queueDeletion = true;
       }
@@ -633,9 +646,16 @@ const handleEnemyDeaths = (projectiles, enemies) => {
 };
 
 const handlePlayerHits = (enemyProjectiles, playerCharacter) => {
+  const playerHitBox = playerCharacter.hitBoxDetails;
   enemyProjectiles.forEach((projectile) => {
-    if (distance(projectile, playerCharacter.hitBoxDetails) <= playerCharacter.hitBoxDetails.size) {
-      projectile.queueDeletion;
+    // Use swept collision detection for enemy projectiles too
+    const lineStart = { x: projectile.previousX, y: projectile.previousY };
+    const lineEnd = { x: projectile.x, y: projectile.y };
+    const circleCenter = { x: playerHitBox.x, y: playerHitBox.y };
+    const circleRadius = playerHitBox.size;
+
+    if (lineCircleIntersection(lineStart, lineEnd, circleCenter, circleRadius)) {
+      projectile.queueDeletion = true;
       garbageCollectObjects(enemyProjectiles);
       let availableDamage = projectile.power;
       let leftOverdamage;

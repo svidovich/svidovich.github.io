@@ -58,6 +58,56 @@ export const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+// Swept collision detection: checks if a line segment intersects a circle
+// This solves the "bullet tunneling" problem where fast projectiles skip over enemies
+// lineStart: {x, y} - starting point of the line segment
+// lineEnd: {x, y} - ending point of the line segment
+// circleCenter: {x, y} - center of the circle
+// circleRadius: number - radius of the circle
+// Returns: boolean - true if the line segment intersects the circle
+export const lineCircleIntersection = (lineStart, lineEnd, circleCenter, circleRadius) => {
+  // Vector from line start to line end
+  const dx = lineEnd.x - lineStart.x;
+  const dy = lineEnd.y - lineStart.y;
+
+  // Vector from line start to circle center
+  const fx = lineStart.x - circleCenter.x;
+  const fy = lineStart.y - circleCenter.y;
+
+  // Quadratic formula coefficients for line-circle intersection
+  // We're solving: ||lineStart + t * direction - circleCenter||^2 = radius^2
+  const a = dx * dx + dy * dy;
+  const b = 2 * (fx * dx + fy * dy);
+  const c = (fx * fx + fy * fy) - circleRadius * circleRadius;
+
+  // Discriminant tells us if there's an intersection
+  const discriminant = b * b - 4 * a * c;
+
+  // No intersection if discriminant is negative
+  if (discriminant < 0) {
+    return false;
+  }
+
+  // Calculate the two possible intersection points along the infinite line
+  const discriminantSqrt = Math.sqrt(discriminant);
+  const t1 = (-b - discriminantSqrt) / (2 * a);
+  const t2 = (-b + discriminantSqrt) / (2 * a);
+
+  // Check if either intersection point is within our line segment (0 <= t <= 1)
+  // t1 is the first intersection point, t2 is the second
+  if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1)) {
+    return true;
+  }
+
+  // Also check if the circle contains the entire segment
+  // (both endpoints inside the circle)
+  if (t1 < 0 && t2 > 1) {
+    return true;
+  }
+
+  return false;
+};
+
 // The objects in the array need to have a 'queueDeletion' property
 export const garbageCollectObjects = (arrayOfObjects) => {
   arrayOfObjects.forEach((deletableObject) => {
