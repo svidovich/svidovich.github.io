@@ -1,0 +1,139 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Arvo", sans-serif;
+  font-display: swap;
+  overflow: hidden;
+}
+
+#topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid black;
+  background: white;
+  height: 48px;
+}
+
+#topbar button {
+  font-family: "Arvo", sans-serif;
+  font-display: swap;
+  font-size: 1.1em;
+  background: none;
+  border: 1px solid black;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#topbar button:hover {
+  color: #43b3ae;
+  border-color: #43b3ae;
+}
+
+#topbar button:disabled {
+  color: #ccc;
+  border-color: #ccc;
+  cursor: default;
+}
+
+#current-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#language-select {
+  font-family: "Arvo", sans-serif;
+  font-display: swap;
+  font-size: 0.85em;
+  padding: 4px 6px;
+  border: 1px solid black;
+  min-height: 44px;
+}
+
+#sidebar {
+  position: fixed;
+  top: 48px;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  border-right: 1px solid black;
+  background: white;
+  overflow-y: auto;
+  transition: transform 0.2s ease;
+  z-index: 10;
+}
+
+#sidebar.collapsed {
+  transform: translateX(-280px);
+}
+
+#song-list {
+  list-style: none;
+}
+
+#song-list li {
+  padding: 14px 16px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+#song-list li:hover {
+  color: #43b3ae;
+}
+
+#song-list li.active {
+  background: #e0faf9;
+  font-weight: bold;
+}
+
+#viewer {
+  position: fixed;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+}
+
+#viewer canvas {
+  display: block;
+  max-width: 100%;
+}
+
+.download-link {
+  display: inline-block;
+  margin: 16px 0 24px;
+  padding: 10px 20px;
+  font-family: "Arvo", sans-serif;
+  font-size: 0.85em;
+  color: black;
+  border: 1px solid black;
+  text-decoration: none;
+}
+
+.download-link:hover {
+  color: #43b3ae;
+  border-color: #43b3ae;
+}
