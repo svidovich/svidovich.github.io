@@ -10,8 +10,16 @@ const directory = {
   1: {
     title: "Common Litanies",
     files: [
-      { filename: "01b_common_litanies.pdf", language: LANG_ENG },
-      { filename: "01_common_litanies.pdf", language: LANG_ENG_SLAVO },
+      {
+        filename: "01b_common_litanies.pdf",
+        scoreTitle: "Common Litanies: English",
+        language: LANG_ENG,
+      },
+      {
+        filename: "01_common_litanies.pdf",
+        scoreTitle: "Common Litanies: Bilingual",
+        language: LANG_ENG_SLAVO,
+      },
     ],
   },
   2: {
@@ -19,29 +27,47 @@ const directory = {
     files: [
       {
         filename: "02_blagoslovi_duse_bless_the_lord.pdf",
+        scoreTitle: "Bless the Lord, O my Soul",
         language: LANG_SLAVO,
       },
     ],
   },
   3: {
     title: "Blaženi: The Beatitudes",
-    files: [{ filename: "04_blazeni_beatitudes.pdf", language: LANG_ENG }],
+    files: [
+      {
+        filename: "04_blazeni_beatitudes.pdf",
+        scoreTitle: "Blaženi: The Beatitudes",
+        language: LANG_ENG,
+      },
+    ],
   },
   4: {
     title: "Pridite: Come, Let us Worship",
     files: [
-      { filename: "05_pridite_come_let_us_worship.pdf", language: LANG_ENG },
+      {
+        filename: "05_pridite_come_let_us_worship.pdf",
+        scoreTitle: "Come, Let us Worship",
+        language: LANG_ENG,
+      },
     ],
   },
   5: {
     title: "Theotokion",
-    files: [{ filename: "xx_it_is_truly_meet.pdf", language: LANG_ENG }],
+    files: [
+      {
+        filename: "xx_it_is_truly_meet.pdf",
+        scoreTitle: "It is Truly Meet ( Balakirev )",
+        language: LANG_ENG,
+      },
+    ],
   },
   6: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
         filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
+        scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
         language: LANG_ENG_SLAVO,
       },
     ],
@@ -49,7 +75,11 @@ const directory = {
   7: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
-      { filename: "xx_vidjehom_svjet_amin_da.pdf", language: LANG_SLAVO },
+      {
+        filename: "xx_vidjehom_svjet_amin_da.pdf",
+        scoreTitle: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
+        language: LANG_SLAVO,
+      },
     ],
   },
 };
@@ -57,13 +87,13 @@ const directory = {
 /**
  * Application for browsing service manual PDFs in order during a church service.
  * Renders PDF pages to canvases via PDF.js, with a sidebar for song titles,
- * language selection, and sequential navigation.
+ * score selection, and sequential navigation.
  */
 class ServiceManualApp {
   /**
    * @param {Object} directory - The directory object mapping 1-based indices to
    *   entries, each with a `title` string and a `files` array of
-   *   `{ filename, language }` objects.
+   *   `{ filename, scoreTitle }` objects.
    */
   constructor(directory) {
     this.directory = directory;
@@ -77,7 +107,7 @@ class ServiceManualApp {
     this.prevBtn = document.getElementById("prev-btn");
     this.nextBtn = document.getElementById("next-btn");
     this.currentTitle = document.getElementById("current-title");
-    this.languageSelect = document.getElementById("language-select");
+    this.scoreSelect = document.getElementById("score-select");
     this.sidebar = document.getElementById("sidebar");
     this.songList = document.getElementById("song-list");
     this.viewer = document.getElementById("viewer");
@@ -111,14 +141,14 @@ class ServiceManualApp {
 
   /**
    * Binds click and change event listeners to the topbar controls:
-   * sidebar toggle, prev/next buttons, and language dropdown.
+   * sidebar toggle, prev/next buttons, and score dropdown.
    */
   bindEvents() {
     this.sidebarToggle.addEventListener("click", () => this.toggleSidebar());
     this.prevBtn.addEventListener("click", () => this.navigate(-1));
     this.nextBtn.addEventListener("click", () => this.navigate(1));
-    this.languageSelect.addEventListener("change", () =>
-      this.onLanguageChange(),
+    this.scoreSelect.addEventListener("change", () =>
+      this.onScoreChange(),
     );
   }
 
@@ -142,7 +172,7 @@ class ServiceManualApp {
   }
 
   /**
-   * Loads a directory entry by its key. Updates the title, language dropdown,
+   * Loads a directory entry by its key. Updates the title, score dropdown,
    * active sidebar highlight, prev/next button states, and renders the
    * first available PDF for that entry.
    * @param {number} key - The 1-based directory key to load.
@@ -153,12 +183,12 @@ class ServiceManualApp {
 
     this.currentTitle.textContent = entry.title;
 
-    this.languageSelect.innerHTML = "";
+    this.scoreSelect.innerHTML = "";
     for (const file of entry.files) {
       const option = document.createElement("option");
       option.value = file.filename;
-      option.textContent = file.language;
-      this.languageSelect.appendChild(option);
+      option.textContent = file.scoreTitle;
+      this.scoreSelect.appendChild(option);
     }
 
     const items = this.songList.querySelectorAll("li");
@@ -178,11 +208,11 @@ class ServiceManualApp {
   }
 
   /**
-   * Handles a change in the language dropdown by rendering the PDF
+   * Handles a change in the score dropdown by rendering the PDF
    * corresponding to the newly selected option.
    */
-  onLanguageChange() {
-    this.renderPdf(this.languageSelect.value);
+  onScoreChange() {
+    this.renderPdf(this.scoreSelect.value);
   }
 
   /**
@@ -203,7 +233,8 @@ class ServiceManualApp {
 
       const page = await pdf.getPage(i);
       const maxWidth = Math.min(this.viewer.clientWidth - 16, 800);
-      const scale = (maxWidth / page.getViewport({ scale: 1 }).width) *
+      const scale =
+        (maxWidth / page.getViewport({ scale: 1 }).width) *
         window.devicePixelRatio;
       const viewport = page.getViewport({ scale });
 
