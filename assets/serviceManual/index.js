@@ -63,6 +63,16 @@ const directory = {
     ],
   },
   6: {
+    title: "The Creed",
+    files: [
+      {
+        filename: "xx_the_creed_v1.pdf",
+        scoreTitle: "The Creed",
+        language: LANG_ENG,
+      },
+    ],
+  },
+  7: {
     title: "Hymn to the Theotokos",
     files: [
       {
@@ -77,7 +87,37 @@ const directory = {
       },
     ],
   },
-  7: {
+  8: {
+    title: "To Thee, Amen, Jedin Svjat",
+    files: [
+      {
+        filename: "to_thee_amen_jedin_svjat.pdf",
+        scoreTitle: "To Thee, Amen, Jedin Svjat",
+        language: LANG_ENG,
+      },
+    ],
+  },
+  9: {
+    title: "Prayer Before Communion",
+    files: [
+      {
+        filename: "prayer_before_communion.pdf",
+        scoreTitle: "Prayer Before Communion",
+        language: LANG_ENG,
+      },
+    ],
+  },
+  10: {
+    title: "Prayer After Communion",
+    files: [
+      {
+        filename: "prayer_after_communion.pdf",
+        scoreTitle: "Prayer After Communion",
+        language: LANG_ENG,
+      },
+    ],
+  },
+  11: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -87,7 +127,7 @@ const directory = {
       },
     ],
   },
-  8: {
+  12: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
