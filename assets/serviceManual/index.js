@@ -53,16 +53,31 @@ const directory = {
     ],
   },
   5: {
-    title: "Theotokion",
+    title: "St. George's Troparion",
+    files: [
+      {
+        filename: "06_st_george_troparion.pdf",
+        scoreTitle: "St. George's Troparion",
+        language: LANG_ENG,
+      },
+    ],
+  },
+  6: {
+    title: "Hymn to the Theotokos",
     files: [
       {
         filename: "xx_it_is_truly_meet.pdf",
         scoreTitle: "It is Truly Meet ( Balakirev )",
         language: LANG_ENG,
       },
+      {
+        filename: "xx_all_of_creation.pdf",
+        scoreTitle: "All of Creation Rejoices, Tone 6",
+        language: LANG_ENG,
+      },
     ],
   },
-  6: {
+  7: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -72,7 +87,7 @@ const directory = {
       },
     ],
   },
-  7: {
+  8: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
@@ -147,9 +162,7 @@ class ServiceManualApp {
     this.sidebarToggle.addEventListener("click", () => this.toggleSidebar());
     this.prevBtn.addEventListener("click", () => this.navigate(-1));
     this.nextBtn.addEventListener("click", () => this.navigate(1));
-    this.scoreSelect.addEventListener("change", () =>
-      this.onScoreChange(),
-    );
+    this.scoreSelect.addEventListener("change", () => this.onScoreChange());
   }
 
   /**
