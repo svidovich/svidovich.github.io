@@ -63,6 +63,21 @@ const directory = {
     ],
   },
   6: {
+    title: "Thrice-Holy Hymn",
+    files: [
+      {
+        filename: "svjati_boze_regular.pdf",
+        scoreTitle: "Svjati Bože (Usual)",
+        language: LANG_SLAVO,
+      },
+      {
+        filename: "svjati_boze_special.pdf",
+        scoreTitle: "Svjati Bože (Special)",
+        language: LANG_SLAVO,
+      },
+    ],
+  },
+  7: {
     title: "The Creed",
     files: [
       {
@@ -72,7 +87,7 @@ const directory = {
       },
     ],
   },
-  7: {
+  8: {
     title: "Hymn to the Theotokos",
     files: [
       {
@@ -87,7 +102,7 @@ const directory = {
       },
     ],
   },
-  8: {
+  9: {
     title: "To Thee, Amen, Jedin Svjat",
     files: [
       {
@@ -97,7 +112,7 @@ const directory = {
       },
     ],
   },
-  9: {
+  10: {
     title: "Prayer Before Communion",
     files: [
       {
@@ -107,7 +122,7 @@ const directory = {
       },
     ],
   },
-  10: {
+  11: {
     title: "Prayer After Communion",
     files: [
       {
@@ -117,7 +132,7 @@ const directory = {
       },
     ],
   },
-  11: {
+  12: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -127,7 +142,7 @@ const directory = {
       },
     ],
   },
-  12: {
+  13: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
