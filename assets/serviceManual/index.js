@@ -25,17 +25,28 @@ const directory = {
     ],
   },
   2: {
-    title: "Blagoslovi Duše: Bless the Lord, O my Soul",
+    title: "Bless the Lord, O my Soul",
     files: [
       {
         filename: "02_blagoslovi_duse_bless_the_lord.pdf",
-        scoreTitle: "Bless the Lord, O my Soul",
+        scoreTitle: "Blagoslovi Duše",
         language: LANG_SLAVO,
         musescore: "https://musescore.com/user/91550341/scores/32321234",
       },
     ],
   },
   3: {
+    title: "Only-Begotten Son",
+    files: [
+      {
+        filename: "03_jedinorodni_sine.pdf",
+        scoreTitle: "Jedinorodni Sine",
+        language: LANG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32337671",
+      },
+    ],
+  },
+  4: {
     title: "Blaženi: The Beatitudes",
     files: [
       {
@@ -46,7 +57,7 @@ const directory = {
       },
     ],
   },
-  4: {
+  5: {
     title: "Pridite: Come, Let us Worship",
     files: [
       {
@@ -57,7 +68,7 @@ const directory = {
       },
     ],
   },
-  5: {
+  6: {
     title: "St. George's Troparion",
     files: [
       {
@@ -68,7 +79,7 @@ const directory = {
       },
     ],
   },
-  6: {
+  7: {
     title: "Thrice-Holy Hymn",
     files: [
       {
@@ -81,10 +92,11 @@ const directory = {
         filename: "svjati_boze_special.pdf",
         scoreTitle: "Svjati Bože (Special)",
         language: LANG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32337722",
       },
     ],
   },
-  7: {
+  8: {
     title: "The Creed",
     files: [
       {
@@ -95,7 +107,7 @@ const directory = {
       },
     ],
   },
-  8: {
+  9: {
     title: "Hymn to the Theotokos",
     files: [
       {
@@ -108,11 +120,11 @@ const directory = {
         filename: "xx_all_of_creation.pdf",
         scoreTitle: "All of Creation Rejoices, Tone 6",
         language: LANG_ENG,
-        musescore: null,
+        musescore: "https://musescore.com/user/91550341/scores/32337695",
       },
     ],
   },
-  9: {
+  10: {
     title: "To Thee, Amen, Jedin Svjat",
     files: [
       {
@@ -123,7 +135,7 @@ const directory = {
       },
     ],
   },
-  10: {
+  11: {
     title: "Prayer Before Communion",
     files: [
       {
@@ -134,7 +146,7 @@ const directory = {
       },
     ],
   },
-  11: {
+  12: {
     title: "Prayer After Communion",
     files: [
       {
@@ -145,7 +157,7 @@ const directory = {
       },
     ],
   },
-  12: {
+  13: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -156,7 +168,7 @@ const directory = {
       },
     ],
   },
-  13: {
+  14: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
