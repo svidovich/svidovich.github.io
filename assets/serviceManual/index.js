@@ -200,6 +200,8 @@ class ServiceManualApp {
     this.currentIndex = 0;
     this.renderGeneration = 0;
 
+    this.pdfWorker = new pdfjsLib.PDFWorker();
+
     this.sidebarToggle = document.getElementById("sidebar-toggle");
     this.prevBtn = document.getElementById("prev-btn");
     this.nextBtn = document.getElementById("next-btn");
@@ -245,6 +247,9 @@ class ServiceManualApp {
     this.prevBtn.addEventListener("click", () => this.navigate(-1));
     this.nextBtn.addEventListener("click", () => this.navigate(1));
     this.scoreSelect.addEventListener("change", () => this.onScoreChange());
+    this.viewer.addEventListener("click", () =>
+      this.sidebar.classList.add("collapsed")
+    );
   }
 
   /**
@@ -296,7 +301,7 @@ class ServiceManualApp {
       activeLi.scrollIntoView({ block: "nearest" });
     }
 
-    this.renderPdf(entry.files[0].filename);
+    this.renderPdf(entry.files[0].filename, entry.files[0].musescore);
 
     this.prevBtn.disabled = this.currentIndex === 0;
     this.nextBtn.disabled = this.currentIndex === this.entries.length - 1;
@@ -307,7 +312,10 @@ class ServiceManualApp {
    * corresponding to the newly selected option.
    */
   onScoreChange() {
-    this.renderPdf(this.scoreSelect.value);
+    const filename = this.scoreSelect.value;
+    const entry = this.directory[this.entries[this.currentIndex]];
+    const file = entry.files.find((f) => f.filename === filename);
+    this.renderPdf(filename, file?.musescore);
   }
 
   /**
@@ -316,12 +324,28 @@ class ServiceManualApp {
    * Uses a generation counter to discard results from stale loads.
    * @param {string} filename - The PDF filename within the documents/ folder.
    */
-  async renderPdf(filename) {
+  async renderPdf(filename, musescore) {
     const generation = ++this.renderGeneration;
     this.viewer.innerHTML = "";
     this.viewer.scrollTop = 0;
 
-    const pdf = await pdfjsLib.getDocument(`documents/${filename}`).promise;
+    const url = `documents/${filename}`;
+    let pdfData;
+    if (typeof caches !== "undefined") {
+      const cache = await caches.open("service-manual-pdfs");
+      const cached = await cache.match(url);
+      if (cached) {
+        pdfData = await cached.arrayBuffer();
+      } else {
+        const response = await fetch(url);
+        await cache.put(url, response.clone());
+        pdfData = await response.arrayBuffer();
+      }
+    } else {
+      pdfData = await fetch(url).then((r) => r.arrayBuffer());
+    }
+
+    const pdf = await pdfjsLib.getDocument({ data: pdfData, worker: this.pdfWorker }).promise;
 
     for (let i = 1; i <= pdf.numPages; i++) {
       if (generation !== this.renderGeneration) return;
@@ -349,6 +373,9 @@ class ServiceManualApp {
 
     if (generation !== this.renderGeneration) return;
     this.viewer.appendChild(this.createDownloadLink(filename));
+    if (musescore) {
+      this.viewer.appendChild(this.createMusescoreLink(musescore));
+    }
   }
 
   /**
@@ -362,6 +389,21 @@ class ServiceManualApp {
     link.href = `documents/${filename}`;
     link.download = filename;
     link.textContent = "Download PDF";
+    link.className = "download-link";
+    return link;
+  }
+
+  /**
+   * Creates an anchor element linking to a MuseScore score page.
+   * @param {string} url - The MuseScore URL.
+   * @returns {HTMLAnchorElement} The MuseScore link element.
+   */
+  createMusescoreLink(url) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "View on MuseScore";
     link.className = "download-link";
     return link;
   }
