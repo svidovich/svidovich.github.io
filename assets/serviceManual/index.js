@@ -100,7 +100,7 @@ const directory = {
     title: "The Creed",
     files: [
       {
-        filename: "xx_the_creed_v1.pdf",
+        filename: "the_creed_v0.3.pdf",
         scoreTitle: "The Creed",
         language: LANG_ENG,
         musescore: null,
@@ -248,7 +248,7 @@ class ServiceManualApp {
     this.nextBtn.addEventListener("click", () => this.navigate(1));
     this.scoreSelect.addEventListener("change", () => this.onScoreChange());
     this.viewer.addEventListener("click", () =>
-      this.sidebar.classList.add("collapsed")
+      this.sidebar.classList.add("collapsed"),
     );
   }
 
@@ -345,7 +345,10 @@ class ServiceManualApp {
       pdfData = await fetch(url).then((r) => r.arrayBuffer());
     }
 
-    const pdf = await pdfjsLib.getDocument({ data: pdfData, worker: this.pdfWorker }).promise;
+    const pdf = await pdfjsLib.getDocument({
+      data: pdfData,
+      worker: this.pdfWorker,
+    }).promise;
 
     for (let i = 1; i <= pdf.numPages; i++) {
       if (generation !== this.renderGeneration) return;
