@@ -6,248 +6,347 @@ const LANG_SERB = "Serbian";
 const LANG_ENG = "English";
 const LANG_SLAVO = "Slavonic";
 const LANG_ENG_SLAVO = "English & Slavonic";
-const directory = {
-  1: {
-    title: "Common Litanies",
-    files: [
+
+const directory = [
+  {
+    title: "Divine Liturgy",
+    display: "open",
+    songs: [
       {
-        filename: "01b_common_litanies.pdf",
-        scoreTitle: "Common Litanies: English",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/32321195",
+        title: "Common Litanies",
+        files: [
+          {
+            filename: "01b_common_litanies.pdf",
+            scoreTitle: "Common Litanies: English",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32321195",
+          },
+          {
+            filename: "01_common_litanies.pdf",
+            scoreTitle: "Common Litanies: Bilingual",
+            language: LANG_ENG_SLAVO,
+            musescore: null,
+          },
+        ],
       },
       {
-        filename: "01_common_litanies.pdf",
-        scoreTitle: "Common Litanies: Bilingual",
-        language: LANG_ENG_SLAVO,
-        musescore: null,
+        title: "Bless the Lord, O my Soul",
+        files: [
+          {
+            filename: "02_blagoslovi_duse_bless_the_lord.pdf",
+            scoreTitle: "Blagoslovi Duše",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32321234",
+          },
+        ],
+      },
+      {
+        title: "Only-Begotten Son",
+        files: [
+          {
+            filename: "03_jedinorodni_sine.pdf",
+            scoreTitle: "Jedinorodni Sine",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32337671",
+          },
+        ],
+      },
+      {
+        title: "Blaženi: The Beatitudes",
+        files: [
+          {
+            filename: "04_blazeni_beatitudes.pdf",
+            scoreTitle: "Blaženi: The Beatitudes",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/29585978",
+          },
+        ],
+      },
+      {
+        title: "Pridite: Come, Let us Worship",
+        files: [
+          {
+            filename: "05_pridite_come_let_us_worship.pdf",
+            scoreTitle: "Come, Let us Worship",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/29636744",
+          },
+        ],
+      },
+      {
+        title: "St. George's Troparion",
+        files: [
+          {
+            filename: "06_st_george_troparion.pdf",
+            scoreTitle: "St. George's Troparion",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32134505",
+          },
+        ],
+      },
+      {
+        title: "Thrice-Holy Hymn",
+        files: [
+          {
+            filename: "svjati_boze_regular.pdf",
+            scoreTitle: "Svjati Bože (Usual)",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32321183",
+          },
+          {
+            filename: "svjati_boze_special.pdf",
+            scoreTitle: "Svjati Bože (Special)",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32337722",
+          },
+        ],
+      },
+      {
+        title: "The Creed",
+        files: [
+          {
+            filename: "the_creed_v0.3.pdf",
+            scoreTitle: "The Creed",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
+        files: [
+          {
+            filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
+            scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32321348",
+          },
+        ],
+      },
+      {
+        title: "We Praise Thee",
+        files: [
+          {
+            filename: "we_praise_thee_mixed.pdf",
+            scoreTitle: "We Praise Thee",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32527565",
+          },
+        ],
+      },
+      {
+        title: "Hymn to the Theotokos",
+        files: [
+          {
+            filename: "xx_it_is_truly_meet.pdf",
+            scoreTitle: "It is Truly Meet ( Balakirev )",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/23499880",
+          },
+          {
+            filename: "xx_all_of_creation.pdf",
+            scoreTitle: "All of Creation Rejoices, Tone 6",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32337695",
+          },
+        ],
+      },
+      {
+        title: "To Thee, Amen, Jedin Svjat",
+        files: [
+          {
+            filename: "to_thee_amen_jedin_svjat.pdf",
+            scoreTitle: "To Thee, Amen, Jedin Svjat",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/25645099",
+          },
+        ],
+      },
+      {
+        title: "Communion Hymn",
+        files: [
+          {
+            filename: "hvalite.pdf",
+            scoreTitle: "Hvalite",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32525783",
+          },
+          {
+            filename: "beneath_your_compassion_eng.pdf",
+            scoreTitle: "Beneath Your Compassion",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32525159",
+          },
+        ],
+      },
+      {
+        title: "Prayer Before Communion",
+        files: [
+          {
+            filename: "prayer_before_communion.pdf",
+            scoreTitle: "Prayer Before Communion",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Blagosloven Grjadi",
+        files: [
+          {
+            filename: "blagosloven_grjadi.pdf",
+            scoreTitle: "Blagosloven Grjadi",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32526983",
+          },
+        ],
+      },
+      {
+        title: "Tijelo Hristovo",
+        files: [
+          {
+            filename: "tijelo_hristovo.pdf",
+            scoreTitle: "Tijelo Hristovo",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32526713",
+          },
+        ],
+      },
+      {
+        title: "Prayer After Communion",
+        files: [
+          {
+            filename: "prayer_after_communion.pdf",
+            scoreTitle: "Prayer After Communion",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
+        files: [
+          {
+            filename: "xx_vidjehom_svjet_amin_da.pdf",
+            scoreTitle: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32321369",
+          },
+        ],
       },
     ],
   },
-  2: {
-    title: "Bless the Lord, O my Soul",
-    files: [
+  {
+    title: "Troparia & Kontakia",
+    display: "closed",
+    songs: [
       {
-        filename: "02_blagoslovi_duse_bless_the_lord.pdf",
-        scoreTitle: "Blagoslovi Duše",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32321234",
+        title: "Tone 1",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont1.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 1",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 2",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont2.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 2",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 3",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont3.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 3",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 4",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont4.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 4",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 5",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont5.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 5",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 6",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont6.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 6",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 7",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont7.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 7",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Tone 8",
+        files: [
+          {
+            filename: "troparia-kontakia/Resurrection-Trop-kont8.pdf",
+            scoreTitle: "Troparion & Kontakion, Tone 8",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
       },
     ],
   },
-  3: {
-    title: "Only-Begotten Son",
-    files: [
-      {
-        filename: "03_jedinorodni_sine.pdf",
-        scoreTitle: "Jedinorodni Sine",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32337671",
-      },
-    ],
-  },
-  4: {
-    title: "Blaženi: The Beatitudes",
-    files: [
-      {
-        filename: "04_blazeni_beatitudes.pdf",
-        scoreTitle: "Blaženi: The Beatitudes",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/29585978",
-      },
-    ],
-  },
-  5: {
-    title: "Pridite: Come, Let us Worship",
-    files: [
-      {
-        filename: "05_pridite_come_let_us_worship.pdf",
-        scoreTitle: "Come, Let us Worship",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/29636744",
-      },
-    ],
-  },
-  6: {
-    title: "St. George's Troparion",
-    files: [
-      {
-        filename: "06_st_george_troparion.pdf",
-        scoreTitle: "St. George's Troparion",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/32134505",
-      },
-    ],
-  },
-  7: {
-    title: "Thrice-Holy Hymn",
-    files: [
-      {
-        filename: "svjati_boze_regular.pdf",
-        scoreTitle: "Svjati Bože (Usual)",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32321183",
-      },
-      {
-        filename: "svjati_boze_special.pdf",
-        scoreTitle: "Svjati Bože (Special)",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32337722",
-      },
-    ],
-  },
-  8: {
-    title: "The Creed",
-    files: [
-      {
-        filename: "the_creed_v0.3.pdf",
-        scoreTitle: "The Creed",
-        language: LANG_ENG,
-        musescore: null,
-      },
-    ],
-  },
-  9: {
-    title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
-    files: [
-      {
-        filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
-        scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
-        language: LANG_ENG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32321348",
-      },
-    ],
-  },
-  10: {
-    title: "We Praise Thee",
-    files: [
-      {
-        filename: "we_praise_thee_mixed.pdf",
-        scoreTitle: "We Praise Thee",
-        language: LANG_ENG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32527565",
-      },
-    ],
-  },
-  11: {
-    title: "Hymn to the Theotokos",
-    files: [
-      {
-        filename: "xx_it_is_truly_meet.pdf",
-        scoreTitle: "It is Truly Meet ( Balakirev )",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/23499880",
-      },
-      {
-        filename: "xx_all_of_creation.pdf",
-        scoreTitle: "All of Creation Rejoices, Tone 6",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/32337695",
-      },
-    ],
-  },
-  12: {
-    title: "To Thee, Amen, Jedin Svjat",
-    files: [
-      {
-        filename: "to_thee_amen_jedin_svjat.pdf",
-        scoreTitle: "To Thee, Amen, Jedin Svjat",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/25645099",
-      },
-    ],
-  },
-  13: {
-    title: "Communion Hymn",
-    files: [
-      {
-        filename: "hvalite.pdf",
-        scoreTitle: "Hvalite",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/32525783",
-      },
-      {
-        filename: "beneath_your_compassion_eng.pdf",
-        scoreTitle: "Beneath Your Compassion",
-        language: LANG_ENG,
-        musescore: "https://musescore.com/user/91550341/scores/32525159",
-      },
-    ],
-  },
-  14: {
-    title: "Prayer Before Communion",
-    files: [
-      {
-        filename: "prayer_before_communion.pdf",
-        scoreTitle: "Prayer Before Communion",
-        language: LANG_ENG,
-        musescore: null,
-      },
-    ],
-  },
-  15: {
-    title: "Blagosloven Grjadi",
-    files: [
-      {
-        filename: "blagosloven_grjadi.pdf",
-        scoreTitle: "Blagosloven Grjadi",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32526983",
-      },
-    ],
-  },
-  16: {
-    title: "Tijelo Hristovo",
-    files: [
-      {
-        filename: "tijelo_hristovo.pdf",
-        scoreTitle: "Tijelo Hristovo",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32526713",
-      },
-    ],
-  },
-  17: {
-    title: "Prayer After Communion",
-    files: [
-      {
-        filename: "prayer_after_communion.pdf",
-        scoreTitle: "Prayer After Communion",
-        language: LANG_ENG,
-        musescore: null,
-      },
-    ],
-  },
-  18: {
-    title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
-    files: [
-      {
-        filename: "xx_vidjehom_svjet_amin_da.pdf",
-        scoreTitle: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
-        language: LANG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32321369",
-      },
-    ],
-  },
-};
+];
 
 /**
  * Application for browsing service manual PDFs in order during a church service.
- * Renders PDF pages to canvases via PDF.js, with a sidebar for song titles,
- * score selection, and sequential navigation.
+ * Renders PDF pages to canvases via PDF.js, with a sidebar organized into
+ * sections. Navigation (prev/next) stays within the current section.
  */
 class ServiceManualApp {
   /**
-   * @param {Object} directory - The directory object mapping 1-based indices to
-   *   entries, each with a `title` string and a `files` array of
-   *   `{ filename, scoreTitle }` objects.
+   * @param {Array} directory - Array of sections, each with a `title` string
+   *   and a `songs` array of `{ title, files }` objects. Song numbers are
+   *   1-based and reset within each section.
    */
   constructor(directory) {
     this.directory = directory;
-    this.entries = Object.keys(directory)
-      .map(Number)
-      .sort((a, b) => a - b);
-    this.currentIndex = 0;
+    this.currentSectionIndex = 0;
+    this.currentSongIndex = 0;
     this.renderGeneration = 0;
 
     this.pdfWorker = new pdfjsLib.PDFWorker();
@@ -266,26 +365,52 @@ class ServiceManualApp {
 
   /**
    * Initializes the application by building the sidebar, binding event
-   * handlers, and loading the first entry.
+   * handlers, and loading the first song of the first non-empty section.
    */
   init() {
     this.buildSongList();
     this.bindEvents();
-    this.loadEntry(this.entries[0]);
+    const firstSection = this.directory.findIndex((s) => s.songs.length > 0);
+    if (firstSection !== -1) this.loadEntry(firstSection, 0);
   }
 
   /**
-   * Populates the sidebar with a list item for each directory entry,
-   * displaying its number and title.
+   * Populates the sidebar with a collapsible section header followed by a
+   * songs container for each section. Clicking the header toggles collapse.
    */
   buildSongList() {
-    for (const key of this.entries) {
-      const li = document.createElement("li");
-      li.textContent = `${key}. ${this.directory[key].title}`;
-      li.dataset.key = key;
-      li.addEventListener("click", () => this.loadEntry(key));
-      this.songList.appendChild(li);
-    }
+    this.directory.forEach((section, si) => {
+      const header = document.createElement("li");
+      header.textContent = section.title;
+      header.className = "section-title";
+
+      const songsContainer = document.createElement("li");
+      songsContainer.className = "section-songs";
+
+      if (section.display === "closed") {
+        header.classList.add("collapsed");
+        songsContainer.classList.add("collapsed");
+      }
+      const songUl = document.createElement("ul");
+
+      header.addEventListener("click", () => {
+        header.classList.toggle("collapsed");
+        songsContainer.classList.toggle("collapsed");
+      });
+
+      section.songs.forEach((song, songIdx) => {
+        const li = document.createElement("li");
+        li.textContent = `${songIdx + 1}. ${song.title}`;
+        li.dataset.section = si;
+        li.dataset.song = songIdx;
+        li.addEventListener("click", () => this.loadEntry(si, songIdx));
+        songUl.appendChild(li);
+      });
+
+      songsContainer.appendChild(songUl);
+      this.songList.appendChild(header);
+      this.songList.appendChild(songsContainer);
+    });
   }
 
   /**
@@ -311,39 +436,46 @@ class ServiceManualApp {
   }
 
   /**
-   * Navigates to the next or previous entry in the directory.
+   * Navigates to the next or previous song within the current section.
+   * Does not cross section boundaries.
    * @param {number} direction - The step direction: -1 for previous, +1 for next.
    */
   navigate(direction) {
-    const newIndex = this.currentIndex + direction;
-    if (newIndex >= 0 && newIndex < this.entries.length) {
-      this.loadEntry(this.entries[newIndex]);
+    const section = this.directory[this.currentSectionIndex];
+    const newSongIndex = this.currentSongIndex + direction;
+    if (newSongIndex >= 0 && newSongIndex < section.songs.length) {
+      this.loadEntry(this.currentSectionIndex, newSongIndex);
     }
   }
 
   /**
-   * Loads a directory entry by its key. Updates the title, score dropdown,
-   * active sidebar highlight, prev/next button states, and renders the
-   * first available PDF for that entry.
-   * @param {number} key - The 1-based directory key to load.
+   * Loads a song by section and song index. Updates the title, score dropdown,
+   * active sidebar highlight, prev/next button states, and renders the first
+   * available PDF for that song.
+   * @param {number} sectionIndex - The 0-based index of the section.
+   * @param {number} songIndex - The 0-based index of the song within the section.
    */
-  loadEntry(key) {
-    this.currentIndex = this.entries.indexOf(key);
-    const entry = this.directory[key];
+  loadEntry(sectionIndex, songIndex) {
+    this.currentSectionIndex = sectionIndex;
+    this.currentSongIndex = songIndex;
+    const song = this.directory[sectionIndex].songs[songIndex];
 
-    this.currentTitle.textContent = entry.title;
+    this.currentTitle.textContent = song.title;
 
     this.scoreSelect.innerHTML = "";
-    for (const file of entry.files) {
+    for (const file of song.files) {
       const option = document.createElement("option");
       option.value = file.filename;
       option.textContent = file.scoreTitle;
       this.scoreSelect.appendChild(option);
     }
 
-    const items = this.songList.querySelectorAll("li");
-    items.forEach((li) => {
-      li.classList.toggle("active", Number(li.dataset.key) === key);
+    this.songList.querySelectorAll("li[data-section]").forEach((li) => {
+      li.classList.toggle(
+        "active",
+        Number(li.dataset.section) === sectionIndex &&
+          Number(li.dataset.song) === songIndex,
+      );
     });
 
     const activeLi = this.songList.querySelector("li.active");
@@ -351,10 +483,11 @@ class ServiceManualApp {
       activeLi.scrollIntoView({ block: "nearest" });
     }
 
-    this.renderPdf(entry.files[0].filename, entry.files[0].musescore);
+    this.renderPdf(song.files[0].filename, song.files[0].musescore);
 
-    this.prevBtn.disabled = this.currentIndex === 0;
-    this.nextBtn.disabled = this.currentIndex === this.entries.length - 1;
+    const section = this.directory[sectionIndex];
+    this.prevBtn.disabled = this.currentSongIndex === 0;
+    this.nextBtn.disabled = this.currentSongIndex === section.songs.length - 1;
   }
 
   /**
@@ -363,8 +496,9 @@ class ServiceManualApp {
    */
   onScoreChange() {
     const filename = this.scoreSelect.value;
-    const entry = this.directory[this.entries[this.currentIndex]];
-    const file = entry.files.find((f) => f.filename === filename);
+    const song =
+      this.directory[this.currentSectionIndex].songs[this.currentSongIndex];
+    const file = song.files.find((f) => f.filename === filename);
     this.renderPdf(filename, file?.musescore);
   }
 
