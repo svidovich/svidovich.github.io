@@ -150,7 +150,7 @@ const directory = {
         language: LANG_ENG,
         musescore: "https://musescore.com/user/91550341/scores/32525159",
       },
-    ]
+    ],
   },
   12: {
     title: "Prayer Before Communion",
@@ -164,6 +164,28 @@ const directory = {
     ],
   },
   13: {
+    title: "Blagosloven Grjadi",
+    files: [
+      {
+        filename: "blagosloven_grjadi.pdf",
+        scoreTitle: "Blagosloven Grjadi",
+        language: LANG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32526983",
+      },
+    ],
+  },
+  14: {
+    title: "Tijelo Hristovo",
+    files: [
+      {
+        filename: "tijelo_hristovo.pdf",
+        scoreTitle: "Tijelo Hristovo",
+        language: LANG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32526713",
+      },
+    ],
+  },
+  15: {
     title: "Prayer After Communion",
     files: [
       {
@@ -174,7 +196,7 @@ const directory = {
       },
     ],
   },
-  14: {
+  16: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -185,7 +207,7 @@ const directory = {
       },
     ],
   },
-  15: {
+  17: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
