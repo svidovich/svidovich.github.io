@@ -136,6 +136,23 @@ const directory = {
     ],
   },
   11: {
+    title: "Communion Hymn",
+    files: [
+      {
+        filename: "hvalite.pdf",
+        scoreTitle: "Hvalite",
+        language: LANG_ENG,
+        musescore: "https://musescore.com/user/91550341/scores/32525783",
+      },
+      {
+        filename: "beneath_your_compassion_eng.pdf",
+        scoreTitle: "Beneath Your Compassion",
+        language: LANG_ENG,
+        musescore: "https://musescore.com/user/91550341/scores/32525159",
+      },
+    ]
+  },
+  12: {
     title: "Prayer Before Communion",
     files: [
       {
@@ -146,7 +163,7 @@ const directory = {
       },
     ],
   },
-  12: {
+  13: {
     title: "Prayer After Communion",
     files: [
       {
@@ -157,7 +174,7 @@ const directory = {
       },
     ],
   },
-  13: {
+  14: {
     title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
     files: [
       {
@@ -168,7 +185,7 @@ const directory = {
       },
     ],
   },
-  14: {
+  15: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
