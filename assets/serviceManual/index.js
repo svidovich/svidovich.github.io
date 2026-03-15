@@ -108,6 +108,28 @@ const directory = {
     ],
   },
   9: {
+    title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
+    files: [
+      {
+        filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
+        scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
+        language: LANG_ENG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32321348",
+      },
+    ],
+  },
+  10: {
+    title: "We Praise Thee",
+    files: [
+      {
+        filename: "we_praise_thee_mixed.pdf",
+        scoreTitle: "We Praise Thee",
+        language: LANG_ENG_SLAVO,
+        musescore: "https://musescore.com/user/91550341/scores/32527565",
+      },
+    ],
+  },
+  11: {
     title: "Hymn to the Theotokos",
     files: [
       {
@@ -124,7 +146,7 @@ const directory = {
       },
     ],
   },
-  10: {
+  12: {
     title: "To Thee, Amen, Jedin Svjat",
     files: [
       {
@@ -135,7 +157,7 @@ const directory = {
       },
     ],
   },
-  11: {
+  13: {
     title: "Communion Hymn",
     files: [
       {
@@ -152,7 +174,7 @@ const directory = {
       },
     ],
   },
-  12: {
+  14: {
     title: "Prayer Before Communion",
     files: [
       {
@@ -163,7 +185,7 @@ const directory = {
       },
     ],
   },
-  13: {
+  15: {
     title: "Blagosloven Grjadi",
     files: [
       {
@@ -174,7 +196,7 @@ const directory = {
       },
     ],
   },
-  14: {
+  16: {
     title: "Tijelo Hristovo",
     files: [
       {
@@ -185,7 +207,7 @@ const directory = {
       },
     ],
   },
-  15: {
+  17: {
     title: "Prayer After Communion",
     files: [
       {
@@ -196,18 +218,7 @@ const directory = {
       },
     ],
   },
-  16: {
-    title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
-    files: [
-      {
-        filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
-        scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
-        language: LANG_ENG_SLAVO,
-        musescore: "https://musescore.com/user/91550341/scores/32321348",
-      },
-    ],
-  },
-  17: {
+  18: {
     title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
     files: [
       {
