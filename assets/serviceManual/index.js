@@ -166,7 +166,7 @@ const directory = [
         title: "Communion Hymn",
         files: [
           {
-            filename: "hvalite.pdf",
+            filename: "hvalite.v0.2.pdf",
             scoreTitle: "Hvalite",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32525783",
