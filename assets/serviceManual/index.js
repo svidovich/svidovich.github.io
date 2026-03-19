@@ -102,6 +102,28 @@ const directory = [
         ],
       },
       {
+        title: "Epistle & Gospel Reading Responses",
+        files: [
+          {
+            filename: "epistle_and_gospel.pdf",
+            scoreTitle: "Epistle & Gospel",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32636450",
+          },
+        ],
+      },
+      {
+        title: "Litany of Fervent Supplication",
+        files: [
+          {
+            filename: "litany_fervent_supplication.pdf",
+            scoreTitle: "Fervent Supplication",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32636423",
+          },
+        ],
+      },
+      {
         title: "The Creed",
         files: [
           {
