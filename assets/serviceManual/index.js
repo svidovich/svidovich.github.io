@@ -160,7 +160,7 @@ const directory = [
         title: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
         files: [
           {
-            filename: "xx_milost_mira_dostojno_svjat_svjat.pdf",
+            filename: "xx_milost_mira_dostojno_svjat_svjat.v0.3.pdf",
             scoreTitle: "'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'",
             language: LANG_ENG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32321348",
