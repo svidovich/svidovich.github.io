@@ -55,7 +55,7 @@ const directory = [
         title: "Blaženi: The Beatitudes",
         files: [
           {
-            filename: "04_blazeni_beatitudes.pdf",
+            filename: "04_blazeni_beatitudes.v0.2.pdf",
             scoreTitle: "Blaženi: The Beatitudes",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/29585978",
@@ -120,6 +120,28 @@ const directory = [
             scoreTitle: "Fervent Supplication",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32636423",
+          },
+        ],
+      },
+      {
+        title: "Iže Heruvimi",
+        files: [
+          {
+            filename: "ize_heruvimi.pdf",
+            scoreTitle: "Iže Heruvimi",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32661428",
+          },
+        ],
+      },
+      {
+        title: "Preparation for Consecration",
+        files: [
+          {
+            filename: "preparation_for_consecration.pdf",
+            scoreTitle: "Preparation ...",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32659679",
           },
         ],
       },
@@ -224,11 +246,11 @@ const directory = [
         ],
       },
       {
-        title: "Tijelo Hristovo",
+        title: "Tjelo Hristovo",
         files: [
           {
-            filename: "tijelo_hristovo.pdf",
-            scoreTitle: "Tijelo Hristovo",
+            filename: "tjelo_hristovo.pdf",
+            scoreTitle: "Tjelo Hristovo",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32526713",
           },
