@@ -196,6 +196,17 @@ const directory = [
         ],
       },
       {
+        title: "Litanies & Lord's Prayer",
+        files: [
+          {
+            filename: "litanies_lords_prayer.pdf",
+            scoreTitle: "Litanies; Oče Naš",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32686529",
+          },
+        ],
+      },
+      {
         title: "To Thee, Amen, Jedin Svjat",
         files: [
           {
@@ -275,6 +286,17 @@ const directory = [
             scoreTitle: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32321369",
+          },
+        ],
+      },
+      {
+        title: "Departure: Budi Imja Gospodnje!",
+        files: [
+          {
+            filename: "departure_budi_imja_blessings.pdf",
+            scoreTitle: "Departure, Budi Imja Gospodnje",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32687336",
           },
         ],
       },
