@@ -227,10 +227,22 @@ const directory = [
             musescore: "https://musescore.com/user/91550341/scores/32525783",
           },
           {
+            filename: "pjesma_krstu.v0.2.pdf",
+            scoreTitle: "Pjesma Krstu (Spasi Bože)",
+            language: LANG_SERB,
+            musescore: "https://musescore.com/user/91550341/scores/32702216",
+          },
+          {
             filename: "beneath_your_compassion_eng.pdf",
             scoreTitle: "Beneath Your Compassion",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32525159",
+          },
+          {
+            filename: "st_simeon.pdf",
+            scoreTitle: "St. Simeon's Prayer",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32701382",
           },
         ],
       },
@@ -303,6 +315,23 @@ const directory = [
     ],
   },
   {
+    title: "Holiday Songs & Carols",
+    display: "closed",
+    songs: [
+      {
+        title: "Hristos Voskrese",
+        files: [
+          {
+            filename: "hristos_voskrese.pdf",
+            scoreTitle: "St. Savić, Shape Notes",
+            language: LANG_ENG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32701406",
+          },
+        ],
+      },
+    ],
+  },
+  {
     title: "Slava Music",
     display: "closed",
     songs: [
@@ -314,6 +343,34 @@ const directory = [
             scoreTitle: "Svjati Mučenici",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32698349",
+          },
+        ],
+      },
+      {
+        title: "Through the Intercession",
+        files: [
+          {
+            filename: "slava_hymn_through_the_intercession.pdf",
+            scoreTitle: "Soprano",
+            language: LANG_ENG,
+            musescore: null,
+          },
+          {
+            filename: "slava_hymn_through_the_intercession_baritone.pdf",
+            scoreTitle: "Baritone",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
+        title: "Troparia + Kontakia for Saints",
+        files: [
+          {
+            filename: "st_sava_troparion_kontakion.pdf",
+            scoreTitle: "St. Sava",
+            language: LANG_ENG,
+            musescore: null,
           },
         ],
       },
