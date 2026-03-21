@@ -303,6 +303,40 @@ const directory = [
     ],
   },
   {
+    title: "Slava Music",
+    display: "closed",
+    songs: [
+      {
+        title: "Holy Martyrs",
+        files: [
+          {
+            filename: "slava_troparia_holy_martyrs.pdf",
+            scoreTitle: "Svjati Mučenici",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/32698349",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Wedding Music",
+    display: "closed",
+    songs: [
+      {
+        title: "Rejoice, Isaiah!",
+        files: [
+          {
+            filename: "wedding_troparia.pdf",
+            scoreTitle: "Isaije Likuj",
+            language: LANG_SLAVO,
+            musescore: "https://musescore.com/user/91550341/scores/22102867",
+          },
+        ],
+      },
+    ],
+  },
+  {
     title: "Troparia & Kontakia",
     display: "closed",
     songs: [
