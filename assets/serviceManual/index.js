@@ -16,7 +16,7 @@ const directory = [
         title: "Common Litanies",
         files: [
           {
-            filename: "reduced_common_litanies.pdf",
+            filename: "reduced_common_litanies.v0.3.pdf",
             scoreTitle: "Common Litanies",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32321195",
