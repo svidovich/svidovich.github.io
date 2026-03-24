@@ -16,14 +16,20 @@ const directory = [
         title: "Common Litanies",
         files: [
           {
+            filename: "reduced_common_litanies.pdf",
+            scoreTitle: "Common Litanies",
+            language: LANG_ENG,
+            musescore: "https://musescore.com/user/91550341/scores/32321195",
+          },
+          {
             filename: "01b_common_litanies.pdf",
-            scoreTitle: "Common Litanies: English",
+            scoreTitle: "Full Common Litanies: English",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32321195",
           },
           {
             filename: "01_common_litanies.pdf",
-            scoreTitle: "Common Litanies: Bilingual",
+            scoreTitle: "Full Common Litanies: Bilingual",
             language: LANG_ENG_SLAVO,
             musescore: null,
           },
@@ -41,6 +47,17 @@ const directory = [
         ],
       },
       {
+        title: "Small Litany",
+        files: [
+          {
+            filename: "small_litany_1.pdf",
+            scoreTitle: "Small Litany",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
         title: "Only-Begotten Son",
         files: [
           {
@@ -48,6 +65,17 @@ const directory = [
             scoreTitle: "Jedinorodni Sine",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32337671",
+          },
+        ],
+      },
+      {
+        title: "Small Litany",
+        files: [
+          {
+            filename: "small_litany_1.pdf",
+            scoreTitle: "Small Litany",
+            language: LANG_ENG,
+            musescore: null,
           },
         ],
       },
@@ -81,6 +109,17 @@ const directory = [
             scoreTitle: "St. George's Troparion",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32134505",
+          },
+        ],
+      },
+      {
+        title: "Small Litany",
+        files: [
+          {
+            filename: "small_litany_2.v0.2.pdf",
+            scoreTitle: "Small Litany",
+            language: LANG_ENG,
+            musescore: null,
           },
         ],
       },
@@ -120,6 +159,17 @@ const directory = [
             scoreTitle: "Fervent Supplication",
             language: LANG_ENG,
             musescore: "https://musescore.com/user/91550341/scores/32636423",
+          },
+        ],
+      },
+      {
+        title: "Small Litany",
+        files: [
+          {
+            filename: "small_litany_4.v0.2.pdf",
+            scoreTitle: "Small Litany",
+            language: LANG_ENG,
+            musescore: null,
           },
         ],
       },
@@ -199,7 +249,7 @@ const directory = [
         title: "Litanies & Lord's Prayer",
         files: [
           {
-            filename: "litanies_lords_prayer.pdf",
+            filename: "litanies_lords_prayer.v0.3.pdf",
             scoreTitle: "Litanies; Oče Naš",
             language: LANG_ENG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32686529",
@@ -272,7 +322,7 @@ const directory = [
         title: "Tjelo Hristovo",
         files: [
           {
-            filename: "tjelo_hristovo.pdf",
+            filename: "tijelo_hristovo.v0.2.pdf",
             scoreTitle: "Tjelo Hristovo",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32526713",
@@ -294,7 +344,7 @@ const directory = [
         title: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
         files: [
           {
-            filename: "xx_vidjehom_svjet_amin_da.pdf",
+            filename: "vidjehom_amin_da_v0.2.pdf",
             scoreTitle: "'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'",
             language: LANG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32321369",
@@ -302,10 +352,21 @@ const directory = [
         ],
       },
       {
+        title: "Small Litany",
+        files: [
+          {
+            filename: "small_litany_3.pdf",
+            scoreTitle: "Small Litany",
+            language: LANG_ENG,
+            musescore: null,
+          },
+        ],
+      },
+      {
         title: "Departure: Budi Imja Gospodnje!",
         files: [
           {
-            filename: "departure_budi_imja_blessings.pdf",
+            filename: "departure_budi_imja_blessings.v0.2.pdf",
             scoreTitle: "Departure, Budi Imja Gospodnje",
             language: LANG_ENG_SLAVO,
             musescore: "https://musescore.com/user/91550341/scores/32687336",
