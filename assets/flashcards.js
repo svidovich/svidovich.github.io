@@ -78,6 +78,12 @@ const getVocabCategorizationOptions = () => {
   return VOCAB_CATEGORIZATION_OPTIONS.peek();
 };
 
+const QUANTITY_OPTIONS = new Cycle([10, 15, 20]);
+
+const getQuantity = () => {
+  return QUANTITY_OPTIONS.peek();
+};
+
 // TODO this file could use some OOP.
 
 // Some globally available stuff
@@ -689,6 +695,15 @@ const addLangChoiceClickListener = () => {
   });
 };
 
+const addQuantityCycleClickListener = () => {
+  const quantityButton = document.getElementById("quantitycyclebutton");
+  const quantitySpan = document.getElementById("quantitycyclespan");
+  quantityButton.addEventListener("click", () => {
+    QUANTITY_OPTIONS.next();
+    quantitySpan.textContent = QUANTITY_OPTIONS.peek();
+  });
+};
+
 const addVocabCategorizationChoiceClickListener = () => {
   // We can choose what goes in the language choice dropdown by cycling the uh,
   // text. It goes like this ...
@@ -1188,10 +1203,12 @@ const loadShuffledFlashCards = (vocabularyObjects) => {
   ).value;
 
   shuffleArray(vocabCopy);
+  const quantity = getQuantity();
+  const vocabSlice = vocabCopy.slice(0, quantity);
   const languageChoice = getLanguageChoice();
   // TODO Where should this live?
 
-  vocabCopy.forEach((vocabularyObject) => {
+  vocabSlice.forEach((vocabularyObject) => {
     // Let's flip some coins, shall we?
     let front;
     let rear;
@@ -1366,15 +1383,17 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   if (scoreBarHidden(scoreBar) === true) {
     toggleScoreBar(scoreBar);
   }
-  const scoreMax = vocabularyObjects.length;
   const trueOrFalseHeader = "True or False:";
-  setScoreBarScore(scoreBar, 0, scoreMax);
   const scriptOption = document.querySelector(
     'input[name="scriptoptions"]:checked'
   ).value;
   const quizBox = document.getElementById("flashcardcontainer");
   const vocabCopy = [...vocabularyObjects];
   shuffleArray(vocabCopy);
+  const quantity = getQuantity();
+  const vocabSlice = vocabCopy.slice(0, quantity);
+  const scoreMax = vocabSlice.length;
+  setScoreBarScore(scoreBar, 0, scoreMax);
 
   // add a newline before we begin.
   const startnl = document.createElement("br");
@@ -1387,7 +1406,7 @@ const loadTrueOrFalse = (vocabularyObjects) => {
   //      ^ Source     ^ Destination
   // Each object should be represented.
   let sourceEnglish;
-  vocabCopy.forEach((vocabularyObject) => {
+  vocabSlice.forEach((vocabularyObject) => {
     const jugoScript = getJugoScriptForObject(scriptOption, vocabularyObject);
     // Get an ID for the question.
     const questionUUID = UUIDGeneratorBrowser();
@@ -1564,8 +1583,6 @@ const loadQuiz = (vocabularyObjects) => {
   if (scoreBarHidden(scoreBar) === true) {
     toggleScoreBar(scoreBar);
   }
-  const scoreMax = vocabularyObjects.length;
-  setScoreBarScore(scoreBar, 0, scoreMax);
   const vocabCopy = [...vocabularyObjects];
 
   const scriptOption = document.querySelector(
@@ -1573,6 +1590,10 @@ const loadQuiz = (vocabularyObjects) => {
   ).value;
 
   shuffleArray(vocabCopy);
+  const quantity = getQuantity();
+  const vocabSlice = vocabCopy.slice(0, quantity);
+  const scoreMax = vocabSlice.length;
+  setScoreBarScore(scoreBar, 0, scoreMax);
   const quizBox = document.getElementById("flashcardcontainer");
   const startnl = document.createElement("br");
   quizBox.appendChild(startnl);
@@ -1580,7 +1601,7 @@ const loadQuiz = (vocabularyObjects) => {
   let isEnglish;
   quizBox.style.gridTemplateColumns = "1fr";
   let questionNumber = 0;
-  vocabCopy.forEach((vocabularyObject) => {
+  vocabSlice.forEach((vocabularyObject) => {
     questionNumber += 1;
     // Add a header for each of the quiz questions
     let headerScript;
@@ -1767,6 +1788,7 @@ const main = () => {
 
   addPracticeOptionsDropdownChangeListener();
   addVocabCategorizationChoiceClickListener();
+  addQuantityCycleClickListener();
   addLangChoiceClickListener();
 
   addNewCustomLessonClickListeners();

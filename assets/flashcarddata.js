@@ -428,7 +428,7 @@ const ADJECTIVES_2_JSON = [
   { english: "Specific", latin: "Naročit", categories: [ADJECTIVE] },
   { english: "General", latin: "Opšti", categories: [ADJECTIVE] },
   { english: "Certain", latin: "Siguran", categories: [ADJECTIVE] },
-  { english: "Free", latin: "Slobod", categories: [ADJECTIVE] },
+  { english: "Free", latin: "Slobodan", categories: [ADJECTIVE] },
   {
     english: "Open",
     latin: "Otvoren",
@@ -499,7 +499,7 @@ const ADJECTIVES_3_JSON = [
     latin: "Ozbiljan",
     categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE, DESCRIPTIONS_EVENTS],
   },
-  { english: "Ready", latin: "Spreman", categories: [ADJECTIVE, FOOD] },
+  { english: "Ready", latin: "Spreman", categories: [ADJECTIVE, DESCRIPTIONS_PEOPLE] },
   {
     english: "Environmental",
     latin: "Ekološki",
@@ -805,15 +805,15 @@ const NOUNS_1_JSON = [
     latin: "Život",
     categories: [NOUN, N_IDEA, N_THING, NATURE],
   },
-  { english: "Child", latin: "Deca", categories: [NOUN, N_PERSON, PEOPLE] },
+  { english: "Child", latin: "Dete", categories: [NOUN, N_PERSON, PEOPLE] },
   {
     english: "World",
     latin: "Svijet",
     categories: [NOUN, N_PLACE, N_THING, NATURE],
   },
-  { english: "School", latin: "Škola", categories: [NOUN, N_PLACE] },
+  { english: "School", latin: "Škola", categories: [NOUN, N_PLACE, EDUCATION] },
   { english: "State", latin: "Država", categories: [NOUN, N_IDEA] },
-  { english: "Family", latin: "Porodica", categories: [NOUN, PEOPLE, N_THING] },
+  { english: "Family", latin: "Porodica", categories: [NOUN, PEOPLE, N_THING, FAMILY_RELATIVES] },
   {
     english: "Student",
     latin: "Đak",
@@ -826,7 +826,7 @@ const NOUNS_1_JSON = [
   },
   { english: "Country", latin: "Zemlja", categories: [NOUN, N_PLACE, N_IDEA] },
   { english: "Problem", latin: "Problem", categories: [NOUN, N_THING] },
-  { english: "Hand", latin: "Ruk", categories: [NOUN, N_THING, BODY] },
+  { english: "Hand", latin: "Ruka", categories: [NOUN, N_THING, BODY] },
 ];
 
 const NOUNS_1 = vocabularySectionFromArray("Nouns I", "nouns1", NOUNS_1_JSON);
@@ -842,7 +842,7 @@ const NOUNS_2_JSON = [
   { english: "Week", latin: "Nedelja", categories: [NOUN, N_THING, TIME] },
   {
     english: "Company",
-    latin: "Firman",
+    latin: "Firma",
     categories: [NOUN, BUSINESS, N_THING, N_IDEA],
   },
   {
@@ -852,17 +852,17 @@ const NOUNS_2_JSON = [
   },
   {
     english: "Program",
-    latin: "Programa",
+    latin: "Program",
     categories: [NOUN, BUSINESS, COMPUTERS, N_THING, N_IDEA],
   },
   {
     english: "Question",
-    latin: "Pitanja",
+    latin: "Pitanje",
     categories: [NOUN, N_THING, N_IDEA, EDUCATION],
   },
   {
     english: "Work",
-    latin: "Posla",
+    latin: "Posao",
     categories: [NOUN, BUSINESS, N_THING, N_IDEA],
   },
   {
@@ -881,10 +881,10 @@ const NOUNS_2_JSON = [
     latin: "Točka",
     categories: [NOUN, N_THING, NUMBERS_COUNTING],
   },
-  { english: "Home", latin: "Kuć", categories: [NOUN, N_PLACE, N_IDEA] },
-  { english: "Water", latin: "Voda", categories: [NOUN, N_THING] },
+  { english: "Home", latin: "Kuća", categories: [NOUN, N_PLACE, N_IDEA] },
+  { english: "Water", latin: "Voda", categories: [NOUN, N_THING, NATURE] },
   { english: "Room", latin: "Soba", categories: [NOUN, N_PLACE, N_THING] },
-  { english: "Mother", latin: "Majka", categories: [NOUN, PEOPLE, N_PERSON] },
+  { english: "Mother", latin: "Majka", categories: [NOUN, PEOPLE, N_PERSON, FAMILY_RELATIVES] },
   { english: "Area", latin: "Mjesto", categories: [NOUN, N_PLACE] },
   { english: "Money", latin: "Novac", categories: [NOUN, N_THING, N_IDEA] },
   {
@@ -909,7 +909,7 @@ const NOUNS_3_JSON = [
   { english: "Eye", latin: "Oko", categories: [NOUN, BODY, N_THING] },
   {
     english: "Job",
-    latin: "Posa",
+    latin: "Posao",
     categories: [NOUN, N_THING, BUSINESS, N_IDEA],
   },
   {
@@ -938,7 +938,7 @@ const NOUNS_3_JSON = [
   { english: "Service", latin: "Služba", categories: [NOUN, BUSINESS, N_IDEA] },
   {
     english: "Friend",
-    latin: "Prijatelja",
+    latin: "Prijatelj",
     categories: [NOUN, PEOPLE, N_PERSON],
   },
   {
@@ -969,7 +969,7 @@ const NOUNS_4_JSON = [
     latin: "Zakon",
     categories: [NOUN, BUSINESS, EDUCATION, N_IDEA, N_THING],
   },
-  { english: "Car", latin: "Kola", categories: [NOUN, N_THING] },
+  { english: "Car", latin: "Kola", categories: [NOUN, N_THING, TRAVEL] },
   { english: "City", latin: "Grad", categories: [NOUN, N_PLACE, N_THING] },
   {
     english: "Community",
@@ -999,7 +999,7 @@ const NOUNS_4_JSON = [
   { english: "Back", latin: "Leđa", categories: [NOUN, DIRECTIONS, N_IDEA] },
   {
     english: "Parent",
-    latin: "Roditelja",
+    latin: "Roditelj",
     categories: [NOUN, N_PERSON, PEOPLE, FAMILY_RELATIVES],
   },
   { english: "Face", latin: "Lica", categories: [NOUN, N_THING, BODY] },
@@ -1014,7 +1014,7 @@ const NOUNS_5_JSON = [
     latin: "Kancelarija",
     categories: [NOUN, N_PLACE, BUSINESS],
   },
-  { english: "Door", latin: "Vrat", categories: [NOUN, N_PLACE] },
+  { english: "Door", latin: "Vrata", categories: [NOUN, N_PLACE] },
   { english: "Health", latin: "Zdravlje", categories: [NOUN, N_IDEA, BODY] },
   { english: "Person", latin: "Čovijek", categories: [NOUN, N_PERSON, PEOPLE] },
   {
@@ -1045,7 +1045,7 @@ const NOUNS_5_JSON = [
     latin: "Trenut",
     categories: [NOUN, TIME, N_THING, N_IDEA],
   },
-  { english: "Air", latin: "Vazduh", categories: [NOUN, N_THING] },
+  { english: "Air", latin: "Vazduh", categories: [NOUN, N_THING, NATURE] },
   {
     english: "Teacher",
     latin: "Nastavnica",
@@ -1102,7 +1102,7 @@ const UNIT_4_VOCAB_JSON = [
     latin: "Žedan sam.",
     categories: [PHRASES_EVERYDAY],
   },
-  { english: "Immediately", latin: "Odmah", categories: [ADJECTIVE] },
+  { english: "Immediately", latin: "Odmah", categories: [ADVERB] },
   {
     english: "Mineral water",
     latin: "Kisela voda",
@@ -1126,7 +1126,7 @@ const UNIT_4_VOCAB_JSON = [
   {
     english: "Two beers",
     latin: "Dva piva",
-    categories: [, PHRASES_RESTAURANT],
+    categories: [PHRASES_RESTAURANT],
   },
   {
     english: "Waitress",
@@ -1361,7 +1361,7 @@ const UNIT_7_VOCAB_JSON = [
     categories: [CULTURE, N_THING, N_PLACE, FUN],
   },
   { english: "To reside", latin: "Stanovati", categories: [VERB_INF, CITY] },
-  { english: "His", latin: "Njegov", categories: [] },
+  { english: "His", latin: "Njegov", categories: [PRONOUN] },
   { english: "Address", latin: "Adresa", categories: [CITY, N_THING] },
   { english: "Phone number", latin: "Telefonski broj", categories: [N_THING] },
   { english: "Below", latin: "Ispod", categories: [DIRECTIONS] },
@@ -1378,8 +1378,8 @@ const UNIT_7_VOCAB_JSON = [
     latin: "Ko je to?",
     categories: [PHRASES_EVERYDAY],
   },
-  { english: "That woman", latin: "Ona žena", categories: [] },
-  { english: "In the pharmacy", latin: "U apoteci", categories: [] },
+  { english: "That woman", latin: "Ona žena", categories: [PHRASES_EVERYDAY] },
+  { english: "In the pharmacy", latin: "U apoteci", categories: [DIRECTIONS, CITY] },
   {
     english: "Is that...?",
     latin: "Je li to...?",
@@ -1390,7 +1390,7 @@ const UNIT_7_VOCAB_JSON = [
     latin: "Jeste",
     categories: [PHRASES_EVERYDAY],
   },
-  { english: "Your", latin: "Tvoj", categories: [] },
+  { english: "Your", latin: "Tvoj", categories: [PRONOUN] },
   {
     english: "Are we...?",
     latin: "Jesmo li...?",
@@ -1399,14 +1399,14 @@ const UNIT_7_VOCAB_JSON = [
   { english: "Well", latin: "Pa", categories: [PHRASES_EVERYDAY] },
   { english: "Now", latin: "Sada", categories: [TIME, N_THING, N_IDEA] },
   { english: "Class", latin: "Čas", categories: [EDUCATION, N_THING] },
-  { english: "Come", latin: "Dođi", categories: [] },
+  { english: "Come", latin: "Dođi", categories: [PHRASES_EVERYDAY] },
   { english: "Tomorrow", latin: "Sutra", categories: [TIME, N_THING] },
   {
     english: "At / To my house",
     latin: "Kod mene",
     categories: [PHRASES_EVERYDAY],
   },
-  { english: "For lunch", latin: "Na ručak", categories: [] },
+  { english: "For lunch", latin: "Na ručak", categories: [FOOD, PHRASES_EVERYDAY] },
   { english: "Number", latin: "Broj", categories: [N_THING] },
   {
     english: "Next to",
@@ -1463,7 +1463,7 @@ const UNIT_7_VOCAB_JSON = [
     categories: [PHRASES_EVERYDAY],
   },
   { english: "Cinema", latin: "Bioskop", categories: [CULTURE, FUN] },
-  { english: "Exactly", latin: "Tačno", categories: [ADJECTIVE] },
+  { english: "Exactly", latin: "Tačno", categories: [ADVERB] },
   { english: "Between", latin: "Između", categories: [DIRECTIONS] },
   { english: "Doctor", latin: "Lekar", categories: [BODY, N_PERSON, N_THING] },
   {
@@ -1481,10 +1481,10 @@ export const UNIT_7_VOCAB = vocabularySectionFromArray(
 
 const UNIT_8_VOCAB_JSON = [
   { english: "Food", latin: "Hrana", categories: [N_THING, FOOD] },
-  { english: "Very", latin: "Vrlo", categories: [ADJECTIVE] },
+  { english: "Very", latin: "Vrlo", categories: [ADVERB] },
   { english: "On foot", latin: "Peške", categories: [DIRECTIONS, TRAVEL] },
-  { english: "Idite gore", latin: "Go up", categories: [DIRECTIONS, TRAVEL] },
-  { english: "I onda", latin: "And then", categories: [PHRASES_EVERYDAY] },
+  { english: "Go up", latin: "Idite gore", categories: [DIRECTIONS, TRAVEL] },
+  { english: "And then", latin: "I onda", categories: [PHRASES_EVERYDAY] },
   {
     english: "To turn",
     latin: "Skrenuti",
@@ -1518,8 +1518,8 @@ const UNIT_8_VOCAB_JSON = [
     latin: "Malo dalje",
     categories: [DIRECTIONS, TRAVEL],
   },
-  { english: "Again", latin: "Opet", categories: [] },
-  { english: "How?", latin: "Kako?", categories: [] },
+  { english: "Again", latin: "Opet", categories: [ADVERB] },
+  { english: "How?", latin: "Kako?", categories: [PHRASES_EVERYDAY] },
   { english: "To", latin: "Do", categories: [DIRECTIONS, TRAVEL] },
   {
     english: "Don't go",
@@ -1531,7 +1531,7 @@ const UNIT_8_VOCAB_JSON = [
     latin: "Autobusom",
     categories: [DIRECTIONS, TRAVEL, CITY],
   },
-  { english: "Should", latin: "Treba", categories: [] },
+  { english: "Should", latin: "Treba", categories: [PHRASES_EVERYDAY] },
   { english: "To take", latin: "Uzeti", categories: [VERB_INF] },
   { english: "In front of", latin: "Ispred", categories: [DIRECTIONS] },
   { english: "Get down", latin: "Sići", categories: [DIRECTIONS] },
@@ -1550,8 +1550,8 @@ const UNIT_8_VOCAB_JSON = [
   { english: "To see", latin: "Videti", categories: [VERB_INF] },
   { english: "Person", latin: "Čovek", categories: [N_PERSON, N_THING] },
   { english: "Clerk", latin: "Službenik", categories: [N_PERSON, BUSINESS] },
-  { english: "Letter", latin: "Pismo", categories: [] },
-  { english: "I send", latin: "Šaljem", categories: [] },
+  { english: "Letter", latin: "Pismo", categories: [N_THING] },
+  { english: "I send", latin: "Šaljem", categories: [PHRASES_EVERYDAY] },
   { english: "By air", latin: "Avionom", categories: [TRAVEL] },
   { english: "Entrance", latin: "Ulaz", categories: [N_THING, N_PLACE] },
 ];
@@ -1563,47 +1563,47 @@ export const UNIT_8_VOCAB = vocabularySectionFromArray(
 );
 
 const UNIT_9_VOCAB_JSON = [
-  { english: "About", latin: "O", category: [] },
-  { english: "Airplane", latin: "Avion", category: [TRAVEL, N_THING] },
+  { english: "About", latin: "O", categories: [] },
+  { english: "Airplane", latin: "Avion", categories: [TRAVEL, N_THING] },
   {
     english: "Airport",
     latin: "Aerodrom",
-    category: [TRAVEL, N_THING, N_PLACE],
+    categories: [TRAVEL, N_THING, N_PLACE],
   },
-  { english: "Already", latin: "Već", category: [PHRASES_CULTURAL] },
+  { english: "Already", latin: "Već", categories: [PHRASES_CULTURAL] },
   {
     english: "Apartment",
     latin: "Apartman",
-    category: [CITY, N_PLACE, N_THING],
+    categories: [CITY, N_PLACE, N_THING],
   },
-  { english: "Arrived", latin: "Stigao", category: [] },
+  { english: "Arrived", latin: "Stigao", categories: [] },
   {
     english: "Bathroom",
     latin: "Kupatilo",
-    category: [BATHROOM, N_PLACE, N_THING],
+    categories: [BATHROOM, N_PLACE, N_THING],
   },
-  { english: "Bought", latin: "Kupio", category: [] },
+  { english: "Bought", latin: "Kupio", categories: [] },
   {
     english: "Come on!",
     latin: "Hajde!",
-    category: [PHRASES_CULTURAL, PHRASES_EVERYDAY],
+    categories: [PHRASES_CULTURAL, PHRASES_EVERYDAY],
   },
-  { english: "Customs", latin: "Carina", category: [N_THING, TRAVEL] },
-  { english: "Elevator", latin: "Lift", category: [] },
+  { english: "Customs", latin: "Carina", categories: [N_THING, TRAVEL] },
+  { english: "Elevator", latin: "Lift", categories: [] },
   {
     english: "Embassy",
     latin: "Ambasada",
-    category: [N_PLACE, N_THING, TRAVEL],
+    categories: [N_PLACE, N_THING, TRAVEL],
   },
-  { english: "Exit", latin: "Izlaz", category: [] },
-  { english: "Flight", latin: "Let", category: [TRAVEL, N_THING] },
-  { english: "Garage", latin: "Garaža", category: [N_PLACE, N_THING, CITY] },
-  { english: "Got / Received", latin: "Dobio", category: [] },
-  { english: "His", latin: "Svoj", category: [] },
+  { english: "Exit", latin: "Izlaz", categories: [] },
+  { english: "Flight", latin: "Let", categories: [TRAVEL, N_THING] },
+  { english: "Garage", latin: "Garaža", categories: [N_PLACE, N_THING, CITY] },
+  { english: "Got / Received", latin: "Dobio", categories: [] },
+  { english: "His", latin: "Svoj", categories: [] },
   {
     english: "Important",
     latin: "Važno",
-    category: [
+    categories: [
       ADJECTIVE,
       DESCRIPTIONS_ITEMS,
       DESCRIPTIONS_PLACES,
@@ -1612,32 +1612,32 @@ const UNIT_9_VOCAB_JSON = [
       DESCRIPTIONS_ORGANIZATIONS,
     ],
   },
-  { english: "Key", latin: "Ključ", category: [N_THING, STUFF] },
-  { english: "Lounge", latin: "Salon", category: [N_PLACE, N_THING, TRAVEL] },
-  { english: "Passport", latin: "Pasoš", category: [N_THING, TRAVEL] },
-  { english: "Quickly", latin: "Brzo", category: [] },
-  { english: "Really", latin: "Zaista", category: [] },
+  { english: "Key", latin: "Ključ", categories: [N_THING, STUFF] },
+  { english: "Lounge", latin: "Salon", categories: [N_PLACE, N_THING, TRAVEL] },
+  { english: "Passport", latin: "Pasoš", categories: [N_THING, TRAVEL] },
+  { english: "Quickly", latin: "Brzo", categories: [] },
+  { english: "Really", latin: "Zaista", categories: [] },
   {
     english: "Receptionist",
     latin: "Recepcioner",
-    category: [BUSINESS, N_PERSON],
+    categories: [BUSINESS, N_PERSON],
   },
-  { english: "Reservation", latin: "Rezervacija", category: [N_THING] },
-  { english: "Room", latin: "Soba", category: [N_THING, N_PLACE] },
-  { english: "Sleepover!", latin: "Noćenje!", category: [] },
-  { english: "Suitcase", latin: "Kofer", category: [N_THING, TRAVEL] },
-  { english: "Surname", latin: "Prezime", category: [N_THING, PEOPLE] },
-  { english: "Telephone", latin: "Telefon", category: [N_THING] },
-  { english: "Through", latin: "Kroz", category: [] },
-  { english: "Ticket", latin: "Karta", category: [N_THING, TRAVEL] },
-  { english: "To Discuss", latin: "Razgovarati", category: [VERB_INF] },
-  { english: "To Drink", latin: "Popiti", category: [VERB_INF] },
-  { english: "To Find", latin: "Nalaziti", category: [VERB_INF] },
-  { english: "To Send", latin: "Poslati", category: [VERB_INF] },
-  { english: "To Sign", latin: "Potpisivati", category: [VERB_INF] },
-  { english: "Travelled", latin: "Putovao", category: [TRAVEL] },
-  { english: "Visa", latin: "Viza", category: [N_THING, TRAVEL] },
-  { english: "Waited", latin: "Čekao", category: [] },
+  { english: "Reservation", latin: "Rezervacija", categories: [N_THING] },
+  { english: "Room", latin: "Soba", categories: [N_THING, N_PLACE] },
+  { english: "Sleepover!", latin: "Noćenje!", categories: [] },
+  { english: "Suitcase", latin: "Kofer", categories: [N_THING, TRAVEL] },
+  { english: "Surname", latin: "Prezime", categories: [N_THING, PEOPLE] },
+  { english: "Telephone", latin: "Telefon", categories: [N_THING] },
+  { english: "Through", latin: "Kroz", categories: [] },
+  { english: "Ticket", latin: "Karta", categories: [N_THING, TRAVEL] },
+  { english: "To Discuss", latin: "Razgovarati", categories: [VERB_INF] },
+  { english: "To Drink", latin: "Popiti", categories: [VERB_INF] },
+  { english: "To Find", latin: "Nalaziti", categories: [VERB_INF] },
+  { english: "To Send", latin: "Poslati", categories: [VERB_INF] },
+  { english: "To Sign", latin: "Potpisivati", categories: [VERB_INF] },
+  { english: "Travelled", latin: "Putovao", categories: [TRAVEL] },
+  { english: "Visa", latin: "Viza", categories: [N_THING, TRAVEL] },
+  { english: "Waited", latin: "Čekao", categories: [] },
 ];
 
 export const UNIT_9_VOCAB = vocabularySectionFromArray(
@@ -1752,7 +1752,7 @@ const UNIT_10_VOCAB_JSON = [
     latin: "Kuhinja",
     categories: [KITCHEN, HOME, N_PLACE, N_THING],
   },
-  { english: "Like / As", latin: "Kao", categories: [] },
+  { english: "Like / As", latin: "Kao", categories: [CONJUNCTION] },
   {
     english: "Living place",
     latin: "Boravište",
@@ -1821,7 +1821,7 @@ const UNIT_10_VOCAB_JSON = [
       CONJUNCTION, // maybe?
     ],
   },
-  { english: "Something", latin: "Nešto", categories: [] },
+  { english: "Something", latin: "Nešto", categories: [PHRASES_EVERYDAY] },
   {
     english: "Son",
     latin: "Sin",
@@ -1843,7 +1843,7 @@ const UNIT_10_VOCAB_JSON = [
   { english: "To Study", latin: "Studirati", categories: [VERB_INF] },
   { english: "To Wear", latin: "Nositi", categories: [VERB_INF] },
   { english: "To Write", latin: "Pisati", categories: [VERB_INF] },
-  { english: "Two children", latin: "Dva deteta", categories: [] },
+  { english: "Two children", latin: "Dva deteta", categories: [FAMILY_RELATIVES, NUMBERS_COUNTING] },
   { english: "Unfortunately", latin: "Na žalost", categories: [ADVERB] },
   {
     english: "University",
@@ -1852,7 +1852,7 @@ const UNIT_10_VOCAB_JSON = [
   },
   { english: "Usually", latin: "Obično", categories: [ADVERB] },
   { english: "Village", latin: "Selo", categories: [HOME, N_PLACE, CITY] },
-  { english: "With parents", latin: "Sa roditeljima", categories: [] },
+  { english: "With parents", latin: "Sa roditeljima", categories: [FAMILY_RELATIVES, PHRASES_EVERYDAY] },
 ];
 
 export const UNIT_10_VOCAB = vocabularySectionFromArray(
@@ -2097,24 +2097,24 @@ export const UNIT_20_VOCAB = vocabularySectionFromArray(
 );
 
 const ANIMALS_JSON = [
-  { english: "Animal", latin: "Životinja" },
-  { english: "Badger", latin: "Jazavac" },
-  { english: "Bear", latin: "Medved" },
-  { english: "Bird", latin: "Ptica" },
-  { english: "Cat", latin: "Mačka" },
-  { english: "Chicken", latin: "Piletina" },
-  { english: "Cow", latin: "Krava" },
-  { english: "Dog", latin: "Pas" },
-  { english: "Fox", latin: "Lisica" },
-  { english: "Goat", latin: "Koza" },
-  { english: "Goose", latin: "Guska" },
-  { english: "Horse", latin: "Konj" },
-  { english: "Lion", latin: "Lav" },
-  { english: "Mouse", latin: "Miš" },
-  { english: "Pig", latin: "Svinja" },
-  { english: "Rabbit", latin: "Zec" },
-  { english: "Rooster", latin: "Petao" },
-  { english: "Sheep", latin: "Ovca" },
+  { english: "Animal", latin: "Životinja", categories: [NOUN, N_THING, NATURE] },
+  { english: "Badger", latin: "Jazavac", categories: [NOUN, N_THING, NATURE] },
+  { english: "Bear", latin: "Medved", categories: [NOUN, N_THING, NATURE] },
+  { english: "Bird", latin: "Ptica", categories: [NOUN, N_THING, NATURE] },
+  { english: "Cat", latin: "Mačka", categories: [NOUN, N_THING, NATURE] },
+  { english: "Chicken", latin: "Kokoška", categories: [NOUN, N_THING, NATURE] },
+  { english: "Cow", latin: "Krava", categories: [NOUN, N_THING, NATURE] },
+  { english: "Dog", latin: "Pas", categories: [NOUN, N_THING, NATURE] },
+  { english: "Fox", latin: "Lisica", categories: [NOUN, N_THING, NATURE] },
+  { english: "Goat", latin: "Koza", categories: [NOUN, N_THING, NATURE] },
+  { english: "Goose", latin: "Guska", categories: [NOUN, N_THING, NATURE] },
+  { english: "Horse", latin: "Konj", categories: [NOUN, N_THING, NATURE] },
+  { english: "Lion", latin: "Lav", categories: [NOUN, N_THING, NATURE] },
+  { english: "Mouse", latin: "Miš", categories: [NOUN, N_THING, NATURE] },
+  { english: "Pig", latin: "Svinja", categories: [NOUN, N_THING, NATURE] },
+  { english: "Rabbit", latin: "Zec", categories: [NOUN, N_THING, NATURE] },
+  { english: "Rooster", latin: "Petao", categories: [NOUN, N_THING, NATURE] },
+  { english: "Sheep", latin: "Ovca", categories: [NOUN, N_THING, NATURE] },
 ];
 
 export const ANIMALS = vocabularySectionFromArray(
@@ -2166,7 +2166,7 @@ const COLORS_JSON = [
   },
   {
     english: "Pink",
-    latin: "Ružo",
+    latin: "Ružičast",
     categories: [COLOR, ADJECTIVE, DESCRIPTIONS_ITEMS],
   },
   {
@@ -2291,7 +2291,7 @@ const CLOTHES_JSON = [
   {
     english: "To Wear",
     latin: "Nositi",
-    categories: [NOUN, N_THING, CLOTHING, STUFF],
+    categories: [VERB_INF, CLOTHING],
   },
   {
     english: "Socks",
@@ -2581,7 +2581,7 @@ export const JEWELRY = vocabularySectionFromArray(
 
 const TRAVEL_THINGS = vocabularySectionFromArray("Travel", "travel", [
   { english: "Crew", latin: "Posada", categories: [N_THING, TRAVEL, PEOPLE] },
-  { english: "Stanica", latin: "Station", categories: [N_THING, TRAVEL] },
+  { english: "Station", latin: "Stanica", categories: [N_THING, TRAVEL] },
   { english: "Platform", latin: "Peron", categories: [N_THING, TRAVEL] },
   { english: "Runway", latin: "Pista", categories: [N_THING, TRAVEL] },
   { english: "Driver", latin: "Vozač", categories: [N_PERSON, TRAVEL, JOBS] },
@@ -2651,7 +2651,7 @@ const KAD_SU_BILI_1_JSON = [
     categories: [PHRASES_EVERYDAY],
   },
   { english: "Nap", latin: "Drema", categories: [N_THING] },
-  { english: "Odgovor", latin: "Answer", categories: [N_THING] },
+  { english: "Answer", latin: "Odgovor", categories: [N_THING] },
   { english: "Pleasure", latin: "Užitka", categories: [N_THING, N_IDEA] },
   { english: "Put down", latin: "Spustiti", categories: [VERB_INF] },
   {
@@ -2693,7 +2693,7 @@ const BODY_PARTS_JSON = [
   { english: "Head", latin: "Glava", categories: [BODY, NOUN, N_THING] },
   { english: "Shoulder", latin: "Rame", categories: [BODY, NOUN, N_THING] },
   { english: "Neck", latin: "Vrat", categories: [BODY, NOUN, N_THING] },
-  { english: "Wrist", latin: "Šaka", categories: [BODY, NOUN, N_THING] },
+  { english: "Wrist", latin: "Ručni zglob", categories: [BODY, NOUN, N_THING] },
   { english: "Finger", latin: "Prst", categories: [BODY, NOUN, N_THING] },
   { english: "Leg", latin: "Noga", categories: [BODY, NOUN, N_THING] },
   { english: "Knee", latin: "Koleno", categories: [BODY, NOUN, N_THING] },
