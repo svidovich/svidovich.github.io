@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocab Explorer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Menu -->
+    <div id="menu">
+      <h1>Vocab Explorer</h1>
+      <p class="subtitle">
+        Explore 3D rooms, look at objects to learn their names, then take a
+        quiz. WASD to move, mouse to look.
+      </p>
+
+      <div id="room-list">
+        <button class="room-btn" data-room="kitchen">
+          <span class="room-name">Кухиња — Kitchen</span>
+          <span class="room-stats"></span>
+        </button>
+      </div>
+
+      <button id="settings-toggle">Settings</button>
+
+      <div id="settings-panel" style="display: none">
+        <div class="setting-group">
+          <label>Difficulty</label>
+          <div id="difficulty-options" class="option-row"></div>
+        </div>
+        <div class="setting-group">
+          <label>Alphabet</label>
+          <div id="alphabet-options" class="option-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game container -->
+    <div id="game-container">
+      <div id="crosshair"></div>
+
+      <div id="hud">
+        <div class="hud-item" id="timer">0:30</div>
+        <div class="hud-item" id="ready-hint"><kbd>R</kbd> Ready</div>
+        <div class="hud-item" id="seen-count">0 / 0 seen</div>
+      </div>
+
+      <div id="label-bubble">
+        <span class="serbian"></span>
+        <span class="english"></span>
+      </div>
+
+      <div id="instructions">
+        Click to start — WASD to move, mouse to look. Find and look at objects!
+        Press R when ready for the quiz.
+      </div>
+
+      <!-- Quiz overlay -->
+      <div id="quiz-overlay">
+        <h2>Quiz Time!</h2>
+        <div id="quiz-prompt"></div>
+        <div id="quiz-choices"></div>
+        <div id="quiz-score"></div>
+        <button id="quiz-next-btn">Next</button>
+        <button id="quiz-done-btn">Finish</button>
+      </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

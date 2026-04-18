@@ -1,0 +1,3320 @@
+ ▐▛███▜▌   Claude Code v2.1.92
+▝▜█████▛▘  Sonnet 4.6 · Claude Pro
+  ▘▘ ▝▝    ~/Радна површина/programming/svidovich.github.io
+
+  ✻ Voice mode is now available · /voice to enable
+
+❯ /clear                                                                        
+  ⎿  (no content)
+
+❯ Hey, how big is three.js' minified variant? I have a cute idea ...            
+  ⎿  Invalid tool parameters
+
+● Web Search("three.js minified bundle size kb 2026")
+  ⎿  Did 1 search in 5s
+
+● The full three.min.js bundle is roughly 650-700 KB minified, or about 155 KB 
+  gzipped. The unminified source is around 1.2 MB.
+
+  If you tree-shake and only import what you need, you can get it down to
+  300-500 KB minified depending on features used.
+
+  What's the cute idea?
+
+  Sources:
+  - How to reduce bundle size with Webpack? - three.js forum
+  - Bundle Size Reduction - three.js forum
+  - react-three-fiber Discussion #812
+
+❯ I think 700K is a good one.                                                   
+So I was thinking about ways to study vocabulary. I was thinking, "well I can   
+get pictures of e.g. a kitchen scene, and then label the stuff therein. Then    
+you could take a time attack study sesh: 30s to remember the words from the     
+image, then take a quiz and see how you do."                                    
+But, immediately the problem is a good enough picture of an e.g. kitchen scene  
+with all of the items I care about visible. What if instead we did an           
+interactive app with several "rooms" where you could explore and look at        
+objects? When you focus an object, a bubble appears with its translation. The   
+more you explore, the more you learn. You have a time limit in each room to     
+explore, then a quiz appears.                                                   
+What do you think?                                                              
+
+● The concept is great — spatial memory is a real thing (method of loci), so
+  physically "walking" through a room and encountering objects in context should
+   genuinely help retention better than flashcards.
+
+  A few thoughts:
+
+  For the idea itself:
+  - The explore-then-quiz loop is solid. The time pressure during exploration
+  creates focus, and the spatial context gives you a "mental hook" for recall.
+  - You could tier difficulty — first quiz is multiple choice with the object
+  highlighted, later quizzes just show the word and you have to recall where you
+   saw it, hardest mode is "name everything in the room."
+  - Rooms map naturally to vocabulary categories: kitchen, bathroom, office,
+  workshop, etc.
+
+  On the implementation side:
+  - 700KB of three.js is heavy for what might not need full 3D. Have you
+  considered a 2.5D approach? A pre-rendered or illustrated room background with
+   clickable hotspots could get you 90% of the experience at a fraction of the
+  weight. Think point-and-click adventure game style.
+  - If you do want real 3D navigation, three.js is the right call — but you'll
+  also need models for the objects, which adds up fast. Low-poly stylized art
+  would keep asset sizes manageable.
+  - A middle ground: a simple three.js scene with basic geometric shapes (box =
+  fridge, cylinder = pot) plus text labels. Ugly but functional prototype, and
+  you could improve art later.
+
+  My honest take: start with the point-and-click 2D version first. One
+  illustrated room, clickable objects, timer, quiz. Prove the learning loop
+  works, then decide if 3D exploration adds enough to justify the complexity.
+  What do you think?
+
+❯ Well the hard part is that I suck at 2d art, but 3d objects seem distinctly   
+download-able, though I don't know shit for anything about it, haha. E.g., a    
+fridge: https://free3d.com/3d-model/simple-lamp-81996.html that's an fbx of a   
+couple hundred KB. I just don't know if I'd piss off git with this, that's all. 
+
+● Fair point — downloading 3D models is way easier than drawing good 2D scenes.
+  A few practical notes:
+
+  Git and binary assets:
+  - A handful of models at 100-300KB each is totally fine in git. It's when you
+  get into hundreds of MB that it hurts (slow clones, bloated history).
+  - For a GitHub Pages site with maybe 20-30 objects across a few rooms, you're
+  looking at maybe 5-10MB total. That's no big deal.
+  - If it ever grows beyond that, Git LFS exists, but you probably won't need
+  it.
+
+  Format-wise:
+  - glTF/GLB is the web standard for 3D — three.js has a great loader for it,
+  files are smaller, and it's designed for real-time rendering. Many free model
+  sites offer glTF alongside FBX.
+  - FBX works too (three.js has FBXLoader), but it's heavier and more of a DCC
+  interchange format.
+  - Check if free3d or Sketchfab let you download glTF — prefer that when
+  available.
+
+  So the stack would be:
+  - three.js for rendering
+  - GLB/FBX models downloaded from free sites
+  - Simple first-person or click-to-move navigation
+  - Label popups on hover/click
+  - Timer + quiz logic in vanilla JS
+
+  This is a totally reasonable project. Want to start scaffolding it out?
+
+❯ Let's scaffold it. New folder under assets/, please. This is going to be      
+vanilla js aside from the minified three.js library that can live down there,   
+too. Let's go for first person with classic mouse and keyboard controls for     
+looking around, a cursor in the middle of the screen. The initial menu should   
+be simple, and just say "kitchen". You can create an organized file hierarchy   
+if it helps. Ask any clarifying questions you think you need, or just get       
+started and ask-as-you-go!                                                      
+
+  Read 2 files, listed 2 directories (ctrl+o to expand)
+
+● Good, I've got the lay of the land. Let me scaffold this out. I'll need to
+  grab three.js minified first, then build the file structure.
+
+● Bash(mkdir -p "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer" && mkdir
+      -p "/home/mydriasis/Радна површина/programming/svidovic…)
+  ⎿  Done
+
+● Bash(cd "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/lib" &&
+      curl -sL "https://cdnjs.cloudflare.com/ajax/libs/three.js/r173/…)
+  ⎿  146 three.min.js
+
+● 146 bytes means that URL didn't work. Let me find the right CDN URL.
+
+● Web Search("three.js r170 CDN download minified three.module.min.js")
+  ⎿  Did 1 search in 6s
+
+● Bash(cd "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/lib" &&
+      curl -sL "https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/…)
+  ⎿  615601 three.min.js
+
+● 615KB — that's three.js r134 minified. Modern enough and a good size. Now let
+  me check what version that actually gives us and then build out the app.
+
+  Read 1 file (ctrl+o to expand)
+
+● r134 from 2021 — solid, well-documented version. Now let me build the app.
+  I'll create:
+
+  1. index.html — entry point with menu and game container
+  2. style.css — styling for menu, HUD, quiz
+  3. main.js — app init, menu, game loop
+  4. room.js — room building (kitchen geometry + object placement)
+  5. player.js — first-person controls
+  6. quiz.js — quiz logic
+  7. vocabulary.js — word data per room
+
+● Write(assets/vocab-explorer/vocabulary.js)
+  ⎿  Wrote 111 lines to assets/vocab-explorer/vocabulary.js
+       1 /**
+       2  * Vocabulary data for each room.
+       3  * Each entry: { id, english, serbian, position: {x, y, z}, scal
+         e }
+       4  * position = where the label appears in the room
+       5  * scale = rough object size for the placeholder geometry
+       6  */
+       7 
+       8 const VOCABULARY = {
+       9   kitchen: {
+      10     name: "Кухиња — Kitchen",
+     … +101 lines (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/style.css)
+  ⎿  Wrote 254 lines to assets/vocab-explorer/style.css
+       1 * {
+       2   margin: 0;
+       3   padding: 0;
+       4   box-sizing: border-box;
+       5 }
+       6 
+       7 body {
+       8   background: #1a1a2e;
+       9   color: #eee;
+      10   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+     … +244 lines (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/player.js)  ⎿  Wrote 105 lines to assets/vocab-explorer/player.js
+      1 /**
+      2  * First-person controls: WASD movement + mouse look via Pointer 
+        Lock.
+      3  */
+      4 
+      5 const Player = (() => {
+      6   const SPEED = 4.0;
+      7   const MOUSE_SENSITIVITY = 0.002;
+      8   const PLAYER_HEIGHT = 1.7;
+      9   const ROOM_HALF = 4.8; // stay slightly inside walls
+     … +95 lines (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/room.js)
+  ⎿  Wrote 99 lines to assets/vocab-explorer/room.js
+       1 /**
+       2  * Builds a room scene from vocabulary data.
+       3  * Returns { scene, interactables } where interactables is a lis
+         t of
+       4  * { mesh, english, serbian } for raycasting.
+       5  */
+       6 
+       7 const Room = (() => {
+       8   const ROOM_W = 10;
+       9   const ROOM_H = 3.5;
+      10   const ROOM_D = 10;
+     … +89 lines (ctrl+o to expand)
+
+❯ Let's use jsdelivr with a script tag for a newer version. I'm not opposed. 
+
+● Got it — let me switch to a jsdelivr CDN tag for a modern three.js instead of
+  the local file. Let me remove the downloaded one and continue building.
+
+● Bash(rm "/home/mydriasis/Радна површина/programming/svidovich.github.io/assets
+      /vocab-explorer/lib/three.min.js" && rmdir "/home/mydriasis/Радна
+      површина/programming/…)
+  ⎿  Error: Exit code 1
+     pwd: error retrieving current directory: getcwd: cannot access parent 
+     directories: No such file or directory
+
+● Bash(rm -f "/home/mydriasis/Радна површина/programming/svidovich.github.io/ass
+      ets/vocab-explorer/lib/three.min.js" && rmdir "/home/mydriasis/Радна
+      површина/programmi…)
+  ⎿  done
+
+● Now let me write the quiz module, main module, and the HTML with jsdelivr CDN
+  for three.js.
+
+● Write(assets/vocab-explorer/quiz.js)
+  ⎿  Wrote 116 lines to assets/vocab-explorer/quiz.js
+       1 /**
+       2  * Quiz module: given a list of vocab items the player has seen,
+       3  * presents multiple-choice questions (serbian → pick the englis
+         h).
+       4  */
+       5 
+       6 const Quiz = (() => {
+       7   let questions = [];
+       8   let current = 0;
+       9   let score = 0;
+      10   let total = 0;
+     … +106 lines (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/main.js)
+  ⎿  Wrote 211 lines to assets/vocab-explorer/main.js
+       1 /**
+       2  * Main entry — ties together scene, player, HUD, and quiz.
+       3  */
+       4 
+       5 (() => {
+       6   let renderer, scene, camera;
+       7   let interactables = [];
+       8   let raycaster, clock;
+       9   let timerSeconds = 0;
+      10   let timerRunning = false;
+     … +201 lines (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/index.html)
+  ⎿  Wrote 59 lines to assets/vocab-explorer/index.html
+       1 <!DOCTYPE html>
+       2 <html lang="en">
+       3   <head>
+       4     <meta charset="UTF-8" />
+       5     <meta name="viewport" content="width=device-width, initial-s
+         cale=1.0" />
+       6     <title>Vocab Explorer</title>
+       7     <link rel="stylesheet" href="style.css" />
+       8   </head>
+       9   <body>
+      10     <!-- ── Menu ── -->
+     … +49 lines (ctrl+o to expand)
+
+● Now let me verify three.js r170 is actually available on jsdelivr and check
+  the file structure:
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js"
+      | head -5)
+  ⎿  HTTP/2 404
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+     … +2 lines (ctrl+o to expand)
+
+  Listed 1 directory (ctrl+o to expand)
+
+● 404 on r170 — let me find a valid version.
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.166.0/build/three.min.js"
+      | head -3)
+  ⎿  HTTP/2 404
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"
+      | head -3)
+  ⎿  HTTP/2 404
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+
+● They may have dropped the build/three.min.js in newer versions. Let me check
+  what's actually available:
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"
+      | head -3)
+  ⎿  HTTP/2 200
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"
+      | head -3)
+  ⎿  HTTP/2 200
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+
+● Bash(curl -sI
+      "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" |
+      head -3)
+  ⎿  HTTP/2 200
+     access-control-allow-origin: *
+     access-control-expose-headers: *
+
+● r170 has three.module.min.js (ES module) but not the UMD three.min.js. r160
+  has the classic UMD build. Two options:
+
+  1. Use r160 with classic <script> tags (simpler, what we have now)
+  2. Use r170 with ES module <script type="module"> and import
+
+  Since you said vanilla JS and we're already using plain <script> tags with
+  global scope, r160 is cleanest. Let me update the HTML:
+
+● Update(assets/vocab-explorer/index.html)
+  ⎿  Tool use rejected
+
+● You need three.module.min.js (357KB). That's the standard WebGL renderer build
+   as an ES module, minified. It has everything we need.
+
+  The core variants strip out some built-in geometries/materials. The webgpu
+  variants are the new WebGPU renderer (heavier, not needed). The tsl is the
+  shader language addon.
+
+  Since it's an ES module, I'll need to adjust the HTML to use <script 
+  type="module"> and convert our scripts to use import. Where did you put the
+  source distribution — or do you want to copy just three.module.min.js into the
+   vocab-explorer folder?
+
+✻ Churned for 7m 59s
+
+❯ I've placed it in vocab-explorer: you can place it elsewhere if you like!     
+It's version r184 -- just released 2026-04-17. I can get docs if you need them  
+as we go!                                                                       
+
+● Nice, bleeding edge! Let me verify it's there and then convert everything to
+  ES modules.
+  Listed 1 directory (ctrl+o to expand)
+
+● Let me move it into a lib/ subfolder to keep things tidy, then rewrite the
+  scripts as ES modules.
+
+● Bash(mkdir -p "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/lib" && mv
+      "/home/mydriasis/Радна површина/programming/svidovich.…)
+  ⎿  Done
+
+● Now let me rewrite all the JS files to use ES module imports/exports.
+
+  Read 1 file (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/vocabulary.js)
+  ⎿  Added 4 lines, removed 4 lines
+       1  /**
+       2   * Vocabulary data for each room.
+       3 - * Each entry: { id, english, serbian, position: {x, y, z}, sca
+         -le }                                                           
+       4 - * position = where the label appears in the room              
+       5 - * scale = rough object size for the placeholder geometry      
+       3 + * Each entry: { id, english, serbian, position: {x, y, z}, siz
+         +e }                                                            
+       4 + * position = where the object sits in the room                
+       5 + * size = bounding box for the placeholder geometry            
+       6   */
+       7  
+       8 -const VOCABULARY = {                                           
+       8 +export const VOCABULARY = {                                    
+       9    kitchen: {
+      10      name: "Кухиња — Kitchen",
+      11      timerSeconds: 60,
+
+● Write(assets/vocab-explorer/room.js)
+  ⎿  Added 55 lines, removed 83 lines
+       1  /**
+       2   * Builds a room scene from vocabulary data.
+       3 - * Returns { scene, interactables } where interactables is a li
+         -st of                                                          
+       4 - * { mesh, english, serbian } for raycasting.                  
+       3 + * Returns interactables: [{ mesh, english, serbian, id, seen }
+         +]                                                              
+       4   */
+       5  
+       7 -const Room = (() => {                                          
+       8 -  const ROOM_W = 10;                                           
+       9 -  const ROOM_H = 3.5;                                          
+      10 -  const ROOM_D = 10;                                           
+      11 -  const WALL_COLOR = 0xdedcb8;                                 
+      12 -  const FLOOR_COLOR = 0x8b6f47;                                
+      13 -  const CEILING_COLOR = 0xf5f5f0;                              
+       6 +import * as THREE from "./lib/three.module.min.js";            
+       7  
+      15 -  function build(scene, roomData) {                            
+      16 -    const interactables = [];                                  
+       8 +const ROOM_W = 10;                                             
+       9 +const ROOM_H = 3.5;                                            
+      10 +const ROOM_D = 10;                                             
+      11  
+      18 -    // Floor                                                   
+      19 -    const floor = new THREE.Mesh(                              
+      20 -      new THREE.PlaneGeometry(ROOM_W, ROOM_D),                 
+      21 -      new THREE.MeshStandardMaterial({ color: FLOOR_COLOR, roug
+         -hness: 0.9 })                                                  
+      22 -    );                                                         
+      23 -    floor.rotation.x = -Math.PI / 2;                           
+      24 -    scene.add(floor);                                          
+      12 +function build(scene, roomData) {                              
+      13 +  const interactables = [];                                    
+      14  
+      26 -    // Ceiling                                                 
+      27 -    const ceiling = new THREE.Mesh(                            
+      28 -      new THREE.PlaneGeometry(ROOM_W, ROOM_D),                 
+      29 -      new THREE.MeshStandardMaterial({ color: CEILING_COLOR }) 
+      30 -    );                                                         
+      31 -    ceiling.rotation.x = Math.PI / 2;                          
+      32 -    ceiling.position.y = ROOM_H;                               
+      33 -    scene.add(ceiling);                                        
+      15 +  // Floor                                                     
+      16 +  const floor = new THREE.Mesh(                                
+      17 +    new THREE.PlaneGeometry(ROOM_W, ROOM_D),                   
+      18 +    new THREE.MeshStandardMaterial({ color: 0x8b6f47, roughness
+         +: 0.9 })                                                       
+      19 +  );                                                           
+      20 +  floor.rotation.x = -Math.PI / 2;                             
+      21 +  scene.add(floor);                                            
+      22  
+      35 -    // Walls                                                   
+      36 -    const wallMat = new THREE.MeshStandardMaterial({           
+      37 -      color: WALL_COLOR,                                       
+      38 -      side: THREE.DoubleSide,                                  
+      39 -    });                                                        
+      23 +  // Ceiling                                                   
+      24 +  const ceiling = new THREE.Mesh(                              
+      25 +    new THREE.PlaneGeometry(ROOM_W, ROOM_D),                   
+      26 +    new THREE.MeshStandardMaterial({ color: 0xf5f5f0 })        
+      27 +  );                                                           
+      28 +  ceiling.rotation.x = Math.PI / 2;                            
+      29 +  ceiling.position.y = ROOM_H;                                 
+      30 +  scene.add(ceiling);                                          
+      31  
+      41 -    // Back wall (Z-)                                          
+      42 -    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H /
+         - 2, z: -ROOM_D / 2 }, 0);                                      
+      43 -    // Front wall (Z+)                                         
+      44 -    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H /
+         - 2, z: ROOM_D / 2 }, Math.PI);                                 
+      45 -    // Left wall (X-)                                          
+      46 -    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: -ROOM_W / 2, y
+         -: ROOM_H / 2, z: 0 }, Math.PI / 2);                            
+      47 -    // Right wall (X+)                                         
+      48 -    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: ROOM_W / 2, y:
+         - ROOM_H / 2, z: 0 }, -Math.PI / 2);                            
+      32 +  // Walls                                                     
+      33 +  const wallMat = new THREE.MeshStandardMaterial({             
+      34 +    color: 0xdedcb8,                                           
+      35 +    side: THREE.DoubleSide,                                    
+      36 +  });                                                          
+      37 +  addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+         +, z: -ROOM_D / 2 }, 0);                                        
+      38 +  addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+         +, z: ROOM_D / 2 }, Math.PI);                                   
+      39 +  addWall(scene, wallMat, ROOM_D, ROOM_H, { x: -ROOM_W / 2, y: 
+         +ROOM_H / 2, z: 0 }, Math.PI / 2);                              
+      40 +  addWall(scene, wallMat, ROOM_D, ROOM_H, { x: ROOM_W / 2, y: R
+         +OOM_H / 2, z: 0 }, -Math.PI / 2);                              
+      41  
+      50 -    // Lighting                                                
+      51 -    const ambient = new THREE.AmbientLight(0xffffff, 0.4);     
+      52 -    scene.add(ambient);                                        
+      42 +  // Lighting                                                  
+      43 +  scene.add(new THREE.AmbientLight(0xffffff, 0.4));            
+      44 +  const overhead = new THREE.PointLight(0xfff5e0, 0.8, 20);    
+      45 +  overhead.position.set(0, ROOM_H - 0.3, 0);                   
+      46 +  scene.add(overhead);                                         
+      47  
+      54 -    const overhead = new THREE.PointLight(0xfff5e0, 0.8, 20);  
+      55 -    overhead.position.set(0, ROOM_H - 0.3, 0);                 
+      56 -    scene.add(overhead);                                       
+      57 -                                                               
+      58 -    // Objects from vocabulary                                 
+      59 -    for (const obj of roomData.objects) {                      
+      60 -      const mesh = createObject(obj);                          
+      61 -      scene.add(mesh);                                         
+      62 -      interactables.push({                                     
+      63 -        mesh,                                                  
+      64 -        english: obj.english,                                  
+      65 -        serbian: obj.serbian,                                  
+      66 -        id: obj.id,                                            
+      67 -        seen: false,                                           
+      68 -      });                                                      
+      69 -    }                                                          
+      70 -                                                               
+      71 -    return interactables;                                      
+      72 -  }                                                            
+      73 -                                                               
+      74 -  function addWall(scene, material, width, height, pos, rotY) {
+      75 -    const wall = new THREE.Mesh(                               
+      76 -      new THREE.PlaneGeometry(width, height),                  
+      77 -      material                                                 
+      78 -    );                                                         
+      79 -    wall.position.set(pos.x, pos.y, pos.z);                    
+      80 -    wall.rotation.y = rotY;                                    
+      81 -    scene.add(wall);                                           
+      82 -  }                                                            
+      83 -                                                               
+      84 -  function createObject(obj) {                                 
+      48 +  // Vocab objects                                             
+      49 +  for (const obj of roomData.objects) {                        
+      50      const { w, h, d } = obj.size;
+      86 -    const geo = new THREE.BoxGeometry(w, h, d);                
+      87 -    const mat = new THREE.MeshStandardMaterial({               
+      88 -      color: obj.color,                                        
+      89 -      roughness: 0.7,                                          
+      90 -      metalness: 0.1,                                          
+      91 -    });                                                        
+      92 -    const mesh = new THREE.Mesh(geo, mat);                     
+      51 +    const mesh = new THREE.Mesh(                               
+      52 +      new THREE.BoxGeometry(w, h, d),                          
+      53 +      new THREE.MeshStandardMaterial({ color: obj.color, roughn
+         +ess: 0.7, metalness: 0.1 })                                    
+      54 +    );                                                         
+      55      mesh.position.set(obj.position.x, obj.position.y, obj.posit
+          ion.z);
+      56      mesh.userData.vocabId = obj.id;
+      95 -    return mesh;                                               
+      57 +    scene.add(mesh);                                           
+      58 +    interactables.push({ mesh, english: obj.english, serbian: o
+         +bj.serbian, id: obj.id, seen: false });                        
+      59    }
+      60  
+      98 -  return { build };                                            
+      99 -})();                                                          
+      61 +  return interactables;                                        
+      62 +}                                                              
+      63 +                                                               
+      64 +function addWall(scene, material, width, height, pos, rotY) {  
+      65 +  const wall = new THREE.Mesh(new THREE.PlaneGeometry(width, he
+         +ight), material);                                              
+      66 +  wall.position.set(pos.x, pos.y, pos.z);                      
+      67 +  wall.rotation.y = rotY;                                      
+      68 +  scene.add(wall);                                             
+      69 +}                                                              
+      70 +                                                               
+      71 +export { build };                                              
+
+● Write(assets/vocab-explorer/player.js)
+  ⎿  Added 69 lines, removed 84 lines
+        2   * First-person controls: WASD movement + mouse look via Point
+           er Lock.
+        3   */
+        4  
+        5 -const Player = (() => {                                       
+        6 -  const SPEED = 4.0;                                          
+        7 -  const MOUSE_SENSITIVITY = 0.002;                            
+        8 -  const PLAYER_HEIGHT = 1.7;                                  
+        9 -  const ROOM_HALF = 4.8; // stay slightly inside walls        
+        5 +import * as THREE from "./lib/three.module.min.js";           
+        6  
+       11 -  let camera, domElement;                                     
+       12 -  let euler = { x: 0, y: 0 };                                 
+       13 -  let moveState = { forward: false, back: false, left: false, 
+          -right: false };                                               
+       14 -  let locked = false;                                         
+        7 +const SPEED = 4.0;                                            
+        8 +const MOUSE_SENSITIVITY = 0.002;                              
+        9 +const PLAYER_HEIGHT = 1.7;                                    
+       10 +const ROOM_HALF = 4.8;                                        
+       11  
+       16 -  function init(cam, canvas) {                                
+       17 -    camera = cam;                                             
+       18 -    domElement = canvas;                                      
+       12 +let camera, domElement;                                       
+       13 +let euler = { x: 0, y: 0 };                                   
+       14 +let moveState = { forward: false, back: false, left: false, ri
+          +ght: false };                                                 
+       15 +let locked = false;                                           
+       16  
+       20 -    camera.position.set(0, PLAYER_HEIGHT, 3);                 
+       21 -    camera.rotation.order = "YXZ";                            
+       17 +function init(cam, canvas) {                                  
+       18 +  camera = cam;                                               
+       19 +  domElement = canvas;                                        
+       20 +  camera.position.set(0, PLAYER_HEIGHT, 3);                   
+       21 +  camera.rotation.order = "YXZ";                              
+       22  
+       23 -    document.addEventListener("keydown", onKey);              
+       24 -    document.addEventListener("keyup", onKey);                
+       25 -    document.addEventListener("mousemove", onMouse);          
+       26 -    document.addEventListener("pointerlockchange", onLockChang
+          -e);                                                           
+       27 -  }                                                           
+       23 +  document.addEventListener("keydown", onKey);                
+       24 +  document.addEventListener("keyup", onKey);                  
+       25 +  document.addEventListener("mousemove", onMouse);            
+       26 +  document.addEventListener("pointerlockchange", onLockChange)
+          +;                                                             
+       27 +}                                                             
+       28  
+       29 -  function requestLock() {                                    
+       30 -    domElement.requestPointerLock();                          
+       31 -  }                                                           
+       29 +function requestLock() {                                      
+       30 +  domElement.requestPointerLock();                            
+       31 +}                                                             
+       32  
+       33 -  function isLocked() {                                       
+       34 -    return locked;                                            
+       35 -  }                                                           
+       33 +function isLocked() {                                         
+       34 +  return locked;                                              
+       35 +}                                                             
+       36  
+       37 -  function onLockChange() {                                   
+       38 -    locked = document.pointerLockElement === domElement;      
+       39 -  }                                                           
+       37 +function onLockChange() {                                     
+       38 +  locked = document.pointerLockElement === domElement;        
+       39 +}                                                             
+       40  
+       41 -  function onKey(e) {                                         
+       42 -    const down = e.type === "keydown";                        
+       43 -    switch (e.code) {                                         
+       44 -      case "KeyW":                                            
+       45 -      case "ArrowUp":                                         
+       46 -        moveState.forward = down;                             
+       47 -        break;                                                
+       48 -      case "KeyS":                                            
+       49 -      case "ArrowDown":                                       
+       50 -        moveState.back = down;                                
+       51 -        break;                                                
+       52 -      case "KeyA":                                            
+       53 -      case "ArrowLeft":                                       
+       54 -        moveState.left = down;                                
+       55 -        break;                                                
+       56 -      case "KeyD":                                            
+       57 -      case "ArrowRight":                                      
+       58 -        moveState.right = down;                               
+       59 -        break;                                                
+       60 -    }                                                         
+       41 +function onKey(e) {                                           
+       42 +  const down = e.type === "keydown";                          
+       43 +  switch (e.code) {                                           
+       44 +    case "KeyW": case "ArrowUp":    moveState.forward = down; 
+          +break;                                                        
+       45 +    case "KeyS": case "ArrowDown":  moveState.back    = down; 
+          +break;                                                        
+       46 +    case "KeyA": case "ArrowLeft":  moveState.left    = down; 
+          +break;                                                        
+       47 +    case "KeyD": case "ArrowRight": moveState.right   = down; 
+          +break;                                                        
+       48    }
+       49 +}                                                             
+       50  
+       63 -  function onMouse(e) {                                       
+       64 -    if (!locked) return;                                      
+       65 -    euler.y -= e.movementX * MOUSE_SENSITIVITY;               
+       66 -    euler.x -= e.movementY * MOUSE_SENSITIVITY;               
+       67 -    euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, eul
+          -er.x));                                                       
+       68 -    camera.rotation.set(euler.x, euler.y, 0);                 
+       69 -  }                                                           
+       51 +function onMouse(e) {                                         
+       52 +  if (!locked) return;                                        
+       53 +  euler.y -= e.movementX * MOUSE_SENSITIVITY;                 
+       54 +  euler.x -= e.movementY * MOUSE_SENSITIVITY;                 
+       55 +  euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler
+          +.x));                                                         
+       56 +  camera.rotation.set(euler.x, euler.y, 0);                   
+       57 +}                                                             
+       58  
+       71 -  function update(dt) {                                       
+       72 -    if (!locked) return;                                      
+       59 +function update(dt) {                                         
+       60 +  if (!locked) return;                                        
+       61  
+       74 -    const dir = new THREE.Vector3();                          
+       75 -    const front = new THREE.Vector3(0, 0, -1).applyQuaternion(
+          -camera.quaternion);                                           
+       76 -    front.y = 0;                                              
+       77 -    front.normalize();                                        
+       78 -    const right = new THREE.Vector3().crossVectors(front, new 
+          -THREE.Vector3(0, 1, 0));                                      
+       62 +  const dir = new THREE.Vector3();                            
+       63 +  const front = new THREE.Vector3(0, 0, -1).applyQuaternion(ca
+          +mera.quaternion);                                             
+       64 +  front.y = 0;                                                
+       65 +  front.normalize();                                          
+       66 +  const right = new THREE.Vector3().crossVectors(front, new TH
+          +REE.Vector3(0, 1, 0));                                        
+       67  
+       80 -    if (moveState.forward) dir.add(front);                    
+       81 -    if (moveState.back) dir.sub(front);                       
+       82 -    if (moveState.left) dir.sub(right);                       
+       83 -    if (moveState.right) dir.add(right);                      
+       68 +  if (moveState.forward) dir.add(front);                      
+       69 +  if (moveState.back) dir.sub(front);                         
+       70 +  if (moveState.left) dir.sub(right);                         
+       71 +  if (moveState.right) dir.add(right);                        
+       72  
+       85 -    if (dir.lengthSq() > 0) {                                 
+       86 -      dir.normalize().multiplyScalar(SPEED * dt);             
+       87 -      camera.position.add(dir);                               
+       88 -                                                              
+       89 -      // Clamp to room bounds                                 
+       90 -      camera.position.x = Math.max(-ROOM_HALF, Math.min(ROOM_H
+          -ALF, camera.position.x));                                     
+       91 -      camera.position.z = Math.max(-ROOM_HALF, Math.min(ROOM_H
+          -ALF, camera.position.z));                                     
+       92 -    }                                                         
+       73 +  if (dir.lengthSq() > 0) {                                   
+       74 +    dir.normalize().multiplyScalar(SPEED * dt);               
+       75 +    camera.position.add(dir);                                 
+       76 +    camera.position.x = Math.max(-ROOM_HALF, Math.min(ROOM_HAL
+          +F, camera.position.x));                                       
+       77 +    camera.position.z = Math.max(-ROOM_HALF, Math.min(ROOM_HAL
+          +F, camera.position.z));                                       
+       78    }
+       79 +}                                                             
+       80  
+       95 -  function destroy() {                                        
+       96 -    document.removeEventListener("keydown", onKey);           
+       97 -    document.removeEventListener("keyup", onKey);             
+       98 -    document.removeEventListener("mousemove", onMouse);       
+       99 -    document.removeEventListener("pointerlockchange", onLockCh
+          -ange);                                                        
+      100 -    moveState = { forward: false, back: false, left: false, ri
+          -ght: false };                                                 
+      101 -    locked = false;                                           
+      102 -  }                                                           
+       81 +function destroy() {                                          
+       82 +  document.removeEventListener("keydown", onKey);             
+       83 +  document.removeEventListener("keyup", onKey);               
+       84 +  document.removeEventListener("mousemove", onMouse);         
+       85 +  document.removeEventListener("pointerlockchange", onLockChan
+          +ge);                                                          
+       86 +  moveState = { forward: false, back: false, left: false, righ
+          +t: false };                                                   
+       87 +  locked = false;                                             
+       88 +}                                                             
+       89  
+      104 -  return { init, requestLock, isLocked, update, destroy };    
+      105 -})();                                                         
+       90 +export { init, requestLock, isLocked, update, destroy };      
+
+● Write(assets/vocab-explorer/quiz.js)
+  ⎿  Added 84 lines, removed 94 lines
+        1  /**
+        2 - * Quiz module: given a list of vocab items the player has see
+          -n,                                                            
+        3 - * presents multiple-choice questions (serbian → pick the engl
+          -ish).                                                         
+        2 + * Quiz: after exploration ends, present multiple-choice quest
+          +ions                                                          
+        3 + * (serbian word → pick the english translation).             
+        4   */
+        5  
+        6 -const Quiz = (() => {                                         
+        7 -  let questions = [];                                         
+        8 -  let current = 0;                                            
+        9 -  let score = 0;                                              
+       10 -  let total = 0;                                              
+       11 -  let onFinish = null;                                        
+        6 +let questions = [];                                           
+        7 +let current = 0;                                              
+        8 +let score = 0;                                                
+        9 +let total = 0;                                                
+       10 +let onFinish = null;                                          
+       11  
+       13 -  const overlay = () => document.getElementById("quiz-overlay"
+          -);                                                            
+       14 -  const promptEl = () => document.getElementById("quiz-prompt"
+          -);                                                            
+       15 -  const choicesEl = () => document.getElementById("quiz-choice
+          -s");                                                          
+       16 -  const scoreEl = () => document.getElementById("quiz-score");
+       17 -  const nextBtn = () => document.getElementById("quiz-next-btn
+          -");                                                           
+       18 -  const doneBtn = () => document.getElementById("quiz-done-btn
+          -");                                                           
+       12 +function start(seenItems, allItems, finishCb) {               
+       13 +  onFinish = finishCb;                                        
+       14 +  score = 0;                                                  
+       15 +  current = 0;                                                
+       16  
+       20 -  function start(seenItems, allItems, finishCb) {             
+       21 -    onFinish = finishCb;                                      
+       22 -    score = 0;                                                
+       23 -    current = 0;                                              
+       17 +  questions = shuffle(allItems.map((item) => ({               
+       18 +    serbian: item.serbian,                                    
+       19 +    correct: item.english,                                    
+       20 +    seen: item.seen,                                          
+       21 +  })));                                                       
+       22 +  total = questions.length;                                   
+       23  
+       25 -    // Build questions from ALL items — seen or not.          
+       26 -    // Shuffle them so quiz order varies.                     
+       27 -    questions = shuffle(allItems.map((item) => ({             
+       28 -      serbian: item.serbian,                                  
+       29 -      correct: item.english,                                  
+       30 -      seen: item.seen,                                        
+       31 -    })));                                                     
+       32 -    total = questions.length;                                 
+       24 +  document.getElementById("quiz-overlay").classList.add("activ
+          +e");                                                          
+       25 +  document.getElementById("quiz-score").textContent = "";     
+       26 +  document.getElementById("quiz-next-btn").style.display = "no
+          +ne";                                                          
+       27 +  document.getElementById("quiz-done-btn").style.display = "no
+          +ne";                                                          
+       28 +  document.getElementById("quiz-next-btn").onclick = nextQuest
+          +ion;                                                          
+       29 +  document.getElementById("quiz-done-btn").onclick = finish;  
+       30  
+       34 -    overlay().classList.add("active");                        
+       35 -    scoreEl().textContent = "";                               
+       36 -    nextBtn().style.display = "none";                         
+       37 -    doneBtn().style.display = "none";                         
+       38 -    nextBtn().onclick = nextQuestion;                         
+       39 -    doneBtn().onclick = finish;                               
+       31 +  showQuestion();                                             
+       32 +}                                                             
+       33  
+       41 -    showQuestion();                                           
+       42 -  }                                                           
+       34 +function showQuestion() {                                     
+       35 +  const q = questions[current];                               
+       36 +  document.getElementById("quiz-prompt").textContent = q.serbi
+          +an;                                                           
+       37 +  document.getElementById("quiz-score").textContent =         
+       38 +    `${current + 1} / ${total}  —  Score: ${score}`;          
+       39  
+       44 -  function showQuestion() {                                   
+       45 -    const q = questions[current];                             
+       46 -    promptEl().textContent = q.serbian;                       
+       47 -    scoreEl().textContent = `${current + 1} / ${total}  —  Sco
+          -re: ${score}`;                                                
+       40 +  const wrong = questions                                     
+       41 +    .filter((o) => o.correct !== q.correct)                   
+       42 +    .map((o) => o.correct);                                   
+       43 +  const picks = shuffle(wrong).slice(0, 3);                   
+       44 +  picks.push(q.correct);                                      
+       45 +  const options = shuffle(picks);                             
+       46  
+       49 -    // Build 4 choices: correct + 3 random wrong              
+       50 -    const wrong = questions                                   
+       51 -      .filter((o) => o.correct !== q.correct)                 
+       52 -      .map((o) => o.correct);                                 
+       53 -    const picks = shuffle(wrong).slice(0, 3);                 
+       54 -    picks.push(q.correct);                                    
+       55 -    const options = shuffle(picks);                           
+       47 +  const choicesEl = document.getElementById("quiz-choices");  
+       48 +  choicesEl.innerHTML = "";                                   
+       49 +  document.getElementById("quiz-next-btn").style.display = "no
+          +ne";                                                          
+       50 +  document.getElementById("quiz-done-btn").style.display = "no
+          +ne";                                                          
+       51  
+       57 -    choicesEl().innerHTML = "";                               
+       58 -    nextBtn().style.display = "none";                         
+       59 -    doneBtn().style.display = "none";                         
+       60 -                                                              
+       61 -    for (const opt of options) {                              
+       62 -      const btn = document.createElement("button");           
+       63 -      btn.className = "quiz-choice";                          
+       64 -      btn.textContent = opt;                                  
+       65 -      btn.addEventListener("click", () => pick(btn, opt, q.cor
+          -rect));                                                       
+       66 -      choicesEl().appendChild(btn);                           
+       67 -    }                                                         
+       52 +  for (const opt of options) {                                
+       53 +    const btn = document.createElement("button");             
+       54 +    btn.className = "quiz-choice";                            
+       55 +    btn.textContent = opt;                                    
+       56 +    btn.addEventListener("click", () => pick(btn, opt, q.corre
+          +ct));                                                         
+       57 +    choicesEl.appendChild(btn);                               
+       58    }
+       59 +}                                                             
+       60  
+       70 -  function pick(btn, chosen, correct) {                       
+       71 -    // Disable all buttons                                    
+       72 -    const buttons = choicesEl().querySelectorAll(".quiz-choice
+          -");                                                           
+       73 -    buttons.forEach((b) => (b.style.pointerEvents = "none")); 
+       61 +function pick(btn, chosen, correct) {                         
+       62 +  const buttons = document.getElementById("quiz-choices").quer
+          +ySelectorAll(".quiz-choice");                                 
+       63 +  buttons.forEach((b) => (b.style.pointerEvents = "none"));   
+       64  
+       75 -    if (chosen === correct) {                                 
+       76 -      btn.classList.add("correct");                           
+       77 -      score++;                                                
+       78 -    } else {                                                  
+       79 -      btn.classList.add("wrong");                             
+       80 -      // Highlight the right answer                           
+       81 -      buttons.forEach((b) => {                                
+       82 -        if (b.textContent === correct) b.classList.add("correc
+          -t");                                                          
+       83 -      });                                                     
+       84 -    }                                                         
+       65 +  if (chosen === correct) {                                   
+       66 +    btn.classList.add("correct");                             
+       67 +    score++;                                                  
+       68 +  } else {                                                    
+       69 +    btn.classList.add("wrong");                               
+       70 +    buttons.forEach((b) => {                                  
+       71 +      if (b.textContent === correct) b.classList.add("correct"
+          +);                                                            
+       72 +    });                                                       
+       73 +  }                                                           
+       74  
+       86 -    scoreEl().textContent = `${current + 1} / ${total}  —  Sco
+          -re: ${score}`;                                                
+       75 +  document.getElementById("quiz-score").textContent =         
+       76 +    `${current + 1} / ${total}  —  Score: ${score}`;          
+       77  
+       88 -    if (current < total - 1) {                                
+       89 -      nextBtn().style.display = "inline-block";               
+       90 -    } else {                                                  
+       91 -      doneBtn().style.display = "inline-block";               
+       92 -      doneBtn().textContent = `Finish (${score}/${total})`;   
+       93 -    }                                                         
+       78 +  if (current < total - 1) {                                  
+       79 +    document.getElementById("quiz-next-btn").style.display = "
+          +inline-block";                                                
+       80 +  } else {                                                    
+       81 +    const doneBtn = document.getElementById("quiz-done-btn"); 
+       82 +    doneBtn.style.display = "inline-block";                   
+       83 +    doneBtn.textContent = `Finish (${score}/${total})`;       
+       84    }
+       85 +}                                                             
+       86  
+       96 -  function nextQuestion() {                                   
+       97 -    current++;                                                
+       98 -    showQuestion();                                           
+       99 -  }                                                           
+       87 +function nextQuestion() {                                     
+       88 +  current++;                                                  
+       89 +  showQuestion();                                             
+       90 +}                                                             
+       91  
+      101 -  function finish() {                                         
+      102 -    overlay().classList.remove("active");                     
+      103 -    if (onFinish) onFinish(score, total);                     
+      104 -  }                                                           
+       92 +function finish() {                                           
+       93 +  document.getElementById("quiz-overlay").classList.remove("ac
+          +tive");                                                       
+       94 +  if (onFinish) onFinish(score, total);                       
+       95 +}                                                             
+       96  
+      106 -  function shuffle(arr) {                                     
+      107 -    const a = [...arr];                                       
+      108 -    for (let i = a.length - 1; i > 0; i--) {                  
+      109 -      const j = Math.floor(Math.random() * (i + 1));          
+      110 -      [a[i], a[j]] = [a[j], a[i]];                            
+      111 -    }                                                         
+      112 -    return a;                                                 
+       97 +function shuffle(arr) {                                       
+       98 +  const a = [...arr];                                         
+       99 +  for (let i = a.length - 1; i > 0; i--) {                    
+      100 +    const j = Math.floor(Math.random() * (i + 1));            
+      101 +    [a[i], a[j]] = [a[j], a[i]];                              
+      102    }
+      103 +  return a;                                                   
+      104 +}                                                             
+      105  
+      115 -  return { start };                                           
+      116 -})();                                                         
+      106 +export { start };                                             
+
+● Now the main module and updated HTML:
+
+● Write(assets/vocab-explorer/main.js)
+  ⎿  Added 137 lines, removed 170 lines
+        1 -/**                                                           
+        2 - * Main entry — ties together scene, player, HUD, and quiz.   
+        3 - */                                                           
+        1 +import * as THREE from "./lib/three.module.min.js";           
+        2 +import { VOCABULARY } from "./vocabulary.js";                 
+        3 +import * as Room from "./room.js";                            
+        4 +import * as Player from "./player.js";                        
+        5 +import * as Quiz from "./quiz.js";                            
+        6  
+        5 -(() => {                                                      
+        6 -  let renderer, scene, camera;                                
+        7 -  let interactables = [];                                     
+        8 -  let raycaster, clock;                                       
+        9 -  let timerSeconds = 0;                                       
+       10 -  let timerRunning = false;                                   
+       11 -  let seenCount = 0;                                          
+        7 +let renderer, scene, camera;                                  
+        8 +let interactables = [];                                       
+        9 +let raycaster, clock;                                         
+       10 +let timerSeconds = 0;                                         
+       11 +let timerRunning = false;                                     
+       12 +let seenCount = 0;                                            
+       13  
+       13 -  const menuEl = document.getElementById("menu");             
+       14 -  const gameEl = document.getElementById("game-container");   
+       15 -  const timerEl = document.getElementById("timer");           
+       16 -  const seenEl = document.getElementById("seen-count");       
+       17 -  const labelBubble = document.getElementById("label-bubble");
+       18 -  const labelSerbian = labelBubble.querySelector(".serbian"); 
+       19 -  const labelEnglish = labelBubble.querySelector(".english"); 
+       20 -  const instructionsEl = document.getElementById("instructions
+          -");                                                           
+       14 +const menuEl = document.getElementById("menu");               
+       15 +const gameEl = document.getElementById("game-container");     
+       16 +const timerEl = document.getElementById("timer");             
+       17 +const seenEl = document.getElementById("seen-count");         
+       18 +const labelBubble = document.getElementById("label-bubble");  
+       19 +const labelSerbian = labelBubble.querySelector(".serbian");   
+       20 +const labelEnglish = labelBubble.querySelector(".english");   
+       21 +const instructionsEl = document.getElementById("instructions")
+          +;                                                             
+       22  
+       22 -  // ── Menu ──                                               
+       23 +// ── Menu ──                                                 
+       24  
+       24 -  document.querySelectorAll(".room-btn").forEach((btn) => {   
+       25 -    btn.addEventListener("click", () => {                     
+       26 -      const roomKey = btn.dataset.room;                       
+       27 -      startRoom(roomKey);                                     
+       28 -    });                                                       
+       29 -  });                                                         
+       25 +document.querySelectorAll(".room-btn").forEach((btn) => {     
+       26 +  btn.addEventListener("click", () => startRoom(btn.dataset.ro
+          +om));                                                         
+       27 +});                                                           
+       28  
+       31 -  // ── Start a room ──                                       
+       29 +// ── Start a room ──                                         
+       30  
+       33 -  function startRoom(roomKey) {                               
+       34 -    const roomData = VOCABULARY[roomKey];                     
+       35 -    if (!roomData) return;                                    
+       31 +function startRoom(roomKey) {                                 
+       32 +  const roomData = VOCABULARY[roomKey];                       
+       33 +  if (!roomData) return;                                      
+       34  
+       37 -    menuEl.style.display = "none";                            
+       38 -    gameEl.style.display = "block";                           
+       35 +  menuEl.style.display = "none";                              
+       36 +  gameEl.style.display = "block";                             
+       37  
+       40 -    // Renderer                                               
+       41 -    renderer = new THREE.WebGLRenderer({ antialias: true });  
+       42 -    renderer.setSize(window.innerWidth, window.innerHeight);  
+       43 -    renderer.setPixelRatio(window.devicePixelRatio);          
+       44 -    renderer.shadowMap.enabled = false;                       
+       45 -    gameEl.insertBefore(renderer.domElement, gameEl.firstChild
+          -);                                                            
+       38 +  renderer = new THREE.WebGLRenderer({ antialias: true });    
+       39 +  renderer.setSize(window.innerWidth, window.innerHeight);    
+       40 +  renderer.setPixelRatio(window.devicePixelRatio);            
+       41 +  gameEl.insertBefore(renderer.domElement, gameEl.firstChild);
+       42  
+       47 -    // Scene + camera                                         
+       48 -    scene = new THREE.Scene();                                
+       49 -    scene.background = new THREE.Color(0x1a1a2e);             
+       50 -    camera = new THREE.PerspectiveCamera(                     
+       51 -      70,                                                     
+       52 -      window.innerWidth / window.innerHeight,                 
+       53 -      0.1,                                                    
+       54 -      50                                                      
+       55 -    );                                                        
+       43 +  scene = new THREE.Scene();                                  
+       44 +  scene.background = new THREE.Color(0x1a1a2e);               
+       45 +  camera = new THREE.PerspectiveCamera(70, window.innerWidth /
+          + window.innerHeight, 0.1, 50);                                
+       46  
+       57 -    // Build room                                             
+       58 -    interactables = Room.build(scene, roomData);              
+       59 -    seenCount = 0;                                            
+       47 +  interactables = Room.build(scene, roomData);                
+       48 +  seenCount = 0;                                              
+       49  
+       61 -    // Player                                                 
+       62 -    Player.init(camera, renderer.domElement);                 
+       63 -    renderer.domElement.addEventListener("click", () => Player
+          -.requestLock());                                              
+       50 +  Player.init(camera, renderer.domElement);                   
+       51 +  renderer.domElement.addEventListener("click", () => Player.r
+          +equestLock());                                                
+       52  
+       65 -    // Raycaster                                              
+       66 -    raycaster = new THREE.Raycaster();                        
+       67 -    raycaster.far = 6;                                        
+       53 +  raycaster = new THREE.Raycaster();                          
+       54 +  raycaster.far = 6;                                          
+       55  
+       69 -    // Timer                                                  
+       70 -    timerSeconds = roomData.timerSeconds;                     
+       71 -    timerRunning = true;                                      
+       72 -    clock = new THREE.Clock();                                
+       56 +  timerSeconds = roomData.timerSeconds;                       
+       57 +  timerRunning = true;                                        
+       58 +  clock = new THREE.Clock();                                  
+       59  
+       74 -    // HUD                                                    
+       75 -    updateHUD();                                              
+       76 -    instructionsEl.style.opacity = "1";                       
+       77 -    setTimeout(() => (instructionsEl.style.opacity = "0"), 600
+          -0);                                                           
+       60 +  updateHUD();                                                
+       61 +  instructionsEl.style.opacity = "1";                         
+       62 +  setTimeout(() => (instructionsEl.style.opacity = "0"), 6000)
+          +;                                                             
+       63  
+       79 -    // Resize handler                                         
+       80 -    window.addEventListener("resize", onResize);              
+       64 +  window.addEventListener("resize", onResize);                
+       65 +  tick();                                                     
+       66 +}                                                             
+       67  
+       82 -    // GO                                                     
+       83 -    tick();                                                   
+       84 -  }                                                           
+       68 +// ── Game loop ──                                            
+       69  
+       86 -  // ── Game loop ──                                          
+       70 +function tick() {                                             
+       71 +  if (!renderer) return;                                      
+       72 +  requestAnimationFrame(tick);                                
+       73  
+       88 -  function tick() {                                           
+       89 -    if (!renderer) return;                                    
+       90 -    requestAnimationFrame(tick);                              
+       74 +  const dt = clock.getDelta();                                
+       75  
+       92 -    const dt = clock.getDelta();                              
+       93 -                                                              
+       94 -    // Timer                                                  
+       95 -    if (timerRunning) {                                       
+       96 -      timerSeconds -= dt;                                     
+       97 -      if (timerSeconds <= 0) {                                
+       98 -        timerSeconds = 0;                                     
+       99 -        timerRunning = false;                                 
+      100 -        endExploration();                                     
+      101 -      }                                                       
+      102 -      updateHUD();                                            
+       76 +  if (timerRunning) {                                         
+       77 +    timerSeconds -= dt;                                       
+       78 +    if (timerSeconds <= 0) {                                  
+       79 +      timerSeconds = 0;                                       
+       80 +      timerRunning = false;                                   
+       81 +      endExploration();                                       
+       82      }
+       83 +    updateHUD();                                              
+       84 +  }                                                           
+       85  
+      105 -    Player.update(dt);                                        
+       86 +  Player.update(dt);                                          
+       87 +  checkGaze();                                                
+       88 +  renderer.render(scene, camera);                             
+       89 +}                                                             
+       90  
+      107 -    // Raycast for object labelling                           
+      108 -    checkGaze();                                              
+       91 +// ── Gaze / label ──                                         
+       92  
+      110 -    renderer.render(scene, camera);                           
+       93 +function checkGaze() {                                        
+       94 +  if (!Player.isLocked()) {                                   
+       95 +    labelBubble.style.display = "none";                       
+       96 +    return;                                                   
+       97    }
+       98  
+      113 -  // ── Gaze / label ──                                       
+       99 +  raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);   
+      100 +  const hits = raycaster.intersectObjects(interactables.map((i
+          +) => i.mesh));                                                
+      101  
+      115 -  let currentLookId = null;                                   
+      116 -                                                              
+      117 -  function checkGaze() {                                      
+      118 -    if (!Player.isLocked()) {                                 
+      119 -      labelBubble.style.display = "none";                     
+      120 -      return;                                                 
+      121 -    }                                                         
+      122 -                                                              
+      123 -    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera); 
+      124 -    const hits = raycaster.intersectObjects(                  
+      125 -      interactables.map((i) => i.mesh)                        
+      126 -    );                                                        
+      127 -                                                              
+      128 -    if (hits.length > 0) {                                    
+      129 -      const vocabId = hits[0].object.userData.vocabId;        
+      130 -      const item = interactables.find((i) => i.id === vocabId)
+          -;                                                             
+      131 -      if (item) {                                             
+      132 -        if (!item.seen) {                                     
+      133 -          item.seen = true;                                   
+      134 -          seenCount++;                                        
+      135 -          // Tint the object slightly to show it's been seen  
+      136 -          item.mesh.material.emissive = new THREE.Color(0x0033
+          -00);                                                          
+      137 -          updateHUD();                                        
+      138 -        }                                                     
+      139 -        labelSerbian.textContent = item.serbian;              
+      140 -        labelEnglish.textContent = item.english;              
+      141 -        labelBubble.style.display = "block";                  
+      142 -        currentLookId = vocabId;                              
+      102 +  if (hits.length > 0) {                                      
+      103 +    const vocabId = hits[0].object.userData.vocabId;          
+      104 +    const item = interactables.find((i) => i.id === vocabId); 
+      105 +    if (item) {                                               
+      106 +      if (!item.seen) {                                       
+      107 +        item.seen = true;                                     
+      108 +        seenCount++;                                          
+      109 +        item.mesh.material.emissive = new THREE.Color(0x003300
+          +);                                                            
+      110 +        updateHUD();                                          
+      111        }
+      144 -    } else {                                                  
+      145 -      labelBubble.style.display = "none";                     
+      146 -      currentLookId = null;                                   
+      112 +      labelSerbian.textContent = item.serbian;                
+      113 +      labelEnglish.textContent = item.english;                
+      114 +      labelBubble.style.display = "block";                    
+      115      }
+      116 +  } else {                                                    
+      117 +    labelBubble.style.display = "none";                       
+      118    }
+      119 +}                                                             
+      120  
+      150 -  // ── HUD ──                                                
+      121 +// ── HUD ──                                                  
+      122  
+      152 -  function updateHUD() {                                      
+      153 -    const m = Math.floor(timerSeconds / 60);                  
+      154 -    const s = Math.floor(timerSeconds % 60);                  
+      155 -    timerEl.textContent = `${m}:${s.toString().padStart(2, "0"
+          -)}`;                                                          
+      156 -    seenEl.textContent = `${seenCount} / ${interactables.lengt
+          -h} seen`;                                                     
+      157 -  }                                                           
+      123 +function updateHUD() {                                        
+      124 +  const m = Math.floor(timerSeconds / 60);                    
+      125 +  const s = Math.floor(timerSeconds % 60);                    
+      126 +  timerEl.textContent = `${m}:${s.toString().padStart(2, "0")}
+          +`;                                                            
+      127 +  seenEl.textContent = `${seenCount} / ${interactables.length}
+          + seen`;                                                       
+      128 +}                                                             
+      129  
+      159 -  // ── Exploration ends → quiz ──                            
+      130 +// ── Exploration ends → quiz ──                              
+      131  
+      161 -  function endExploration() {                                 
+      162 -    // Exit pointer lock                                      
+      163 -    document.exitPointerLock();                               
+      164 -    labelBubble.style.display = "none";                       
+      132 +function endExploration() {                                   
+      133 +  document.exitPointerLock();                                 
+      134 +  labelBubble.style.display = "none";                         
+      135  
+      166 -    Quiz.start(                                               
+      167 -      interactables.filter((i) => i.seen),                    
+      168 -      interactables,                                          
+      169 -      onQuizDone                                              
+      170 -    );                                                        
+      171 -  }                                                           
+      136 +  Quiz.start(                                                 
+      137 +    interactables.filter((i) => i.seen),                      
+      138 +    interactables,                                            
+      139 +    onQuizDone                                                
+      140 +  );                                                          
+      141 +}                                                             
+      142  
+      173 -  function onQuizDone(score, total) {                         
+      174 -    // Tear down                                              
+      175 -    cleanup();                                                
+      143 +function onQuizDone(score, total) {                           
+      144 +  cleanup();                                                  
+      145 +  menuEl.style.display = "flex";                              
+      146  
+      177 -    // Back to menu with a brief result                       
+      178 -    menuEl.style.display = "flex";                            
+      179 -    const existing = document.getElementById("last-score");   
+      180 -    if (existing) existing.remove();                          
+      147 +  const existing = document.getElementById("last-score");     
+      148 +  if (existing) existing.remove();                            
+      149  
+      182 -    const p = document.createElement("p");                    
+      183 -    p.id = "last-score";                                      
+      184 -    p.className = "subtitle";                                 
+      185 -    p.textContent = `Last score: ${score} / ${total} (saw ${se
+          -enCount} / ${total} objects)`;                                
+      186 -    menuEl.appendChild(p);                                    
+      187 -  }                                                           
+      150 +  const p = document.createElement("p");                      
+      151 +  p.id = "last-score";                                        
+      152 +  p.className = "subtitle";                                   
+      153 +  p.textContent = `Last score: ${score} / ${total} (saw ${seen
+          +Count} / ${total} objects)`;                                  
+      154 +  menuEl.appendChild(p);                                      
+      155 +}                                                             
+      156  
+      189 -  // ── Cleanup ──                                            
+      157 +// ── Cleanup ──                                              
+      158  
+      191 -  function cleanup() {                                        
+      192 -    window.removeEventListener("resize", onResize);           
+      193 -    Player.destroy();                                         
+      194 -    if (renderer) {                                           
+      195 -      renderer.dispose();                                     
+      196 -      renderer.domElement.remove();                           
+      197 -      renderer = null;                                        
+      198 -    }                                                         
+      199 -    scene = null;                                             
+      200 -    camera = null;                                            
+      201 -    interactables = [];                                       
+      202 -    gameEl.style.display = "none";                            
+      159 +function cleanup() {                                          
+      160 +  window.removeEventListener("resize", onResize);             
+      161 +  Player.destroy();                                           
+      162 +  if (renderer) {                                             
+      163 +    renderer.dispose();                                       
+      164 +    renderer.domElement.remove();                             
+      165 +    renderer = null;                                          
+      166    }
+      167 +  scene = null;                                               
+      168 +  camera = null;                                              
+      169 +  interactables = [];                                         
+      170 +  gameEl.style.display = "none";                              
+      171 +}                                                             
+      172  
+      205 -  function onResize() {                                       
+      206 -    if (!camera || !renderer) return;                         
+      207 -    camera.aspect = window.innerWidth / window.innerHeight;   
+      208 -    camera.updateProjectionMatrix();                          
+      209 -    renderer.setSize(window.innerWidth, window.innerHeight);  
+      210 -  }                                                           
+      211 -})();                                                         
+      173 +function onResize() {                                         
+      174 +  if (!camera || !renderer) return;                           
+      175 +  camera.aspect = window.innerWidth / window.innerHeight;     
+      176 +  camera.updateProjectionMatrix();                            
+      177 +  renderer.setSize(window.innerWidth, window.innerHeight);    
+      178 +}                                                             
+
+● Write(assets/vocab-explorer/index.html)
+  ⎿  Added 4 lines, removed 11 lines
+       7      <link rel="stylesheet" href="style.css" />
+       8    </head>
+       9    <body>
+      10 -    <!-- ── Menu ── -->                                        
+      10 +    <!-- Menu -->                                              
+      11      <div id="menu">
+      12        <h1>Vocab Explorer</h1>
+      13        <p class="subtitle">
+     ...
+      17        <button class="room-btn" data-room="kitchen">Кухиња — Kit
+          chen</button>
+      18      </div>
+      19  
+      20 -    <!-- ── Game container ── -->                              
+      20 +    <!-- Game container -->                                    
+      21      <div id="game-container">
+      22        <div id="crosshair"></div>
+      23  
+     ...
+      46        </div>
+      47      </div>
+      48  
+      49 -    <!-- three.js from jsdelivr (r170) -->                     
+      50 -    <script src="https://cdn.jsdelivr.net/npm/three@0.170.0/bui
+         -ld/three.min.js"></script>                                     
+      51 -                                                               
+      52 -    <!-- App modules (order matters: data → room → player → qui
+         -z → main) -->                                                  
+      53 -    <script src="vocabulary.js"></script>                      
+      54 -    <script src="room.js"></script>                            
+      55 -    <script src="player.js"></script>                          
+      56 -    <script src="quiz.js"></script>                            
+      57 -    <script src="main.js"></script>                            
+      49 +    <!-- three.js r184 (local) + app modules -->               
+      50 +    <script type="module" src="main.js"></script>              
+      51    </body>
+      52  </html>
+  ⎿  Found 1 new diagnostic issue in 1 file (ctrl+o to expand)
+
+● Let me fix that unused parameter:
+
+● Update(assets/vocab-explorer/quiz.js)
+  ⎿  Added 1 line, removed 1 line
+       9  let total = 0;
+      10  let onFinish = null;
+      11  
+      12 -function start(seenItems, allItems, finishCb) {                
+      12 +function start(_seenItems, allItems, finishCb) {               
+      13    onFinish = finishCb;
+      14    score = 0;
+      15    current = 0;
+
+● Let me verify the final file structure:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● All set. Here's what we've got:
+
+  assets/vocab-explorer/
+  ├── index.html          ← entry point (single <script type="module">)
+  ├── style.css           ← menu, HUD, crosshair, quiz overlay
+  ├── main.js             ← app init, game loop, gaze detection, timer
+  ├── player.js           ← WASD + mouse look via Pointer Lock
+  ├── room.js             ← builds walls/floor/ceiling + vocab objects as boxes
+  ├── quiz.js             ← multiple choice (serbian → english), score tracking
+  ├── vocabulary.js       ← kitchen data (12 objects with positions/sizes)
+  ├── lib/
+  │   └── three.module.min.js  ← three.js r184
+  └── models/
+      └── kitchen/         ← empty, ready for GLB/FBX models later
+
+  How it works right now:
+  - Menu shows "Кухиња — Kitchen" button
+  - Click it → 3D room with colored boxes as placeholder objects
+  - Click canvas to enter pointer lock, WASD + mouse to explore
+  - Look at an object → label bubble shows serbian + english
+  - Objects tint green when seen, HUD tracks seen count
+  - 60-second timer → quiz with all 12 items as 4-choice multiple choice
+  - Score shown, then back to menu
+
+  You'll need to serve it from a local HTTP server since ES modules don't work
+  via file://. Something like python3 -m http.server from the vocab-explorer
+  directory. Want to give it a spin?
+
+✻ Sautéed for 1m 33s
+
+❯ Got it served! We're failing to load the module no less: Учитавање модула из  
+„http://127.0.0.1:8000/assets/vocab-explorer/lib/three.core.min.js” је          
+блокирано због недозвољеног MIME типа („”).                                     
+
+● The minified module build internally imports from three.core.min.js. You need
+  that file in lib/ too — it was in the same build/ directory you downloaded
+  from.
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Yep — three.module.min.js imports from three.core.min.js. Copy that file from
+  the build directory into lib/:
+
+  cp /path/to/three-r184/build/three.core.min.js assets/vocab-explorer/lib/
+
+  Where's the build directory you downloaded from? I can copy it for you if you
+  tell me the path.
+
+❯ I copied it in and it played really well. You did stunningly with exactly     
+zilch to work with, kudos! I have some suggestions:                             
+* Let's make a glowing "R" key next to the timer that says "Ready" next to it.  
+You can press R to immediately end the study session and skip to the quiz.      
+* If I get an answer correct, immediately go to the next question. If I'm       
+speedy, don't stop me from advancing with the "next" button.                    
+* Put the scores "per room" on the main menu, and also track how many times     
+I've completed it with :star-emoji: x count next to the menu option.            
+* Let's add a "settings" menu to the main page. Up-front, it should allow me to 
+ configure...                                                                   
+ -> Difficulty: how much time do I get per room? Easy: 30s, Medium: 20s, Hard:  
+10s, Impossible: 5s                                                             
+ -> Alphabet: Latin or cyrillic? Support words for both, like we do in my       
+flashcard app.                                                                  
+
+● Let me check your flashcard app to see how you handle the dual alphabet.
+
+  Searched for 1 pattern, read 3 files (ctrl+o to expand)
+
+● Got it — you store words in Latin and auto-generate Cyrillic via
+  latinToJugoslavCyrillic. I'll follow the same pattern: store serbian words in
+  Latin, convert to Cyrillic at runtime, and let the user pick which script to
+  display.
+
+  Now let me implement all the features.
+
+● Write(assets/vocab-explorer/vocabulary.js)
+  ⎿  Added 41 lines, removed 17 lines
+       1  /**
+       2   * Vocabulary data for each room.
+       3 - * Each entry: { id, english, serbian, position: {x, y, z}, siz
+         -e }                                                            
+       4 - * position = where the object sits in the room                
+       5 - * size = bounding box for the placeholder geometry            
+       3 + * Serbian words stored in Latin script; Cyrillic generated at 
+         +runtime.                                                       
+       4   */
+       5  
+       6 +// ── Latin → Cyrillic converter (same logic as flashcard app) 
+         +──                                                             
+       7 +                                                               
+       8 +const CYRILLIC_MAP = {                                         
+       9 +  A: "А", a: "а", B: "Б", b: "б", V: "В", v: "в", G: "Г", g: "г
+         +",                                                             
+      10 +  D: "Д", d: "д", Đ: "Ђ", đ: "ђ", E: "Е", e: "е", Ž: "Ж", ž: "ж
+         +",                                                             
+      11 +  Z: "З", z: "з", I: "И", i: "и", J: "Ј", j: "ј", K: "К", k: "к
+         +",                                                             
+      12 +  L: "Л", l: "л", M: "М", m: "м", N: "Н", n: "н", O: "О", o: "о
+         +",                                                             
+      13 +  P: "П", p: "п", R: "Р", r: "р", S: "С", s: "с", T: "Т", t: "т
+         +",                                                             
+      14 +  Ć: "Ћ", ć: "ћ", U: "У", u: "у", F: "Ф", f: "ф", H: "Х", h: "х
+         +",                                                             
+      15 +  C: "Ц", c: "ц", Č: "Ч", č: "ч", Š: "Ш", š: "ш",              
+      16 +};                                                             
+      17 +                                                               
+      18 +export function latinToCyrillic(str) {                         
+      19 +  let s = str                                                  
+      20 +    .replace(/Nj/g, "Њ").replace(/nj/g, "њ")                   
+      21 +    .replace(/Dž/g, "Џ").replace(/dž/g, "џ")                   
+      22 +    .replace(/Lj/g, "Љ").replace(/lj/g, "љ");                  
+      23 +  let out = "";                                                
+      24 +  for (const ch of s) {                                        
+      25 +    out += CYRILLIC_MAP[ch] || ch;                             
+      26 +  }                                                            
+      27 +  return out;                                                  
+      28 +}                                                              
+      29 +                                                               
+      30 +// ── Room data ──                                             
+      31 +// serbian field is Latin script; use latinToCyrillic() for Cyr
+         +illic display.                                                 
+      32 +                                                               
+      33  export const VOCABULARY = {
+      34    kitchen: {
+      10 -    name: "Кухиња — Kitchen",                                  
+      11 -    timerSeconds: 60,                                          
+      35 +    name: { latin: "Kuhinja", cyrillic: "Кухиња", english: "Kit
+         +chen" },                                                       
+      36      objects: [
+      37        {
+      38          id: "fridge",
+      39          english: "refrigerator",
+      16 -        serbian: "фрижидер",                                   
+      40 +        serbian: "frižider",                                   
+      41          position: { x: -4, y: 1.2, z: -4.5 },
+      42          size: { w: 1.2, h: 2.4, d: 0.8 },
+      43          color: 0xcccccc,
+     ...
+      45        {
+      46          id: "stove",
+      47          english: "stove",
+      24 -        serbian: "шпорет",                                     
+      48 +        serbian: "šporet",                                     
+      49          position: { x: -1.5, y: 0.6, z: -4.5 },
+      50          size: { w: 1.0, h: 1.2, d: 0.8 },
+      51          color: 0x444444,
+     ...
+      53        {
+      54          id: "sink",
+      55          english: "sink",
+      32 -        serbian: "судопера",                                   
+      56 +        serbian: "sudopera",                                   
+      57          position: { x: 1.0, y: 0.6, z: -4.5 },
+      58          size: { w: 1.0, h: 0.8, d: 0.6 },
+      59          color: 0x888899,
+     ...
+      61        {
+      62          id: "table",
+      63          english: "table",
+      40 -        serbian: "сто",                                        
+      64 +        serbian: "sto",                                        
+      65          position: { x: 0, y: 0.5, z: 1.0 },
+      66          size: { w: 1.8, h: 0.1, d: 1.2 },
+      67          color: 0x8b5e3c,
+     ...
+      69        {
+      70          id: "chair",
+      71          english: "chair",
+      48 -        serbian: "столица",                                    
+      72 +        serbian: "stolica",                                    
+      73          position: { x: -1.2, y: 0.4, z: 1.0 },
+      74          size: { w: 0.5, h: 0.8, d: 0.5 },
+      75          color: 0x6b3a1f,
+     ...
+      77        {
+      78          id: "cup",
+      79          english: "cup",
+      56 -        serbian: "шоља",                                       
+      80 +        serbian: "šolja",                                      
+      81          position: { x: 0.2, y: 1.1, z: 1.0 },
+      82          size: { w: 0.12, h: 0.15, d: 0.12 },
+      83          color: 0xf0e6d3,
+     ...
+      85        {
+      86          id: "plate",
+      87          english: "plate",
+      64 -        serbian: "тањир",                                      
+      88 +        serbian: "tanjir",                                     
+      89          position: { x: -0.3, y: 1.05, z: 0.8 },
+      90          size: { w: 0.3, h: 0.03, d: 0.3 },
+      91          color: 0xffffff,
+     ...
+      93        {
+      94          id: "knife",
+      95          english: "knife",
+      72 -        serbian: "нож",                                        
+      96 +        serbian: "nož",                                        
+      97          position: { x: 0.0, y: 1.05, z: 0.5 },
+      98          size: { w: 0.03, h: 0.02, d: 0.25 },
+      99          color: 0xaaaaaa,
+     ...
+      101        {
+      102          id: "window",
+      103          english: "window",
+       80 -        serbian: "прозор",                                    
+      104 +        serbian: "prozor",                                    
+      105          position: { x: 4.9, y: 2.0, z: -1.0 },
+      106          size: { w: 0.05, h: 1.2, d: 1.5 },
+      107          color: 0xaaddff,
+     ...
+      109        {
+      110          id: "door",
+      111          english: "door",
+       88 -        serbian: "врата",                                     
+      112 +        serbian: "vrata",                                     
+      113          position: { x: 0, y: 1.2, z: 4.9 },
+      114          size: { w: 1.0, h: 2.4, d: 0.1 },
+      115          color: 0x6b4226,
+     ...
+      117        {
+      118          id: "pot",
+      119          english: "pot",
+       96 -        serbian: "лонац",                                     
+      120 +        serbian: "lonac",                                     
+      121          position: { x: -1.5, y: 1.3, z: -4.5 },
+      122          size: { w: 0.3, h: 0.2, d: 0.3 },
+      123          color: 0x666666,
+     ...
+      125        {
+      126          id: "spoon",
+      127          english: "spoon",
+      104 -        serbian: "кашика",                                    
+      128 +        serbian: "kašika",                                    
+      129          position: { x: 0.4, y: 1.05, z: 0.6 },
+      130          size: { w: 0.03, h: 0.02, d: 0.2 },
+      131          color: 0xbbbbbb,
+
+● Now the settings module to manage difficulty and alphabet via localStorage:
+● Write(assets/vocab-explorer/settings.js)
+  ⎿  Wrote 38 lines to assets/vocab-explorer/settings.js
+       1 /**
+       2  * Settings: difficulty + alphabet, persisted to localStorage.
+       3  */
+       4 
+       5 const STORAGE_KEY = "vocabExplorerSettings";
+       6 
+       7 const DIFFICULTIES = [
+       8   { key: "easy",       label: "Easy",       seconds: 30 },
+       9   { key: "medium",     label: "Medium",     seconds: 20 },
+      10   { key: "hard",       label: "Hard",       seconds: 10 },
+     … +28 lines (ctrl+o to expand)
+
+● Now a scores module to track per-room stats in localStorage:
+
+● Write(assets/vocab-explorer/scores.js)
+  ⎿  Wrote 39 lines to assets/vocab-explorer/scores.js
+       1 /**
+       2  * Per-room score tracking in localStorage.
+       3  * Stores: { [roomKey]: { best: n, total: n, completions: n } }
+       4  */
+       5 
+       6 const STORAGE_KEY = "vocabExplorerScores";
+       7 
+       8 function loadAll() {
+       9   try {
+      10     const raw = localStorage.getItem(STORAGE_KEY);
+     … +29 lines (ctrl+o to expand)
+
+● Now update the quiz to auto-advance on correct answers:
+
+● Write(assets/vocab-explorer/quiz.js)
+  ⎿  Added 38 lines, removed 21 lines
+       1  /**
+       2 - * Quiz: after exploration ends, present multiple-choice questi
+         -ons                                                            
+       3 - * (serbian word → pick the english translation).              
+       2 + * Quiz: multiple-choice (serbian → english).                  
+       3 + * Auto-advances on correct answer; pauses on wrong to show the
+         + right one.                                                    
+       4   */
+       5  
+       6 +import { latinToCyrillic } from "./vocabulary.js";             
+       7 +                                                               
+       8  let questions = [];
+       9  let current = 0;
+      10  let score = 0;
+      11  let total = 0;
+      12  let onFinish = null;
+      13 +let alphabet = "cyrillic";                                     
+      14  
+      12 -function start(_seenItems, allItems, finishCb) {               
+      15 +const AUTO_ADVANCE_MS = 400;                                   
+      16 +const WRONG_PAUSE_MS = 1200;                                   
+      17 +                                                               
+      18 +function start(allItems, finishCb, alphabetSetting) {          
+      19    onFinish = finishCb;
+      20 +  alphabet = alphabetSetting || "cyrillic";                    
+      21    score = 0;
+      22    current = 0;
+      23  
+      24    questions = shuffle(allItems.map((item) => ({
+      25      serbian: item.serbian,
+      26      correct: item.english,
+      20 -    seen: item.seen,                                           
+      27    })));
+      28    total = questions.length;
+      29  
+     ...
+      31    document.getElementById("quiz-score").textContent = "";
+      32    document.getElementById("quiz-next-btn").style.display = "non
+          e";
+      33    document.getElementById("quiz-done-btn").style.display = "non
+          e";
+      28 -  document.getElementById("quiz-next-btn").onclick = nextQuesti
+         -on;                                                            
+      34    document.getElementById("quiz-done-btn").onclick = finish;
+      35  
+      36    showQuestion();
+      37  }
+      38  
+      39 +function serbianDisplay(latinWord) {                           
+      40 +  return alphabet === "latin" ? latinWord : latinToCyrillic(lat
+         +inWord);                                                       
+      41 +}                                                              
+      42 +                                                               
+      43  function showQuestion() {
+      44    const q = questions[current];
+      36 -  document.getElementById("quiz-prompt").textContent = q.serbia
+         -n;                                                             
+      45 +  document.getElementById("quiz-prompt").textContent = serbianD
+         +isplay(q.serbian);                                             
+      46    document.getElementById("quiz-score").textContent =
+      47      `${current + 1} / ${total}  —  Score: ${score}`;
+      48  
+     ...
+       74    if (chosen === correct) {
+       75      btn.classList.add("correct");
+       76      score++;
+       77 +    document.getElementById("quiz-score").textContent =       
+       78 +      `${current + 1} / ${total}  ���  Score: ${score}`;      
+       79 +                                                              
+       80 +    if (current < total - 1) {                                
+       81 +      // Auto-advance on correct                              
+       82 +      setTimeout(() => { current++; showQuestion(); }, AUTO_AD
+          +VANCE_MS);                                                    
+       83 +    } else {                                                  
+       84 +      setTimeout(finish, AUTO_ADVANCE_MS);                    
+       85 +    }                                                         
+       86    } else {
+       87      btn.classList.add("wrong");
+       88      buttons.forEach((b) => {
+       89        if (b.textContent === correct) b.classList.add("correct"
+           );
+       90      });
+       73 -  }                                                           
+       91 +    document.getElementById("quiz-score").textContent =       
+       92 +      `${current + 1} / ${total}  —  Score: ${score}`;        
+       93  
+       75 -  document.getElementById("quiz-score").textContent =         
+       76 -    `${current + 1} / ${total}  —  Score: ${score}`;          
+       77 -                                                              
+       78 -  if (current < total - 1) {                                  
+       79 -    document.getElementById("quiz-next-btn").style.display = "
+          -inline-block";                                                
+       80 -  } else {                                                    
+       81 -    const doneBtn = document.getElementById("quiz-done-btn"); 
+       82 -    doneBtn.style.display = "inline-block";                   
+       83 -    doneBtn.textContent = `Finish (${score}/${total})`;       
+       94 +    if (current < total - 1) {                                
+       95 +      // Pause to show correct answer, then show Next button  
+       96 +      document.getElementById("quiz-next-btn").style.display =
+          + "inline-block";                                              
+       97 +      document.getElementById("quiz-next-btn").onclick = () =>
+          + {                                                            
+       98 +        current++;                                            
+       99 +        showQuestion();                                       
+      100 +      };                                                      
+      101 +    } else {                                                  
+      102 +      const doneBtn = document.getElementById("quiz-done-btn")
+          +;                                                             
+      103 +      doneBtn.style.display = "inline-block";                 
+      104 +      doneBtn.textContent = `Finish (${score}/${total})`;     
+      105 +    }                                                         
+      106    }
+      107  }
+      108  
+       87 -function nextQuestion() {                                     
+       88 -  current++;                                                  
+       89 -  showQuestion();                                             
+       90 -}                                                             
+       91 -                                                              
+      109  function finish() {
+      110    document.getElementById("quiz-overlay").classList.remove("ac
+           tive");
+      111    if (onFinish) onFinish(score, total);
+
+● Now update the HTML with settings panel and score display areas:
+
+● Write(assets/vocab-explorer/index.html)
+  ⎿  Added 23 lines, removed 3 lines
+      14          Explore 3D rooms, look at objects to learn their names,
+           then take a
+      15          quiz. WASD to move, mouse to look.
+      16        </p>
+      17 -      <button class="room-btn" data-room="kitchen">Кухиња — Kit
+         -chen</button>                                                  
+      17 +                                                               
+      18 +      <div id="room-list">                                     
+      19 +        <button class="room-btn" data-room="kitchen">          
+      20 +          <span class="room-name">Кухиња — Kitchen</span>      
+      21 +          <span class="room-stats"></span>                     
+      22 +        </button>                                              
+      23 +      </div>                                                   
+      24 +                                                               
+      25 +      <button id="settings-toggle">Settings</button>           
+      26 +                                                               
+      27 +      <div id="settings-panel" style="display: none">          
+      28 +        <div class="setting-group">                            
+      29 +          <label>Difficulty</label>                            
+      30 +          <div id="difficulty-options" class="option-row"></div
+         +>                                                              
+      31 +        </div>                                                 
+      32 +        <div class="setting-group">                            
+      33 +          <label>Alphabet</label>                              
+      34 +          <div id="alphabet-options" class="option-row"></div> 
+      35 +        </div>                                                 
+      36 +      </div>                                                   
+      37      </div>
+      38  
+      39      <!-- Game container -->
+     ...
+      41        <div id="crosshair"></div>
+      42  
+      43        <div id="hud">
+      25 -        <div class="hud-item" id="timer">1:00</div>            
+      44 +        <div class="hud-item" id="timer">0:30</div>            
+      45 +        <div class="hud-item" id="ready-hint"><kbd>R</kbd> Read
+         +y</div>                                                        
+      46          <div class="hud-item" id="seen-count">0 / 0 seen</div>
+      47        </div>
+      48  
+     ...
+      53  
+      54        <div id="instructions">
+      55          Click to start — WASD to move, mouse to look. Find and 
+          look at objects!
+      56 +        Press R when ready for the quiz.                       
+      57        </div>
+      58  
+      59        <!-- Quiz overlay -->
+     ...
+      67        </div>
+      68      </div>
+      69  
+      49 -    <!-- three.js r184 (local) + app modules -->               
+      70      <script type="module" src="main.js"></script>
+      71    </body>
+      72  </html>
+  ⎿  Found 1 new diagnostic issue in 1 file (ctrl+o to expand)
+
+● Now update the CSS for the new elements:
+
+  Read 2 files (ctrl+o to expand)
+
+● Write(assets/vocab-explorer/style.css)
+  ⎿  Added 108 lines, removed 4 lines
+      20    align-items: center;
+      21    justify-content: center;
+      22    height: 100vh;
+      23 -  gap: 2rem;                                                   
+      23 +  gap: 1.5rem;                                                 
+      24  }
+      25  
+      26  #menu h1 {
+     ...
+      36    line-height: 1.5;
+      37  }
+      38  
+      39 +#room-list {                                                   
+      40 +  display: flex;                                               
+      41 +  flex-direction: column;                                      
+      42 +  gap: 0.75rem;                                                
+      43 +  align-items: center;                                         
+      44 +}                                                              
+      45 +                                                               
+      46  .room-btn {
+      47    background: #16213e;
+      48    border: 2px solid #0f3460;
+      49    color: #e0e0e0;
+      43 -  padding: 1rem 3rem;                                          
+      50 +  padding: 1rem 2.5rem;                                        
+      51    font-size: 1.25rem;
+      52    cursor: pointer;
+      53    border-radius: 6px;
+      54    transition: background 0.2s, border-color 0.2s;
+      55 +  display: flex;                                               
+      56 +  align-items: center;                                         
+      57 +  gap: 1rem;                                                   
+      58  }
+      59  
+      60  .room-btn:hover {
+     ...
+       62    border-color: #e94560;
+       63  }
+       64  
+       65 +.room-stats {                                                 
+       66 +  font-size: 0.85rem;                                         
+       67 +  color: #aaa;                                                
+       68 +}                                                             
+       69 +                                                              
+       70 +/* ── Settings ── */                                          
+       71 +                                                              
+       72 +#settings-toggle {                                            
+       73 +  background: none;                                           
+       74 +  border: 1px solid #555;                                     
+       75 +  color: #aaa;                                                
+       76 +  padding: 0.4rem 1.2rem;                                     
+       77 +  font-size: 0.9rem;                                          
+       78 +  cursor: pointer;                                            
+       79 +  border-radius: 4px;                                         
+       80 +}                                                             
+       81 +                                                              
+       82 +#settings-toggle:hover {                                      
+       83 +  border-color: #e94560;                                      
+       84 +  color: #eee;                                                
+       85 +}                                                             
+       86 +                                                              
+       87 +#settings-panel {                                             
+       88 +  background: #16213e;                                        
+       89 +  border: 1px solid #0f3460;                                  
+       90 +  border-radius: 8px;                                         
+       91 +  padding: 1.25rem 1.5rem;                                    
+       92 +  max-width: 420px;                                           
+       93 +  width: 90%;                                                 
+       94 +}                                                             
+       95 +                                                              
+       96 +.setting-group {                                              
+       97 +  margin-bottom: 1rem;                                        
+       98 +}                                                             
+       99 +                                                              
+      100 +.setting-group:last-child {                                   
+      101 +  margin-bottom: 0;                                           
+      102 +}                                                             
+      103 +                                                              
+      104 +.setting-group label {                                        
+      105 +  display: block;                                             
+      106 +  font-size: 0.9rem;                                          
+      107 +  color: #aaa;                                                
+      108 +  margin-bottom: 0.5rem;                                      
+      109 +}                                                             
+      110 +                                                              
+      111 +.option-row {                                                 
+      112 +  display: flex;                                              
+      113 +  gap: 0.5rem;                                                
+      114 +  flex-wrap: wrap;                                            
+      115 +}                                                             
+      116 +                                                              
+      117 +.option-btn {                                                 
+      118 +  background: #1a1a2e;                                        
+      119 +  border: 1px solid #333;                                     
+      120 +  color: #ccc;                                                
+      121 +  padding: 0.35rem 0.9rem;                                    
+      122 +  font-size: 0.9rem;                                          
+      123 +  cursor: pointer;                                            
+      124 +  border-radius: 4px;                                         
+      125 +}                                                             
+      126 +                                                              
+      127 +.option-btn:hover {                                           
+      128 +  border-color: #e94560;                                      
+      129 +}                                                             
+      130 +                                                              
+      131 +.option-btn.active {                                          
+      132 +  background: #0f3460;                                        
+      133 +  border-color: #e94560;                                      
+      134 +  color: #fff;                                                
+      135 +}                                                             
+      136 +                                                              
+      137  /* ── Game container ── */
+      138  
+      139  #game-container {
+     ...
+      147    display: block;
+      148  }
+      149  
+       68 -/* ── Crosshair ── */                                         
+      150 +/* ── Crosshair ���─ */                                       
+      151  
+      152  #crosshair {
+      153    position: absolute;
+     ...
+      205    font-variant-numeric: tabular-nums;
+      206  }
+      207  
+      208 +#ready-hint {                                                 
+      209 +  cursor: pointer;                                            
+      210 +}                                                             
+      211 +                                                              
+      212 +#ready-hint kbd {                                             
+      213 +  display: inline-block;                                      
+      214 +  background: #e94560;                                        
+      215 +  color: #fff;                                                
+      216 +  padding: 0.1rem 0.45rem;                                    
+      217 +  border-radius: 3px;                                         
+      218 +  font-size: 0.85rem;                                         
+      219 +  font-family: inherit;                                       
+      220 +  margin-right: 0.3rem;                                       
+      221 +  animation: glow 2s ease-in-out infinite;                    
+      222 +}                                                             
+      223 +                                                              
+      224 +@keyframes glow {                                             
+      225 +  0%, 100% { box-shadow: 0 0 4px rgba(233, 69, 96, 0.4); }    
+      226 +  50% { box-shadow: 0 0 12px rgba(233, 69, 96, 0.9); }        
+      227 +}                                                             
+      228 +                                                              
+      229  /* ── Label bubble ── */
+      230  
+      231  #label-bubble {
+     ...
+      340    background: #c73651;
+      341  }
+      342  
+      240 -/* ── Instructions toast ── */                                
+      343 +/* ── Instructions toast ��─ */                               
+      344  
+      345  #instructions {
+      346    position: absolute;
+     ...
+      354    color: #ccc;
+      355    z-index: 10;
+      356    transition: opacity 1s;
+      357 +  text-align: center;                                         
+      358  }
+
+● Now the big one — rewrite main.js to wire up settings, scores, R-key ready,
+  and alphabet-aware labels:
+
+● Write(assets/vocab-explorer/main.js)
+  ⎿  Added 96 lines, removed 18 lines
+       1  import * as THREE from "./lib/three.module.min.js";
+       2 -import { VOCABULARY } from "./vocabulary.js";                  
+       2 +import { VOCABULARY, latinToCyrillic } from "./vocabulary.js"; 
+       3  import * as Room from "./room.js";
+       4  import * as Player from "./player.js";
+       5  import * as Quiz from "./quiz.js";
+       6 +import * as Settings from "./settings.js";                     
+       7 +import * as Scores from "./scores.js";                         
+       8  
+       9  let renderer, scene, camera;
+      10  let interactables = [];
+     ...
+      12  let timerSeconds = 0;
+      13  let timerRunning = false;
+      14  let seenCount = 0;
+      15 +let currentRoomKey = null;                                     
+      16 +let settings = Settings.load();                                
+      17  
+      18  const menuEl = document.getElementById("menu");
+      19  const gameEl = document.getElementById("game-container");
+     ...
+       24  const labelEnglish = labelBubble.querySelector(".english");
+       25  const instructionsEl = document.getElementById("instructions")
+           ;
+       26  
+       23 -// ── Menu ──                                                 
+       27 +// ── Settings panel ──                                       
+       28  
+       29 +const settingsToggle = document.getElementById("settings-toggl
+          +e");                                                          
+       30 +const settingsPanel = document.getElementById("settings-panel"
+          +);                                                            
+       31 +                                                              
+       32 +settingsToggle.addEventListener("click", () => {              
+       33 +  const visible = settingsPanel.style.display !== "none";     
+       34 +  settingsPanel.style.display = visible ? "none" : "block";   
+       35 +});                                                           
+       36 +                                                              
+       37 +function buildSettingsUI() {                                  
+       38 +  const diffEl = document.getElementById("difficulty-options")
+          +;                                                             
+       39 +  diffEl.innerHTML = "";                                      
+       40 +  for (const d of Settings.DIFFICULTIES) {                    
+       41 +    const btn = document.createElement("button");             
+       42 +    btn.className = "option-btn" + (settings.difficulty === d.
+          +key ? " active" : "");                                        
+       43 +    btn.textContent = `${d.label} (${d.seconds}s)`;           
+       44 +    btn.addEventListener("click", () => {                     
+       45 +      settings.difficulty = d.key;                            
+       46 +      Settings.save(settings);                                
+       47 +      buildSettingsUI();                                      
+       48 +    });                                                       
+       49 +    diffEl.appendChild(btn);                                  
+       50 +  }                                                           
+       51 +                                                              
+       52 +  const alphaEl = document.getElementById("alphabet-options");
+       53 +  alphaEl.innerHTML = "";                                     
+       54 +  for (const a of Settings.ALPHABETS) {                       
+       55 +    const btn = document.createElement("button");             
+       56 +    btn.className = "option-btn" + (settings.alphabet === a.ke
+          +y ? " active" : "");                                          
+       57 +    btn.textContent = a.label;                                
+       58 +    btn.addEventListener("click", () => {                     
+       59 +      settings.alphabet = a.key;                              
+       60 +      Settings.save(settings);                                
+       61 +      buildSettingsUI();                                      
+       62 +      updateRoomButtons();                                    
+       63 +    });                                                       
+       64 +    alphaEl.appendChild(btn);                                 
+       65 +  }                                                           
+       66 +}                                                             
+       67 +                                                              
+       68 +buildSettingsUI();                                            
+       69 +                                                              
+       70 +// ── Room buttons + scores ──                                
+       71 +                                                              
+       72 +function serbianDisplay(latinWord) {                          
+       73 +  return settings.alphabet === "latin" ? latinWord : latinToCy
+          +rillic(latinWord);                                            
+       74 +}                                                             
+       75 +                                                              
+       76 +function updateRoomButtons() {                                
+       77 +  document.querySelectorAll(".room-btn").forEach((btn) => {   
+       78 +    const roomKey = btn.dataset.room;                         
+       79 +    const roomData = VOCABULARY[roomKey];                     
+       80 +    if (!roomData) return;                                    
+       81 +                                                              
+       82 +    const nameEl = btn.querySelector(".room-name");           
+       83 +    nameEl.textContent = `${serbianDisplay(roomData.name.latin
+          +)} — ${roomData.name.english}`;                               
+       84 +                                                              
+       85 +    const statsEl = btn.querySelector(".room-stats");         
+       86 +    const scoreData = Scores.get(roomKey);                    
+       87 +    if (scoreData) {                                          
+       88 +      const stars = "\u2B50 \u00D7 " + scoreData.completions; 
+       89 +      statsEl.textContent = `Best: ${scoreData.best}/${scoreDa
+          +ta.total} | ${stars}`;                                        
+       90 +    } else {                                                  
+       91 +      statsEl.textContent = "";                               
+       92 +    }                                                         
+       93 +  });                                                         
+       94 +}                                                             
+       95 +                                                              
+       96 +updateRoomButtons();                                          
+       97 +                                                              
+       98  document.querySelectorAll(".room-btn").forEach((btn) => {
+       99    btn.addEventListener("click", () => startRoom(btn.dataset.ro
+           om));
+      100  });
+     ...
+      105    const roomData = VOCABULARY[roomKey];
+      106    if (!roomData) return;
+      107  
+      108 +  currentRoomKey = roomKey;                                   
+      109 +  settings = Settings.load();                                 
+      110 +                                                              
+      111    menuEl.style.display = "none";
+      112    gameEl.style.display = "block";
+      113  
+     ...
+      129    raycaster = new THREE.Raycaster();
+      130    raycaster.far = 6;
+      131  
+       56 -  timerSeconds = roomData.timerSeconds;                       
+      132 +  timerSeconds = Settings.getTimerSeconds(settings);          
+      133    timerRunning = true;
+      134    clock = new THREE.Clock();
+      135  
+     ...
+      137    instructionsEl.style.opacity = "1";
+      138    setTimeout(() => (instructionsEl.style.opacity = "0"), 6000)
+           ;
+      139  
+      140 +  document.addEventListener("keydown", onReadyKey);           
+      141    window.addEventListener("resize", onResize);
+      142 +                                                              
+      143    tick();
+      144  }
+      145  
+      146 +// ── R key to skip to quiz ──                                
+      147 +                                                              
+      148 +function onReadyKey(e) {                                      
+      149 +  if (e.code === "KeyR" && timerRunning) {                    
+      150 +    timerSeconds = 0;                                         
+      151 +    timerRunning = false;                                     
+      152 +    endExploration();                                         
+      153 +  }                                                           
+      154 +}                                                             
+      155 +                                                              
+      156  // ── Game loop ──
+      157  
+      158  function tick() {
+     ...
+      197          item.mesh.material.emissive = new THREE.Color(0x003300
+           );
+      198          updateHUD();
+      199        }
+      112 -      labelSerbian.textContent = item.serbian;                
+      200 +      labelSerbian.textContent = serbianDisplay(item.serbian);
+      201        labelEnglish.textContent = item.english;
+      202        labelBubble.style.display = "block";
+      203      }
+     ...
+      221    document.exitPointerLock();
+      222    labelBubble.style.display = "none";
+      223  
+      136 -  Quiz.start(                                                 
+      137 -    interactables.filter((i) => i.seen),                      
+      138 -    interactables,                                            
+      139 -    onQuizDone                                                
+      140 -  );                                                          
+      224 +  Quiz.start(interactables, onQuizDone, settings.alphabet);   
+      225  }
+      226  
+      227  function onQuizDone(score, total) {
+      228 +  Scores.record(currentRoomKey, score, total);                
+      229    cleanup();
+      230    menuEl.style.display = "flex";
+      146 -                                                              
+      147 -  const existing = document.getElementById("last-score");     
+      148 -  if (existing) existing.remove();                            
+      149 -                                                              
+      150 -  const p = document.createElement("p");                      
+      151 -  p.id = "last-score";                                        
+      152 -  p.className = "subtitle";                                   
+      153 -  p.textContent = `Last score: ${score} / ${total} (saw ${seen
+          -Count} / ${total} objects)`;                                  
+      154 -  menuEl.appendChild(p);                                      
+      231 +  updateRoomButtons();                                        
+      232  }
+      233  
+      234  // ── Cleanup ──
+      235  
+      236  function cleanup() {
+      237 +  document.removeEventListener("keydown", onReadyKey);        
+      238    window.removeEventListener("resize", onResize);
+      239    Player.destroy();
+      240    if (renderer) {
+
+● Now clean up the unused constant in quiz.js:
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(~/Радна powierzchина/programming/svidovich.github.io/assets/vocab-explo
+        rer/quiz.js)
+  ⎿  File not found
+
+● Update(assets/vocab-explorer/quiz.js)
+  ⎿  Removed 1 line
+      13  let alphabet = "cyrillic";
+      14  
+      15  const AUTO_ADVANCE_MS = 400;
+      16 -const WRONG_PAUSE_MS = 1200;                                   
+      16  
+      17  function start(allItems, finishCb, alphabetSetting) {
+      18    onFinish = finishCb;
+
+● Let me verify the final file list:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Here's what changed:
+
+  New files:
+  - settings.js — difficulty (Easy 30s / Medium 20s / Hard 10s / Impossible 5s)
+  + alphabet (Latin/Cyrillic), persisted to localStorage
+  - scores.js — tracks best score, total, and completion count per room in
+  localStorage
+
+  Changes:
+  - vocabulary.js — Serbian words now stored in Latin script with a
+  latinToCyrillic() converter (same logic as your flashcard app). Room names
+  have both scripts.
+  - main.js — Settings panel wiring, room buttons show ⭐ × N completion count +
+   best score, R key ends exploration early, alphabet-aware labels
+  - quiz.js — Auto-advances on correct answer (400ms flash), only shows Next
+  button on wrong answers. Uses selected alphabet for serbian prompts.
+  - style.css — Settings panel, glowing R key badge, room stats styling
+  - index.html — Settings toggle + panel, ready hint in HUD, room stats spans
+
+  Give it a spin! The R key should glow in the HUD during exploration.
+
+✻ Churned for 3m 8s
+
+❯ Before I go ahead, can we do explicit imports instead of splats?              
+
+  Read 3 files (ctrl+o to expand)
+
+● Let me check what THREE members are actually used in each file, then replace
+  the splats.
+
+  Searched for 3 patterns (ctrl+o to expand)
+
+● Now let me also check what's used from the app modules in main.js:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 8 lines, removed 6 lines
+       1 -import * as THREE from "./lib/three.module.min.js";            
+       1 +import {                                                       
+       2 +  Clock, Color, PerspectiveCamera, Raycaster, Scene, Vector2, W
+         +ebGLRenderer,                                                  
+       3 +} from "./lib/three.module.min.js";                            
+       4  import { VOCABULARY, latinToCyrillic } from "./vocabulary.js";
+       3 -import * as Room from "./room.js";                             
+       4 -import * as Player from "./player.js";                         
+       5 -import * as Quiz from "./quiz.js";                             
+       6 -import * as Settings from "./settings.js";                     
+       7 -import * as Scores from "./scores.js";                         
+       5 +import { build as buildRoom } from "./room.js";                
+       6 +import { init as initPlayer, requestLock, isLocked, update as u
+         +pdatePlayer, destroy as destroyPlayer } from "./player.js";    
+       7 +import { start as startQuiz } from "./quiz.js";                
+       8 +import { DIFFICULTIES, ALPHABETS, load as loadSettings, save as
+         + saveSettings, getTimerSeconds } from "./settings.js";         
+       9 +import { get as getScore, record as recordScore } from "./score
+         +s.js";                                                         
+      10  
+      11  let renderer, scene, camera;
+      12  let interactables = [];
+
+● Now I need to update all the references in main.js from THREE.X / Module.x to
+  the direct names:
+
+  Read 1 file (ctrl+o to expand)
+  ⎿  Found 12 new diagnostic issues in 1 file (ctrl+o to expand)
+● Right — I changed the imports but didn't update the references. Let me fix the
+   whole body now:
+
+● Write(assets/vocab-explorer/main.js)
+  ⎿  Added 24 lines, removed 24 lines
+      15  let timerRunning = false;
+      16  let seenCount = 0;
+      17  let currentRoomKey = null;
+      18 -let settings = Settings.load();                                
+      18 +let settings = loadSettings();                                 
+      19  
+      20  const menuEl = document.getElementById("menu");
+      21  const gameEl = document.getElementById("game-container");
+     ...
+      39  function buildSettingsUI() {
+      40    const diffEl = document.getElementById("difficulty-options");
+      41    diffEl.innerHTML = "";
+      42 -  for (const d of Settings.DIFFICULTIES) {                     
+      42 +  for (const d of DIFFICULTIES) {                              
+      43      const btn = document.createElement("button");
+      44      btn.className = "option-btn" + (settings.difficulty === d.k
+          ey ? " active" : "");
+      45      btn.textContent = `${d.label} (${d.seconds}s)`;
+      46      btn.addEventListener("click", () => {
+      47        settings.difficulty = d.key;
+      48 -      Settings.save(settings);                                 
+      48 +      saveSettings(settings);                                  
+      49        buildSettingsUI();
+      50      });
+      51      diffEl.appendChild(btn);
+     ...
+      53  
+      54    const alphaEl = document.getElementById("alphabet-options");
+      55    alphaEl.innerHTML = "";
+      56 -  for (const a of Settings.ALPHABETS) {                        
+      56 +  for (const a of ALPHABETS) {                                 
+      57      const btn = document.createElement("button");
+      58      btn.className = "option-btn" + (settings.alphabet === a.key
+           ? " active" : "");
+      59      btn.textContent = a.label;
+      60      btn.addEventListener("click", () => {
+      61        settings.alphabet = a.key;
+      62 -      Settings.save(settings);                                 
+      62 +      saveSettings(settings);                                  
+      63        buildSettingsUI();
+      64        updateRoomButtons();
+      65      });
+     ...
+      85      nameEl.textContent = `${serbianDisplay(roomData.name.latin)
+          } — ${roomData.name.english}`;
+      86  
+      87      const statsEl = btn.querySelector(".room-stats");
+      88 -    const scoreData = Scores.get(roomKey);                     
+      88 +    const scoreData = getScore(roomKey);                       
+      89      if (scoreData) {
+      90        const stars = "\u2B50 \u00D7 " + scoreData.completions;
+      91        statsEl.textContent = `Best: ${scoreData.best}/${scoreDat
+          a.total} | ${stars}`;
+     ...
+      108    if (!roomData) return;
+      109  
+      110    currentRoomKey = roomKey;
+      111 -  settings = Settings.load();                                 
+      111 +  settings = loadSettings();                                  
+      112  
+      113    menuEl.style.display = "none";
+      114    gameEl.style.display = "block";
+      115  
+      116 -  renderer = new THREE.WebGLRenderer({ antialias: true });    
+      116 +  renderer = new WebGLRenderer({ antialias: true });          
+      117    renderer.setSize(window.innerWidth, window.innerHeight);
+      118    renderer.setPixelRatio(window.devicePixelRatio);
+      119    gameEl.insertBefore(renderer.domElement, gameEl.firstChild);
+      120  
+      121 -  scene = new THREE.Scene();                                  
+      122 -  scene.background = new THREE.Color(0x1a1a2e);               
+      123 -  camera = new THREE.PerspectiveCamera(70, window.innerWidth /
+          - window.innerHeight, 0.1, 50);                                
+      121 +  scene = new Scene();                                        
+      122 +  scene.background = new Color(0x1a1a2e);                     
+      123 +  camera = new PerspectiveCamera(70, window.innerWidth / windo
+          +w.innerHeight, 0.1, 50);                                      
+      124  
+      125 -  interactables = Room.build(scene, roomData);                
+      125 +  interactables = buildRoom(scene, roomData);                 
+      126    seenCount = 0;
+      127  
+      128 -  Player.init(camera, renderer.domElement);                   
+      129 -  renderer.domElement.addEventListener("click", () => Player.r
+          -equestLock());                                                
+      128 +  initPlayer(camera, renderer.domElement);                    
+      129 +  renderer.domElement.addEventListener("click", () => requestL
+          +ock());                                                       
+      130  
+      131 -  raycaster = new THREE.Raycaster();                          
+      131 +  raycaster = new Raycaster();                                
+      132    raycaster.far = 6;
+      133  
+      134 -  timerSeconds = Settings.getTimerSeconds(settings);          
+      134 +  timerSeconds = getTimerSeconds(settings);                   
+      135    timerRunning = true;
+      136 -  clock = new THREE.Clock();                                  
+      136 +  clock = new Clock();                                        
+      137  
+      138    updateHUD();
+      139    instructionsEl.style.opacity = "1";
+     ...
+      173      updateHUD();
+      174    }
+      175  
+      176 -  Player.update(dt);                                          
+      176 +  updatePlayer(dt);                                           
+      177    checkGaze();
+      178    renderer.render(scene, camera);
+      179  }
+     ...
+      181  // ── Gaze / label ──
+      182  
+      183  function checkGaze() {
+      184 -  if (!Player.isLocked()) {                                   
+      184 +  if (!isLocked()) {                                          
+      185      labelBubble.style.display = "none";
+      186      return;
+      187    }
+      188  
+      189 -  raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);   
+      189 +  raycaster.setFromCamera(new Vector2(0, 0), camera);         
+      190    const hits = raycaster.intersectObjects(interactables.map((i
+           ) => i.mesh));
+      191  
+      192    if (hits.length > 0) {
+     ...
+      196        if (!item.seen) {
+      197          item.seen = true;
+      198          seenCount++;
+      199 -        item.mesh.material.emissive = new THREE.Color(0x003300
+          -);                                                            
+      199 +        item.mesh.material.emissive = new Color(0x003300);    
+      200          updateHUD();
+      201        }
+      202        labelSerbian.textContent = serbianDisplay(item.serbian);
+     ...
+      223    document.exitPointerLock();
+      224    labelBubble.style.display = "none";
+      225  
+      226 -  Quiz.start(interactables, onQuizDone, settings.alphabet);   
+      226 +  startQuiz(interactables, onQuizDone, settings.alphabet);    
+      227  }
+      228  
+      229  function onQuizDone(score, total) {
+      230 -  Scores.record(currentRoomKey, score, total);                
+      230 +  recordScore(currentRoomKey, score, total);                  
+      231    cleanup();
+      232    menuEl.style.display = "flex";
+      233    updateRoomButtons();
+     ...
+      238  function cleanup() {
+      239    document.removeEventListener("keydown", onReadyKey);
+      240    window.removeEventListener("resize", onResize);
+      241 -  Player.destroy();                                           
+      241 +  destroyPlayer();                                            
+      242    if (renderer) {
+      243      renderer.dispose();
+      244      renderer.domElement.remove();
+
+● Now do the same for room.js and player.js:
+
+● Update(assets/vocab-explorer/room.js)
+  ⎿  Added 3 lines, removed 1 line
+       3   * Returns interactables: [{ mesh, english, serbian, id, seen }
+          ]
+       4   */
+       5  
+       6 -import * as THREE from "./lib/three.module.min.js";            
+       6 +import {                                                       
+       7 +  AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMate
+         +rial, PlaneGeometry, PointLight,                               
+       8 +} from "./lib/three.module.min.js";                            
+       9  
+      10  const ROOM_W = 10;
+      11  const ROOM_H = 3.5;
+
+  Read 1 file (ctrl+o to expand)
+  ⎿  Found 1 new diagnostic issue in 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/room.js)
+  ⎿  Added 14 lines, removed 14 lines
+      15    const interactables = [];
+      16  
+      17    // Floor
+      18 -  const floor = new THREE.Mesh(                                
+      19 -    new THREE.PlaneGeometry(ROOM_W, ROOM_D),                   
+      20 -    new THREE.MeshStandardMaterial({ color: 0x8b6f47, roughness
+         -: 0.9 })                                                       
+      18 +  const floor = new Mesh(                                      
+      19 +    new PlaneGeometry(ROOM_W, ROOM_D),                         
+      20 +    new MeshStandardMaterial({ color: 0x8b6f47, roughness: 0.9 
+         +})                                                             
+      21    );
+      22    floor.rotation.x = -Math.PI / 2;
+      23    scene.add(floor);
+      24  
+      25    // Ceiling
+      26 -  const ceiling = new THREE.Mesh(                              
+      27 -    new THREE.PlaneGeometry(ROOM_W, ROOM_D),                   
+      28 -    new THREE.MeshStandardMaterial({ color: 0xf5f5f0 })        
+      26 +  const ceiling = new Mesh(                                    
+      27 +    new PlaneGeometry(ROOM_W, ROOM_D),                         
+      28 +    new MeshStandardMaterial({ color: 0xf5f5f0 })              
+      29    );
+      30    ceiling.rotation.x = Math.PI / 2;
+      31    ceiling.position.y = ROOM_H;
+      32    scene.add(ceiling);
+      33  
+      34    // Walls
+      35 -  const wallMat = new THREE.MeshStandardMaterial({             
+      35 +  const wallMat = new MeshStandardMaterial({                   
+      36      color: 0xdedcb8,
+      37 -    side: THREE.DoubleSide,                                    
+      37 +    side: DoubleSide,                                          
+      38    });
+      39    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+          , z: -ROOM_D / 2 }, 0);
+      40    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+          , z: ROOM_D / 2 }, Math.PI);
+     ...
+      42    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: ROOM_W / 2, y: R
+          OOM_H / 2, z: 0 }, -Math.PI / 2);
+      43  
+      44    // Lighting
+      45 -  scene.add(new THREE.AmbientLight(0xffffff, 0.4));            
+      46 -  const overhead = new THREE.PointLight(0xfff5e0, 0.8, 20);    
+      45 +  scene.add(new AmbientLight(0xffffff, 0.4));                  
+      46 +  const overhead = new PointLight(0xfff5e0, 0.8, 20);          
+      47    overhead.position.set(0, ROOM_H - 0.3, 0);
+      48    scene.add(overhead);
+      49  
+      50    // Vocab objects
+      51    for (const obj of roomData.objects) {
+      52      const { w, h, d } = obj.size;
+      53 -    const mesh = new THREE.Mesh(                               
+      54 -      new THREE.BoxGeometry(w, h, d),                          
+      55 -      new THREE.MeshStandardMaterial({ color: obj.color, roughn
+         -ess: 0.7, metalness: 0.1 })                                    
+      53 +    const mesh = new Mesh(                                     
+      54 +      new BoxGeometry(w, h, d),                                
+      55 +      new MeshStandardMaterial({ color: obj.color, roughness: 0
+         +.7, metalness: 0.1 })                                          
+      56      );
+      57      mesh.position.set(obj.position.x, obj.position.y, obj.posit
+          ion.z);
+      58      mesh.userData.vocabId = obj.id;
+     ...
+      64  }
+      65  
+      66  function addWall(scene, material, width, height, pos, rotY) {
+      67 -  const wall = new THREE.Mesh(new THREE.PlaneGeometry(width, he
+         -ight), material);                                              
+      67 +  const wall = new Mesh(new PlaneGeometry(width, height), mater
+         +ial);                                                          
+      68    wall.position.set(pos.x, pos.y, pos.z);
+      69    wall.rotation.y = rotY;
+      70    scene.add(wall);
+
+● Now player.js:
+
+● Update(assets/vocab-explorer/player.js)
+  ⎿  Added 1 line, removed 1 line
+      2   * First-person controls: WASD movement + mouse look via Pointer
+          Lock.
+      3   */
+      4  
+      5 -import * as THREE from "./lib/three.module.min.js";             
+      5 +import { Vector3 } from "./lib/three.module.min.js";            
+      6  
+      7  const SPEED = 4.0;
+      8  const MOUSE_SENSITIVITY = 0.002;
+
+● Update(assets/vocab-explorer/player.js)
+  ⎿  Added 3 lines, removed 3 lines
+      59  function update(dt) {
+      60    if (!locked) return;
+      61  
+      62 -  const dir = new THREE.Vector3();                             
+      63 -  const front = new THREE.Vector3(0, 0, -1).applyQuaternion(cam
+         -era.quaternion);                                               
+      62 +  const dir = new Vector3();                                   
+      63 +  const front = new Vector3(0, 0, -1).applyQuaternion(camera.qu
+         +aternion);                                                     
+      64    front.y = 0;
+      65    front.normalize();
+      66 -  const right = new THREE.Vector3().crossVectors(front, new THR
+         -EE.Vector3(0, 1, 0));                                          
+      66 +  const right = new Vector3().crossVectors(front, new Vector3(0
+         +, 1, 0));                                                      
+      67  
+      68    if (moveState.forward) dir.add(front);
+      69    if (moveState.back) dir.sub(front);
+
+● All THREE.* splats are gone. Every import is now explicit. Give it another
+  spin.
+
+✻ Worked for 1m 20s
+
+❯ You did fabulously :) it plays well. Briefly when I click an answer, unknown  
+text appears next to the x/12 marker. Also, we shouldn't start the timer until  
+the applet has control of the player's mouse, which requires a click. Is there  
+a way to detect that?                                                           
+
+● The mystery text is likely the em dash — let me check. And yes,
+  pointerlockchange fires when pointer lock is acquired, so we can start the
+  timer there.
+
+  Read 1 file (ctrl+o to expand)
+
+● There it is — line 77 has a corrupted character (���). That's a mojibake em
+  dash from when the file was written. Let me fix both issues.
+
+  Read 1 file (ctrl+o to expand)
+
+● Bash(hexdump -C "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/quiz.js" |
+      grep -A1 "Score")
+  ⎿  00000510  7d 20 20 e2 80 94 20 20  53 63 6f 72 65 3a 20 24  |}  ...  S
+     core: $|
+     00000520  7b 73 63 6f 72 65 7d 60  3b 0a 0a 20 20 63 6f 6e  |{score}`;
+     … +6 lines (ctrl+o to expand)
+
+● Both are e2 80 94 which is the correct UTF-8 em dash (U+2014). The Read tool
+  just rendered it oddly. The actual file is fine — the problem must be
+  something else. Let me look more carefully at what's displayed. The score line
+   updates twice during pick() — once on line 77 and again... wait, the issue is
+   that on correct answers, the score text flashes briefly before auto-advancing
+   clears it. The "unknown text" you're seeing might just be the score update
+  being visible for 400ms before showQuestion() resets it.
+
+  Actually, let me re-read line 77 raw to be sure:
+
+● Bash(sed -n '76,78p' "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/quiz.js" |
+      cat -v)
+  ⎿      document.getElementById("quiz-score").textContent =
+           `${current + 1} / ${total}  M-oM-?M-=M-oM-?M-=M-oM-?M-=  Score:
+     ${score}`;
+
+● There's the problem — line 77 has M-oM-?M-= repeated three times, which is ef 
+  bf bd × 3 — that's three U+FFFD replacement characters (�). The second
+  occurrence on line 91 is fine. Let me fix it:
+
+● Bash(python3 -c "
+      data = open('/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/quiz.js',
+      'rb').read()…)
+  ⎿  Interrupted · What should Claude do instead?
+
+❯ :) maybe just replace it with a regular - instead                             
+
+● Bash(sed -n '77p' "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/quiz.js" |
+      hexdump -C)
+  ⎿  00000000  20 20 20 20 20 20 60 24  7b 63 75 72 72 65 6e 74  |      `${
+     current|
+     00000010  20 2b 20 31 7d 20 2f 20  24 7b 74 6f 74 61 6c 7d  | + 1} / $
+     … +6 lines (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/quiz.js)
+  ⎿  Tool use rejected
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/quiz.js)
+  ⎿  Added 1 line, removed 1 line
+      74      btn.classList.add("correct");
+      75      score++;
+      76      document.getElementById("quiz-score").textContent =
+      77 -      `${current + 1} / ${total}  ���  Score: ${score}`;       
+      77 +      `${current + 1} / ${total} - Score: ${score}`;           
+      78  
+      79      if (current < total - 1) {
+      80        // Auto-advance on correct
+
+● Fixed. Now for the timer — don't start until pointer lock is acquired:
+  Read 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 13 lines, removed 2 lines
+      132    raycaster.far = 6;
+      133  
+      134    timerSeconds = getTimerSeconds(settings);
+      135 -  timerRunning = true;                                        
+      135 +  timerRunning = false;                                       
+      136    clock = new Clock();
+      137  
+      138    updateHUD();
+      139    instructionsEl.style.opacity = "1";
+      140 -  setTimeout(() => (instructionsEl.style.opacity = "0"), 6000)
+          -;                                                             
+      140  
+      141 +  document.addEventListener("pointerlockchange", onFirstLock);
+      142    document.addEventListener("keydown", onReadyKey);
+      143    window.addEventListener("resize", onResize);
+      144  
+      145    tick();
+      146  }
+      147  
+      148 +// ── Start timer on first pointer lock ──                    
+      149 +                                                              
+      150 +function onFirstLock() {                                      
+      151 +  if (document.pointerLockElement === renderer.domElement) {  
+      152 +    timerRunning = true;                                      
+      153 +    clock.getDelta(); // reset delta so first frame isn't huge
+      154 +    document.removeEventListener("pointerlockchange", onFirstL
+          +ock);                                                         
+      155 +    instructionsEl.style.opacity = "0";                       
+      156 +  }                                                           
+      157 +}                                                             
+      158 +                                                              
+      159  // ── R key to skip to quiz ──
+      160  
+      161  function onReadyKey(e) {
+
+● Also clean up the listener in cleanup:
+
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 1 line
+      247  // ── Cleanup ──
+      248  
+      249  function cleanup() {
+      250 +  document.removeEventListener("pointerlockchange", onFirstLoc
+          +k);                                                           
+      251    document.removeEventListener("keydown", onReadyKey);
+      252    window.removeEventListener("resize", onResize);
+      253    destroyPlayer();
+
+● Both fixes in:
+  - Score text: replaced corrupted bytes with a plain -
+  - Timer: starts paused, only begins counting when pointer lock is first
+  acquired (i.e. you click the canvas)
+
+✻ Churned for 40s
+
+❯ Let's make it so that no matter how many objects are in the scene, the quiz   
+is always 10 words.                                                             
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/quiz.js)
+  ⎿  Added 2 lines, removed 1 line
+      20    score = 0;
+      21    current = 0;
+      22  
+      23 +  const QUIZ_SIZE = 10;                                        
+      24    questions = shuffle(allItems.map((item) => ({
+      25      serbian: item.serbian,
+      26      correct: item.english,
+      26 -  })));                                                        
+      27 +  }))).slice(0, QUIZ_SIZE);                                    
+      28    total = questions.length;
+      29  
+      30    document.getElementById("quiz-overlay").classList.add("active
+          ");
+
+● Done. Shuffles all items, takes the first 10. If a room has fewer than 10
+  objects it'll just use however many there are.
+
+❯ OK, you've done so well, thank you! Now, I know you've hand-jammed this       
+scene. Questions before I get started giving you models:                        
+- How would you like me to name things? I assume you have a "scene" concept     
+which will place objects at a particular spot with a particular orientation,    
+and then you can just point to a local file for the model?                      
+- What's the best format to use? Follow-on: what's a good hunk of software I    
+can use to convert to that file format if I find a model I like that's in the   
+wrong format? Ideally it's free and not too tough to use. I'm familiar with     
+tinkercad if that helps, but maybe it doesn't.                                  
+
+● Great questions. Here's my thinking:
+
+  Naming / scene structure:
+  The vocabulary.js entries already have id, position, and size. I'd add
+  optional model and rotation fields. If model is present, we load the file; if
+  not, fall back to the colored box. Something like:
+
+  {
+    id: "fridge",
+    english: "refrigerator",
+    serbian: "frižider",
+    model: "models/kitchen/fridge.glb",
+    position: { x: -4, y: 0, z: -4.5 },
+    rotation: { x: 0, y: 0, z: 0 },  // degrees, optional
+    scale: 1.0,                        // uniform scale, optional
+    // size/color kept as fallback
+  }
+
+  So naming: models/<room>/<id>.glb — e.g. models/kitchen/fridge.glb,
+  models/kitchen/stove.glb. Flat and obvious.
+
+  Best format: GLB. It's the binary variant of glTF — the web standard for 3D.
+  Single file (mesh + textures + materials baked in), compact, and three.js has
+  a first-class GLTFLoader for it. Every free model site worth anything offers
+  glTF/GLB.
+
+  Conversion software: Blender. Free, open source, handles everything. The
+  workflow for conversion is simple even if you never touch the rest of Blender:
+
+  1. File → Import → (FBX, OBJ, STL, DAE, whatever you downloaded)
+  2. File → Export → glTF 2.0 (.glb)
+  3. Done
+
+  It's heavier than Tinkercad but you don't need to learn modeling — just the
+  import/export menu. Tinkercad unfortunately can't export GLB.
+
+  One heads-up: downloaded models will come in at wildly different scales and
+  orientations. You'll likely need to tweak scale and rotation per object in
+  vocabulary.js, or do a quick rescale in Blender before exporting. I can help
+  tune those values once you start dropping models in.
+
+  Want me to wire up the GLTFLoader now so the app is ready for models when you
+  have them?
+
+❯ Yes, go ahead. Get everything ready, and I'll work on getting blender         
+installed and getting a fridge as our first poc object.                         
+
+  Read 2 files (ctrl+o to expand)
+
+● Now I need to check if the three.js r184 distribution includes GLTFLoader as
+  an addon, since it's not in the core build.
+
+  Listed 1 directory (ctrl+o to expand)
+
+● GLTFLoader is a separate addon — it's in the three.js distribution under
+  examples/jsm/loaders/GLTFLoader.js. Let me check if that's available on
+  jsdelivr for r184, or if you have it locally.
+
+● Bash(curl -sI "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/loaders
+      /GLTFLoader.js" | head -3)
+  ⎿  HTTP/2 200
+     date: Sat, 18 Apr 2026 01:25:17 GMT
+     content-type: application/javascript; charset=utf-8
+
+● It's there. But since we're keeping three.js local, let me download it so it
+  works offline too.
+
+● Bash(curl -sL "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/loaders
+      /GLTFLoader.js" -o "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/asse…)
+  ⎿  114959 /home/mydriasis/Радна површина/programming/svidovich.github.io/
+     assets/vocab-explorer/lib/GLTFLoader.js
+
+● 115KB. Let me check what it imports from three.js — it'll reference 'three'
+  which won't resolve locally. I need to see how to fix the import path.
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● It imports from 'three' — a bare module specifier. I need to swap that to the
+  relative path to our local three.module.min.js.
+
+● Update(assets/vocab-explorer/lib/GLTFLoader.js)
+  ⎿  File must be read first
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/lib/GLTFLoader.js)
+  ⎿  Added 1 line, removed 1 line
+      64    VectorKeyframeTrack,
+      65    SRGBColorSpace,
+      66    InstancedBufferAttribute
+      67 -} from 'three';                                                
+      67 +} from './three.module.min.js';                                
+      68  import { toTrianglesDrawMode } from '../utils/BufferGeometryUti
+          ls.js';
+      69  import { clone } from '../utils/SkeletonUtils.js';
+      70  
+
+● Good. Now update room.js to support loading GLB models, and update
+  vocabulary.js with the model field for the fridge.
+
+● Write(assets/vocab-explorer/room.js)
+  ⎿  Added 74 lines, removed 20 lines
+       1  /**
+       2   * Builds a room scene from vocabulary data.
+       3 - * Returns interactables: [{ mesh, english, serbian, id, seen }
+         -]                                                              
+       3 + * Objects with a `model` field load a GLB file; others fall ba
+         +ck to colored boxes.                                           
+       4 + * Returns a promise that resolves to interactables: [{ mesh, e
+         +nglish, serbian, id, seen }]                                   
+       5   */
+       6  
+       7  import {
+       7 -  AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMate
+         -rial, PlaneGeometry, PointLight,                               
+       8 +  AmbientLight, Box3, BoxGeometry, DoubleSide, Mesh, MeshStanda
+         +rdMaterial,                                                    
+       9 +  PlaneGeometry, PointLight, Vector3,                          
+      10  } from "./lib/three.module.min.js";
+      11 +import { GLTFLoader } from "./lib/GLTFLoader.js";              
+      12  
+      13  const ROOM_W = 10;
+      14  const ROOM_H = 3.5;
+      15  const ROOM_D = 10;
+      16 +const DEG2RAD = Math.PI / 180;                                 
+      17  
+      14 -function build(scene, roomData) {                              
+      15 -  const interactables = [];                                    
+      18 +const loader = new GLTFLoader();                               
+      19  
+      20 +function build(scene, roomData) {                              
+      21    // Floor
+      22    const floor = new Mesh(
+      23      new PlaneGeometry(ROOM_W, ROOM_D),
+     ...
+      36    scene.add(ceiling);
+      37  
+      38    // Walls
+      35 -  const wallMat = new MeshStandardMaterial({                   
+      36 -    color: 0xdedcb8,                                           
+      37 -    side: DoubleSide,                                          
+      38 -  });                                                          
+      39 +  const wallMat = new MeshStandardMaterial({ color: 0xdedcb8, s
+         +ide: DoubleSide });                                            
+      40    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+          , z: -ROOM_D / 2 }, 0);
+      41    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2
+          , z: ROOM_D / 2 }, Math.PI);
+      42    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: -ROOM_W / 2, y: 
+          ROOM_H / 2, z: 0 }, Math.PI / 2);
+     ...
+       48    overhead.position.set(0, ROOM_H - 0.3, 0);
+       49    scene.add(overhead);
+       50  
+       50 -  // Vocab objects                                            
+       51 -  for (const obj of roomData.objects) {                       
+       52 -    const { w, h, d } = obj.size;                             
+       53 -    const mesh = new Mesh(                                    
+       54 -      new BoxGeometry(w, h, d),                               
+       55 -      new MeshStandardMaterial({ color: obj.color, roughness: 
+          -0.7, metalness: 0.1 })                                        
+       51 +  // Vocab objects — load models in parallel, fall back to box
+          +es                                                            
+       52 +  const promises = roomData.objects.map((obj) => {            
+       53 +    if (obj.model) {                                          
+       54 +      return loadModel(obj).then((group) => {                 
+       55 +        group.userData.vocabId = obj.id;                      
+       56 +        scene.add(group);                                     
+       57 +        return { mesh: group, english: obj.english, serbian: o
+          +bj.serbian, id: obj.id, seen: false };                        
+       58 +      }).catch((err) => {                                     
+       59 +        console.warn(`Failed to load model for "${obj.id}", us
+          +ing fallback box:`, err);                                     
+       60 +        return addFallbackBox(scene, obj);                    
+       61 +      });                                                     
+       62 +    } else {                                                  
+       63 +      return Promise.resolve(addFallbackBox(scene, obj));     
+       64 +    }                                                         
+       65 +  });                                                         
+       66 +                                                              
+       67 +  return Promise.all(promises);                               
+       68 +}                                                             
+       69 +                                                              
+       70 +function loadModel(obj) {                                     
+       71 +  return new Promise((resolve, reject) => {                   
+       72 +    loader.load(                                              
+       73 +      obj.model,                                              
+       74 +      (gltf) => {                                             
+       75 +        const group = gltf.scene;                             
+       76 +                                                              
+       77 +        // Apply scale                                        
+       78 +        const s = obj.scale || 1;                             
+       79 +        group.scale.set(s, s, s);                             
+       80 +                                                              
+       81 +        // Apply position                                     
+       82 +        group.position.set(obj.position.x, obj.position.y, obj
+          +.position.z);                                                 
+       83 +                                                              
+       84 +        // Apply rotation (degrees → radians)                 
+       85 +        if (obj.rotation) {                                   
+       86 +          group.rotation.set(                                 
+       87 +            (obj.rotation.x || 0) * DEG2RAD,                  
+       88 +            (obj.rotation.y || 0) * DEG2RAD,                  
+       89 +            (obj.rotation.z || 0) * DEG2RAD                   
+       90 +          );                                                  
+       91 +        }                                                     
+       92 +                                                              
+       93 +        // Tag every child mesh so raycasting hits register th
+          +e vocab id                                                    
+       94 +        group.traverse((child) => {                           
+       95 +          if (child.isMesh) {                                 
+       96 +            child.userData.vocabId = obj.id;                  
+       97 +          }                                                   
+       98 +        });                                                   
+       99 +                                                              
+      100 +        resolve(group);                                       
+      101 +      },                                                      
+      102 +      undefined,                                              
+      103 +      reject                                                  
+      104      );
+       57 -    mesh.position.set(obj.position.x, obj.position.y, obj.posi
+          -tion.z);                                                      
+       58 -    mesh.userData.vocabId = obj.id;                           
+       59 -    scene.add(mesh);                                          
+       60 -    interactables.push({ mesh, english: obj.english, serbian: 
+          -obj.serbian, id: obj.id, seen: false });                      
+       61 -  }                                                           
+      105 +  });                                                         
+      106 +}                                                             
+      107  
+       63 -  return interactables;                                       
+      108 +function addFallbackBox(scene, obj) {                         
+      109 +  const { w, h, d } = obj.size;                               
+      110 +  const mesh = new Mesh(                                      
+      111 +    new BoxGeometry(w, h, d),                                 
+      112 +    new MeshStandardMaterial({ color: obj.color, roughness: 0.
+          +7, metalness: 0.1 })                                          
+      113 +  );                                                          
+      114 +  mesh.position.set(obj.position.x, obj.position.y, obj.positi
+          +on.z);                                                        
+      115 +  mesh.userData.vocabId = obj.id;                             
+      116 +  scene.add(mesh);                                            
+      117 +  return { mesh, english: obj.english, serbian: obj.serbian, i
+          +d: obj.id, seen: false };                                     
+      118  }
+      119  
+      120  function addWall(scene, material, width, height, pos, rotY) {
+
+● Now update main.js since build is now async:
+
+  Read 1 file (ctrl+o to expand)
+  ⎿  Found 3 new diagnostic issues in 1 file (ctrl+o to expand)
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 3 lines, removed 2 lines
+      103  
+      104  // ── Start a room ──
+      105  
+      106 -function startRoom(roomKey) {                                 
+      106 +async function startRoom(roomKey) {                           
+      107    const roomData = VOCABULARY[roomKey];
+      108    if (!roomData) return;
+      109  
+     ...
+      122    scene.background = new Color(0x1a1a2e);
+      123    camera = new PerspectiveCamera(70, window.innerWidth / windo
+           w.innerHeight, 0.1, 50);
+      124  
+      125 -  interactables = buildRoom(scene, roomData);                 
+      125 +  // Load models (async) then start                           
+      126 +  interactables = await buildRoom(scene, roomData);           
+      127    seenCount = 0;
+      128  
+      129    initPlayer(camera, renderer.domElement);
+
+● Now clean up the unused imports in room.js and update the fridge entry in
+  vocabulary.js as a demo:
+
+● Update(assets/vocab-explorer/room.js)
+  ⎿  Added 2 lines, removed 2 lines
+       5   */
+       6  
+       7  import {
+       8 -  AmbientLight, Box3, BoxGeometry, DoubleSide, Mesh, MeshStanda
+         -rdMaterial,                                                    
+       9 -  PlaneGeometry, PointLight, Vector3,                          
+       8 +  AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMate
+         +rial,                                                          
+       9 +  PlaneGeometry, PointLight,                                   
+      10  } from "./lib/three.module.min.js";
+      11  import { GLTFLoader } from "./lib/GLTFLoader.js";
+      12  
+
+● Now update the fridge entry to point to a model path (you'll drop the GLB
+  there):
+
+● Update(assets/vocab-explorer/vocabulary.js)
+  ⎿  Added 5 lines, removed 1 line
+      38          id: "fridge",
+      39          english: "refrigerator",
+      40          serbian: "frižider",
+      41 -        position: { x: -4, y: 1.2, z: -4.5 },                  
+      41 +        model: "models/kitchen/fridge.glb",                    
+      42 +        position: { x: -4, y: 0, z: -4.5 },                    
+      43 +        rotation: { x: 0, y: 0, z: 0 },                        
+      44 +        scale: 1.0,                                            
+      45 +        // fallback if model fails to load                     
+      46          size: { w: 1.2, h: 2.4, d: 0.8 },
+      47          color: 0xcccccc,
+      48        },
+
+● Now also need to update the raycaster logic in main.js — for GLB models, the
+  raycast hits child meshes inside a Group, not the group itself. Let me check
+  the current gaze code:
+
+  Read 1 file (ctrl+o to expand)
+
+● The raycast uses intersectObjects on the top-level meshes/groups. For Groups
+  (loaded models), we need recursive: true so it hits child meshes. The child
+  meshes already have vocabId set via traverse in room.js.
+
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 3 lines, removed 2 lines
+      199    }
+      200  
+      201    raycaster.setFromCamera(new Vector2(0, 0), camera);
+      202 -  const hits = raycaster.intersectObjects(interactables.map((i
+          -) => i.mesh));                                                
+      202 +  const hits = raycaster.intersectObjects(interactables.map((i
+          +) => i.mesh), true);                                          
+      203  
+      204    if (hits.length > 0) {
+      205 -    const vocabId = hits[0].object.userData.vocabId;          
+      205 +    const vocabId = hits[0].object.userData.vocabId           
+      206 +      || findVocabIdUp(hits[0].object);                       
+      207      const item = interactables.find((i) => i.id === vocabId);
+      208      if (item) {
+      209        if (!item.seen) {
+
+● Now I need to add the findVocabIdUp helper and also fix the emissive tint for
+  loaded models (which have multiple child meshes). Let me read the surrounding
+  area:
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/main.js)
+  ⎿  Added 26 lines, removed 6 lines
+      192  
+      193  // ── Gaze / label ──
+      194  
+      195 +function findVocabIdUp(obj) {                                 
+      196 +  let cur = obj;                                              
+      197 +  while (cur) {                                               
+      198 +    if (cur.userData && cur.userData.vocabId) return cur.userD
+          +ata.vocabId;                                                  
+      199 +    cur = cur.parent;                                         
+      200 +  }                                                           
+      201 +  return null;                                                
+      202 +}                                                             
+      203 +                                                              
+      204 +function markSeen(item) {                                     
+      205 +  item.seen = true;                                           
+      206 +  seenCount++;                                                
+      207 +  // Tint all meshes in the object (works for both single boxe
+          +s and loaded models)                                          
+      208 +  const root = item.mesh;                                     
+      209 +  if (root.isMesh && root.material) {                         
+      210 +    root.material.emissive = new Color(0x003300);             
+      211 +  }                                                           
+      212 +  root.traverse((child) => {                                  
+      213 +    if (child.isMesh && child.material && child.material.emiss
+          +ive) {                                                        
+      214 +      child.material.emissive = new Color(0x003300);          
+      215 +    }                                                         
+      216 +  });                                                         
+      217 +  updateHUD();                                                
+      218 +}                                                             
+      219 +                                                              
+      220  function checkGaze() {
+      221    if (!isLocked()) {
+      222      labelBubble.style.display = "none";
+     ...
+      231        || findVocabIdUp(hits[0].object);
+      232      const item = interactables.find((i) => i.id === vocabId);
+      233      if (item) {
+      209 -      if (!item.seen) {                                       
+      210 -        item.seen = true;                                     
+      211 -        seenCount++;                                          
+      212 -        item.mesh.material.emissive = new Color(0x003300);    
+      213 -        updateHUD();                                          
+      214 -      }                                                       
+      234 +      if (!item.seen) markSeen(item);                         
+      235        labelSerbian.textContent = serbianDisplay(item.serbian);
+      236        labelEnglish.textContent = item.english;
+      237        labelBubble.style.display = "block";
+
+● Let me make sure the models/kitchen directory exists:
+
+  Listed 1 directory (ctrl+o to expand)
+
+● Everything's wired up. Here's the summary:
+
+  What's ready:
+  - room.js — build() is now async. For each object, if model is set it loads
+  the GLB via GLTFLoader; on failure it falls back to the colored box.
+  - main.js — startRoom is async, awaits model loading. Raycasting is recursive
+  (hits child meshes inside Groups). findVocabIdUp() walks the parent chain to
+  find the vocabId. The "seen" tint traverses all child meshes.
+  - lib/GLTFLoader.js — downloaded from three.js r184, import patched to point
+  to local three.module.min.js
+  - vocabulary.js — fridge entry has model, rotation, and scale fields ready
+
+  What you need to do:
+  1. Export your fridge model from Blender as GLB
+  2. Drop it at assets/vocab-explorer/models/kitchen/fridge.glb
+  3. Reload the app — it should appear in place of the grey box
+
+  You'll likely need to tweak position, rotation, and scale in vocabulary.js to
+  get it placed right. I can help dial those in once you see how it looks.
+
+✻ Cooked for 2m 29s
+
+❯ Looks like we're hitting some fresh errors on load attempts:                  
+Учитавање модула са извором                                                     
+“http://127.0.0.1:8000/assets/vocab-explorer/utils/BufferGeometryUtils.js” није 
+ успело                                                                         
+Учитавање модула са извором                                                     
+“http://127.0.0.1:8000/assets/vocab-explorer/utils/SkeletonUtils.js” није       
+успело                                                                          
+I think we're missing these. I hope this doesn't get _too_ big.                 
+
+● GLTFLoader imports those utility modules. Let me grab them too.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● It's resolving ../utils/ relative to lib/, so it looks for
+  assets/vocab-explorer/utils/. Let me download both and patch their imports.
+
+● Bash(mkdir -p "/home/mydriasis/Радна
+      површина/programming/svidovich.github.io/assets/vocab-explorer/utils" &&
+      curl -sL "https://cdn.jsdelivr.net/npm/three@0.184.0/ex…)
+  ⎿  35539 /home/mydriasis/Радна површина/programming/svidovich.github.io/a
+     ssets/vocab-explorer/utils/BufferGeometryUtils.js
+     11535 /home/mydriasis/Радна површина/programming/svidovich.github.io/a
+     … +2 lines (ctrl+o to expand)
+
+● 47KB total — not bad. Now patch their 'three' imports:
+
+  Searched for 1 pattern, read 2 files (ctrl+o to expand)
+
+● Update(assets/vocab-explorer/utils/BufferGeometryUtils.js)
+  ⎿  Added 1 line, removed 1 line
+       9    TriangleStripDrawMode,
+      10    TrianglesDrawMode,
+      11    Vector3,
+      12 -} from 'three';                                                
+      12 +} from '../lib/three.module.min.js';                           
+      13  
+      14  /**
+      15   * @module BufferGeometryUtils
+
+● Update(assets/vocab-explorer/utils/SkeletonUtils.js)
+  ⎿  Added 1 line, removed 1 line
+       7    SkeletonHelper,
+       8    Vector3,
+       9    VectorKeyframeTrack
+      10 -} from 'three';                                                
+      10 +} from '../lib/three.module.min.js';                           
+      11  
+      12  /**
+      13   * @module SkeletonUtils
+  ⎿  Found 1 new diagnostic issue in 1 file (ctrl+o to expand)
+
+● That TS diagnostic is just type inference noise on the vendored file — won't
+  affect runtime. Try reloading now.
+
+✻ Churned for 33s
+
+❯ :) it worked PERFECTLY. Thank you so much, very cool.                         
+
+● That's awesome! Glad the fridge loaded on the first try. I see you already
+  dialed in the scale to 0.0015 — nice, those downloaded models really do come
+  in at wild scales.
+
+  Have fun hunting for models in Blender. When you're ready to add more objects
+  or rooms, you know the pattern — just drop the GLB and add the entry to
+  vocabulary.js. Happy exploring!
+
+❯ Oo! Can you make it so that I can rotate my models as well as position them?  
+
+● You already can! The fridge entry has rotation: { x: 0, y: 0, z: 0 } and
+  room.js applies it in degrees. So just set e.g. rotation: { x: 0, y: 90, z: 0 
+  } to spin it 90° around Y.
+
+  Want to try tweaking one of the values to confirm it works?
+❯ :D OMG it is perfect, tysm.                                                   
+
+● You're welcome! This is shaping up really nicely. Enjoy building out the
+  kitchen — and when you're ready for a second room, the whole structure is
+  there to support it.
