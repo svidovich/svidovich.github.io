@@ -1,6 +1,7 @@
 /**
  * Quiz: multiple-choice (serbian → english).
  * Auto-advances on correct answer; pauses on wrong to show the right one.
+ * Tracks elapsed time and reports it to the finish callback.
  */
 
 import { latinToCyrillic } from "./vocabulary.js";
@@ -11,6 +12,7 @@ let score = 0;
 let total = 0;
 let onFinish = null;
 let alphabet = "cyrillic";
+let startTime = 0;
 
 const AUTO_ADVANCE_MS = 400;
 
@@ -21,10 +23,15 @@ function start(allItems, finishCb, alphabetSetting) {
   current = 0;
 
   const QUIZ_SIZE = 10;
-  questions = shuffle(allItems.map((item) => ({
-    serbian: item.serbian,
-    correct: item.english,
-  }))).slice(0, QUIZ_SIZE);
+  const seen = new Set();
+  const unique = [];
+  for (const item of allItems) {
+    if (item.quizExclude) continue;
+    if (seen.has(item.english)) continue;
+    seen.add(item.english);
+    unique.push({ serbian: item.serbian, correct: item.english });
+  }
+  questions = shuffle(unique).slice(0, QUIZ_SIZE);
   total = questions.length;
 
   document.getElementById("quiz-overlay").classList.add("active");
@@ -33,6 +40,7 @@ function start(allItems, finishCb, alphabetSetting) {
   document.getElementById("quiz-done-btn").style.display = "none";
   document.getElementById("quiz-done-btn").onclick = finish;
 
+  startTime = performance.now();
   showQuestion();
 }
 
@@ -40,11 +48,28 @@ function serbianDisplay(latinWord) {
   return alphabet === "latin" ? latinWord : latinToCyrillic(latinWord);
 }
 
+function formatTime(seconds) {
+  const s = Math.floor(seconds % 60);
+  const ms = Math.floor((seconds % 1) * 10);
+  if (seconds >= 60) {
+    const m = Math.floor(seconds / 60);
+    return `${m}:${s.toString().padStart(2, "0")}.${ms}`;
+  }
+  return `${s}.${ms}s`;
+}
+
+function elapsed() {
+  return (performance.now() - startTime) / 1000;
+}
+
+function statusText() {
+  return `${current + 1} / ${total}  \u2014  Score: ${score}  \u2014  ${formatTime(elapsed())}`;
+}
+
 function showQuestion() {
   const q = questions[current];
   document.getElementById("quiz-prompt").textContent = serbianDisplay(q.serbian);
-  document.getElementById("quiz-score").textContent =
-    `${current + 1} / ${total}  —  Score: ${score}`;
+  document.getElementById("quiz-score").textContent = statusText();
 
   const wrong = questions
     .filter((o) => o.correct !== q.correct)
@@ -74,8 +99,7 @@ function pick(btn, chosen, correct) {
   if (chosen === correct) {
     btn.classList.add("correct");
     score++;
-    document.getElementById("quiz-score").textContent =
-      `${current + 1} / ${total} - Score: ${score}`;
+    document.getElementById("quiz-score").textContent = statusText();
 
     if (current < total - 1) {
       // Auto-advance on correct
@@ -88,8 +112,7 @@ function pick(btn, chosen, correct) {
     buttons.forEach((b) => {
       if (b.textContent === correct) b.classList.add("correct");
     });
-    document.getElementById("quiz-score").textContent =
-      `${current + 1} / ${total}  —  Score: ${score}`;
+    document.getElementById("quiz-score").textContent = statusText();
 
     if (current < total - 1) {
       // Pause to show correct answer, then show Next button
@@ -101,14 +124,15 @@ function pick(btn, chosen, correct) {
     } else {
       const doneBtn = document.getElementById("quiz-done-btn");
       doneBtn.style.display = "inline-block";
-      doneBtn.textContent = `Finish (${score}/${total})`;
+      doneBtn.textContent = `Finish (${score}/${total} \u2014 ${formatTime(elapsed())})`;
     }
   }
 }
 
 function finish() {
+  const finalTime = elapsed();
   document.getElementById("quiz-overlay").classList.remove("active");
-  if (onFinish) onFinish(score, total);
+  if (onFinish) onFinish(score, total, finalTime);
 }
 
 function shuffle(arr) {

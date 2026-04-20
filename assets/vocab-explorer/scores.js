@@ -1,6 +1,7 @@
 /**
  * Per-room score tracking in localStorage.
- * Stores: { [roomKey]: { best: n, total: n, completions: n } }
+ * Stores: { [roomKey]: { bestTime: n|null, total: n, completions: n } }
+ * bestTime and completions only update on perfect scores.
  */
 
 const STORAGE_KEY = "vocabExplorerScores";
@@ -17,16 +18,20 @@ function saveAll(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function record(roomKey, score, total) {
+function record(roomKey, score, total, elapsedSeconds) {
   const all = loadAll();
   if (!all[roomKey]) {
-    all[roomKey] = { best: 0, total, completions: 0 };
-  }
-  all[roomKey].completions++;
-  if (score > all[roomKey].best) {
-    all[roomKey].best = score;
+    all[roomKey] = { bestTime: null, total, completions: 0 };
   }
   all[roomKey].total = total;
+
+  if (score === total) {
+    all[roomKey].completions++;
+    if (!all[roomKey].bestTime || elapsedSeconds < all[roomKey].bestTime) {
+      all[roomKey].bestTime = elapsedSeconds;
+    }
+  }
+
   saveAll(all);
   return all[roomKey];
 }

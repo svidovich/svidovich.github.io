@@ -5,6 +5,7 @@
 const STORAGE_KEY = "vocabExplorerSettings";
 
 const DIFFICULTIES = [
+  { key: "study",      label: "Study Mode", seconds: Infinity },
   { key: "easy",       label: "Easy",       seconds: 30 },
   { key: "medium",     label: "Medium",     seconds: 20 },
   { key: "hard",       label: "Hard",       seconds: 10 },
@@ -16,7 +17,12 @@ const ALPHABETS = [
   { key: "latin",    label: "Latinica (Latin)" },
 ];
 
-const DEFAULTS = { difficulty: "easy", alphabet: "cyrillic" };
+const HIGHLIGHTS = [
+  { key: "on",  label: "On" },
+  { key: "off", label: "Off" },
+];
+
+const DEFAULTS = { difficulty: "easy", alphabet: "cyrillic", highlight: "on" };
 
 function load() {
   try {
@@ -35,4 +41,4 @@ function getTimerSeconds(settings) {
   return d ? d.seconds : DIFFICULTIES[0].seconds;
 }
 
-export { DIFFICULTIES, ALPHABETS, DEFAULTS, load, save, getTimerSeconds };
+export { DIFFICULTIES, ALPHABETS, HIGHLIGHTS, DEFAULTS, load, save, getTimerSeconds };

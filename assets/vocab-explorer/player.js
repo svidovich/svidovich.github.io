@@ -7,12 +7,18 @@ import { Vector3 } from "./lib/three.module.min.js";
 const SPEED = 4.0;
 const MOUSE_SENSITIVITY = 0.002;
 const PLAYER_HEIGHT = 1.7;
+const PLAYER_RADIUS = 0.3;
 const ROOM_HALF = 4.8;
+const JUMP_VELOCITY = 4.0;
+const GRAVITY = 12.0;
 
 let camera, domElement;
 let euler = { x: 0, y: 0 };
 let moveState = { forward: false, back: false, left: false, right: false };
 let locked = false;
+let solids = [];
+let velocityY = 0;
+let grounded = true;
 
 function init(cam, canvas) {
   camera = cam;
@@ -45,6 +51,12 @@ function onKey(e) {
     case "KeyS": case "ArrowDown":  moveState.back    = down; break;
     case "KeyA": case "ArrowLeft":  moveState.left    = down; break;
     case "KeyD": case "ArrowRight": moveState.right   = down; break;
+    case "Space":
+      if (down && grounded) {
+        velocityY = JUMP_VELOCITY;
+        grounded = false;
+      }
+      break;
   }
 }
 
@@ -70,12 +82,53 @@ function update(dt) {
   if (moveState.left) dir.sub(right);
   if (moveState.right) dir.add(right);
 
+  // Jump / gravity
+  if (!grounded) {
+    velocityY -= GRAVITY * dt;
+    camera.position.y += velocityY * dt;
+    if (camera.position.y <= PLAYER_HEIGHT) {
+      camera.position.y = PLAYER_HEIGHT;
+      velocityY = 0;
+      grounded = true;
+    }
+  }
+
   if (dir.lengthSq() > 0) {
     dir.normalize().multiplyScalar(SPEED * dt);
     camera.position.add(dir);
-    camera.position.x = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, camera.position.x));
-    camera.position.z = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, camera.position.z));
   }
+
+  // Push out of solid objects
+  const pos = camera.position;
+  for (const box of solids) {
+    // Skip if player is above or below the object
+    if (pos.y - PLAYER_HEIGHT > box.max.y || pos.y < box.min.y) continue;
+
+    const minX = box.min.x - PLAYER_RADIUS;
+    const maxX = box.max.x + PLAYER_RADIUS;
+    const minZ = box.min.z - PLAYER_RADIUS;
+    const maxZ = box.max.z + PLAYER_RADIUS;
+
+    if (pos.x > minX && pos.x < maxX && pos.z > minZ && pos.z < maxZ) {
+      const pushRight = maxX - pos.x;
+      const pushLeft  = pos.x - minX;
+      const pushFront = maxZ - pos.z;
+      const pushBack  = pos.z - minZ;
+      const min = Math.min(pushRight, pushLeft, pushFront, pushBack);
+
+      if (min === pushLeft)       pos.x = minX;
+      else if (min === pushRight) pos.x = maxX;
+      else if (min === pushBack)  pos.z = minZ;
+      else                        pos.z = maxZ;
+    }
+  }
+
+  pos.x = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, pos.x));
+  pos.z = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, pos.z));
+}
+
+function setSolids(boxes) {
+  solids = boxes;
 }
 
 function destroy() {
@@ -85,6 +138,9 @@ function destroy() {
   document.removeEventListener("pointerlockchange", onLockChange);
   moveState = { forward: false, back: false, left: false, right: false };
   locked = false;
+  solids = [];
+  velocityY = 0;
+  grounded = true;
 }
 
-export { init, requestLock, isLocked, update, destroy };
+export { init, requestLock, isLocked, update, destroy, setSolids };

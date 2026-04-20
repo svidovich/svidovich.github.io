@@ -5,48 +5,72 @@
  */
 
 import {
-  AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMaterial,
-  PlaneGeometry, PointLight,
+  Box3, BoxGeometry, DirectionalLight, DoubleSide, HemisphereLight, Mesh,
+  MeshStandardMaterial, PlaneGeometry, PointLight,
 } from "./lib/three.module.min.js";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 
-const ROOM_W = 10;
-const ROOM_H = 3.5;
-const ROOM_D = 10;
+const DEFAULT_SIZE = { x: 10, y: 3.5, z: 10 };
+const DEFAULT_WALL_COLOR = "#dedcb8";
+const DEFAULT_FLOOR_COLOR = "#8b6f47";
+const DEFAULT_CEILING_COLOR = "#f5f5f0";
 const DEG2RAD = Math.PI / 180;
 
 const loader = new GLTFLoader();
 
 function build(scene, roomData) {
+  const sz = roomData.size || DEFAULT_SIZE;
+  const ROOM_W = sz.x;
+  const ROOM_H = sz.y;
+  const ROOM_D = sz.z;
+
   // Floor
   const floor = new Mesh(
     new PlaneGeometry(ROOM_W, ROOM_D),
-    new MeshStandardMaterial({ color: 0x8b6f47, roughness: 0.9 })
+    new MeshStandardMaterial({ color: roomData.floorColor || DEFAULT_FLOOR_COLOR, roughness: 0.9 })
   );
   floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
   scene.add(floor);
 
   // Ceiling
   const ceiling = new Mesh(
     new PlaneGeometry(ROOM_W, ROOM_D),
-    new MeshStandardMaterial({ color: 0xf5f5f0 })
+    new MeshStandardMaterial({ color: roomData.ceilingColor || DEFAULT_CEILING_COLOR })
   );
   ceiling.rotation.x = Math.PI / 2;
   ceiling.position.y = ROOM_H;
   scene.add(ceiling);
 
   // Walls
-  const wallMat = new MeshStandardMaterial({ color: 0xdedcb8, side: DoubleSide });
-  addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2, z: -ROOM_D / 2 }, 0);
-  addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2, z: ROOM_D / 2 }, Math.PI);
-  addWall(scene, wallMat, ROOM_D, ROOM_H, { x: -ROOM_W / 2, y: ROOM_H / 2, z: 0 }, Math.PI / 2);
-  addWall(scene, wallMat, ROOM_D, ROOM_H, { x: ROOM_W / 2, y: ROOM_H / 2, z: 0 }, -Math.PI / 2);
+  const wallMat = new MeshStandardMaterial({ color: roomData.wallColor || DEFAULT_WALL_COLOR, side: DoubleSide });
+  const walls = [
+    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2, z: -ROOM_D / 2 }, 0),
+    addWall(scene, wallMat, ROOM_W, ROOM_H, { x: 0, y: ROOM_H / 2, z: ROOM_D / 2 }, Math.PI),
+    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: -ROOM_W / 2, y: ROOM_H / 2, z: 0 }, Math.PI / 2),
+    addWall(scene, wallMat, ROOM_D, ROOM_H, { x: ROOM_W / 2, y: ROOM_H / 2, z: 0 }, -Math.PI / 2),
+  ];
+  for (const w of walls) w.receiveShadow = true;
 
-  // Lighting
-  scene.add(new AmbientLight(0xffffff, 0.4));
-  const overhead = new PointLight(0xfff5e0, 0.8, 20);
-  overhead.position.set(0, ROOM_H - 0.3, 0);
-  scene.add(overhead);
+  // Lighting — hemisphere for natural ambient variation, directional for shadows
+  scene.add(new HemisphereLight(0xc8d8f0, 0x806040, 0.4));
+
+  const dirLight = new DirectionalLight(0xfff5e0, 0.9);
+  dirLight.position.set(1, ROOM_H + 3, 1);
+  dirLight.target.position.set(0, 0, 0);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.set(1024, 1024);
+  dirLight.shadow.camera.left = -ROOM_W / 2;
+  dirLight.shadow.camera.right = ROOM_W / 2;
+  dirLight.shadow.camera.top = ROOM_D / 2;
+  dirLight.shadow.camera.bottom = -ROOM_D / 2;
+  scene.add(dirLight);
+  scene.add(dirLight.target);
+
+  // Warm fill light from the opposite side
+  const fill = new PointLight(0xffc080, 0.3, 15);
+  fill.position.set(-3, ROOM_H - 0.5, -2);
+  scene.add(fill);
 
   // Vocab objects — load models in parallel, fall back to boxes
   const promises = roomData.objects.map((obj) => {
@@ -54,7 +78,8 @@ function build(scene, roomData) {
       return loadModel(obj).then((group) => {
         group.userData.vocabId = obj.id;
         scene.add(group);
-        return { mesh: group, english: obj.english, serbian: obj.serbian, id: obj.id, seen: false };
+        const bounds = obj.solid ? new Box3().setFromObject(group) : null;
+        return { mesh: group, english: obj.english, serbian: obj.serbian, id: obj.id, seen: false, bounds, quizExclude: !!obj.quizExclude, large: !!obj.large };
       }).catch((err) => {
         console.warn(`Failed to load model for "${obj.id}", using fallback box:`, err);
         return addFallbackBox(scene, obj);
@@ -94,6 +119,8 @@ function loadModel(obj) {
         group.traverse((child) => {
           if (child.isMesh) {
             child.userData.vocabId = obj.id;
+            child.castShadow = obj.shadows !== false;
+            child.receiveShadow = true;
           }
         });
 
@@ -113,8 +140,11 @@ function addFallbackBox(scene, obj) {
   );
   mesh.position.set(obj.position.x, obj.position.y, obj.position.z);
   mesh.userData.vocabId = obj.id;
+  mesh.castShadow = obj.shadows !== false;
+  mesh.receiveShadow = true;
   scene.add(mesh);
-  return { mesh, english: obj.english, serbian: obj.serbian, id: obj.id, seen: false };
+  const bounds = obj.solid ? new Box3().setFromObject(mesh) : null;
+  return { mesh, english: obj.english, serbian: obj.serbian, id: obj.id, seen: false, bounds, quizExclude: !!obj.quizExclude, large: !!obj.large };
 }
 
 function addWall(scene, material, width, height, pos, rotY) {
@@ -122,6 +152,7 @@ function addWall(scene, material, width, height, pos, rotY) {
   wall.position.set(pos.x, pos.y, pos.z);
   wall.rotation.y = rotY;
   scene.add(wall);
+  return wall;
 }
 
 export { build };

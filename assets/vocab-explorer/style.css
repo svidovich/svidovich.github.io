@@ -23,6 +23,41 @@ body {
   gap: 1.5rem;
 }
 
+/* ── Menu bubbles ── */
+
+#menu-bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#menu {
+  position: relative;
+  z-index: 1;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -80px;
+  border-radius: 50%;
+  opacity: 0.6;
+  filter: blur(1px);
+  animation: bubble-rise linear forwards, bubble-hue 6s linear infinite;
+}
+
+@keyframes bubble-rise {
+  to { transform: translateY(-110vh); }
+}
+
+@keyframes bubble-hue {
+  0%   { background: hsl(0, 80%, 65%); }
+  33%  { background: hsl(120, 80%, 65%); }
+  66%  { background: hsl(240, 80%, 65%); }
+  100% { background: hsl(360, 80%, 65%); }
+}
+
 #menu h1 {
   font-size: 2.5rem;
   letter-spacing: 0.05em;
@@ -209,7 +244,7 @@ canvas {
   cursor: pointer;
 }
 
-#ready-hint kbd {
+#hud kbd {
   display: inline-block;
   background: #e94560;
   color: #fff;
@@ -224,6 +259,127 @@ canvas {
 @keyframes glow {
   0%, 100% { box-shadow: 0 0 4px rgba(233, 69, 96, 0.4); }
   50% { box-shadow: 0 0 12px rgba(233, 69, 96, 0.9); }
+}
+
+/* ── Too-big flash ── */
+
+#too-big-flash {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #ef5350;
+  text-shadow: 0 0 8px rgba(239, 83, 80, 0.7);
+  pointer-events: none;
+  z-index: 15;
+}
+
+#too-big-flash.visible {
+  display: block;
+  animation: flash-fade 0.6s ease-out forwards;
+}
+
+@keyframes flash-fade {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+}
+
+/* ── Inventory ── */
+
+#inventory {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.inv-slot {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  position: relative;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.inv-slot.active {
+  border-color: #e94560;
+  box-shadow: 0 0 8px rgba(233, 69, 96, 0.6);
+}
+
+.inv-slot.occupied {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.inv-hint {
+  display: none;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #ccc;
+  padding-bottom: 0.25rem;
+}
+
+.inv-hint.visible {
+  display: block;
+}
+
+.inv-hint kbd {
+  display: inline-block;
+  background: #e94560;
+  color: #fff;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  margin-right: 0.2rem;
+}
+
+.inv-key {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+/* ── Equipped card ── */
+
+#equipped-card {
+  display: none;
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+  min-width: 140px;
+}
+
+#equipped-card .serbian {
+  font-size: 1.4rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+#equipped-card .english {
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
 /* ── Label bubble ── */
@@ -254,6 +410,46 @@ canvas {
 #label-bubble .english {
   font-size: 0.95rem;
   color: #aaa;
+}
+
+/* ── Pause overlay ── */
+
+#pause-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 30, 0.85);
+  z-index: 90;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+#pause-overlay.active {
+  display: flex;
+}
+
+#pause-overlay h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pause-btn {
+  background: #16213e;
+  border: 2px solid #0f3460;
+  color: #e0e0e0;
+  padding: 0.75rem 2.5rem;
+  font-size: 1.15rem;
+  cursor: pointer;
+  border-radius: 6px;
+  min-width: 200px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.pause-btn:hover {
+  background: #0f3460;
+  border-color: #e94560;
 }
 
 /* ── Quiz overlay ── */

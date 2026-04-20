@@ -1,6 +1,6 @@
-# Vocab Explorer
+# Serbian Vocabulary Explorer
 
-3D vocabulary learning app. Walk through rooms in first person, look at objects to see their Serbian/English names, then take a timed quiz. Built for svidovich.github.io (GitHub Pages).
+3D vocabulary learning app. Walk through rooms in first person, look at objects to see their Serbian/English names, then take a timed quiz. Built for svidovich.github.io (GitHub Pages). Linked from the site's root index.html.
 
 ## Stack
 
@@ -38,7 +38,23 @@ vocab-explorer/
 
 Raycasting for gaze detection uses `recursive: true` + parent-chain traversal (`findVocabIdUp`) so it works on both simple box meshes and multi-mesh GLB scenes. See "Raycasting pipeline" section for details.
 
-Quiz picks 10 random items (or fewer if room has <10 objects). Correct answers auto-advance after 400ms. Wrong answers pause and show the correct choice; user clicks Next.
+Quiz picks 10 random items (or fewer if room has <10 objects), deduplicating on the `english` field and excluding items with `quizExclude: true`. Correct answers auto-advance after 400ms. Wrong answers pause and show the correct choice; user clicks Next. Quiz is timed; perfect scores record best time.
+
+### Pause system
+
+ESC releases pointer lock, which triggers `onPauseCheck()`. This freezes the timer, hides the label bubble, and shows a pause overlay with Resume/Quit buttons. Resume re-requests pointer lock and restores timer state.
+
+### Inventory system
+
+Players can pick up small objects (F key), store them in 5 inventory slots (keys 1-5), equip them (renders on camera as a held item), and place them on horizontal surfaces. Large objects (`large: true`) show a "Too big!" flash instead. Inventory thumbnails are generated via a single offscreen WebGLRenderer to avoid WebGL context limits. Equipped items are added as camera children (`scene.add(camera)` is required for this). Placed items use surface normal checking (`normal.y >= 0.7`) for horizontal-only placement.
+
+### Emissive highlight system
+
+When `settings.highlight === "on"`, seen objects get a green emissive tint that fades from full to zero over `EMISSIVE_FADE_SECONDS` (1s). The currently gazed object stays at full emissive. Each item tracks its own `emissiveLevel` (0-1), updated per frame via linear interpolation.
+
+### Menu bubbles
+
+Decorative CSS-animated bubbles float upward on the main menu with RGB color cycling (HSL hue rotation). Spawned every 400ms into `#menu-bubbles`, each with random size/speed/position/hue offset. Cleaned up on room entry, restarted on menu return.
 
 ## three.js vendoring
 
@@ -62,7 +78,7 @@ To upgrade three.js:
 
 ## Coordinate system and room geometry
 
-Room is a 10x10 box, 3.5 units tall. Origin (0,0,0) is at floor center.
+Room size is configurable per room via `size: { x, y, z }` in vocabulary.js (defaults: 10x3.5x10). Wall/floor/ceiling colors are also configurable via `wallColor`, `floorColor`, `ceilingColor` hex strings. Origin (0,0,0) is at floor center.
 
 ```
         Z- (back wall, z = -5)
@@ -98,7 +114,7 @@ This is the most complex part of the codebase. It handles gaze detection for bot
 5. Fallback: if the hit mesh somehow doesn't have vocabId (shouldn't happen, but defensive), `findVocabIdUp()` walks the `.parent` chain until it finds a node with vocabId set. The Group-level node always has it.
 6. The vocabId is matched against the `interactables` array to find the vocabulary item.
 
-When an item is first seen, `markSeen()` traverses all child meshes and sets `material.emissive = Color(0x003300)` on each. This produces a subtle green tint. For box fallbacks it's a single mesh; for GLB models it hits every child mesh in the group.
+When an item is first seen, `markSeen()` sets its `emissiveLevel` to 1 (if highlights are on). The emissive system then fades it over time. See "Emissive highlight system" above.
 
 ## Pointer lock lifecycle
 
@@ -106,15 +122,15 @@ The Pointer Lock API controls mouse capture for first-person look. The lifecycle
 
 1. Room loads. Timer is paused (`timerRunning = false`). Instructions shown.
 2. User clicks canvas -> `requestPointerLock()` called.
-3. Browser grants lock -> `pointerlockchange` fires -> `onFirstLock()` starts the timer, resets clock delta (prevents a huge first-frame dt from the time spent on menu), hides instructions. This listener removes itself after firing once.
+3. Browser grants lock -> `pointerlockchange` fires -> `onFirstLock()` starts the timer, resets clock delta (prevents a huge first-frame dt from the time spent on menu), hides instructions. This listener removes itself and installs `onPauseCheck` instead.
 4. During gameplay, player.js tracks lock state via its own `pointerlockchange` listener. Movement and mouse look only work while locked.
-5. User presses Escape -> browser releases lock. Timer keeps ticking. User can re-click to re-lock.
-6. User presses R while timer is running -> `onReadyKey` fires, timer set to 0, `endExploration()` called.
+5. User presses Escape -> browser releases lock -> `onPauseCheck()` freezes timer, shows pause overlay with Resume/Quit options.
+6. User presses R while timer is running -> `onGameKey` fires, timer set to 0, `endExploration()` called.
 7. Timer hits 0 (naturally or via R) -> `endExploration()` calls `document.exitPointerLock()`, hides label bubble, starts quiz.
-8. Quiz runs in DOM overlay (no pointer lock needed).
+8. Quiz runs in DOM overlay (no pointer lock needed). Quiz is timed via `performance.now()`.
 9. Quiz ends -> `cleanup()` removes all event listeners including the `pointerlockchange` and `keydown` handlers.
 
-Important: R key is checked against `e.code === "KeyR"`, and player.js movement also uses `e.code`. This means R is consumed by both -- pressing R during exploration will trigger quiz AND briefly set `moveState.right` (KeyR is not bound to movement, so this is fine, but worth knowing if you add more key bindings).
+Key bindings in `onGameKey`: R (quiz), F (interact/pickup/place), Digit1-5 (equip inventory slots).
 
 ## localStorage keys and schemas
 
@@ -123,23 +139,24 @@ Two keys, both JSON:
 **`vocabExplorerSettings`**
 ```json
 {
-  "difficulty": "easy",     // "easy"|"medium"|"hard"|"impossible"
-  "alphabet": "cyrillic"    // "cyrillic"|"latin"
+  "difficulty": "easy",     // "study"|"easy"|"medium"|"hard"|"impossible"
+  "alphabet": "cyrillic",   // "cyrillic"|"latin"
+  "highlight": "on"         // "on"|"off"
 }
 ```
-Defaults (if key is missing or corrupt): `{ difficulty: "easy", alphabet: "cyrillic" }`. Settings are read fresh at room start via `loadSettings()`, so changes take effect on next room entry without reload.
+Defaults (if key is missing or corrupt): `{ difficulty: "easy", alphabet: "cyrillic", highlight: "on" }`. Settings are read fresh at room start via `loadSettings()`, so changes take effect on next room entry without reload.
 
 **`vocabExplorerScores`**
 ```json
 {
   "kitchen": {
-    "best": 8,           // highest score achieved
+    "bestTime": 12.3,    // best quiz completion time in seconds (lower is better), null if no perfect score yet
     "total": 10,         // number of quiz questions (always 10 or object count if <10)
-    "completions": 3     // number of times quiz was finished
+    "completions": 3     // number of perfect-score completions
   }
 }
 ```
-Keyed by room id (matches VOCABULARY keys). Updated after each quiz via `recordScore()`. `best` only increases; `completions` increments every time.
+Keyed by room id (matches VOCABULARY keys). Updated after each quiz via `recordScore()`. `bestTime` and `completions` only update on perfect scores (`score === total`). Legacy data may have `undefined` instead of `null` for `bestTime` -- `formatBestTime()` handles this with `!bestTime || isNaN()` checks.
 
 ## GLB model gotchas
 

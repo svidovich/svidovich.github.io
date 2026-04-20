@@ -3,13 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vocab Explorer</title>
+    <title>Serbian Vocabulary Explorer</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Menu -->
     <div id="menu">
-      <h1>Vocab Explorer</h1>
+      <div id="menu-bubbles"></div>
+      <h1>Serbian Vocabulary Explorer</h1>
       <p class="subtitle">
         Explore 3D rooms, look at objects to learn their names, then take a
         quiz. WASD to move, mouse to look.
@@ -33,6 +34,10 @@
           <label>Alphabet</label>
           <div id="alphabet-options" class="option-row"></div>
         </div>
+        <div class="setting-group">
+          <label>Highlight Objects</label>
+          <div id="highlight-options" class="option-row"></div>
+        </div>
       </div>
     </div>
 
@@ -42,6 +47,7 @@
 
       <div id="hud">
         <div class="hud-item" id="timer">0:30</div>
+        <div class="hud-item" id="pause-hint"><kbd>Esc</kbd> Pause</div>
         <div class="hud-item" id="ready-hint"><kbd>R</kbd> Ready</div>
         <div class="hud-item" id="seen-count">0 / 0 seen</div>
       </div>
@@ -54,6 +60,32 @@
       <div id="instructions">
         Click to start — WASD to move, mouse to look. Find and look at objects!
         Press R when ready for the quiz.
+      </div>
+
+      <!-- "Too big" flash -->
+      <div id="too-big-flash">Too big!</div>
+
+      <!-- Inventory slots -->
+      <div id="inventory">
+        <div id="inv-hint" class="inv-hint"></div>
+        <div class="inv-slot" data-slot="0"><span class="inv-key">1</span></div>
+        <div class="inv-slot" data-slot="1"><span class="inv-key">2</span></div>
+        <div class="inv-slot" data-slot="2"><span class="inv-key">3</span></div>
+        <div class="inv-slot" data-slot="3"><span class="inv-key">4</span></div>
+        <div class="inv-slot" data-slot="4"><span class="inv-key">5</span></div>
+      </div>
+
+      <!-- Equipped item card -->
+      <div id="equipped-card">
+        <span class="serbian"></span>
+        <span class="english"></span>
+      </div>
+
+      <!-- Pause overlay -->
+      <div id="pause-overlay">
+        <h2>Paused</h2>
+        <button id="pause-resume-btn" class="pause-btn">Resume</button>
+        <button id="pause-quit-btn" class="pause-btn">Quit to Menu</button>
       </div>
 
       <!-- Quiz overlay -->
