@@ -78,11 +78,29 @@
         text-align: center;
       }
 
-      .box {
-        display: inline-block;
+      input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        display: inline-grid;
+        place-content: center;
         width: 0.2in;
         height: 0.2in;
         border: 2px solid #111;
+        margin: 0;
+        background: white;
+        cursor: pointer;
+      }
+
+      input[type="checkbox"]::before {
+        content: "";
+        width: 0.12in;
+        height: 0.12in;
+        transform: scale(0);
+        background: #111;
+      }
+
+      input[type="checkbox"]:checked::before {
+        transform: scale(1);
       }
 
       .number {
@@ -147,62 +165,62 @@
           </thead>
           <tbody>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Common Litanies done" /></td>
               <td class="number">1</td>
               <td class="item">Common Litanies</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Bless the Lord, O my Soul done" /></td>
               <td class="number">2</td>
               <td class="item">Bless the Lord, O my Soul</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Small Litany done" /></td>
               <td class="number">3</td>
               <td class="item">Small Litany</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Only-Begotten Son done" /></td>
               <td class="number">4</td>
               <td class="item">Only-Begotten Son</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Small Litany done" /></td>
               <td class="number">5</td>
               <td class="item">Small Litany</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Blazeni: The Beatitudes done" /></td>
               <td class="number">6</td>
               <td class="item">Blaženi: The Beatitudes</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Pridite: Come, Let us Worship done" /></td>
               <td class="number">7</td>
               <td class="item">Pridite: Come, Let us Worship</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Resurrection Troparion done" /></td>
               <td class="number">8</td>
               <td class="item">Resurrection Troparion</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="St. George's Troparion done" /></td>
               <td class="number">9</td>
               <td class="item">St. George's Troparion</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Resurrection Kontakion done" /></td>
               <td class="number">10</td>
               <td class="item">Resurrection Kontakion</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Small Litany done" /></td>
               <td class="number">11</td>
               <td class="item">Small Litany</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Thrice-Holy Hymn done" /></td>
               <td class="number">12</td>
               <td class="item">Thrice-Holy Hymn</td>
             </tr>
@@ -212,47 +230,47 @@
               <td>Special Music? &nbsp; Y / N</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Epistle and Gospel Reading Responses done" /></td>
               <td class="number">13</td>
               <td class="item">Epistle &amp; Gospel Reading Responses</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Litany of Fervent Supplication done" /></td>
               <td class="number">14</td>
               <td class="item">Litany of Fervent Supplication</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Small Litany done" /></td>
               <td class="number">15</td>
               <td class="item">Small Litany</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Ize Heruvimi done" /></td>
               <td class="number">16</td>
               <td class="item">Iže Heruvimi</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Preparation for Consecration done" /></td>
               <td class="number">17</td>
               <td class="item">Preparation for Consecration</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="The Creed done" /></td>
               <td class="number">18</td>
               <td class="item">The Creed</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Milost Mira, Dostojno Jest, Svjat Svat done" /></td>
               <td class="number">19</td>
               <td class="item">'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="We Praise Thee done" /></td>
               <td class="number">20</td>
               <td class="item">We Praise Thee</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Hymn to the Theotokos done" /></td>
               <td class="number">21</td>
               <td class="item">Hymn to the Theotokos</td>
             </tr>
@@ -262,17 +280,17 @@
               <td>Special Music? &nbsp; Y / N</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Litanies and Lord's Prayer done" /></td>
               <td class="number">22</td>
               <td class="item">Litanies &amp; Lord's Prayer</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="To Thee, Amen, Jedin Svjat done" /></td>
               <td class="number">23</td>
               <td class="item">To Thee, Amen, Jedin Svjat</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Communion Hymn done" /></td>
               <td class="number">24</td>
               <td class="item">Communion Hymn</td>
             </tr>
@@ -282,37 +300,37 @@
               <td>Special Music? &nbsp; Y / N</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Prayer Before Communion done" /></td>
               <td class="number">25</td>
               <td class="item">Prayer Before Communion</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Blagosloven Grjadi done" /></td>
               <td class="number">26</td>
               <td class="item">Blagosloven Grjadi</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Tjelo Hristovo done" /></td>
               <td class="number">27</td>
               <td class="item">Tjelo Hristovo</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Prayer After Communion done" /></td>
               <td class="number">28</td>
               <td class="item">Prayer After Communion</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Vidjehom Svjet Istinij, Amin Da Ispolnjatsja done" /></td>
               <td class="number">29</td>
               <td class="item">'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Small Litany done" /></td>
               <td class="number">30</td>
               <td class="item">Small Litany</td>
             </tr>
             <tr>
-              <td class="check"><span class="box"></span></td>
+              <td class="check"><input type="checkbox" aria-label="Departure: Budi Imja Gospodnje done" /></td>
               <td class="number">31</td>
               <td class="item">Departure: Budi Imja Gospodnje!</td>
             </tr>
