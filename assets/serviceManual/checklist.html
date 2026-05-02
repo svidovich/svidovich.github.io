@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Divine Liturgy checklist - St. George North Canton"
+    />
+    <link rel="icon" href="../../media/favicon.png" />
+    <title>Divine Liturgy Checklist</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        color: #111;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+      }
+
+      body {
+        padding: 0.35in;
+      }
+
+      h1 {
+        margin: 0 0 0.12in;
+        font-size: 22px;
+        line-height: 1.1;
+        text-align: center;
+      }
+
+      .sheet {
+        max-width: 4.25in;
+        margin: 0 auto;
+      }
+
+      .tables {
+        display: block;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        break-inside: avoid;
+      }
+
+      th,
+      td {
+        border: 1px solid #222;
+        vertical-align: middle;
+      }
+
+      th {
+        padding: 5px 6px;
+        background: #e8f1fb;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      td {
+        height: 0.3in;
+        padding: 4px 6px;
+        font-size: 13px;
+        line-height: 1.15;
+      }
+
+      .check {
+        width: 0.38in;
+        padding: 0;
+        text-align: center;
+      }
+
+      .box {
+        display: inline-block;
+        width: 0.2in;
+        height: 0.2in;
+        border: 2px solid #111;
+      }
+
+      .number {
+        width: 0.34in;
+        text-align: right;
+        font-weight: 700;
+      }
+
+      .item {
+        font-weight: 700;
+      }
+
+      .special td {
+        height: 0.25in;
+        background: #f8fbff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      @media print {
+        @page {
+          size: letter portrait;
+          margin: 0.25in;
+        }
+
+        body {
+          padding: 0;
+        }
+
+        .sheet {
+          max-width: 3.75in;
+        }
+
+        h1 {
+          font-size: 18px;
+        }
+
+        td {
+          height: 0.25in;
+          font-size: 12px;
+        }
+
+        .special td {
+          height: 0.23in;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <h1>Divine Liturgy Checklist</h1>
+
+      <div class="tables" aria-label="Divine Liturgy checklist">
+        <table>
+          <thead>
+            <tr>
+              <th class="check">Done</th>
+              <th class="number">#</th>
+              <th>Service Item</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">1</td>
+              <td class="item">Common Litanies</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">2</td>
+              <td class="item">Bless the Lord, O my Soul</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">3</td>
+              <td class="item">Small Litany</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">4</td>
+              <td class="item">Only-Begotten Son</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">5</td>
+              <td class="item">Small Litany</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">6</td>
+              <td class="item">Blaženi: The Beatitudes</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">7</td>
+              <td class="item">Pridite: Come, Let us Worship</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">8</td>
+              <td class="item">Resurrection Troparion</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">9</td>
+              <td class="item">St. George's Troparion</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">10</td>
+              <td class="item">Resurrection Kontakion</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">11</td>
+              <td class="item">Small Litany</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">12</td>
+              <td class="item">Thrice-Holy Hymn</td>
+            </tr>
+            <tr class="special">
+              <td></td>
+              <td></td>
+              <td>Special Music? &nbsp; Y / N</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">13</td>
+              <td class="item">Epistle &amp; Gospel Reading Responses</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">14</td>
+              <td class="item">Litany of Fervent Supplication</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">15</td>
+              <td class="item">Small Litany</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">16</td>
+              <td class="item">Iže Heruvimi</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">17</td>
+              <td class="item">Preparation for Consecration</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">18</td>
+              <td class="item">The Creed</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">19</td>
+              <td class="item">'Milost Mira', 'Dostojno Jest', 'Svjat Svat!'</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">20</td>
+              <td class="item">We Praise Thee</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">21</td>
+              <td class="item">Hymn to the Theotokos</td>
+            </tr>
+            <tr class="special">
+              <td></td>
+              <td></td>
+              <td>Special Music? &nbsp; Y / N</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">22</td>
+              <td class="item">Litanies &amp; Lord's Prayer</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">23</td>
+              <td class="item">To Thee, Amen, Jedin Svjat</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">24</td>
+              <td class="item">Communion Hymn</td>
+            </tr>
+            <tr class="special">
+              <td></td>
+              <td></td>
+              <td>Special Music? &nbsp; Y / N</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">25</td>
+              <td class="item">Prayer Before Communion</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">26</td>
+              <td class="item">Blagosloven Grjadi</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">27</td>
+              <td class="item">Tjelo Hristovo</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">28</td>
+              <td class="item">Prayer After Communion</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">29</td>
+              <td class="item">'Vidjehom Svjet Istinij', 'Amin Da Ispolnjatsja'</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">30</td>
+              <td class="item">Small Litany</td>
+            </tr>
+            <tr>
+              <td class="check"><span class="box"></span></td>
+              <td class="number">31</td>
+              <td class="item">Departure: Budi Imja Gospodnje!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
