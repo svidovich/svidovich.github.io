@@ -533,6 +533,12 @@ const directory = [
             language: LANG_ENG,
             musescore: null,
           },
+          {
+            filename: "troparia-kontakia/kontakion-tone-7-sr.pdf",
+            scoreTitle: "Kontakion, Tone 7",
+            language: LANG_SERB,
+            musescore: null,
+          },
         ],
       },
       {
